@@ -1,4 +1,4 @@
-/* NusaMora Invite — lapisan data.
+/* NusaMora Invite 2D — lapisan data.
    Mengambil undangan dari Supabase (REST/RPC, tanpa SDK agar ringan saat dibuka dari WhatsApp),
    lalu menormalkan `invitations.content` (jsonb dari editor) menjadi view model yang dipakai template.
    Tidak ada konten undangan yang ditulis di sini; DEMO hanya dipakai untuk pratinjau template. */
@@ -36,8 +36,8 @@
   function normalize(raw, meta) {
     var c = raw || {}, names = c.names || {}, cp = c.couple || {}, ph = c.photos || {}, ev = c.event || {}, ft = c.features || {};
     var cat = meta.category || "wedding", isCouple = cat === "wedding" || cat === "engagement";
-    var bride = { nick: str(names.a, 80), full: str((cp.bride || {}).full, 120) || str(names.a, 80), parents: str((cp.bride || {}).parents, 200), ig: ig((cp.bride || {}).ig), photo: okUrl(ph.bride) };
-    var groom = { nick: str(names.b, 80), full: str((cp.groom || {}).full, 120) || str(names.b, 80), parents: str((cp.groom || {}).parents, 200), ig: ig((cp.groom || {}).ig), photo: okUrl(ph.groom) };
+    var bride = { nick: str(names.a, 80), full: str((cp.bride || {}).full, 120) || str(names.a, 80), parents: str((cp.bride || {}).parents, 200), ig: ig((cp.bride || {}).ig), photo: okUrl(ph.bride), sex: "f" };
+    var groom = { nick: str(names.b, 80), full: str((cp.groom || {}).full, 120) || str(names.b, 80), parents: str((cp.groom || {}).parents, 200), ig: ig((cp.groom || {}).ig), photo: okUrl(ph.groom), sex: "m" };
     var groomFirst = cp.order !== "wanita";
     var people = isCouple ? (groomFirst ? [groom, bride] : [bride, groom]) : [bride];
     var roles = isCouple ? (groomFirst ? ["Mempelai Pria", "Mempelai Wanita"] : ["Mempelai Wanita", "Mempelai Pria"]) : [""];
@@ -62,7 +62,7 @@
     return {
       slug: meta.slug || "", category: cat, isCouple: isCouple, title: str(meta.title),
       pair: pair, people: people, displayNames: pair.length ? pair.join(" & ") : str(meta.title),
-      theme: str(c.theme) || "marun",
+      theme: /^[a-z0-9-]{1,40}$/.test(str(c.theme)) ? str(c.theme) : "",
       welcome: str(c.welcome, 1000), quote: { text: str((c.quote || {}).text, 400), source: str((c.quote || {}).source, 80) },
       cover: okUrl(ph.cover), gallery: gallery, events: events, target: target, story: story, accounts: accounts,
       giftAddress: str(c.giftAddress, 300), closing: str(c.closing, 600),
@@ -133,7 +133,7 @@
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
     var content = {
-      theme: /^(marun|sage|navy|blush|batak)$/.test(theme || "") ? theme : "marun",
+      theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
       names: { a: "Sekar", b: "Raka" },
       couple: { order: "pria", groom: { full: "Raka Aditya Pratama, S.T.", parents: "Putra pertama Bapak Hendra Pratama & Ibu Sri Wahyuni", ig: "raka.aditya" }, bride: { full: "Sekar Ayu Larasati, S.Ds.", parents: "Putri kedua Bapak Bambang Larasno & Ibu Dewi Kartika", ig: "sekarayu" } },
       welcome: "Dengan memohon rahmat dan ridho Tuhan Yang Maha Esa, kami bermaksud menyelenggarakan pernikahan putra-putri kami.",

@@ -54,13 +54,12 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
 
-## Template 2D Essential (`nusa-essential`)
-Halaman publik `nusamora.com/{slug}` dirender oleh `undangan.html` + `assets/invite/` (tanpa Supabase SDK, ringan untuk tamu dari WhatsApp):
-- `data.js` — ambil undangan (`get_public_invitation`), normalisasi `invitations.content`, kirim RSVP/ucapan. `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik (sesi login), `?demo=1&theme=sage` = demo galeri template.
-- `themes.js` — tema warna (marun, sage, navy, blush, batak dengan ilustrasi di `art/batak`) + ornamen SVG. `motion.js` — reveal, parallax, kelopak, animasi huruf, gulir otomatis (menghormati prefers-reduced-motion).
-- `essential.js` + `essential.css` — section: cover, hero, salam, mempelai, hitung mundur, acara (multi), love story, galeri + lightbox, RSVP, hadiah (multi rekening, salin), ucapan, penutup, dock navigasi, musik.
-- Template 2D baru cukup mendaftar ke `NMInvite.templates["slug"]` dan `ESSENTIAL` di `assets/flow.js`. Template tanpa renderer sendiri memakai tampilan Essential.
+## Undangan 2D universal (engine + tema)
+Semua undangan 2D (`nusamora.com/{slug}`) dirender satu engine; tampilannya ditentukan paket tema.
+- `undangan.html` memuat `assets/invite/core/`: `data.js` (ambil & normalisasi undangan, RSVP/ucapan), `theme.js` (muat & terapkan paket tema), `motion.js` (reveal, parallax, partikel, animasi huruf, gulir otomatis; menghormati prefers-reduced-motion), `engine.js` + `engine.css` (semua section dan interaksi).
+- Paket tema di `assets/invite/themes/<id>/theme.json`: warna, font, ornamen, transisi cover, urutan section, teks, dan slot ilustrasi. Panduan lengkap & cara menambah tema: `assets/invite/themes/README.md`.
+- Tema bawaan: Marun Songket, Sage Garden, Biru Malam, Blush Rose, Batak Ulos (berilustrasi).
+- URL: `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik, `?demo=1&theme=<id>` = demo untuk galeri template.
+- Galeri `/template` dan pilihan **Tema undangan** di editor membaca `themes/index.json`, jadi tema baru muncul otomatis. Pelanggan dapat berganti tema kapan saja tanpa kehilangan isi.
 
-Editor (`/editor`) menampilkan bagian tambahan untuk template ini: Mempelai, Acara lainnya, Love Story, Hadiah, Tema, dan Tamu & Ucapan (link tamu + WhatsApp, rekap RSVP, sembunyikan ucapan).
-
-**Setup:** jalankan `backend/essential-schema.sql` SETELAH `payment-schema.sql` (tabel `rsvps`, `wishes`, RPC `submit_rsvp`, `submit_wish`, `list_wishes`, `set_wish_hidden`, validasi foto tambahan di `save_invitation`, baris template). Routing slug: `vercel.json` (rewrites) dan `.htaccess` sudah diatur; file/halaman yang ada tetap didahulukan.
+**Setup:** jalankan `backend/essential-schema.sql` (RSVP, ucapan, validasi foto) lalu `backend/themes-seed.sql` (daftar tema sebagai template) setelah `payment-schema.sql`. Routing slug sudah diatur di `vercel.json` dan `.htaccess`.

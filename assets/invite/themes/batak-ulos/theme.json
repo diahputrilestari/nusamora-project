@@ -1,0 +1,110 @@
+{
+  "id": "batak-ulos",
+  "name": "Batak Ulos",
+  "version": 1,
+  "description": "Adat Batak: rumah bolon, ulos, gorga, lentera, dan ilustrasi pengantin berbusana adat.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#5A0A0F",
+    "deep2": "#8A171C",
+    "paper": "#FBF2E2",
+    "ink": "#3A1612",
+    "muted": "#7A4B3E",
+    "accent": "#D4A243",
+    "accent2": "#F2D58C",
+    "soft": "#F4E2C4",
+    "petal": "#E4525A"
+  },
+  "fonts": {
+    "script": "Pinyon Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost"
+  },
+  "ornament": {
+    "pattern": "lattice",
+    "border": "tumpal",
+    "corner": "vine",
+    "divider": "diamond",
+    "frame": "arch",
+    "petals": [
+      "bloom",
+      "leaf"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "copy": {
+    "closingEyebrow": "Mauliate godang",
+    "guestDefault": "Tamu Undangan"
+  },
+  "art": {
+    "coverCorner": "art/sulur-kanan-atas.webp",
+    "coverHang": "art/lentera-gantung.webp",
+    "coverGround": [
+      {
+        "src": "art/jambangan-kiri.webp",
+        "w": 78
+      },
+      {
+        "src": "art/rumah-bolon.webp",
+        "w": 300
+      },
+      {
+        "src": "art/jambangan-kanan.webp",
+        "w": 78
+      }
+    ],
+    "heading": [
+      "art/gorga-kiri.webp",
+      "art/gorga-kanan.webp"
+    ],
+    "introTop": "art/ulos.webp",
+    "introCorners": [
+      "art/sulur-kanan-atas.webp",
+      "art/sulur-kiri-bawah.webp"
+    ],
+    "figureGroom": "art/pengantin-pria.webp",
+    "figureBride": "art/pengantin-wanita.webp",
+    "countdownRow": [
+      {
+        "src": "art/jambangan-kiri.webp",
+        "w": 74
+      },
+      {
+        "src": "art/lentera-berdiri.webp",
+        "w": 46
+      },
+      {
+        "src": "art/jambangan-kanan.webp",
+        "w": 74
+      }
+    ],
+    "eventBadge": "art/lentera-berdiri.webp",
+    "storyTop": "art/konfeti.webp",
+    "rsvpHang": "art/lentera-gantung.webp",
+    "giftTop": "art/amplop.webp",
+    "wishesTop": "art/buket.webp",
+    "closingScene": "art/gerbang-pelaminan.webp",
+    "closingFigures": [
+      "art/pengantin-pria.webp",
+      "art/pengantin-wanita.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

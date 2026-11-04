@@ -1,0 +1,54 @@
+{
+  "id": "blush-rose",
+  "name": "Blush Rose",
+  "version": 1,
+  "description": "Merah muda lembut dengan pola kawung, hati dan kelopak mawar yang melayang.",
+  "categories": [
+    "wedding",
+    "engagement",
+    "birthday"
+  ],
+  "colors": {
+    "deep": "#5A2B34",
+    "deep2": "#7A3F4A",
+    "paper": "#FCF4F1",
+    "ink": "#4A2C31",
+    "muted": "#86636A",
+    "accent": "#C08A70",
+    "accent2": "#E9C3AD",
+    "soft": "#F2DFD8",
+    "petal": "#F5C7C7"
+  },
+  "fonts": {
+    "script": "Parisienne",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito Sans"
+  },
+  "ornament": {
+    "pattern": "kawung",
+    "border": "line",
+    "corner": "vine",
+    "divider": "simple",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "bloom"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "fade"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

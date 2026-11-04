@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "default": "marun-songket",
+  "aliases": {
+    "marun": "marun-songket",
+    "sage": "sage-garden",
+    "navy": "biru-malam",
+    "blush": "blush-rose",
+    "batak": "batak-ulos",
+    "nusa-essential": "marun-songket"
+  },
+  "themes": [
+    {
+      "id": "marun-songket",
+      "name": "Marun Songket",
+      "description": "Marun dan emas dengan pola anyaman songket, sulur bunga, dan pintu cover yang terbelah.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A0D14",
+        "#C9A35B"
+      ],
+      "art": false
+    },
+    {
+      "id": "sage-garden",
+      "name": "Sage Garden",
+      "description": "Hijau sage yang tenang dengan daun berguguran, garis tipis, dan cover yang memudar lembut.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "birthday",
+        "aqiqah"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2B3A30",
+        "#B7975A"
+      ],
+      "art": false
+    },
+    {
+      "id": "biru-malam",
+      "name": "Biru Malam",
+      "description": "Navy dan emas seperti langit malam, dengan titik cahaya yang jatuh pelan dan cover yang terangkat.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "graduation",
+        "corporate"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#101A31",
+        "#CFAE6B"
+      ],
+      "art": false
+    },
+    {
+      "id": "blush-rose",
+      "name": "Blush Rose",
+      "description": "Merah muda lembut dengan pola kawung, hati dan kelopak mawar yang melayang.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5A2B34",
+        "#C08A70"
+      ],
+      "art": false
+    },
+    {
+      "id": "batak-ulos",
+      "name": "Batak Ulos",
+      "description": "Adat Batak: rumah bolon, ulos, gorga, lentera, dan ilustrasi pengantin berbusana adat.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5A0A0F",
+        "#D4A243"
+      ],
+      "art": true
+    }
+  ]
+}

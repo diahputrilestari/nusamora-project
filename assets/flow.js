@@ -8,8 +8,7 @@
   var CATN = {}; CATS.forEach(function (c) { CATN[c[0]] = c[1]; });
   var BUILTIN = [
     { slug: "romantic-garden", name: "Romantic Garden", cats: ["wedding", "engagement", "birthday"], desc: "Taman bunga blush dan lavender dengan gazebo kaca. Lembut, romantis, dan hangat.", img: "/assets/img/romantic-garden-s1.webp", demo: "/live/" },
-    { slug: "jawa-tengah", name: "Adat Jawa Tengah", cats: ["wedding", "engagement"], desc: "Pendopo joglo, pelaminan emas, batik kawung, serta avatar kebaya dan beskap.", img: "/assets/img/jawa-tengah-s1.webp", demo: "/live/jawa-tengah" },
-    { slug: "nusa-essential", name: "Nusa Essential", cats: ["wedding", "engagement"], desc: "Undangan 2D elegan dengan ornamen songket, love story, RSVP, hadiah digital, dan ucapan tamu. Lima pilihan tema termasuk Batak Ulos.", img: "/assets/img/nusa-essential.webp", demo: "/undangan?demo=nusa-essential" }
+    { slug: "jawa-tengah", name: "Adat Jawa Tengah", cats: ["wedding", "engagement"], desc: "Pendopo joglo, pelaminan emas, batik kawung, serta avatar kebaya dan beskap.", img: "/assets/img/jawa-tengah-s1.webp", demo: "/live/jawa-tengah" }
   ];
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function toast(t, k) { var e = d.createElement("div"); e.className = "toast " + (k || ""); e.setAttribute("role", k === "bad" ? "alert" : "status"); e.textContent = t; $("#toasts").appendChild(e); setTimeout(function () { e.remove(); }, 4500); }
@@ -19,12 +18,28 @@
   var ERR = { slug_digunakan: "URL ini sudah digunakan. Coba yang lain.", slug_dicadangkan: "URL ini dicadangkan sistem. Pilih yang lain.", slug_tidak_valid: "Format URL belum benar.", batas_draft: "Anda sudah memiliki 20 draft. Selesaikan atau hapus draft lama dulu.", akun_ditangguhkan: "Akun Anda sedang ditangguhkan.", template_tidak_valid: "Template tidak tersedia.", kategori_tidak_valid: "Kategori tidak valid.", tidak_ditemukan: "Undangan tidak ditemukan.", tidak_dapat_diubah: "Undangan ini tidak dapat diubah.", foto_tidak_valid: "Foto tidak valid.", konten_tidak_valid: "Isi undangan terlalu besar." };
   function errText(e) { var m = (e && e.message) || ""; return ERR[m] || (/fetch|network/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet." : "Terjadi kendala. Coba lagi."); }
 
+  /* Tema undangan 2D: paket di assets/invite/themes (dirender engine universal /undangan). Menambah tema tidak perlu mengubah file ini. */
+  var T2D = { list: [], ids: {}, aliases: {}, def: "" }, t2dP = null;
+  function loadThemes2D() {
+    return t2dP || (t2dP = fetch("/assets/invite/themes/index.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }).then(function (ix) {
+      T2D.list = (ix.themes || []).filter(function (t) { return /^[a-z0-9-]+$/.test(t.id || ""); }); T2D.aliases = ix.aliases || {}; T2D.def = ix.default || (T2D.list[0] || {}).id || "";
+      T2D.list.forEach(function (t) { T2D.ids[t.id] = t; }); return T2D;
+    }));
+  }
+  function themeId(x) { x = T2D.aliases[x] || x; return T2D.ids[x] ? x : ""; }
+  function isEngine(tpl) { return !!themeId(tpl); }
+  function themeThumb(t) { return "/assets/invite/themes/" + t.id + "/" + (t.thumb || "thumb.webp"); }
   function loadTemplates() {
+    return loadThemes2D().then(loadTemplatesDb);
+  }
+  function loadTemplatesDb() {
     return sb.from("templates").select("slug,name,description,thumbnail_url,preview_url,event_categories(slug)").eq("status", "published").order("sort").then(function (r) {
       var out = (r.error || !r.data ? [] : r.data).map(function (t) { return { slug: t.slug, name: t.name, cats: t.event_categories && t.event_categories.slug ? [t.event_categories.slug] : ["other"], desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "" }; });
-      BUILTIN.forEach(function (b) { if (!out.some(function (x) { return x.slug === b.slug; })) out.push(b); });
+      var t2d = T2D.list.map(function (t) { return { slug: t.id, name: t.name, cats: t.categories && t.categories.length ? t.categories : ["wedding"], desc: t.description || "", img: themeThumb(t), demo: "/undangan?demo=1&theme=" + encodeURIComponent(t.id) }; });
+      out = out.map(function (x) { var t = T2D.ids[x.slug]; return t && !x.img ? Object.assign({}, x, { img: themeThumb(t), demo: x.demo || "/undangan?demo=1&theme=" + t.id }) : x; });
+      BUILTIN.concat(t2d).forEach(function (b) { if (!out.some(function (x) { return x.slug === b.slug; })) out.push(b); });
       return out;
-    }, function () { return BUILTIN.slice(); });
+    }, function () { return BUILTIN.concat(T2D.list.map(function (t) { return { slug: t.id, name: t.name, cats: t.categories || ["wedding"], desc: t.description || "", img: themeThumb(t), demo: "/undangan?demo=1&theme=" + t.id }; })); });
   }
 
   /* ================= HALAMAN TEMPLATE ================= */
@@ -98,8 +113,6 @@
   var DEF = { names: { a: "", b: "" }, welcome: "", event: { name: "", start: "", end: "", tz: "WIB", venue: "", address: "", maps: "" }, photos: { cover: "", gallery: [], groom: "", bride: "" }, music: { enabled: true, track: "we-are" }, features: { rsvp: true, guestbook: true, countdown: true, gift: false, story: true }, gift: { bank: "", number: "", holder: "" },
     couple: { order: "pria", groom: { full: "", parents: "", ig: "" }, bride: { full: "", parents: "", ig: "" } }, quote: { text: "", source: "" }, events: [], story: [], accounts: [], giftAddress: "", closing: "", theme: "marun" };
   /* template 2D yang dirender oleh /undangan (assets/invite). Pilihan tema mengikuti assets/invite/themes.js */
-  var ESSENTIAL = { "nusa-essential": 1 };
-  window.NM_THEMES = [["marun", "Marun Songket", "#4A0D14", "#C9A35B"], ["sage", "Sage Garden", "#2B3A30", "#B7975A"], ["navy", "Biru Malam", "#101A31", "#CFAE6B"], ["blush", "Blush Rose", "#5A2B34", "#C08A70"], ["batak", "Batak Ulos", "#5A0A0F", "#D4A243"]];
   function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); Object.keys(b || {}).forEach(function (k) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = merge(o[k], b[k]); else if (b[k] != null) o[k] = b[k]; }); return o; }
   function get(o, p) { return p.split(".").reduce(function (x, k) { return x && x[k]; }, o); }
   function set(o, p, v) { var ks = p.split("."), last = ks.pop(), t = ks.reduce(function (x, k) { return x[k] || (x[k] = {}); }, o); t[last] = v; }
@@ -114,7 +127,7 @@
       var dirty = false, busy = false, timer = null, retry = 0, state = "ok", savedAt = inv.updated_at;
       function fld(lbl, p, o) { o = o || {}; var v = p === "date" ? date : (get(C0, p) || ""); return '<div class="f' + (o.full ? " full" : "") + '"><label for="e-' + p + '">' + esc(lbl) + '</label><' + (o.ta ? "textarea" : "input type=\"" + (o.type || "text") + "\"") + ' id="e-' + p + '" data-p="' + p + '"' + (o.max ? ' maxlength="' + o.max + '"' : "") + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : "") + (locked ? " disabled" : "") + (o.ta ? ">" + esc(v) + "</textarea>" : ' value="' + esc(v) + '">') + "</div>"; }
       function sw(p, t, s) { return '<label class="sw"><input type="checkbox" data-p="' + p + '"' + (get(C0, p) ? " checked" : "") + (locked ? " disabled" : "") + "><div><b>" + esc(t) + "</b><span>" + esc(s) + "</span></div></label>"; }
-      var ESS = !!ESSENTIAL[inv.template_id], couple2 = cat === "wedding" || cat === "engagement";
+      var ESS = isEngine(inv.template_id), couple2 = cat === "wedding" || cat === "engagement";
       var secs = ESS ? [["info", "Informasi Acara"]].concat(couple2 ? [["mempelai", "Mempelai"]] : [], [["waktu", "Acara"], ["foto", "Foto"], ["kisah", "Love Story"], ["hadiah", "Hadiah"], ["musik", "Tema & Musik"], ["fitur", "Komponen Undangan"], ["tamu", "Tamu & Ucapan"]])
         : [["info", "Informasi Acara"], ["waktu", "Waktu & Tempat"], ["foto", "Foto"], ["musik", "Musik"], ["fitur", "Komponen Undangan"]];
       view.innerHTML = '<div class="fw">' + steps(2) + '<div class="hd"><h1 id="ttl">' + esc(inv.title) + '</h1><p>Isi detail undangan Anda. Perubahan tersimpan otomatis, jadi Anda bisa keluar dan melanjutkan kapan saja.</p></div>' + banner(inv, locked) +
@@ -143,7 +156,8 @@
         function redraw(key) { $("#rep-" + key).innerHTML = repHtml(key); }
         function sec(id, h, sub, body) { return '<section class="card sec" id="s-' + id + '"><h2>' + h + "</h2>" + (sub ? '<p class="sub">' + sub + "</p>" : "") + body + "</section>"; }
         ["events", "story", "accounts"].forEach(function (k) { if (!Array.isArray(C0[k])) C0[k] = []; });
-        var TH = (window.NM_THEMES || []);
+        var TH = T2D.list.filter(function (t) { return !t.categories || t.categories.indexOf(cat) > -1; }), curTheme = themeId(C0.theme) || themeId(inv.template_id) || T2D.def;
+        if (!TH.some(function (t) { return t.id === curTheme; }) && T2D.ids[curTheme]) TH.unshift(T2D.ids[curTheme]);
 
         // Informasi: kutipan + urutan nama
         $("#s-info .g2f").insertAdjacentHTML("beforeend", (couple2 ? sel("Urutan nama di undangan", "couple.order", [["pria", "Mempelai pria lebih dulu"], ["wanita", "Mempelai wanita lebih dulu"]]) : "") + fld("Kutipan / ayat", "quote.text", { ta: 1, full: 1, max: 400, ph: "Ayat suci, doa, atau kutipan favorit" }) + fld("Sumber kutipan", "quote.source", { max: 80, ph: "Mis. QS. Ar-Rum: 21" }));
@@ -157,8 +171,9 @@
         // Love story, hadiah, tema, tamu
         $("#s-foto").insertAdjacentHTML("afterend", sec("kisah", "Love Story", "Perjalanan cinta yang tampil sebagai timeline.", sw("features.story", "Tampilkan Love Story", "Bagian disembunyikan bila tidak ada cerita.") + rep("story")) +
           sec("hadiah", "Hadiah Digital", "Rekening bank, e-wallet, dan alamat kirim kado. Tamu dapat menyalin nomor dengan sekali ketuk.", '<p class="fine">Aktifkan juga <b>Hadiah digital</b> di Komponen Undangan. Rekening utama diisi di sana.</p>' + rep("accounts") + '<div class="g2f">' + fld("Alamat kirim kado (opsional)", "giftAddress", { ta: 1, full: 1, max: 300 }) + "</div>"));
-        $("#s-musik h2").textContent = "Tema & Musik";
-        $("#s-musik .sub").insertAdjacentHTML("beforebegin", '<div class="f"><label>Warna tema</label><div class="thm" role="radiogroup" aria-label="Warna tema">' + TH.map(function (t) { return '<label class="thm-o"><input type="radio" name="thm" data-p="theme" value="' + t[0] + '"' + ((C0.theme || "marun") === t[0] ? " checked" : "") + (locked ? " disabled" : "") + '><span><i style="background:linear-gradient(135deg,' + t[2] + " 0 55%," + t[3] + ' 55%)"></i>' + esc(t[1]) + "</span></label>"; }).join("") + '</div></div><div class="g2f">' + fld("Ucapan penutup", "closing", { ta: 1, full: 1, max: 600, ph: "Merupakan suatu kehormatan dan kebahagiaan bagi kami..." }) + "</div>");
+        $("#s-musik h2").textContent = "Tema & Musik"; if (!C0.theme) C0.theme = curTheme;
+        $("#s-musik .sub").insertAdjacentHTML("beforebegin", '<div class="f"><label>Tema undangan</label><div class="thm" role="radiogroup" aria-label="Tema undangan">' + TH.map(function (t) { return '<label class="thm-o"><input type="radio" name="thm" data-p="theme" value="' + esc(t.id) + '"' + (curTheme === t.id ? " checked" : "") + (locked ? " disabled" : "") + '><span><img src="' + esc(themeThumb(t)) + '" alt="" loading="lazy"><b>' + esc(t.name) + '</b><a href="/undangan?demo=1&amp;theme=' + encodeURIComponent(t.id) + '" target="_blank" rel="noopener">Lihat demo</a></span></label>'; }).join("") + '</div><small>Tema mengatur warna, huruf, ornamen, ilustrasi, dan animasi. Isi undangan tidak berubah.</small>' +
+'</div><div class="g2f">' + fld("Ucapan penutup", "closing", { ta: 1, full: 1, max: 600, ph: "Merupakan suatu kehormatan dan kebahagiaan bagi kami..." }) + "</div>");
         $("#s-fitur").insertAdjacentHTML("afterend", sec("tamu", "Tamu & Ucapan", "Buat link pribadi untuk setiap tamu, lalu pantau RSVP dan ucapan yang masuk.",
           '<div class="f"><label for="g-names">Nama tamu <small>(satu nama per baris)</small></label><textarea id="g-names" rows="4" placeholder="Bapak Hendra Wijaya&#10;Keluarga Ibu Sari"></textarea></div><div class="acts"><button type="button" class="btn o sm" id="g-make">Buat link tamu</button></div><ul class="glinks" id="g-out"></ul>' +
           '<h3 class="sub-h">Konfirmasi kehadiran</h3><div id="g-rsvp" class="fine">Memuat...</div><h3 class="sub-h">Ucapan tamu</h3><div id="g-wish" class="fine">Memuat...</div>'));
@@ -398,8 +413,9 @@
     var s = r.data && r.data.session; if (!s) { location.replace("/masuk?next=" + encodeURIComponent(nextUrl())); return; } U = s.user; $("#chip-i").textContent = (U.email || "?").charAt(0).toUpperCase();
     return sb.from("profiles").select("status").eq("id", U.id).maybeSingle().then(function (x) {
       if (x && x.data && x.data.status === "suspended") { view.innerHTML = note("Akun ditangguhkan", "Akun Anda sedang ditangguhkan. Hubungi tim NusaMora untuk bantuan."); return; }
-      if (PAGE === "template") pageTemplate(); else if (PAGE === "buat") pageBuat(); else if (PAGE === "editor") pageEditor(); else if (PAGE === "pembayaran") pageBayar();
-    }, function () { if (PAGE === "template") pageTemplate(); else if (PAGE === "buat") pageBuat(); else if (PAGE === "editor") pageEditor(); else pageBayar(); });
+      return loadThemes2D().then(go);
+    }, function () { return loadThemes2D().then(go); });
+    function go() { if (PAGE === "template") pageTemplate(); else if (PAGE === "buat") pageBuat(); else if (PAGE === "editor") pageEditor(); else pageBayar(); }
   }, function () { view.innerHTML = note("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang."); });
   sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT") location.replace("/masuk"); });
 })();

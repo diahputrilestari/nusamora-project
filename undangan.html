@@ -7,35 +7,36 @@
 <meta property="og:type" content="website"><meta property="og:site_name" content="NusaMora"><meta property="og:title" content="Undangan Digital | NusaMora"><meta property="og:image" content="/assets/og-nusamora.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@400;500;600;700&family=Pinyon+Script&display=swap">
-<link rel="stylesheet" href="/assets/invite/essential.css?v=2">
+<!-- font tema dimuat oleh core/theme.js sesuai theme.json -->
+<link rel="stylesheet" href="/assets/invite/core/engine.css?v=3">
 </head>
 <body>
 <div id="app"><div class="boot" role="status"><div><div class="bl"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><ellipse cx="20" cy="9" rx="6" ry="9"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(72 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(144 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(216 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(288 20 20)"/></g></svg></div><p>Membuka undangan...</p></div></div></div>
 <noscript><p style="padding:24px;text-align:center;color:#fff">Aktifkan JavaScript untuk membuka undangan ini.</p></noscript>
 <script src="/assets/config.js"></script>
-<script src="/assets/invite/data.js?v=2"></script>
-<script src="/assets/invite/themes.js?v=2"></script>
-<script src="/assets/invite/motion.js?v=1"></script>
-<script src="/assets/invite/essential.js?v=2"></script>
+<script src="/assets/invite/core/data.js?v=3"></script>
+<script src="/assets/invite/core/theme.js?v=3"></script>
+<script src="/assets/invite/core/motion.js?v=3"></script>
+<script src="/assets/invite/core/engine.js?v=3"></script>
 <script>
-/* Boot: ambil data -> pilih template -> terapkan tema -> render. Template 2D lain cukup mendaftar ke NMInvite.templates. */
+/* Boot: data undangan -> paket tema (content.theme, lalu template_id, lalu tema bawaan) -> render oleh engine 2D universal. */
 (function () {
   var NI = window.NMInvite, app = document.getElementById("app");
   function sbw() { document.documentElement.style.setProperty("--sbw", (innerWidth - document.documentElement.clientWidth) + "px"); }
   function fail(e) {
-    NI.themes.apply("marun");
     var m = (e && e.message) || "", login = m === "perlu_masuk";
     var t = login ? ["Masuk dulu", "Pratinjau undangan hanya bisa dibuka oleh pemiliknya. Silakan masuk ke akun NusaMora Anda.", "/masuk?next=" + encodeURIComponent(location.pathname + location.search), "Masuk"]
       : m === "config" ? ["Belum siap", "Konfigurasi layanan undangan belum lengkap.", "/", "Ke NusaMora"]
       : /fetch|network|Failed/i.test(m) ? ["Tidak bisa terhubung", "Periksa koneksi internet Anda, lalu muat ulang halaman ini.", location.href, "Muat ulang"]
       : ["Undangan tidak ditemukan", "Undangan ini belum dipublikasikan, sudah berakhir masa aktifnya, atau alamatnya salah ketik.", "/", "Ke NusaMora"];
-    app.innerHTML = '<div class="boot"><div><div class="bl">' + NI.themes.orn.bloom + "</div><h1>" + t[0] + "</h1><p>" + t[1] + '</p><a href="' + t[2] + '">' + t[3] + "</a></div></div>";
+    NI.theme.load([]).then(NI.theme.apply).catch(function () {}).then(function () {
+      app.innerHTML = '<div class="boot"><div><div class="bl">' + NI.theme.orn("bloom") + "</div><h1>" + t[0] + "</h1><p>" + t[1] + '</p><a href="' + t[2] + '">' + t[3] + "</a></div></div>";
+    });
   }
   NI.data.resolve().then(function (r) {
-    var tpl = NI.templates[r.template] || NI.templates["nusa-essential"];
-    NI.themes.apply(r.vm.theme);
-    tpl.render(app, r.vm); sbw(); addEventListener("resize", sbw);
+    return NI.theme.load([r.vm.theme, r.template]).then(function (pack) {
+      NI.theme.apply(pack); NI.engine.render(app, r.vm, pack); sbw(); addEventListener("resize", sbw);
+    });
   }).catch(fail);
 })();
 </script>
