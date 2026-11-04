@@ -11,7 +11,9 @@ create table if not exists public.profiles (
 );
 alter table public.profiles enable row level security;
 
+drop policy if exists "profil sendiri: baca" on public.profiles;
 create policy "profil sendiri: baca" on public.profiles for select using (auth.uid() = id);
+drop policy if exists "profil sendiri: ubah" on public.profiles;
 create policy "profil sendiri: ubah" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
 -- insert hanya lewat trigger di bawah (sengaja tanpa policy insert untuk klien)
 
