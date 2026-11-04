@@ -15,3 +15,9 @@ Backend memakai Supabase (Auth + Postgres, skala terkelola). Cara mengaktifkan:
 2. Authentication > Providers > Email: aktifkan "Confirm email". Authentication > URL Configuration: isi Site URL dan Redirect URLs dengan domain Anda (`https://dodgerblue-cod-965274.hostingersite.com/**`, lalu `https://nusamora.com/**`).
 3. Isi `SUPABASE_URL` dan `SUPABASE_ANON_KEY` di `assets/config.js` (anon key memang publik; jangan pernah memasukkan service_role key).
 4. Sebelum peluncuran: atur SMTP sendiri (Authentication > SMTP), karena email bawaan Supabase dibatasi jumlahnya.
+
+## Dashboard Pelanggan (`/akun`)
+
+Setelah login, pelanggan diarahkan ke `/akun`. Menu: Dashboard, Undangan Saya, Invoice, Tutorial, Affiliate, History Bonus, History Penarikan, Edit Profil, Log Out (rute hash: `/akun#undangan`, dst.). File: `akun.html`, `assets/dashboard.css`, `assets/dashboard.js`.
+
+Data dibaca dari Supabase (hanya milik pengguna sendiri, via RLS). Jalankan `backend/dashboard-schema.sql` setelah `supabase-schema.sql`. Tanpa tabel itu, dashboard tetap tampil dengan keadaan kosong. Penulisan data (undangan, paket, invoice, saldo) sengaja tidak dibuka untuk browser; itu dikerjakan backend tepercaya.

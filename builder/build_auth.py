@@ -57,8 +57,5 @@ page("atur-password.html", "Kata Sandi Baru", "Buat kata sandi baru untuk akun N
 <h1>Kata sandi baru</h1><p class="sub">Buat kata sandi baru untuk akun Anda.</p><div id="msg" role="alert" hidden></div>
 <form id="f-reset" novalidate data-form="reset">{pw("Kata sandi baru", "new-password", True)}<button class="btn full lg" type="submit" id="go">Simpan kata sandi</button></form>''')
 
-page("akun.html", "Akun Saya", "Akun NusaMora Anda.", '''
-<h1>Akun saya</h1><p class="sub" id="hi">Memuat akun...</p><div id="msg" role="alert" hidden></div>
-<div class="who" id="who" hidden></div>
-<div class="stack"><a class="btn full" href="/#template">Pilih template</a><button class="btn o full" type="button" id="logout">Keluar</button></div>''')
+# akun.html (Dashboard Pelanggan) ditulis manual: lihat akun.html, assets/dashboard.css, assets/dashboard.js
 print("auth pages built")
