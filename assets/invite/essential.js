@@ -27,6 +27,9 @@
     function fb() { var t = d.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;opacity:0"; d.body.appendChild(t); t.select(); try { d.execCommand("copy"); ok(); } catch (e) { toast("Salin manual: " + text); } t.remove(); }
     if (navigator.clipboard && w.isSecureContext) navigator.clipboard.writeText(text).then(ok, fb); else fb();
   }
+  /* ilustrasi tema (hanya tema yang punya "art", mis. batak). Dekoratif: alt kosong. */
+  var ART = null;
+  function art(n, cls, eager) { return ART ? '<img class="art ' + (cls || "") + '" src="' + ART + n + '.webp" alt="" aria-hidden="true" ' + (eager ? "" : 'loading="lazy" ') + 'decoding="async">' : ""; }
   function img(src, alt, cls, eager) { return src ? '<img class="' + (cls || "") + '" src="' + esc(src) + '" alt="' + esc(alt || "") + '" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">' : ""; }
   function calUrl(e, vm) {
     if (!e.at) return "";
@@ -61,13 +64,15 @@
   };
 
   /* ---------- bagian-bagian ---------- */
-  function head(eyebrow, title, rv) { return '<header class="sh"><p class="eb" data-rv="fade">' + esc(eyebrow) + '</p><h2 class="st" data-rv="' + (rv || "up") + '">' + esc(title) + '</h2><div class="dv" data-rv="draw">' + O.divider + "</div></header>"; }
+  function head(eyebrow, title, rv) { return '<header class="sh">' + (ART ? '<div class="gable" data-rv="zoom">' + art("gorga-kiri") + art("gorga-kanan") + "</div>" : "") + '<p class="eb" data-rv="fade">' + esc(eyebrow) + '</p><h2 class="st" data-rv="' + (rv || "up") + '">' + esc(title) + '</h2><div class="dv" data-rv="draw">' + O.divider + "</div></header>"; }
 
   function cover(vm, guest) {
     var e = vm.events[0] || {};
     return '<div class="cover" id="cover" role="dialog" aria-modal="true" aria-label="Sampul undangan">' +
       '<div class="gate l"></div><div class="gate r"></div><div class="cv-petals" aria-hidden="true"></div>' +
-      '<div class="cv-frame"><span class="tp t"></span><span class="tp b"></span>' + ["tl", "tr", "bl", "br"].map(function (k) { return '<i class="co ' + k + '">' + O.corner + "</i>"; }).join("") +
+      '<div class="cv-frame"><span class="tp t"></span><span class="tp b"></span>' +
+      (ART ? art("sulur-kanan-atas", "cv-sl l", 1) + art("sulur-kanan-atas", "cv-sl r", 1) + art("lentera-gantung", "cv-lt l", 1) + art("lentera-gantung", "cv-lt r", 1) +
+        '<div class="cv-ground">' + art("jambangan-kiri", "cv-jb", 1) + art("rumah-bolon", "cv-rb", 1) + art("jambangan-kanan", "cv-jb", 1) + "</div>" : "") + ["tl", "tr", "bl", "br"].map(function (k) { return '<i class="co ' + k + '">' + O.corner + "</i>"; }).join("") +
       '<div class="cv-in">' +
       (vm.cover ? '<div class="cv-arch"><span class="ring">' + O.arch + "</span>" + img(vm.cover, "Foto " + vm.displayNames, "", true) + "</div>" : '<div class="cv-bloom">' + O.bloom + "</div>") +
       '<p class="cv-eb">' + (vm.isCouple ? "The Wedding of" : "Undangan") + '</p><h1 class="cv-nm" id="cv-nm">' + esc(vm.displayNames) + "</h1>" +
@@ -92,7 +97,8 @@
   function salam(vm) {
     if (!vm.welcome && !vm.quote.text) return "";
     return '<section class="sec paper" id="salam" data-nav="Salam" data-ico="flower"><div class="wrap">' +
-      '<div class="bloom-dec" data-px="0.08" aria-hidden="true">' + O.bloom + "</div>" +
+      art("sulur-kanan-atas", "sec-tr") + art("sulur-kiri-bawah", "sec-bl") +
+      (ART ? '<div class="ulos-dec" data-rv="zoom">' + art("ulos") + "</div>" : '<div class="bloom-dec" data-px="0.08" aria-hidden="true">' + O.bloom + "</div>") +
       (vm.quote.text ? '<blockquote class="qt" data-rv="zoom"><p>' + nl(vm.quote.text) + "</p>" + (vm.quote.source ? "<cite>" + esc(vm.quote.source) + "</cite>" : "") + "</blockquote>" : "") +
       (vm.quote.text && vm.welcome ? '<div class="dv" data-rv="draw">' + O.divider + "</div>" : "") +
       (vm.welcome ? '<p class="lead" data-rv="up">' + nl(vm.welcome) + "</p>" : "") + "</div></section>";
@@ -100,12 +106,12 @@
 
   function couple(vm) {
     var ps = vm.people.filter(function (p) { return p.nick; }); if (!ps.length) return "";
-    return '<section class="sec" id="mempelai" data-nav="Mempelai" data-ico="heart"><div class="wrap">' + head(vm.isCouple ? "Bismillah, kami yang berbahagia" : "Yang berbahagia", vm.isCouple ? "Mempelai" : "Profil") +
+    return '<section class="sec" id="mempelai" data-nav="Mempelai" data-ico="heart"><div class="wrap">' + head("Kami yang berbahagia", vm.isCouple ? "Mempelai" : "Profil") +
       '<div class="cpl">' + ps.map(function (p, i) {
         var side = i % 2 ? "right" : "left";
         return (i ? '<div class="amp" data-rv="zoom" aria-hidden="true">&amp;</div>' : "") +
           '<article class="ps" data-stagger="120"><div class="pf" data-rv="' + side + '"><span class="ring">' + O.arch + "</span>" +
-          (p.photo ? img(p.photo, "Foto " + p.full) : '<span class="pf-ph">' + esc(initials(p.nick)) + "</span>") + "</div>" +
+          (p.photo ? img(p.photo, "Foto " + p.full) : ART ? '<span class="pf-ph fig">' + art(/Pria/.test(p.role) ? "pengantin-pria" : "pengantin-wanita") + "</span>" : '<span class="pf-ph">' + esc(initials(p.nick)) + "</span>") + "</div>" +
           (p.role ? '<p class="role" data-rv="up">' + esc(p.role) + "</p>" : "") + '<h3 class="pn" data-rv="up">' + esc(p.full) + "</h3>" +
           (p.parents ? '<p class="pp" data-rv="up">' + nl(p.parents) + "</p>" : "") +
           (p.ig ? '<a class="chip" data-rv="up" href="https://instagram.com/' + esc(p.ig) + '" target="_blank" rel="noopener">' + I.ig + "<span>@" + esc(p.ig) + "</span></a>" : "") + "</article>";
@@ -117,6 +123,7 @@
     var e = vm.events[0];
     return '<section class="sec deep" id="hitung" data-nav="Hitung" data-ico="clock"><div class="pat" data-px="0.1"></div><div class="wrap">' + head("Menuju hari bahagia", "Save the Date") +
       '<div class="cd" data-cd data-rv="up"></div>' +
+      (ART ? '<div class="jb-row" aria-hidden="true">' + art("jambangan-kiri", "", 0) + art("lentera-berdiri") + art("jambangan-kanan") + "</div>" : "") +
       (e && e.at ? '<p class="cd-dt" data-rv="up">' + esc(fdate(e.at, e.tz)) + "</p>" + '<a class="btn ghost" data-rv="up" target="_blank" rel="noopener" href="' + esc(calUrl(e, vm)) + '">' + I.cal + "<span>Simpan ke Kalender</span></a>" : "") +
       "</div></section>";
   }
@@ -126,7 +133,7 @@
     return '<section class="sec paper" id="acara" data-nav="Acara" data-ico="cal"><div class="wrap">' + head("Waktu & tempat", "Rangkaian Acara") +
       '<div class="evs" data-stagger="140">' + vm.events.map(function (e, i) {
         var t = e.start ? e.start.replace(":", ".") + (e.end ? " – " + e.end.replace(":", ".") : " – selesai") + " " + e.tz : "";
-        return '<article class="ev" data-rv="' + (i % 2 ? "right" : "left") + '"><span class="ev-co" aria-hidden="true">' + O.corner + "</span>" +
+        return '<article class="ev" data-rv="' + (i % 2 ? "right" : "left") + '">' + (ART ? art("lentera-berdiri", "ev-lt") : '<span class="ev-co" aria-hidden="true">' + O.corner + "</span>") +
           "<h3>" + esc(e.name || "Acara") + "</h3>" +
           (e.at ? '<div class="ev-date"><b>' + esc(fmt(e.at, e.tz, { day: "2-digit" })) + "</b><span>" + esc(fmt(e.at, e.tz, { weekday: "long" })) + "<br>" + esc(fmt(e.at, e.tz, { month: "long", year: "numeric" })) + "</span></div>" : "") +
           (t ? '<p class="ev-l">' + I.clock + "<span>" + esc(t) + "</span></p>" : "") +
@@ -139,7 +146,7 @@
   function story(vm) {
     if (!vm.features.story) return "";
     return '<section class="sec" id="kisah" data-nav="Kisah" data-ico="book"><div class="wrap">' + head("Perjalanan kami", "Love Story") +
-      '<ol class="tml"><span class="tl-line" aria-hidden="true"><i></i></span>' + vm.story.map(function (s, i) {
+      art("konfeti", "st-kf") + '<ol class="tml"><span class="tl-line" aria-hidden="true"><i></i></span>' + vm.story.map(function (s, i) {
         return '<li class="tl-i ' + (i % 2 ? "r" : "l") + '"><span class="tl-dot" data-rv="zoom" aria-hidden="true">' + I.heart + '</span><div class="tl-c" data-rv="' + (i % 2 ? "right" : "left") + '">' +
           (s.photo ? '<div class="tl-ph">' + img(s.photo, s.title) + "</div>" : "") + (s.date ? '<p class="tl-d">' + esc(s.date) + "</p>" : "") +
           (s.title ? "<h3>" + esc(s.title) + "</h3>" : "") + (s.text ? "<p>" + nl(s.text) + "</p>" : "") + "</div></li>";
@@ -157,7 +164,7 @@
   function rsvp(vm, guest) {
     if (!vm.features.rsvp) return "";
     return '<section class="sec deep" id="rsvp" data-nav="RSVP" data-ico="users"><div class="pat" data-px="0.1"></div><div class="wrap">' + head("Konfirmasi kehadiran", "RSVP") +
-      '<p class="lead lt" data-rv="up">Mohon bantu kami mempersiapkan acara dengan mengonfirmasi kehadiran Anda.</p>' +
+      art("lentera-gantung", "rs-lt l") + art("lentera-gantung", "rs-lt r") + '<p class="lead lt" data-rv="up">Mohon bantu kami mempersiapkan acara dengan mengonfirmasi kehadiran Anda.</p>' +
       '<div class="card form" data-rv="up" id="rsvp-box"><form id="rsvp-f" novalidate>' +
       '<label class="fl"><span>Nama</span><input name="name" maxlength="60" autocomplete="name" required value="' + esc(guest) + '" placeholder="Nama Anda"></label>' +
       '<fieldset class="att"><legend>Kehadiran</legend>' + [["hadir", "Hadir", I.check], ["tidak", "Tidak hadir", I.x], ["ragu", "Masih ragu", I.clock]].map(function (a, i) {
@@ -171,7 +178,7 @@
   function gift(vm) {
     if (!vm.features.gift) return "";
     return '<section class="sec paper" id="hadiah" data-nav="Hadiah" data-ico="gift"><div class="wrap">' + head("Tanda kasih", "Wedding Gift") +
-      '<p class="lead" data-rv="up">Doa restu Anda adalah karunia terindah bagi kami. Bila ingin memberi tanda kasih, dapat melalui:</p>' +
+      (ART ? '<div class="gf-amp" data-rv="zoom">' + art("amplop") + "</div>" : "") + '<p class="lead" data-rv="up">Doa restu Anda adalah karunia terindah bagi kami. Bila ingin memberi tanda kasih, dapat melalui:</p>' +
       '<div class="acc" data-stagger="130">' + vm.accounts.map(function (a) {
         return '<div class="bc ' + a.type + '" data-rv="up"><div class="bc-t"><b>' + esc(a.bank || (a.type === "ewallet" ? "E-Wallet" : "Bank")) + '</b><span class="chipc" aria-hidden="true"></span></div>' +
           '<p class="bc-n">' + esc(a.number.replace(/(\d{4})(?=\d)/g, "$1 ")) + '</p><p class="bc-h">a.n. ' + esc(a.holder) + "</p>" +
@@ -183,7 +190,7 @@
 
   function wishes(vm, guest) {
     if (!vm.features.wishes) return "";
-    return '<section class="sec" id="ucapan" data-nav="Ucapan" data-ico="chat"><div class="wrap">' + head("Doa & harapan", "Ucapan Tamu") +
+    return '<section class="sec" id="ucapan" data-nav="Ucapan" data-ico="chat"><div class="wrap">' + head("Doa & harapan", "Ucapan Tamu") + (ART ? '<div class="ws-bk" data-rv="zoom">' + art("buket") + "</div>" : "") +
       '<div class="card form" data-rv="up"><form id="wish-f" novalidate>' +
       '<label class="fl"><span>Nama</span><input name="name" maxlength="60" required value="' + esc(guest) + '" placeholder="Nama Anda"></label>' +
       '<label class="fl"><span>Ucapan &amp; doa</span><textarea name="message" rows="3" maxlength="500" required placeholder="Tulis ucapan terbaik Anda..."></textarea><small class="cnt"><i id="wcnt">0</i>/500</small></label>' +
@@ -195,7 +202,7 @@
   function closing(vm) {
     return '<section class="sec deep end" id="terima-kasih" data-nav="Terima kasih" data-ico="flower">' +
       (vm.cover ? '<div class="end-bg" data-px="0.12">' + img(vm.cover, "") + "</div>" : "") + '<div class="pat"></div><div class="wrap">' +
-      '<div class="bloom-dec lt" data-rv="zoom" aria-hidden="true">' + O.bloom + "</div>" +
+      (ART ? '<div class="end-art" data-rv="up">' + art("gerbang-pelaminan", "eg") + '<div class="cp">' + art("pengantin-pria") + art("pengantin-wanita") + "</div></div>" : '<div class="bloom-dec lt" data-rv="zoom" aria-hidden="true">' + O.bloom + "</div>") +
       '<p class="lead lt" data-rv="up">' + nl(vm.closing || "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.") + "</p>" +
       '<p class="eb lt" data-rv="fade">Kami yang berbahagia</p><h2 class="end-nm" data-rv="zoom">' + esc(vm.displayNames) + "</h2>" +
       '<div class="dv lt" data-rv="draw">' + O.divider + '</div><p class="brand" data-rv="fade">Undangan digital oleh <a href="/" target="_blank" rel="noopener">NusaMora</a></p></div></section>';
@@ -353,6 +360,8 @@
   /* ---------- render utama ---------- */
   function render(root, vm) {
     var guest = D.guestName();
+    var th = T.list[vm.theme]; ART = th && th.art ? (w.NM_ART_BASE || "/assets/invite/art/") + th.art + "/" : null;
+    d.body.classList.toggle("has-art", !!ART);
     d.title = (vm.isCouple ? "The Wedding of " : "") + vm.displayNames + " | NusaMora";
     d.body.classList.add("is-locked");
     root.innerHTML =

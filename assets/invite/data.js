@@ -133,7 +133,7 @@
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
     var content = {
-      theme: /^(marun|sage|navy|blush)$/.test(theme || "") ? theme : "marun",
+      theme: /^(marun|sage|navy|blush|batak)$/.test(theme || "") ? theme : "marun",
       names: { a: "Sekar", b: "Raka" },
       couple: { order: "pria", groom: { full: "Raka Aditya Pratama, S.T.", parents: "Putra pertama Bapak Hendra Pratama & Ibu Sri Wahyuni", ig: "raka.aditya" }, bride: { full: "Sekar Ayu Larasati, S.Ds.", parents: "Putri kedua Bapak Bambang Larasno & Ibu Dewi Kartika", ig: "sekarayu" } },
       welcome: "Dengan memohon rahmat dan ridho Tuhan Yang Maha Esa, kami bermaksud menyelenggarakan pernikahan putra-putri kami.",

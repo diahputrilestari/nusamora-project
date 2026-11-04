@@ -9,7 +9,7 @@
   var BUILTIN = [
     { slug: "romantic-garden", name: "Romantic Garden", cats: ["wedding", "engagement", "birthday"], desc: "Taman bunga blush dan lavender dengan gazebo kaca. Lembut, romantis, dan hangat.", img: "/assets/img/romantic-garden-s1.webp", demo: "/live/" },
     { slug: "jawa-tengah", name: "Adat Jawa Tengah", cats: ["wedding", "engagement"], desc: "Pendopo joglo, pelaminan emas, batik kawung, serta avatar kebaya dan beskap.", img: "/assets/img/jawa-tengah-s1.webp", demo: "/live/jawa-tengah" },
-    { slug: "nusa-essential", name: "Nusa Essential", cats: ["wedding", "engagement"], desc: "Undangan 2D elegan dengan ornamen songket, love story, RSVP, hadiah digital, dan ucapan tamu. Empat pilihan warna.", img: "/assets/img/nusa-essential.webp", demo: "/undangan?demo=nusa-essential" }
+    { slug: "nusa-essential", name: "Nusa Essential", cats: ["wedding", "engagement"], desc: "Undangan 2D elegan dengan ornamen songket, love story, RSVP, hadiah digital, dan ucapan tamu. Lima pilihan tema termasuk Batak Ulos.", img: "/assets/img/nusa-essential.webp", demo: "/undangan?demo=nusa-essential" }
   ];
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function toast(t, k) { var e = d.createElement("div"); e.className = "toast " + (k || ""); e.setAttribute("role", k === "bad" ? "alert" : "status"); e.textContent = t; $("#toasts").appendChild(e); setTimeout(function () { e.remove(); }, 4500); }
@@ -99,7 +99,7 @@
     couple: { order: "pria", groom: { full: "", parents: "", ig: "" }, bride: { full: "", parents: "", ig: "" } }, quote: { text: "", source: "" }, events: [], story: [], accounts: [], giftAddress: "", closing: "", theme: "marun" };
   /* template 2D yang dirender oleh /undangan (assets/invite). Pilihan tema mengikuti assets/invite/themes.js */
   var ESSENTIAL = { "nusa-essential": 1 };
-  window.NM_THEMES = [["marun", "Marun Songket", "#4A0D14", "#C9A35B"], ["sage", "Sage Garden", "#2B3A30", "#B7975A"], ["navy", "Biru Malam", "#101A31", "#CFAE6B"], ["blush", "Blush Rose", "#5A2B34", "#C08A70"]];
+  window.NM_THEMES = [["marun", "Marun Songket", "#4A0D14", "#C9A35B"], ["sage", "Sage Garden", "#2B3A30", "#B7975A"], ["navy", "Biru Malam", "#101A31", "#CFAE6B"], ["blush", "Blush Rose", "#5A2B34", "#C08A70"], ["batak", "Batak Ulos", "#5A0A0F", "#D4A243"]];
   function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); Object.keys(b || {}).forEach(function (k) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = merge(o[k], b[k]); else if (b[k] != null) o[k] = b[k]; }); return o; }
   function get(o, p) { return p.split(".").reduce(function (x, k) { return x && x[k]; }, o); }
   function set(o, p, v) { var ks = p.split("."), last = ks.pop(), t = ks.reduce(function (x, k) { return x[k] || (x[k] = {}); }, o); t[last] = v; }

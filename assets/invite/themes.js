@@ -6,7 +6,9 @@
     marun: { label: "Marun Songket", deep: "#4A0D14", deep2: "#6E1823", paper: "#F7EEDC", ink: "#3A2420", muted: "#7A5F55", accent: "#C9A35B", accent2: "#E8CF93", soft: "#EBD9BB", petal: "#EDB9A6" },
     sage: { label: "Sage Garden", deep: "#2B3A30", deep2: "#3E5244", paper: "#F4F0E6", ink: "#262C27", muted: "#5F6A5F", accent: "#B7975A", accent2: "#DCC796", soft: "#E1DACA", petal: "#F3E9D2" },
     navy: { label: "Biru Malam", deep: "#101A31", deep2: "#1E2B50", paper: "#F5F0E6", ink: "#1D2233", muted: "#5B6275", accent: "#CFAE6B", accent2: "#EDD8A6", soft: "#E5DCCA", petal: "#F2E5CC" },
-    blush: { label: "Blush Rose", deep: "#5A2B34", deep2: "#7A3F4A", paper: "#FCF4F1", ink: "#4A2C31", muted: "#86636A", accent: "#C08A70", accent2: "#E9C3AD", soft: "#F2DFD8", petal: "#F5C7C7" }
+    blush: { label: "Blush Rose", deep: "#5A2B34", deep2: "#7A3F4A", paper: "#FCF4F1", ink: "#4A2C31", muted: "#86636A", accent: "#C08A70", accent2: "#E9C3AD", soft: "#F2DFD8", petal: "#F5C7C7" },
+    /* tema adat: memakai ilustrasi di assets/invite/art/batak (rumah bolon, ulos, gorga, pengantin) */
+    batak: { label: "Batak Ulos", art: "batak", deep: "#5A0A0F", deep2: "#8A171C", paper: "#FBF2E2", ink: "#3A1612", muted: "#7A4B3E", accent: "#D4A243", accent2: "#F2D58C", soft: "#F4E2C4", petal: "#E4525A" }
   };
 
   function enc(svg) { return "url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")"; }
@@ -21,7 +23,7 @@
 
   function apply(name, root) {
     var t = THEMES[name] || THEMES.marun, s = (root || document.documentElement).style;
-    Object.keys(t).forEach(function (k) { if (k !== "label") s.setProperty("--" + k, t[k]); });
+    Object.keys(t).forEach(function (k) { if (k !== "label" && k !== "art") s.setProperty("--" + k, t[k]); });
     s.setProperty("--pattern", lattice(t.accent, 0.16));
     s.setProperty("--pattern-paper", lattice(t.accent, 0.12));
     s.setProperty("--tumpal", tumpal(t.accent));

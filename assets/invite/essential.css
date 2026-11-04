@@ -413,3 +413,65 @@ svg { display: block; }
   .is-open .corners .co { opacity: .78; }
   .petals, .cv-petals { display: none; }
 }
+
+/* ---------- ilustrasi tema adat (body.has-art, mis. tema Batak) ---------- */
+.art { display: block; max-width: 100%; height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.has-art .corners, .has-art .cv-frame .co { display: none; }
+/* cover */
+.cv-sl { position: absolute; top: 4px; width: clamp(90px, 26vw, 150px); z-index: 1; opacity: 0; transition: opacity 1.2s ease .3s, translate 1.4s var(--ease) .3s; }
+.cv-sl.r { right: 4px; translate: 16px -16px; } .cv-sl.l { left: 4px; transform: scaleX(-1); translate: -16px -16px; }
+.cover.ready .cv-sl { opacity: 1; translate: 0 0; }
+.cv-lt { position: absolute; top: -6px; width: clamp(34px, 9vw, 52px); z-index: 1; transform-origin: 50% 0; opacity: 0; transition: opacity 1s ease .6s; animation: swing 4.5s ease-in-out infinite alternate; }
+.cv-lt.l { left: 22%; } .cv-lt.r { right: 22%; animation-delay: -2.2s; }
+.cover.ready .cv-lt { opacity: 1; }
+.cv-lt { filter: drop-shadow(0 0 14px rgba(255, 210, 120, .55)); }
+@keyframes swing { from { rotate: -4deg; } to { rotate: 4deg; } }
+.cv-ground { position: absolute; left: 0; right: 0; bottom: 26px; z-index: 1; display: flex; justify-content: center; align-items: flex-end; gap: 0; pointer-events: none; }
+.cv-rb { width: min(300px, 58vw); margin: 0 -10px; opacity: 0; transform: translateY(30px); transition: opacity 1.2s ease .5s, transform 1.4s var(--ease) .5s; }
+.cv-jb { width: min(78px, 17vw); opacity: 0; transform: translateY(24px); transition: opacity 1.2s ease .8s, transform 1.4s var(--ease) .8s; position: relative; z-index: 1; }
+.cover.ready .cv-rb, .cover.ready .cv-jb { opacity: 1; transform: none; }
+.has-art .cv-in { padding-bottom: clamp(120px, 34vw, 190px); }
+.has-art .cv-arch { width: clamp(110px, 30vw, 150px); margin-bottom: 12px; }
+@media (max-height: 720px) { .has-art .cv-arch { display: none; } }
+/* judul section: dua gorga membentuk atap */
+.gable { display: flex; justify-content: center; align-items: flex-end; gap: 0; height: 40px; margin-bottom: 10px; }
+.gable .art { height: 40px; width: auto; }
+/* salam */
+.sec-tr, .sec-bl { position: absolute; z-index: 0; width: clamp(110px, 30vw, 170px); opacity: .9; }
+.sec-tr { top: 10px; right: 6px; } .sec-bl { bottom: 10px; left: 6px; width: clamp(130px, 36vw, 200px); }
+.ulos-dec { width: 120px; margin: 0 auto 18px; }
+/* hitung mundur */
+.jb-row { display: flex; justify-content: center; align-items: flex-end; gap: 6px; margin: 4px auto 18px; }
+.jb-row .art { width: 74px; } .jb-row .art:nth-child(2) { width: 46px; filter: drop-shadow(0 0 16px rgba(255, 210, 120, .5)); }
+/* acara */
+.ev-lt { position: absolute; top: 14px; right: 14px; width: 30px; filter: drop-shadow(0 0 10px rgba(255, 200, 110, .45)); }
+.has-art .ev:nth-child(even) .ev-lt { right: auto; left: 14px; }
+/* kisah, rsvp, hadiah, ucapan */
+.st-kf { width: 150px; margin: -14px auto 18px; }
+.rs-lt { position: absolute; top: -18px; width: 40px; transform-origin: 50% 0; animation: swing 5s ease-in-out infinite alternate; filter: drop-shadow(0 0 14px rgba(255, 210, 120, .5)); }
+.rs-lt.l { left: 4px; } .rs-lt.r { right: 4px; animation-delay: -2.5s; }
+.gf-amp { width: min(230px, 66vw); margin: -6px auto 18px; filter: drop-shadow(0 16px 26px rgba(0, 0, 0, .18)); transition: transform .5s var(--ease); }
+.gf-amp:hover { transform: rotate(-2deg) translateY(-4px); }
+.ws-bk { width: min(260px, 72vw); margin: -10px auto 14px; }
+/* mempelai: ilustrasi bila foto belum diunggah */
+.pf-ph.fig { background: radial-gradient(circle at 50% 35%, var(--paper), var(--soft)); display: grid; place-items: end center; padding-top: 18px; }
+.pf-ph.fig .art { height: 92%; width: auto; }
+/* penutup */
+.end-art { position: relative; width: min(380px, 90%); margin: 0 auto 22px; }
+.end-art .eg { width: 100%; }
+.end-art .cp { position: absolute; left: 0; right: 0; bottom: 4%; display: flex; justify-content: center; align-items: flex-end; gap: 2px; }
+.end-art .cp .art { height: clamp(90px, 28vw, 130px); width: auto; }
+.end-art .cp .art:first-child { height: clamp(98px, 30vw, 142px); }
+@media (prefers-reduced-motion: reduce) { .cv-sl, .cv-lt, .cv-rb, .cv-jb { opacity: 1 !important; transform: none !important; translate: 0 0 !important; } .cv-sl.l { transform: scaleX(-1) !important; } }
+.has-art #salam .wrap { padding-bottom: 64px; }
+.sec-tr, .sec-bl { opacity: .85; }
+.wrap > .sec-tr, .wrap > .sec-bl { position: absolute; }
+#salam .sec-tr { top: -60px; right: -14px; } #salam .sec-bl { bottom: -84px; left: -14px; }
+/* cover bertema ilustrasi: konten dan tanah disusun berurutan agar tidak saling menimpa */
+.has-art .cv-frame { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.has-art .cv-in { flex: 1; justify-content: center; padding: 56px 0 8px; }
+.has-art .cv-ground { position: relative; bottom: auto; margin-bottom: 26px; flex: none; order: 2; }
+.has-art .cv-rb { width: min(300px, 58vw, 30vh); }
+.has-art .cv-jb { width: min(78px, 17vw, 8vh); }
+@media (max-height: 820px) { .has-art .cv-arch { display: none; } }
+@media (max-height: 620px) { .has-art .cv-ground { display: none; } }

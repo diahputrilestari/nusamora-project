@@ -57,7 +57,7 @@ Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `
 ## Template 2D Essential (`nusa-essential`)
 Halaman publik `nusamora.com/{slug}` dirender oleh `undangan.html` + `assets/invite/` (tanpa Supabase SDK, ringan untuk tamu dari WhatsApp):
 - `data.js` — ambil undangan (`get_public_invitation`), normalisasi `invitations.content`, kirim RSVP/ucapan. `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik (sesi login), `?demo=1&theme=sage` = demo galeri template.
-- `themes.js` — tema warna (marun, sage, navy, blush) + ornamen SVG. `motion.js` — reveal, parallax, kelopak, animasi huruf, gulir otomatis (menghormati prefers-reduced-motion).
+- `themes.js` — tema warna (marun, sage, navy, blush, batak dengan ilustrasi di `art/batak`) + ornamen SVG. `motion.js` — reveal, parallax, kelopak, animasi huruf, gulir otomatis (menghormati prefers-reduced-motion).
 - `essential.js` + `essential.css` — section: cover, hero, salam, mempelai, hitung mundur, acara (multi), love story, galeri + lightbox, RSVP, hadiah (multi rekening, salin), ucapan, penutup, dock navigasi, musik.
 - Template 2D baru cukup mendaftar ke `NMInvite.templates["slug"]` dan `ESSENTIAL` di `assets/flow.js`. Template tanpa renderer sendiri memakai tampilan Essential.
 
