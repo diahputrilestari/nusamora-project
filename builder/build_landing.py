@@ -102,8 +102,8 @@ def nav():
 <header class="top" id="top"><div class="wrap bar">
  <a class="brand" href="#beranda" aria-label="NusaMora, ke beranda">nusamora<span>.</span></a>
  <nav class="m" id="menu" aria-label="Navigasi utama">{li}
-  <div class="mob-acts"><button class="btn o" type="button" data-open="login">Masuk</button><button class="btn" type="button" data-open="start">Buat Undangan {ic("arrow")}</button></div></nav>
- <div class="acts"><button class="btn o sm" type="button" data-open="login">Masuk</button><button class="btn sm" type="button" data-open="start">Buat Undangan {ic("arrow")}</button></div>
+  <div class="mob-acts"><a class="btn o" href="/masuk">Masuk</a><button class="btn" type="button" data-open="start">Buat Undangan {ic("arrow")}</button></div></nav>
+ <div class="acts"><a class="btn o sm" href="/masuk">Masuk</a><button class="btn sm" type="button" data-open="start">Buat Undangan {ic("arrow")}</button></div>
  <button class="burger" type="button" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Buka menu">{ic("menu")}</button>
 </div></header>'''
 
@@ -454,12 +454,12 @@ def build_project(out):
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="{TEMPLATES[0]["img"]}" fetchpriority="high">
 <link rel="stylesheet" href="{FONTS}">
-<link rel="stylesheet" href="/assets/landing.css">
+<link rel="stylesheet" href="/assets/landing.css?v=3">
 <script type="application/ld+json">{jsonld()}</script>
 </head>
 <body>
 {body()}
-<script src="/assets/landing.js" defer></script>
+<script src="/assets/landing.js?v=3" defer></script>
 </body>
 </html>
 '''
