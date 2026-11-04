@@ -6,6 +6,7 @@ Disallow: /akun
 Disallow: /template
 Disallow: /buat
 Disallow: /editor
+Disallow: /pembayaran
 Disallow: /masuk
 Disallow: /daftar
 Disallow: /lupa-password

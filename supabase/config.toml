@@ -1,0 +1,7 @@
+# Autentikasi pelanggan diverifikasi di kode (auth.getUser). Webhook: signature_key + verifikasi Status API.
+[functions.midtrans-checkout]
+verify_jwt = false
+[functions.midtrans-sync]
+verify_jwt = false
+[functions.midtrans-webhook]
+verify_jwt = false

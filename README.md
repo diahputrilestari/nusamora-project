@@ -37,3 +37,19 @@ Belum terhubung: pembayaran Midtrans otomatis (webhook & refund dana), pengirima
 ## Alur Buat Undangan
 `/template` (pilih kategori & template) → `/buat` (kategori + link `nusamora.com/{slug}`, cek ketersediaan real-time) → `/editor?id=` (draft, autosave).
 Backend: jalankan `backend/invitation-schema.sql` SETELAH `dashboard-schema.sql` dan `admin-schema.sql`. Semua tulis lewat RPC `slug_available`, `create_invitation`, `save_invitation`; foto ke bucket `invitation-media`.
+
+## Publikasi & Pembayaran (Midtrans Snap)
+Alur: editor (Preview / Publikasikan) → dialog ringkasan paket → Edge Function `midtrans-checkout` → halaman pembayaran Snap → `/pembayaran?order_id=…` (hasil).
+Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + verifikasi Status API) dan `midtrans-sync` memanggil `apply_payment` (idempoten). Harga selalu dari tabel `plans`.
+
+**Setup (sekali):**
+1. SQL Editor: jalankan `backend/payment-schema.sql` (setelah 3 skema sebelumnya).
+2. Instal Supabase CLI, `supabase link --project-ref ixzmogwaaajkyltcnwaf`.
+3. Secret (Server Key TIDAK boleh ada di kode/GitHub):
+   `supabase secrets set MIDTRANS_SERVER_KEY=SB-Mid-server-xxxx MIDTRANS_IS_PRODUCTION=false ALLOWED_ORIGINS=https://dodgerblue-cod-965274.hostingersite.com,https://nusamora.com`
+4. `supabase functions deploy midtrans-checkout midtrans-sync midtrans-webhook --no-verify-jwt`
+5. Dashboard Midtrans (Sandbox) → Settings → Configuration → Payment Notification URL:
+   `https://ixzmogwaaajkyltcnwaf.supabase.co/functions/v1/midtrans-webhook`
+6. (Opsional) jadwalkan `select public.expire_invitations();` tiap hari (pg_cron) untuk menonaktifkan undangan yang masa aktifnya habis.
+
+Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.

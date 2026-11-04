@@ -7,7 +7,7 @@
   var EVL = { pernikahan: "Pernikahan", pertunangan: "Pertunangan", aqiqah: "Aqiqah", ulangtahun: "Ulang Tahun", wisuda: "Wisuda", seminar: "Seminar & Workshop", corporate: "Corporate Event", lainnya: "Lainnya" };
   var TPL = { "romantic-garden": "Romantic Garden", "jawa-tengah": "Adat Jawa Tengah" };
   var PLAN = { essential: "Essential", signature: "Signature", luxe: "Luxe" };
-  var ST = { draft: ["Draft", ""], aktif: ["Aktif", "ok"], selesai: ["Selesai", ""], nonaktif: ["Nonaktif", "warn"], menunggu: ["Menunggu bayar", "warn"], lunas: ["Lunas", "ok"], gagal: ["Gagal", "bad"], dibatalkan: ["Dibatalkan", "bad"], diproses: ["Diproses", "warn"], berhasil: ["Berhasil", "ok"], ditolak: ["Ditolak", "bad"] };
+  var ST = { draft: ["Draft", ""], menunggu_pembayaran: ["Menunggu pembayaran", "warn"], aktif: ["Aktif", "ok"], selesai: ["Selesai", ""], nonaktif: ["Nonaktif", "warn"], menunggu: ["Menunggu bayar", "warn"], lunas: ["Lunas", "ok"], gagal: ["Gagal", "bad"], dibatalkan: ["Dibatalkan", "bad"], diproses: ["Diproses", "warn"], berhasil: ["Berhasil", "ok"], ditolak: ["Ditolak", "bad"] };
 
   /* ---------- util ---------- */
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
