@@ -139,7 +139,13 @@ export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
   if (req.method !== "POST") return R(405, { error: "metode_tidak_didukung" });
   if (!d.env.serverKey) return R(500, { error: "konfigurasi" });
   let n: any; try { n = await req.json(); } catch { return R(400, { error: "permintaan_tidak_valid" }); }
-  if (!n || typeof n.order_id !== "string" || !ORDER.test(n.order_id) || !(await signatureValid(n, d.env.serverKey))) return R(401, { error: "signature_tidak_valid" });
+  const orderOk = !!n && typeof n.order_id === "string" && ORDER.test(n.order_id);
+  const sigOk = orderOk && (await signatureValid(n, d.env.serverKey));
+  if (!orderOk || !sigOk) {
+    // diagnostik aman: tanpa Server Key dan tanpa signature
+    try { console.log("webhook_ditolak", JSON.stringify({ orderOk, hasSig: typeof n?.signature_key === "string", sigLen: typeof n?.signature_key === "string" ? n.signature_key.length : 0, status_code: n?.status_code, gross_amount: n?.gross_amount, gross_type: typeof n?.gross_amount, keyLen: d.env.serverKey.length, keyPrefix: d.env.serverKey.slice(0, 7), keyEndsWithSpace: /\s$/.test(d.env.serverKey), tx_status: n?.transaction_status })); } catch { /* abaikan */ }
+    return R(401, { error: "signature_tidak_valid" });
+  }
   try {
     // jangan percaya isi notifikasi: ambil status resmi dari Midtrans, lalu terapkan
     const st = await midtransStatus(n.order_id, d);
