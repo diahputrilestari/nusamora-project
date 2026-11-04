@@ -1,5 +1,5 @@
 // Logika Midtrans yang tidak bergantung pada runtime (Deno/Node), supaya bisa diuji. Server Key hanya datang dari env backend.
-export interface Env { serverKey: string; isProd: boolean; allowedOrigins: string[] }
+export interface Env { serverKey: string; signatureKey?: string; isProd: boolean; allowedOrigins: string[] }
 export interface Deps {
   env: Env;
   fetch: typeof fetch;
@@ -140,10 +140,12 @@ export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
   if (!d.env.serverKey) return R(500, { error: "konfigurasi" });
   let n: any; try { n = await req.json(); } catch { return R(400, { error: "permintaan_tidak_valid" }); }
   const orderOk = !!n && typeof n.order_id === "string" && ORDER.test(n.order_id);
-  const sigOk = orderOk && (await signatureValid(n, d.env.serverKey));
+  // signature dicek dengan Server Key; bila akun Midtrans memakai Signature Secret Key terpisah, kunci itu juga diterima (opsional)
+  let sigOk = false;
+  if (orderOk) { for (const k of [d.env.serverKey, d.env.signatureKey || ""]) { if (k && await signatureValid(n, k)) { sigOk = true; break; } } }
   if (!orderOk || !sigOk) {
     // diagnostik aman: tanpa Server Key dan tanpa signature
-    try { console.log("webhook_ditolak", JSON.stringify({ orderOk, hasSig: typeof n?.signature_key === "string", sigLen: typeof n?.signature_key === "string" ? n.signature_key.length : 0, status_code: n?.status_code, gross_amount: n?.gross_amount, gross_type: typeof n?.gross_amount, keyLen: d.env.serverKey.length, keyPrefix: d.env.serverKey.slice(0, 7), keyEndsWithSpace: /\s$/.test(d.env.serverKey), tx_status: n?.transaction_status })); } catch { /* abaikan */ }
+    try { console.log("webhook_ditolak", JSON.stringify({ orderOk, hasSig: typeof n?.signature_key === "string", sigLen: typeof n?.signature_key === "string" ? n.signature_key.length : 0, status_code: n?.status_code, gross_amount: n?.gross_amount, gross_type: typeof n?.gross_amount, keyLen: d.env.serverKey.length, keyPrefix: d.env.serverKey.slice(0, 7), keyEndsWithSpace: /\s$/.test(d.env.serverKey), hasSigKeyEnv: !!d.env.signatureKey, tx_status: n?.transaction_status })); } catch { /* abaikan */ }
     return R(401, { error: "signature_tidak_valid" });
   }
   try {

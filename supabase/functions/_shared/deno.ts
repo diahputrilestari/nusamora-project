@@ -8,6 +8,7 @@ export function makeDeps(): Deps {
   return {
     env: {
       serverKey: Deno.env.get("MIDTRANS_SERVER_KEY") || "",
+      signatureKey: Deno.env.get("MIDTRANS_SIGNATURE_KEY") || "",
       isProd: Deno.env.get("MIDTRANS_IS_PRODUCTION") === "true",
       allowedOrigins: (Deno.env.get("ALLOWED_ORIGINS") || "").split(",").map((s) => s.trim().replace(/\/$/, "")).filter(Boolean),
     },
