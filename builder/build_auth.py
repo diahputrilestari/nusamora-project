@@ -4,7 +4,7 @@ Pakai: python3 builder/build_auth.py <outdir>"""
 import sys
 out = sys.argv[1] if len(sys.argv) > 1 else "."
 FONTS = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
-SB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
+SB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"
 
 def page(fn, title, desc, body):
     html = f'''<!doctype html>
