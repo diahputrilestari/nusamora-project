@@ -34,16 +34,26 @@ Mengaktifkan:
 
 Belum terhubung: pembayaran Midtrans otomatis (webhook & refund dana), pengiriman email/WhatsApp, dan pembacaan harga/template oleh landing page. Semuanya membutuhkan layanan di sisi server.
 
-## Alur Buat Undangan
-`/template` (pilih kategori & template) → `/buat` (kategori + link `nusamora.com/{slug}`, cek ketersediaan real-time) → `/editor?id=` (draft, autosave).
-Backend: jalankan `backend/invitation-schema.sql` SETELAH `dashboard-schema.sql` dan `admin-schema.sql`. Semua tulis lewat RPC `slug_available`, `create_invitation`, `save_invitation`; foto ke bucket `invitation-media`.
+## Alur Buat Undangan (paket dulu)
+Urutan: `/paket` (1 Pilih Paket) → `/template?paket=` (2 Kategori Acara, lalu 3 Template yang SUDAH difilter menurut paket) → `/buat` (4 Kategori + link `nusamora.com/{slug}`, cek ketersediaan real-time) → `/editor?id=` (5 Isi & Kustomisasi, autosave) → `/preview?id=` (6 Preview) → Publikasikan (7 Ringkasan pesanan + checkout Midtrans) → `/pembayaran?order_id=` (hasil; 9 webhook, 10 URL aktif).
+Contoh template publik tanpa login: `/preview?demo={slug-template}`.
+
+Tiga paket = tiga jenis produk dengan editor sendiri:
+- **Essential** (2D): palet warna, gaya huruf, teks undangan, musik, komponen (RSVP, buku ucapan, galeri, peta).
+- **Signature** (3D Cinematic): scene & background, objek 3D, kamera, animasi & partikel, judul sinematik, musik.
+- **Luxe** (3D Live Guest): virtual venue, area (resepsi, kuliner, photo booth, galeri), dekorasi, avatar tamu, fitur interaktif.
+
+Model data: `templates.package_type` + `templates.categories[]` + `templates.capabilities` (pilihan yang boleh dipakai editor) dan `invitations.package_type`. Template hanya muncul untuk paketnya; server menolak template/kategori yang tidak cocok dan menolak kunci konten milik paket lain (`konten_tidak_sesuai_paket`, `opsi_tidak_didukung`). Paket yang ditagih selalu paket milik undangan, bukan kiriman browser.
+
+**Urutan SQL di Supabase SQL Editor (wajib berurutan):** `supabase-schema` → `dashboard-schema` → `admin-schema` → `invitation-schema` → `payment-schema` → **`package-schema` (TERAKHIR)**. `package-schema.sql` aman dijalankan ulang dan memigrasikan data lama (undangan lama dipasangkan ke paket Luxe agar tidak berubah perilaku). Jika salah satu file sebelumnya dijalankan ulang, jalankan `package-schema.sql` sekali lagi sesudahnya, karena fungsi `create_invitation`, `save_invitation`, `publish_issues`, `get_public_invitation`, dan `prepare_checkout` ditimpa olehnya.
+Tulis data lewat RPC `slug_available`, `create_invitation`, `save_invitation`; foto ke bucket `invitation-media`.
 
 ## Publikasi & Pembayaran (Midtrans Snap)
 Alur: editor (Preview / Publikasikan) → dialog ringkasan paket → Edge Function `midtrans-checkout` → halaman pembayaran Snap → `/pembayaran?order_id=…` (hasil).
 Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + verifikasi Status API) dan `midtrans-sync` memanggil `apply_payment` (idempoten). Harga selalu dari tabel `plans`.
 
 **Setup (sekali):**
-1. SQL Editor: jalankan `backend/payment-schema.sql` (setelah 3 skema sebelumnya).
+1. SQL Editor: jalankan `backend/payment-schema.sql`, lalu `backend/package-schema.sql` (terakhir).
 2. Instal Supabase CLI, `supabase link --project-ref ixzmogwaaajkyltcnwaf`.
 3. Secret (Server Key TIDAK boleh ada di kode/GitHub):
    `supabase secrets set MIDTRANS_SERVER_KEY=SB-Mid-server-xxxx MIDTRANS_IS_PRODUCTION=false ALLOWED_ORIGINS=https://dodgerblue-cod-965274.hostingersite.com,https://nusamora.com`
