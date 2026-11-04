@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /live/
+Sitemap: https://nusamora.com/sitemap.xml

@@ -1,0 +1,7 @@
+for n,(x,z) in enumerate([[-11.5,-3],[-5.2,-3],[5.2,-3],[11.5,-3],[-8.5,3.8],[8.5,3.8]]): tableset(x,z)
+buffet(-13.5,8.6)
+kul1('gerobak-minuman',13.2,8.0); kul1('stan-snack',-7.0,10.0)
+deco('fountain',6.0,10.4,4.0)
+avatar(img(GR['groom3']),1.5,-24.0,3.4)
+avatar(Image.open('/mnt/user-data/outputs/avatars/wanita-1.png').convert('RGBA'),-1.5,-24.0,3.4)
+avatar(img(GR['groom1']),0,10,1)
