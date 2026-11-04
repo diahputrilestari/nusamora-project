@@ -53,3 +53,14 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 6. (Opsional) jadwalkan `select public.expire_invitations();` tiap hari (pg_cron) untuk menonaktifkan undangan yang masa aktifnya habis.
 
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
+
+## Template 2D Essential (`nusa-essential`)
+Halaman publik `nusamora.com/{slug}` dirender oleh `undangan.html` + `assets/invite/` (tanpa Supabase SDK, ringan untuk tamu dari WhatsApp):
+- `data.js` — ambil undangan (`get_public_invitation`), normalisasi `invitations.content`, kirim RSVP/ucapan. `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik (sesi login), `?demo=1&theme=sage` = demo galeri template.
+- `themes.js` — tema warna (marun, sage, navy, blush) + ornamen SVG. `motion.js` — reveal, parallax, kelopak, animasi huruf, gulir otomatis (menghormati prefers-reduced-motion).
+- `essential.js` + `essential.css` — section: cover, hero, salam, mempelai, hitung mundur, acara (multi), love story, galeri + lightbox, RSVP, hadiah (multi rekening, salin), ucapan, penutup, dock navigasi, musik.
+- Template 2D baru cukup mendaftar ke `NMInvite.templates["slug"]` dan `ESSENTIAL` di `assets/flow.js`. Template tanpa renderer sendiri memakai tampilan Essential.
+
+Editor (`/editor`) menampilkan bagian tambahan untuk template ini: Mempelai, Acara lainnya, Love Story, Hadiah, Tema, dan Tamu & Ucapan (link tamu + WhatsApp, rekap RSVP, sembunyikan ucapan).
+
+**Setup:** jalankan `backend/essential-schema.sql` SETELAH `payment-schema.sql` (tabel `rsvps`, `wishes`, RPC `submit_rsvp`, `submit_wish`, `list_wishes`, `set_wish_hidden`, validasi foto tambahan di `save_invitation`, baris template). Routing slug: `vercel.json` (rewrites) dan `.htaccess` sudah diatur; file/halaman yang ada tetap didahulukan.

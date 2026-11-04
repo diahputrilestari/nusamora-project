@@ -10,6 +10,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+?)/?$ $1.html [L]
 
+# Undangan publik: nusamora.com/{slug} -> undangan.html (file & halaman yang ada tetap didahulukan)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html !-f
+RewriteRule ^([a-z0-9]+(-[a-z0-9]+)*)/?$ undangan.html [L,QSA]
+
 DirectoryIndex index.html
 
 <IfModule mod_headers.c>
