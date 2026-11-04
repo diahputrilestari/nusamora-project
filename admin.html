@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin NusaMora</title><meta name="description" content="Panel admin NusaMora."><meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#7552A8"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap">
+<link rel="stylesheet" href="/assets/dashboard.css?v=3"><link rel="stylesheet" href="/assets/admin.css?v=1">
+</head><body class="dash adm">
+<a class="skip" href="#view">Lewati ke konten</a>
+<div class="app" id="app">
+ <aside class="side" id="side" aria-label="Navigasi admin">
+  <div class="side-h"><a class="brand" href="/admin" aria-label="NusaMora Admin">nusamora<span>.</span></a><span class="tag-admin">Admin</span>
+   <button class="icon-btn only-m" type="button" id="side-x" aria-label="Tutup menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <nav id="nav" aria-label="Menu admin"></nav>
+ </aside>
+ <div class="scrim" id="scrim" hidden></div>
+ <div class="main">
+  <header class="dtop">
+   <button class="icon-btn only-m" type="button" id="burger" aria-label="Buka menu" aria-controls="side" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+   <form class="gsearch" id="gsearch" role="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.500-3.500"/></svg><input type="search" id="gq" placeholder="Cari pelanggan (nama, email)..." aria-label="Cari pelanggan" autocomplete="off"></form>
+   <div class="dtop-r">
+    <div class="pop-w"><button class="icon-btn" type="button" id="bell" aria-label="Notifikasi" aria-haspopup="true" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7zM10 20a2 2 0 0 0 4 0"/></svg><i class="dot" id="bell-n" hidden></i></button><div class="pop" id="bell-p" hidden></div></div>
+    <div class="pop-w"><button class="chip" type="button" id="pm" aria-haspopup="true" aria-expanded="false"><i id="chip-i">?</i><span id="chip-n">Memuat...</span></button><div class="pop right" id="pm-p" hidden></div></div>
+   </div>
+  </header>
+  <div class="crumbs" id="crumbs" aria-label="Breadcrumb"></div>
+  <main id="view" tabindex="-1" aria-live="polite"></main>
+ </div>
+</div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog" aria-labelledby="dr-t"><div class="dr-h"><h2 id="dr-t">Detail</h2><button class="icon-btn" type="button" id="dr-x" aria-label="Tutup detail"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="dr-b" id="dr-b"></div></aside>
+<div class="scrim" id="dr-scrim" hidden></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<dialog id="fdlg" aria-labelledby="fdlg-t" class="wide"><form method="dialog"><button class="icon-btn x" aria-label="Tutup" value="x"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></form><h2 id="fdlg-t"></h2><form id="fdlg-f" novalidate class="fgrid"></form></dialog>
+<dialog id="cdlg" aria-labelledby="cdlg-t"><h2 id="cdlg-t">Konfirmasi</h2><p id="cdlg-b"></p><div class="row-end"><button class="btn o" type="button" id="cdlg-n">Batal</button><button class="btn" type="button" id="cdlg-y">Lanjutkan</button></div></dialog>
+<script src="/assets/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
+<script src="/assets/admin.js?v=1" defer></script>
+</body></html>

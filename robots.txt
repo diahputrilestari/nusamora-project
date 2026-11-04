@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /live/
+Disallow: /admin
 Disallow: /akun
 Disallow: /masuk
 Disallow: /daftar

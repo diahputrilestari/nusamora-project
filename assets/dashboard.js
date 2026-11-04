@@ -229,7 +229,15 @@
     var s = r.data && r.data.session;
     if (!s) { location.replace("/masuk?next=/akun"); return; }
     S.user = s.user; head();
-    return loadAll().then(function () { head(); route(); });
+    return loadAll().then(function () {
+      return sb.from("profiles").select("status").eq("id", S.user.id).maybeSingle().then(function (x) {
+        if (x && x.data && x.data.status === "suspended") {
+          $("#nav").innerHTML = ""; $("#view").innerHTML = '<div class="card">' + empty("Akun ditangguhkan", "Akun Anda sedang ditangguhkan. Hubungi tim NusaMora untuk bantuan.", '<button class="btn" type="button" id="lo2">Keluar</button>') + "</div>";
+          $("#lo2").addEventListener("click", function () { sb.auth.signOut().then(function () { location.replace("/masuk"); }); }); return;
+        }
+        head(); route();
+      }, function () { head(); route(); });
+    });
   }, function () { $("#view").innerHTML = '<div class="note" role="alert">Tidak bisa terhubung. Periksa koneksi internet Anda lalu muat ulang.</div>'; });
   sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT") location.replace("/masuk"); });
   addEventListener("hashchange", route);
