@@ -24,7 +24,7 @@
   var nameOf = function (r, k) { return (r[k || "profiles"] && r[k || "profiles"].full_name) || "-"; };
 
   /* ================= definisi umum ================= */
-  var EV = [["pernikahan", "Pernikahan"], ["ulangtahun", "Ulang Tahun"], ["wisuda", "Wisuda"], ["seminar", "Seminar & Workshop"], ["corporate", "Corporate Event"], ["lainnya", "Lainnya"]];
+  var EV = [["pernikahan", "Pernikahan"], ["pertunangan", "Pertunangan"], ["aqiqah", "Aqiqah"], ["ulangtahun", "Ulang Tahun"], ["wisuda", "Wisuda"], ["seminar", "Seminar & Workshop"], ["corporate", "Corporate Event"], ["lainnya", "Lainnya"]];
   var PL = [["essential", "Essential"], ["signature", "Signature"], ["luxe", "Luxe"]];
   var PUB = [["draft", "Draft"], ["published", "Published"], ["archived", "Arsip"]];
   var optsCache = {};

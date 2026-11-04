@@ -3,6 +3,9 @@ Allow: /
 Disallow: /live/
 Disallow: /admin
 Disallow: /akun
+Disallow: /template
+Disallow: /buat
+Disallow: /editor
 Disallow: /masuk
 Disallow: /daftar
 Disallow: /lupa-password

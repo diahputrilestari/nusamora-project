@@ -33,3 +33,7 @@ Mengaktifkan:
 3. Buka `/admin`. Admin lain ditambahkan dari menu Admin & Role.
 
 Belum terhubung: pembayaran Midtrans otomatis (webhook & refund dana), pengiriman email/WhatsApp, dan pembacaan harga/template oleh landing page. Semuanya membutuhkan layanan di sisi server.
+
+## Alur Buat Undangan
+`/template` (pilih kategori & template) → `/buat` (kategori + link `nusamora.com/{slug}`, cek ketersediaan real-time) → `/editor?id=` (draft, autosave).
+Backend: jalankan `backend/invitation-schema.sql` SETELAH `dashboard-schema.sql` dan `admin-schema.sql`. Semua tulis lewat RPC `slug_available`, `create_invitation`, `save_invitation`; foto ke bucket `invitation-media`.

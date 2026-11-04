@@ -11,7 +11,7 @@
   function msg(text, kind) { var m = $("#msg"); if (!m) return; m.hidden = !text; m.className = "msg " + (kind === "o" ? "o" : "e"); m.textContent = text || ""; }
   function fieldErr(id, text) { var e = d.querySelector('[data-for="' + id + '"]'), i = d.getElementById(id); if (e) e.textContent = text || ""; if (i) i.setAttribute("aria-invalid", text ? "true" : "false"); }
   function busy(on, label) { var b = $("#go"); if (!b) return; b.disabled = on; if (label) b.textContent = on ? "Memproses..." : label; }
-  function nextPath() { var n = new URLSearchParams(location.search).get("next"); return n && /^\/[a-z0-9\-\/]*$/i.test(n) ? n : "/akun"; }
+  function nextPath() { var n = new URLSearchParams(location.search).get("next"); return n && /^\/(?!\/)[a-z0-9\-\/]*(\?[a-z0-9=&%_.\-]*)?$/i.test(n) ? n : "/akun"; }
   function friendly(err) {
     var m = (err && err.message || "").toLowerCase();
     if (m.indexOf("invalid login") > -1) return "Email atau kata sandi salah.";
