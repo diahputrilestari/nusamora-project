@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /live/
+Disallow: /akun
+Disallow: /masuk
+Disallow: /daftar
+Disallow: /lupa-password
+Disallow: /atur-password
 Sitemap: https://nusamora.com/sitemap.xml

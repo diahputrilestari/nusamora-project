@@ -1,7 +1,7 @@
 (function(){
 var d=document,$=function(s,r){return(r||d).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||d).querySelectorAll(s))};
 d.documentElement.classList.add('js');
-var APP={signup:'',login:'',whatsapp:''}; /* isi saat pendaftaran/login/WhatsApp siap; kosong = dialog informasi */
+var APP={signup:'/daftar',login:'/masuk',whatsapp:''}; /* isi saat pendaftaran/login/WhatsApp siap; kosong = dialog informasi */
 var PLAN={essential:['Essential',79000],signature:['Signature',149000],luxe:['Luxe',249000]};
 var EVL={pernikahan:'Pernikahan',ulangtahun:'Ulang Tahun',wisuda:'Wisuda',seminar:'Seminar & Workshop',corporate:'Corporate Event',lainnya:'Lainnya'};
 var TPL={'romantic-garden':'Romantic Garden','jawa-tengah':'Adat Jawa Tengah'};

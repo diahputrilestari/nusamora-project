@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Daftar Akun | NusaMora</title><meta name="description" content="Buat akun NusaMora untuk membuat undangan digital interaktif."><meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#6a34b6"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"><link rel="stylesheet" href="/assets/landing.css"><link rel="stylesheet" href="/assets/auth.css">
+</head><body class="auth">
+<header class="top"><div class="wrap bar"><a class="brand" href="/" aria-label="NusaMora, ke beranda">nusamora<span>.</span></a><a class="btn o sm" href="/">Kembali ke beranda</a></div></header>
+<main id="utama"><section class="card-a">
+<h1>Buat akun NusaMora</h1><p class="sub">Daftar gratis untuk menyimpan draft undangan. Anda baru membayar saat siap.</p>
+<div id="pick" class="pick" hidden></div><div id="msg" role="alert" hidden></div>
+<form id="f-reg" novalidate data-form="register">
+ <div class="f"><label for="name">Nama lengkap</label><input id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80"><span class="err" data-for="name"></span></div>
+ <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required><span class="err" data-for="email"></span></div>
+ <div class="f"><label for="wa">Nomor WhatsApp <small>(opsional, untuk bantuan)</small></label><input id="wa" name="wa" type="tel" autocomplete="tel" inputmode="tel" placeholder="08123456789"><span class="err" data-for="wa"></span></div>
+ <div class="f"><label for="pw">Kata sandi</label><div class="pw"><input id="pw" name="pw" type="password" autocomplete="new-password" required minlength=8><button type="button" data-toggle="pw" aria-label="Tampilkan kata sandi">Lihat</button></div><div class="meter" aria-hidden="true"><i id="meter"></i></div><small id="pwhint">Minimal 8 karakter, campur huruf dan angka.</small><span class="err" data-for="pw"></span></div>
+ <label class="chk"><input id="terms" type="checkbox" required><span>Saya menyetujui Syarat Layanan dan Kebijakan Privasi NusaMora.</span></label><span class="err" data-for="terms"></span>
+ <div class="hp" aria-hidden="true"><label>Jangan diisi <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+ <button class="btn full lg" type="submit" id="go">Daftar</button>
+</form>
+<p class="alt">Sudah punya akun? <a href="/masuk">Masuk</a></p></section></main>
+<script src="/assets/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/assets/auth.js" defer></script></body></html>
