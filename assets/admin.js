@@ -213,6 +213,7 @@
     return ok ? out : null;
   }
   function openForm(tab, row, reload, title) {
+    if (tab.studio) return tab.studio(tab, row, reload);
     var dl = $("#fdlg"), form = $("#fdlg-f"), fields = tab.fields, editing = !!row;
     $("#fdlg-t").textContent = title || ((editing ? "Edit " : "Tambah ") + (tab.title && row ? tab.title(row) : "data"));
     form.innerHTML = '<div class="full" id="fe" role="alert"></div><div class="skel full"><div class="sk h2"></div></div>';
@@ -403,5 +404,8 @@
     }, function () { denied("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang."); });
     sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT") location.replace("/masuk"); });
   }
+  /* titik sambung untuk modul tambahan (assets/admin-assets.js) */
+  window.NM_ADMIN = { sb: sb, $: $, $$: $$, esc: esc, rp: rp, dt: dt, toast: toast, fail: fail, ico: ico, badge: badge, empty: empty, skel: skel, errBox: errBox, dlgConfirm: dlgConfirm, can: can, buildField: buildField, collect: collect, loadOpts: loadOpts, M: M, PL: PL, PUB: PUB, A: A };
+  (window.NM_ADMIN_EXT || []).forEach(function (f) { try { f(window.NM_ADMIN); } catch (e) { if (window.console) console.error("admin ext", e); } });
   start();
 })();

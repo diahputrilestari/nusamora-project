@@ -48,6 +48,19 @@ Model data: `templates.package_type` + `templates.categories[]` + `templates.cap
 **Urutan SQL di Supabase SQL Editor (wajib berurutan):** `supabase-schema` → `dashboard-schema` → `admin-schema` → `invitation-schema` → `payment-schema` → **`package-schema` (TERAKHIR)**. `package-schema.sql` aman dijalankan ulang dan memigrasikan data lama (undangan lama dipasangkan ke paket Luxe agar tidak berubah perilaku). Jika salah satu file sebelumnya dijalankan ulang, jalankan `package-schema.sql` sekali lagi sesudahnya, karena fungsi `create_invitation`, `save_invitation`, `publish_issues`, `get_public_invitation`, dan `prepare_checkout` ditimpa olehnya.
 Tulis data lewat RPC `slug_available`, `create_invitation`, `save_invitation`; foto ke bucket `invitation-media`.
 
+## Theme & Asset Management (Asset Library + Template Studio)
+
+Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu template universal per paket (Essential 2D, Signature 3D Cinematic, Luxe 3D Live Guest); **tema = set aset** yang menimpa aset umum template pada slot yang sama.
+
+**Setup (sekali):**
+1. SQL Editor: jalankan `backend/asset-schema.sql` **paling akhir** (setelah `package-schema.sql`). Aman dijalankan ulang; membuat kategori aset per paket, `assets`, `themes`, `template_themes`, `template_assets`, bucket storage `theme-assets`, dan fungsi `admin_*`.
+2. Deploy Edge Function pendaftaran aset: `supabase functions deploy asset-register --no-verify-jwt` (memakai `SUPABASE_SERVICE_ROLE_KEY` bawaan Supabase; tidak ada secret baru).
+3. `git pull origin landing-page` sebelum deploy.
+
+**Keamanan unggah:** browser hanya boleh menulis ke `theme-assets/incoming/...` (izin `templates.write`). Aset baru masuk library **hanya** lewat `asset-register`, yang memeriksa isi file di server (magic bytes, dimensi, SVG dibersihkan/ditolak jika berskrip, GLB/glTF yang merujuk URL luar ditolak, sha256 untuk deteksi duplikat) sebelum memanggil RPC `admin_register_asset`. File yang gagal validasi langsung dihapus dari storage.
+
+**Aturan:** aset tidak disalin; template mengacu lewat tabel `template_assets` (template, tema, slot, section, posisi, config). Melepas relasi tidak menghapus file. Menghapus aset = soft delete dan, jika masih dipakai, butuh konfirmasi (relasi dilepas, file tetap ada). Slot bersifat bebas (admin menambah kunci slot baru tanpa ubah kode). Renderer 2D memakai posisi/animasi dari `config`; pratinjau Signature/Luxe adalah **simulasi** tata letak, bukan mesin 3D penuh.
+
 ## Publikasi & Pembayaran (Midtrans Snap)
 Alur: editor (Preview / Publikasikan) → dialog ringkasan paket → Edge Function `midtrans-checkout` → halaman pembayaran Snap → `/pembayaran?order_id=…` (hasil).
 Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + verifikasi Status API) dan `midtrans-sync` memanggil `apply_payment` (idempoten). Harga selalu dari tabel `plans`.
