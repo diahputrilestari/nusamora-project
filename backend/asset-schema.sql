@@ -494,3 +494,8 @@ revoke execute on function public.ai_category(uuid), public.admin_generation_all
 grant execute on function public.ai_category(uuid), public.admin_generation_allowed(uuid,int), public.admin_record_generation(uuid,text,text,uuid,text,text,int,text,text,jsonb) to service_role;
 revoke execute on function public.admin_link_variant(uuid, uuid) from public, anon;
 grant execute on function public.admin_link_variant(uuid, uuid) to authenticated;
+
+-- 9. Sinkron kategori template: template yang dibuat dari dashboard admin (hanya category_id) harus punya categories[]
+--    agar muncul di katalog pelanggan (katalog memfilter dengan categories). Idempoten.
+update public.templates t set categories = array[c.slug] from public.event_categories c
+ where t.category_id = c.id and cardinality(coalesce(t.categories, '{}')) = 0;
