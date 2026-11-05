@@ -55,6 +55,11 @@ insert into public.asset_categories (package_type, slug, name, kind, allowed_ext
 on conflict (package_type, slug) do nothing;
 -- Luxe > Virtual environment juga menerima gambar latar (PNG/JPG/WebP), bukan hanya model 3D. Menyusul untuk database yang sudah terisi.
 update public.asset_categories set allowed_ext = '{glb,gltf,png,jpg,jpeg,webp}' where package_type = 'luxe' and slug = 'virtual-environment' and not ('png' = any (allowed_ext));
+-- Luxe: avatar, objek interaktif, furniture boleh berupa ilustrasi 2D (png/jpg/webp) yang ditampilkan sebagai billboard 3D.
+update public.asset_categories set allowed_ext = '{glb,gltf,png,jpg,jpeg,webp}'
+ where package_type = 'luxe' and slug in ('guest-avatar','couple-avatar','interactive-objects','furniture-3d') and not ('png' = any (allowed_ext));
+update public.asset_categories set allowed_ext = '{glb,gltf,png,jpg,jpeg,webp}'
+ where package_type = 'luxe' and slug = 'venue-decoration' and not ('jpg' = any (allowed_ext));
 
 -- ============================================================ 2. Asset Library
 create table if not exists public.assets (
