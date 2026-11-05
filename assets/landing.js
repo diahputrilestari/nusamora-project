@@ -21,10 +21,11 @@ var hs=$$('#hs img'),hp=$$('#hp img'),hn=$('#hn'),names=['Romantic Garden','Adat
 function hero(i){hs.forEach(function(x,j){x.classList.toggle('on',j===i)});hp.forEach(function(x,j){x.classList.toggle('on',j===i)});hn.textContent=names[i]}
 if(!matchMedia('(prefers-reduced-motion:reduce)').matches){var dv=$('.devs');dv.addEventListener('pointerenter',function(){hold=true});dv.addEventListener('pointerleave',function(){hold=false});setInterval(function(){if(hold||d.hidden)return;hi=(hi+1)%hs.length;hero(hi)},4200)}
 /* filter template per jenis acara */
-var tcards=$$('.tcard'),tcount=$('#tcount'),treset=$('#treset'),tnote=$('#tnote'),evb=$$('.ev'),flt=null;
+function totalTxt(){return $$('.tcard:not(.soon)').length+' template tersedia'}
+var tcount=$('#tcount'),treset=$('#treset'),tnote=$('#tnote'),evb=$$('.ev'),flt=null;
 function filt(id){flt=flt===id?null:id;evb.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.ev===flt)});
- var n=0;tcards.forEach(function(c){var soon=c.classList.contains('soon'),match=!flt||c.dataset.ev.split(' ').indexOf(flt)>-1;if(!soon){c.classList.toggle('dim',!!flt&&!match);if(!flt||match)n++}else c.classList.remove('dim')});
- tcount.textContent=flt?(n?n+' template untuk '+EVL[flt]:'Belum ada template khusus '+EVL[flt]):'2 template tersedia';
+ var n=0;$$('.tcard').forEach(function(c){var soon=c.classList.contains('soon'),match=!flt||c.dataset.ev.split(' ').indexOf(flt)>-1;if(!soon){c.classList.toggle('dim',!!flt&&!match);if(!flt||match)n++}else c.classList.remove('dim')});
+ tcount.textContent=flt?(n?n+' template untuk '+EVL[flt]:'Belum ada template khusus '+EVL[flt]):totalTxt();
  treset.hidden=!flt;tnote.hidden=!(flt&&!n);if(flt&&!n)tnote.textContent='Template khusus '+EVL[flt]+' sedang disiapkan. Anda tetap bisa memakai template yang ada dan menyesuaikan teksnya, atau beri tahu kami acara yang Anda rencanakan.';
  if(flt)$('#template').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
 evb.forEach(function(b){b.addEventListener('click',function(){filt(b.dataset.ev)})});treset.addEventListener('click',function(){filt(flt)});
@@ -57,4 +58,32 @@ if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion:reduce
  $$('.rv').forEach(function(el){if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}})}
 /* bar CTA mobile disembunyikan saat CTA akhir terlihat */
 var mb=$('#mbar'),fin=$('.fin');if(mb&&fin&&'IntersectionObserver' in window){new IntersectionObserver(function(es){mb.classList.toggle('hide',es[0].isIntersecting)}).observe(fin)}
+/* Katalog template: kartu bawaan tetap ada; template published lain dari database ditambahkan (gagal = katalog bawaan tetap tampil) */
+(function(){var C=window.NM_CONFIG;if(!C||!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY||!window.fetch)return;
+var EVMAP={wedding:'pernikahan',engagement:'pernikahan',birthday:'ulangtahun',graduation:'wisuda',aqiqah:'lainnya',seminar:'seminar',corporate:'corporate',other:'lainnya'},
+ CATL={wedding:'Pernikahan',engagement:'Pertunangan',birthday:'Ulang Tahun',graduation:'Wisuda',aqiqah:'Aqiqah',seminar:'Seminar & Workshop',corporate:'Corporate Event',other:'Lainnya'},
+ PKN={essential:'Essential 2D',signature:'Signature 3D',luxe:'Luxe Live Guest'};
+var grid=$('#tgrid'),soon=grid&&$('.tcard.soon',grid);if(!grid)return;
+function mk(tag,cls,txt){var e=d.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+function safeUrl(u){u=String(u||'');return /^(https:\/\/|\/)/.test(u)&&u.indexOf('//')!==0?u:''}
+function card(r){var cats=(r.categories&&r.categories.length?r.categories:[]),ev=cats.map(function(c){return EVMAP[c]}).filter(Boolean).filter(function(x,i,a){return a.indexOf(x)===i}).join(' ')||'lainnya';
+ var a=mk('article','tcard');a.dataset.ev=ev;a.dataset.id=r.slug;
+ var tv=mk('div','tv'),img=safeUrl(r.thumbnail_url);
+ if(img){var im=d.createElement('img');im.src=img;im.width=960;im.height=540;im.loading='lazy';im.decoding='async';im.alt='Pratinjau template undangan digital '+r.name;tv.appendChild(im)}else{var ph=mk('div',null,null);ph.style.cssText='aspect-ratio:16/9;display:grid;place-items:center;font:700 15px var(--sans);color:var(--mute);background:linear-gradient(120deg,var(--soft),var(--soft2))';ph.textContent=PKN[r.package_type]||'Template';tv.appendChild(ph)}
+ var tb=mk('div','tb'),tg=mk('div','tags');
+ tg.appendChild(mk('span','tag',PKN[r.package_type]||r.package_type));
+ cats.forEach(function(c){tg.appendChild(mk('span','tag',CATL[c]||c))});
+ tb.appendChild(mk('h3',null,r.name));tb.appendChild(tg);if(r.description)tb.appendChild(mk('p',null,r.description));
+ var two=mk('div','two'),demo=safeUrl(r.preview_url);
+ if(demo){var da=mk('a','btn o','Coba Demo');da.href=demo;da.target='_blank';da.rel='noopener';two.appendChild(da)}else two.appendChild(mk('span'));
+ var bt=mk('button','btn','Gunakan Template Ini');bt.type='button';bt.dataset.open='start';bt.dataset.tpl=r.slug;two.appendChild(bt);
+ tb.appendChild(two);a.appendChild(tv);a.appendChild(tb);return a}
+var q=C.SUPABASE_URL+'/rest/v1/templates?select=slug,name,description,thumbnail_url,preview_url,package_type,categories&status=eq.published&order=sort.asc,created_at.asc';
+fetch(q,{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:'Bearer '+C.SUPABASE_ANON_KEY}}).then(function(r){return r.ok?r.json():[]}).then(function(rows){
+ if(!Array.isArray(rows))return;var have={};$$('.tcard[data-id]',grid).forEach(function(c){have[c.dataset.id]=1});var added=0;
+ rows.forEach(function(r){if(!r||!/^[a-z0-9-]{1,60}$/.test(r.slug||'')||have[r.slug])return;have[r.slug]=1;var c=card(r);soon?grid.insertBefore(c,soon):grid.appendChild(c);
+  TPL[r.slug]=r.name;var ek=c.dataset.ev.split(' ')[0];TPL_EV[r.slug]=ek;var o=d.createElement('option');o.value=r.slug;o.textContent=r.name;fTp.appendChild(o);added++});
+ if(added){var n=$('#tcount');if(n&&!flt)n.textContent=totalTxt()}
+}).catch(function(){});
+})();
 })();
