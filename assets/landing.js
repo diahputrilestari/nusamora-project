@@ -74,7 +74,7 @@ function card(r){var cats=(r.categories&&r.categories.length?r.categories:[]),ev
  tg.appendChild(mk('span','tag',PKN[r.package_type]||r.package_type));
  cats.forEach(function(c){tg.appendChild(mk('span','tag',CATL[c]||c))});
  tb.appendChild(mk('h3',null,r.name));tb.appendChild(tg);if(r.description)tb.appendChild(mk('p',null,r.description));
- var two=mk('div','two'),demo=safeUrl(r.preview_url);
+ var two=mk('div','two'),demo=safeUrl(r.preview_url)||'/preview?demo='+encodeURIComponent(r.slug);
  if(demo){var da=mk('a','btn o','Coba Demo');da.href=demo;da.target='_blank';da.rel='noopener';two.appendChild(da)}else two.appendChild(mk('span'));
  var bt=mk('button','btn','Gunakan Template Ini');bt.type='button';bt.dataset.open='start';bt.dataset.tpl=r.slug;two.appendChild(bt);
  tb.appendChild(two);a.appendChild(tv);a.appendChild(tb);return a}

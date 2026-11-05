@@ -34,7 +34,7 @@
   var CAMN = { orbit: "Orbit", dolly: "Dolly maju", crane: "Crane naik", static: "Statis" }, INTN = { fade: "Fade", zoom: "Zoom", flythrough: "Fly-through" }, PARN = { none: "Tanpa efek", petals: "Kelopak bunga", fireflies: "Kunang-kunang" }, GRN = { warm: "Hangat", cool: "Sejuk", soft: "Lembut" };
 
   /* Template dibaca dari DB dan selalu difilter menurut paket. */
-  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "", pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {} }; }
+  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "/preview?demo=" + encodeURIComponent(t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {} }; }
   var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities";
   function loadTemplates(pkg) { return sb.from("templates").select(TSEL).eq("status", "published").eq("package_type", pkg).order("sort").then(function (r) { return r.error || !r.data ? [] : r.data.map(mapT); }, function () { return []; }); }
   /* Tema (set aset) per template; gagal/belum ada tabel -> tanpa tema, alur lama tetap jalan. */
