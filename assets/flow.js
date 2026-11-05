@@ -37,6 +37,9 @@
   function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "", pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {} }; }
   var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities";
   function loadTemplates(pkg) { return sb.from("templates").select(TSEL).eq("status", "published").eq("package_type", pkg).order("sort").then(function (r) { return r.error || !r.data ? [] : r.data.map(mapT); }, function () { return []; }); }
+  /* Tema (set aset) per template; gagal/belum ada tabel -> tanpa tema, alur lama tetap jalan. */
+  function loadThemes(slugs) { if (!slugs.length) return Promise.resolve({}); return sb.rpc("get_template_themes", { p_templates: slugs }).then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
+  function themePick(t, th) { if (!th || !th.length) return ""; return '<fieldset class="thm"><legend>Pilih tema</legend>' + th.map(function (x, i) { return '<label class="thc"><input type="radio" name="th-' + esc(t.slug) + '" data-th="' + esc(t.slug) + '" value="' + esc(x.slug) + '"' + (i === 0 ? " checked" : "") + "><span>" + esc(x.name) + "</span></label>"; }).join("") + "</fieldset>"; }
   function loadTemplate(slug) { return sb.from("templates").select(TSEL).eq("slug", slug).maybeSingle().then(function (r) { return r.data ? mapT(r.data) : null; }, function () { return null; }); }
   function loadPlans() { return sb.from("plans").select("id,name,price,duration_days,gallery_limit,allow_3d,allow_live_guest,features").eq("active", true).order("sort").then(function (r) { return r.data || []; }, function () { return []; }); }
   function rp(n) { return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
@@ -73,11 +76,15 @@
         return;
       }
       var list = T.filter(function (t) { return t.cats.indexOf(kat) > -1; });
+      loadThemes(list.map(function (t) { return t.slug; })).then(function (TH) { renderList(list, TH); });
+    });
+    function renderList(list, TH) {
       view.innerHTML = '<div class="fw">' + steps(2, pkg) + '<div class="hd"><h1>Pilih template ' + esc(CATN[kat]) + '</h1><p>Template ' + esc(PK[pkg].kind) + ". Coba demo, lalu gunakan yang paling mewakili cerita Anda.</p></div>" +
-        (list.length ? '<div class="tg">' + list.map(function (t) { return '<article class="card tc hov"><div class="im">' + (t.img ? '<img src="' + esc(t.img) + '" alt="Pratinjau template ' + esc(t.name) + '" loading="lazy">' : "") + '<span class="pkchip sm"><i>' + PK[pkg].icon + "</i>" + PK[pkg].name + '</span></div><div class="bd"><h2>' + esc(t.name) + '</h2><div class="tags">' + t.cats.map(function (c) { return '<span class="tag">' + esc(CATN[c] || c) + "</span>"; }).join("") + "</div><p>" + esc(t.desc) + '</p><div class="two">' + (t.demo ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(t.demo) + '">Coba Demo</a>' : "<span></span>") + '<a class="btn" href="/buat?paket=' + pkg + "&kategori=" + kat + "&template=" + encodeURIComponent(t.slug) + '">Gunakan Template</a></div></div></article>'; }).join("") + "</div>" :
+        (list.length ? '<div class="tg">' + list.map(function (t) { return '<article class="card tc hov"><div class="im">' + (t.img ? '<img src="' + esc(t.img) + '" alt="Pratinjau template ' + esc(t.name) + '" loading="lazy">' : "") + '<span class="pkchip sm"><i>' + PK[pkg].icon + "</i>" + PK[pkg].name + '</span></div><div class="bd"><h2>' + esc(t.name) + '</h2>' + themePick(t, TH[t.slug]) + '<div class="tags">' + t.cats.map(function (c) { return '<span class="tag">' + esc(CATN[c] || c) + "</span>"; }).join("") + "</div><p>" + esc(t.desc) + '</p><div class="two">' + (t.demo ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(t.demo) + '">Coba Demo</a>' : "<span></span>") + '<a class="btn" data-use="' + esc(t.slug) + '" href="/buat?paket=' + pkg + "&kategori=" + kat + "&template=" + encodeURIComponent(t.slug) + (TH[t.slug] && TH[t.slug].length ? "&tema=" + encodeURIComponent(TH[t.slug][0].slug) : "") + '">Gunakan Template</a></div></div></article>'; }).join("") + "</div>" :
           '<div class="card"><div class="empty"><h3>Template ' + esc(CATN[kat]) + " sedang disiapkan</h3><p>Belum ada template " + esc(PK[pkg].kind) + " untuk kategori ini.</p></div></div>") +
         '<div class="acts"><a class="btn o" href="/template?paket=' + pkg + '">Kembali ke kategori</a></div></div>';
-    });
+      view.addEventListener("change", function (e) { var r = e.target.closest("input[data-th]"); if (!r) return; var a = $('[data-use="' + r.dataset.th + '"]'); if (a) a.href = a.href.replace(/&tema=[^&]*/, "") + "&tema=" + encodeURIComponent(r.value); });
+    }
   }
 
   /* ================= 4. ATUR KATEGORI & LINK ================= */
@@ -86,13 +93,15 @@
   function pageBuat() {
     var q = new URLSearchParams(location.search), pkg = pkgOk(q.get("paket")), tslug = q.get("template") || "", kat = q.get("kategori") || "";
     if (!pkg) { location.replace("/paket"); return; }
-    loadTemplate(tslug).then(function (t) {
+    Promise.all([loadTemplate(tslug), loadThemes(tslug ? [tslug] : [])]).then(function (z) { var t = z[0], TH = z[1][tslug] || [], tema = q.get("tema") || "";
+      if (tema && !TH.some(function (x) { return x.slug === tema; })) tema = TH.length ? TH[0].slug : "";
       if (!t || t.pkg !== pkg) { view.innerHTML = note(t ? "Template tidak cocok dengan paket" : "Template belum dipilih", t ? "Template ini milik paket lain. Pelanggan hanya dapat memakai template sesuai paket yang dipilih." : "Pilih template terlebih dahulu sebelum mengatur link undangan.", '<a class="btn" href="/template?paket=' + pkg + '">Pilih Template</a>'); return; }
       if (t.cats.indexOf(kat) < 0) kat = t.cats[0];
       var saved = {}; try { saved = JSON.parse(sessionStorage.getItem("nm:buat:" + tslug) || "{}"); } catch (e) { }
       var back = "/template?paket=" + pkg + "&kategori=" + kat;
       view.innerHTML = '<div class="fw">' + steps(3, pkg) + '<div class="fc"><div class="card"><h1 style="font:700 clamp(26px,3.4vw,34px)/1.15 var(--display)">Atur Kategori &amp; Link Undangan</h1><p class="sub" style="margin-top:8px">Tentukan jenis acara dan alamat undangan yang mudah diingat tamu Anda.</p>' +
         '<form id="fb" novalidate><div class="f"><label for="cat">Kategori acara</label><select id="cat">' + t.cats.map(function (c) { return '<option value="' + c + '"' + (c === kat ? " selected" : "") + ">" + esc(CATN[c] || c) + "</option>"; }).join("") + "</select></div>" +
+        (TH.length ? '<div class="f"><label for="thm">Tema</label><select id="thm">' + TH.map(function (x) { return '<option value="' + esc(x.slug) + '"' + (x.slug === tema ? " selected" : "") + ">" + esc(x.name) + "</option>"; }).join("") + '</select><small class="sub">Tema menentukan set ilustrasi dan dekorasi undangan.</small></div>' : "") +
         '<div class="f"><div class="hint"><b>Tips:</b> buat link yang singkat dan mudah diingat, misalnya <b>raka-sinta</b> atau <b>ulangtahun-sinta</b>. Link ini dipakai tamu untuk membuka undangan Anda.</div></div>' +
         '<div class="f"><label for="slug">Link undangan</label><div class="slug" id="sw"><span aria-hidden="true">nusamora.com/</span><input id="slug" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40" aria-describedby="sst" placeholder="nama-acara-anda" value="' + esc(saved.slug || "") + '"></div><div class="st" id="sst" role="status" aria-live="polite"></div><div class="sugg" id="sg"></div></div>' +
         '<div class="acts"><a class="btn o" href="' + back + '">Kembali</a><button class="btn" type="submit" id="nx" disabled>Selanjutnya</button></div></form></div>' +
@@ -121,7 +130,8 @@
         sb.rpc("create_invitation", { p_template: tslug, p_category: $("#cat").value, p_slug: okSlug }).then(function (r) {
           if (r.error) { nx.textContent = "Selanjutnya"; var m = r.error.message; if (m === "slug_digunakan" || m === "slug_dicadangkan") { okSlug = ""; setS("bad", esc(ERR[m])); } else { nx.disabled = false; toast(errText(r.error), "bad"); } return; }
           try { sessionStorage.removeItem("nm:buat:" + tslug); } catch (e2) { }
-          location.href = "/editor?id=" + encodeURIComponent(r.data);
+          var go = function () { location.href = "/editor?id=" + encodeURIComponent(r.data); }, th = $("#thm");
+          if (th && th.value) sb.rpc("set_invitation_theme", { p_invitation: r.data, p_theme: th.value }).then(function (x) { if (x.error || !x.data || !x.data.ok) toast("Undangan dibuat, tetapi tema belum bisa dipasang. Pilih ulang nanti.", "bad"); go(); }, go); else go();
         }, function (er) { nx.disabled = false; nx.textContent = "Selanjutnya"; toast(errText(er), "bad"); });
       });
       if (saved.slug) check(); inp.focus();

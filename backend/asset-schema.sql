@@ -370,3 +370,46 @@ grant execute on function public.get_template_assets(text, text) to anon, authen
 grant select on public.asset_categories, public.assets, public.template_assets, public.asset_generations, public.asset_variants to authenticated;
 grant select on public.themes, public.template_themes to anon, authenticated;
 grant insert, update, delete on public.themes, public.template_themes to authenticated;
+
+-- ============================================================ 7. Tema pada undangan pelanggan (kompatibel mundur)
+alter table public.invitations add column if not exists theme_key text;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'invitations_theme_key_chk') then
+    alter table public.invitations add constraint invitations_theme_key_chk check (theme_key is null or theme_key ~ '^[a-z0-9-]{2,60}$');
+  end if;
+end $$;
+
+-- Tema yang boleh dipilih pelanggan untuk template tertentu (hanya tema Published + diaktifkan di template Published).
+create or replace function public.get_template_themes(p_templates text[]) returns jsonb
+language sql stable security definer set search_path = public as $$
+  select coalesce(jsonb_object_agg(x.slug, x.themes), '{}'::jsonb) from (
+    select t.slug, jsonb_agg(jsonb_build_object('slug', th.slug, 'name', th.name, 'description', th.description, 'thumbnail_url', th.thumbnail_url) order by tt.sort, th.sort, th.name) as themes
+    from public.templates t
+    join public.template_themes tt on tt.template_id = t.id and tt.enabled
+    join public.themes th on th.id = tt.theme_id and th.status = 'published'
+    where t.slug = any (coalesce(p_templates, '{}')) and t.status = 'published'
+    group by t.slug) x
+$$;
+
+-- Pelanggan menetapkan tema undangannya sendiri (null = tanpa tema / aset umum).
+create or replace function public.set_invitation_theme(p_invitation uuid, p_theme text) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare uid uuid := auth.uid(); r public.invitations; th text := nullif(lower(trim(coalesce(p_theme, ''))), '');
+begin
+  if uid is null then raise exception 'unauthorized' using errcode = '28000'; end if;
+  select * into r from public.invitations where id = p_invitation and user_id = uid for update;
+  if not found then return jsonb_build_object('ok', false, 'error', 'tidak_ditemukan'); end if;
+  if r.status not in ('draft','aktif') or r.moderation = 'takedown' then return jsonb_build_object('ok', false, 'error', 'tidak_dapat_diubah'); end if;
+  if th is not null and not exists (
+      select 1 from public.templates t join public.template_themes tt on tt.template_id = t.id and tt.enabled
+      join public.themes x on x.id = tt.theme_id and x.status = 'published'
+      where t.slug = r.template_id and x.slug = th) then
+    return jsonb_build_object('ok', false, 'error', 'tema_tidak_tersedia');
+  end if;
+  update public.invitations set theme_key = th where id = r.id;
+  return jsonb_build_object('ok', true, 'theme', th);
+end $$;
+
+revoke execute on function public.set_invitation_theme(uuid, text) from public, anon;
+grant execute on function public.set_invitation_theme(uuid, text) to authenticated;
+grant execute on function public.get_template_themes(text[]) to anon, authenticated;
