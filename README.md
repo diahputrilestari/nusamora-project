@@ -65,6 +65,25 @@ Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu
 
 **AI Asset Generator (tambahan, opsional):** tab *AI Generator* di Asset Library. Tidak mengasumsikan provider: tanpa konfigurasi, UI menampilkan "belum dikonfigurasi". Untuk mengaktifkan: `supabase secrets set AI_PROVIDER=openai OPENAI_API_KEY=... [AI_IMAGE_MODEL=gpt-image-1]` lalu `supabase functions deploy asset-generate --no-verify-jwt`. Kunci hanya dibaca di server. Provider baru = tambah adapter `ImageProvider` di `supabase/functions/_shared/ai.ts`. AI hanya membuat gambar (kategori PNG/JPG/WebP), maks. 40 gambar/24 jam per admin; hasil harus dipilih dan disimpan, lewat validator `asset-register` yang sama.
 
+### Form aset per paket (modular)
+
+Form **Unggah aset**, **detail aset**, **picker slot** dan **pengaturan aset di Template Studio** berubah otomatis mengikuti paket yang dipilih. Semua definisinya ada di satu file konfigurasi: `assets/asset-forms.js` (`window.NM_ASSET_FORMS`).
+
+| Paket | Jenis aset | Pengaturan |
+|---|---|---|
+| Essential (2D) | background per section, ilustrasi pengantin & karakter, dekorasi/ornamen/bunga/frame/border, animasi GIF/Lottie | posisi %, lebar, skala, rotasi, layer (z), opasitas, animasi |
+| Signature (3D cinematic) | model GLB/glTF, texture & material, background/environment, kamera & efek, musik | posisi XYZ, rotasi XYZ, skala, bayangan, animasi objek, shot kamera; layout: cahaya & kamera scene |
+| Luxe (3D live guest) | background virtual venue (PNG/JPG/WebP/GLB), model venue & area interaktif, avatar (pria/wanita/pengantin/tamu), furniture & dekorasi, interactive objects, asset mini games | posisi, collision, interaksi, kunci mini game; layout: kapasitas, collision bawaan, titik spawn |
+
+Menambah kategori/field/slot **tanpa mengubah komponen**: edit `asset-forms.js` (grup `groups`, `fields`, `slots`, `config`, `layout`). Kategori baru di database ditambah lewat modul *Aset > Kategori Aset* atau `asset_categories` di `asset-schema.sql`.
+
+Isian khusus jenis aset (mis. `avatar_role`, `model_role`, `map_type`) disimpan di kolom `assets.attrs` (jsonb, divalidasi `asset_attrs_clean`: kunci `[a-z][a-z0-9_]{0,29}`, nilai string/angka/boolean, maks. 20 kunci). Konfigurasi aset per template tetap di `template_assets.config`, dan pengaturan scene/venue di `layout`. Unggah banyak file sekaligus didukung; aset dapat dipakai ulang dari Asset Library. Jalankan ulang `backend/asset-schema.sql` (idempoten) lalu deploy ulang `asset-register`:
+
+```
+supabase functions deploy asset-register --no-verify-jwt
+```
+
+
 ## Publikasi & Pembayaran (Midtrans Snap)
 Alur: editor (Preview / Publikasikan) → dialog ringkasan paket → Edge Function `midtrans-checkout` → halaman pembayaran Snap → `/pembayaran?order_id=…` (hasil).
 Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + verifikasi Status API) dan `midtrans-sync` memanggil `apply_payment` (idempoten). Harga selalu dari tabel `plans`.

@@ -209,10 +209,38 @@ create or replace function public.asset_mime_ok(p_ext text, p_mime text) returns
 $$;
 
 -- Pendaftaran asset: HANYA service_role (Edge Function asset-register, yang sudah memeriksa isi file). Memeriksa ulang aturan paket/kategori di DB.
+-- Isian khusus paket (mis. peran avatar, collision, bagian undangan). Divalidasi generik: kunci bebas (huruf kecil/angka/_),
+-- nilai skalar saja, sehingga isian baru bisa ditambah di konfigurasi form tanpa mengubah SQL.
+alter table public.assets add column if not exists attrs jsonb not null default '{}'::jsonb;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'assets_attrs_chk') then
+    alter table public.assets add constraint assets_attrs_chk check (jsonb_typeof(attrs) = 'object' and pg_column_size(attrs) <= 2048);
+  end if;
+end $$;
+create or replace function public.asset_attrs_clean(p jsonb) returns jsonb language plpgsql immutable as $$
+declare k text; v jsonb; o jsonb := '{}'::jsonb; n int := 0;
+begin
+  if p is null or p = 'null'::jsonb then return '{}'::jsonb; end if;
+  if jsonb_typeof(p) <> 'object' then return null; end if;
+  for k, v in select * from jsonb_each(p) loop
+    if k !~ '^[a-z][a-z0-9_]{0,29}$' then return null; end if;
+    if jsonb_typeof(v) = 'string' then
+      if char_length(v #>> '{}') > 80 then return null; end if;
+      if v #>> '{}' = '' then continue; end if;
+    elsif jsonb_typeof(v) not in ('number','boolean') then
+      if jsonb_typeof(v) = 'null' then continue; end if;
+      return null;
+    end if;
+    n := n + 1; if n > 20 then return null; end if;
+    o := o || jsonb_build_object(k, v);
+  end loop;
+  return o;
+end $$;
+
 create or replace function public.admin_register_asset(p_user uuid, p_path text, p_name text, p_description text, p_category uuid, p_packages text[], p_theme text, p_tags text[], p_meta jsonb)
 returns jsonb language plpgsql security definer set search_path = public, storage as $$
 declare c public.asset_categories; ext text := lower(coalesce(p_meta->>'file_type','')); sz bigint := nullif(p_meta->>'size','')::bigint; obj record; dup public.assets; a public.assets;
-        pk text; pkgs text[]; url text;
+        pk text; pkgs text[]; url text; at jsonb;
 begin
   if not public.has_perm_user(p_user, 'templates.write') then raise exception 'forbidden' using errcode = '42501'; end if;
   if p_path is null or p_path !~ '^(incoming|generated)/[A-Za-z0-9._/-]{3,200}$' or p_path like '%..%' then return jsonb_build_object('ok', false, 'error', 'path_tidak_valid'); end if;
@@ -221,6 +249,8 @@ begin
   if ext = '' or not (ext = any (c.allowed_ext)) or right(lower(p_path), char_length(ext) + 1) <> '.' || ext then return jsonb_build_object('ok', false, 'error', 'format_tidak_didukung', 'allowed', to_jsonb(c.allowed_ext)); end if;
   if not public.asset_mime_ok(ext, lower(coalesce(p_meta->>'mime',''))) then return jsonb_build_object('ok', false, 'error', 'mime_tidak_sesuai'); end if;
   if sz is null or sz <= 0 or sz > c.max_bytes then return jsonb_build_object('ok', false, 'error', 'ukuran_melebihi_batas', 'max_bytes', c.max_bytes); end if;
+  at := public.asset_attrs_clean(p_meta->'attrs');
+  if at is null then return jsonb_build_object('ok', false, 'error', 'attrs_tidak_valid'); end if;
   pkgs := coalesce(nullif(p_packages, '{}'), array[c.package_type]);
   if not (c.package_type = any (pkgs)) then pkgs := array_append(pkgs, c.package_type); end if;
   foreach pk in array pkgs loop
@@ -235,10 +265,10 @@ begin
   select * into dup from public.assets where checksum = p_meta->>'checksum' and deleted_at is null;
   if found then return jsonb_build_object('ok', false, 'error', 'duplikat', 'id', dup.id, 'name', dup.name); end if;
   url := coalesce(p_meta->>'public_base', '') || p_path;
-  insert into public.assets (name, description, category_id, package_types, theme_key, file_path, file_url, thumbnail_url, file_type, mime, file_size, width, height, tags, is_transparent, checksum, created_by)
+  insert into public.assets (name, description, category_id, package_types, theme_key, file_path, file_url, thumbnail_url, file_type, mime, file_size, width, height, tags, is_transparent, checksum, created_by, attrs)
   values (left(trim(coalesce(nullif(p_name, ''), p_path)), 120), left(p_description, 500), c.id, (select array_agg(distinct x order by x) from unnest(pkgs) x), nullif(lower(trim(p_theme)), ''), p_path, url,
           nullif(p_meta->>'thumbnail_url', ''), ext, lower(p_meta->>'mime'), sz, nullif(p_meta->>'width','')::int, nullif(p_meta->>'height','')::int,
-          coalesce((select array_agg(left(trim(t), 30)) from unnest(p_tags) t where trim(t) <> '' limit 20), '{}'), coalesce((p_meta->>'is_transparent')::boolean, false), p_meta->>'checksum', p_user)
+          coalesce((select array_agg(left(trim(t), 30)) from unnest(p_tags) t where trim(t) <> '' limit 20), '{}'), coalesce((p_meta->>'is_transparent')::boolean, false), p_meta->>'checksum', p_user, at)
   returning * into a;
   return jsonb_build_object('ok', true, 'asset', to_jsonb(a));
 end $$;
@@ -247,7 +277,7 @@ grant execute on function public.admin_register_asset(uuid,text,text,text,uuid,t
 
 create or replace function public.admin_update_asset(p_id uuid, p_patch jsonb) returns jsonb
 language plpgsql security definer set search_path = public as $$
-declare a public.assets; c public.asset_categories; pk text; pkgs text[]; cat uuid;
+declare a public.assets; c public.asset_categories; pk text; pkgs text[]; cat uuid; at jsonb;
 begin
   if not public.has_perm('templates.write') then raise exception 'forbidden' using errcode = '42501'; end if;
   select * into a from public.assets where id = p_id and deleted_at is null for update;
@@ -265,6 +295,7 @@ begin
   if exists (select 1 from public.template_assets ta join public.templates t on t.id = ta.template_id where ta.asset_id = a.id and not (t.package_type = any (pkgs))) then
     return jsonb_build_object('ok', false, 'error', 'masih_dipakai_paket_lain');
   end if;
+  if p_patch ? 'attrs' then at := public.asset_attrs_clean(p_patch->'attrs'); if at is null then return jsonb_build_object('ok', false, 'error', 'attrs_tidak_valid'); end if; else at := a.attrs; end if;
   if p_patch ? 'status' and (p_patch->>'status') not in ('active','archived') then return jsonb_build_object('ok', false, 'error', 'status_tidak_valid'); end if;
   update public.assets set
     name = left(trim(coalesce(nullif(p_patch->>'name',''), name)), 120),
@@ -274,7 +305,7 @@ begin
     tags = case when p_patch ? 'tags' then coalesce((select array_agg(left(trim(value), 30)) from jsonb_array_elements_text(p_patch->'tags') where trim(value) <> '' limit 20), '{}') else tags end,
     is_transparent = coalesce((p_patch->>'is_transparent')::boolean, is_transparent),
     thumbnail_url = case when p_patch ? 'thumbnail_url' then nullif(p_patch->>'thumbnail_url','') else thumbnail_url end,
-    status = coalesce(p_patch->>'status', status)
+    status = coalesce(p_patch->>'status', status), attrs = at
   where id = a.id returning * into a;
   return jsonb_build_object('ok', true, 'asset', to_jsonb(a));
 end $$;
@@ -354,7 +385,7 @@ language sql stable security definer set search_path = public as $$
        th as (select th.* from public.themes th join t on true join public.template_themes tt on tt.template_id = t.id and tt.theme_id = th.id and tt.enabled
               where th.slug = p_theme and th.status = 'published'),
        pick as (
-         select ta.*, a.file_url, a.file_type, a.width, a.height, a.name as aname from t
+         select ta.*, a.file_url, a.file_type, a.width, a.height, a.name as aname, a.attrs as aattrs from t
          join public.template_assets ta on ta.template_id = t.id
          join public.assets a on a.id = ta.asset_id and a.deleted_at is null and a.status = 'active'
          where (ta.theme_id is null and not exists (select 1 from th join public.template_assets x on x.template_id = t.id and x.theme_id = th.id and x.slot_key = ta.slot_key
@@ -363,7 +394,7 @@ language sql stable security definer set search_path = public as $$
   select case when (select count(*) from t) = 0 then null else jsonb_build_object('template', (select slug from t), 'package', (select package_type from t),
       'theme', (select slug from th), 'layout', coalesce((select tt.layout from th join public.template_themes tt on tt.theme_id = th.id and tt.template_id = (select id from t)), '{}'::jsonb) || '{}'::jsonb,
       'base_layout', (select layout from t),
-      'assets', coalesce((select jsonb_agg(jsonb_build_object('slot', slot_key, 'section', section, 'position', position, 'config', config, 'url', file_url, 'type', file_type, 'width', width, 'height', height, 'name', aname) order by position, slot_key) from pick), '[]'::jsonb)) end;
+      'assets', coalesce((select jsonb_agg(jsonb_build_object('slot', slot_key, 'section', section, 'position', position, 'config', config, 'url', file_url, 'type', file_type, 'width', width, 'height', height, 'name', aname, 'attrs', aattrs) order by position, slot_key) from pick), '[]'::jsonb)) end;
 $$;
 
 revoke execute on function public.admin_update_asset(uuid,jsonb), public.admin_delete_asset(uuid,boolean), public.admin_restore_asset(uuid), public.admin_assets_usage(), public.admin_save_template_mapping(uuid,uuid,jsonb,jsonb) from public, anon;
