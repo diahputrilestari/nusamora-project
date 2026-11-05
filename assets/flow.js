@@ -24,7 +24,7 @@
   }
   function note(t, p, cta) { return '<div class="fw narrow"><div class="card"><div class="empty"><span class="ico"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span><h3>' + esc(t) + "</h3><p>" + esc(p) + "</p>" + (cta || "") + "</div></div></div>"; }
   function nextUrl() { return location.pathname + location.search; }
-  var ERR = { slug_digunakan: "URL ini sudah digunakan. Coba yang lain.", slug_dicadangkan: "URL ini dicadangkan sistem. Pilih yang lain.", slug_tidak_valid: "Format URL belum benar.", batas_draft: "Anda sudah memiliki 20 draft. Selesaikan atau hapus draft lama dulu.", akun_ditangguhkan: "Akun Anda sedang ditangguhkan.", template_tidak_valid: "Template tidak tersedia.", kategori_tidak_valid: "Kategori tidak valid.", kategori_tidak_cocok: "Template ini tidak tersedia untuk kategori tersebut.", tidak_ditemukan: "Undangan tidak ditemukan.", tidak_dapat_diubah: "Undangan ini tidak dapat diubah.", foto_tidak_valid: "Foto tidak valid.", konten_tidak_valid: "Isi undangan terlalu besar.", konten_tidak_sesuai_paket: "Isi undangan tidak sesuai dengan paket Anda.", opsi_tidak_didukung: "Pilihan tersebut tidak didukung template ini." };
+  var ERR = { avatar_tidak_valid: "Avatar yang dipilih tidak tersedia untuk tema ini. Pilih avatar lain.", slug_digunakan: "URL ini sudah digunakan. Coba yang lain.", slug_dicadangkan: "URL ini dicadangkan sistem. Pilih yang lain.", slug_tidak_valid: "Format URL belum benar.", batas_draft: "Anda sudah memiliki 20 draft. Selesaikan atau hapus draft lama dulu.", akun_ditangguhkan: "Akun Anda sedang ditangguhkan.", template_tidak_valid: "Template tidak tersedia.", kategori_tidak_valid: "Kategori tidak valid.", kategori_tidak_cocok: "Template ini tidak tersedia untuk kategori tersebut.", tidak_ditemukan: "Undangan tidak ditemukan.", tidak_dapat_diubah: "Undangan ini tidak dapat diubah.", foto_tidak_valid: "Foto tidak valid.", konten_tidak_valid: "Isi undangan terlalu besar.", konten_tidak_sesuai_paket: "Isi undangan tidak sesuai dengan paket Anda.", opsi_tidak_didukung: "Pilihan tersebut tidak didukung template ini." };
   function errText(e) { var m = (e && e.message) || ""; return ERR[m] || (/fetch|network/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet." : "Terjadi kendala. Coba lagi."); }
   function ids(a) { return (Array.isArray(a) ? a : []).map(function (x) { return typeof x === "string" ? x : x.id; }); }
   function opts(a) { return (Array.isArray(a) ? a : []).map(function (x) { return typeof x === "string" ? [x, x] : [x.id, x.name || x.id]; }); }
@@ -41,6 +41,16 @@
   function loadThemes(slugs) { if (!slugs.length) return Promise.resolve({}); return sb.rpc("get_template_themes", { p_templates: slugs }).then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
   function themePick(t, th) { if (!th || !th.length) return ""; return '<fieldset class="thm"><legend>Pilih tema</legend>' + th.map(function (x, i) { return '<label class="thc"><input type="radio" name="th-' + esc(t.slug) + '" data-th="' + esc(t.slug) + '" value="' + esc(x.slug) + '"' + (i === 0 ? " checked" : "") + "><span>" + esc(x.name) + "</span></label>"; }).join("") + "</fieldset>"; }
   function loadTemplate(slug) { return sb.from("templates").select(TSEL).eq("slug", slug).maybeSingle().then(function (r) { return r.data ? mapT(r.data) : null; }, function () { return null; }); }
+  /* Pilihan avatar mempelai = aset yang diunggah admin untuk template + tema undangan (RPC template_avatar_options). */
+  function loadAvatarOpts(slug, theme) { return sb.rpc("template_avatar_options", { p_slug: slug, p_theme: theme || null }).then(function (r) { return r.error || !Array.isArray(r.data) ? null : r.data; }, function () { return null; }); }
+  var IMGT = { png: 1, jpg: 1, jpeg: 1, webp: 1, gif: 1, svg: 1 };
+  function avThumb(o) { var ty = String(o.type || "").toLowerCase(); return IMGT[ty] && /^https?:\/\//i.test(o.url || "") ? '<img src="' + esc(o.url) + '" alt="" loading="lazy">' : '<span class="av3d" aria-hidden="true">3D</span>'; }
+  function avatarBlock(x) {
+    var A = x.av || {}, c = (x.c && x.c.avatars) || {}, parts = [["groom", "Mempelai pria"], ["bride", "Mempelai wanita"]].map(function (s) {
+      var o = (A.options || []).filter(function (v) { return v.side === s[0] && (A.demo ? true : v.slot === c[s[0]]); })[0]; return o ? '<figure class="avp">' + avThumb(o) + "<figcaption><b>" + esc(s[1]) + "</b><span>" + esc(o.name || "") + "</span></figcaption></figure>" : "";
+    }).join("");
+    return parts ? '<section class="avb card"><h3>Avatar mempelai</h3><div class="avr">' + parts + "</div></section>" : "";
+  }
   function loadPlans() { return sb.from("plans").select("id,name,price,duration_days,gallery_limit,allow_3d,allow_live_guest,features").eq("active", true).order("sort").then(function (r) { return r.data || []; }, function () { return []; }); }
   function rp(n) { return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
 
@@ -140,8 +150,8 @@
 
   /* ================= 5. EDITOR (berbeda untuk tiap paket) ================= */
   var LAB = { wedding: ["Nama mempelai wanita", "Nama mempelai pria"], engagement: ["Nama calon mempelai wanita", "Nama calon mempelai pria"], birthday: ["Nama yang berulang tahun", ""], graduation: ["Nama wisudawan/wisudawati", ""], aqiqah: ["Nama anak", "Nama orang tua"], seminar: ["Nama acara", "Penyelenggara"], corporate: ["Nama acara", "Perusahaan / penyelenggara"], other: ["Nama acara", "Penyelenggara"] };
-  var DEF = { names: { a: "", b: "" }, welcome: "", event: { start: "", end: "", tz: "WIB", venue: "", address: "", maps: "" }, photos: { cover: "", gallery: [] }, music: { enabled: true, track: "we-are" }, features: { rsvp: true, guestbook: true, countdown: true, gift: false }, gift: { bank: "", number: "", holder: "" } };
-  var COMMON_KEYS = ["names", "welcome", "event", "photos", "music", "features", "gift"];
+  var DEF = { names: { a: "", b: "" }, welcome: "", event: { start: "", end: "", tz: "WIB", venue: "", address: "", maps: "" }, photos: { cover: "", gallery: [] }, avatars: { groom: "", bride: "" }, music: { enabled: true, track: "we-are" }, features: { rsvp: true, guestbook: true, countdown: true, gift: false }, gift: { bank: "", number: "", holder: "" } };
+  var COMMON_KEYS = ["names", "welcome", "event", "photos", "avatars", "music", "features", "gift"];
   var PKEYS = { essential: ["design2d", "texts", "sections"], signature: ["scene", "camera", "anim", "cinematic"], luxe: ["scene", "venue", "live"] };
   function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); Object.keys(b || {}).forEach(function (k) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = merge(o[k], b[k]); else if (b[k] != null) o[k] = b[k]; }); return o; }
   function get(o, p) { return p.split(".").reduce(function (x, k) { return x && x[k]; }, o); }
@@ -162,19 +172,19 @@
     return [];
   }
   function baseChecks(c, date) { return [["Nama acara", !!(c.names.a || "").trim()], ["Tanggal acara", !!date], ["Jam mulai", !!c.event.start], ["Lokasi", !!(c.event.venue || "").trim()], ["Foto sampul", !!c.photos.cover], ["Foto galeri", c.photos.gallery.length > 0]]; }
-  var SEC_OF = { "Nama acara": "info", "Nama pasangan": "info", "Tanggal acara": "waktu", "Jam mulai": "waktu", "Nama lokasi": "waktu", "Foto sampul": "foto", "Warna undangan": "design", "Scene 3D": "scene", "Gerakan kamera": "kamera", "Scene venue": "venue", "Minimal satu area venue": "venue", "Minimal satu pilihan avatar tamu": "avatar" };
+  var SEC_OF = { "Nama acara": "info", "Nama pasangan": "info", "Tanggal acara": "waktu", "Jam mulai": "waktu", "Nama lokasi": "waktu", "Foto sampul": "foto", "Warna undangan": "design", "Scene 3D": "scene", "Gerakan kamera": "kamera", "Scene venue": "venue", "Minimal satu area venue": "venue", "Minimal satu pilihan avatar tamu": "avatar", "Avatar mempelai pria": "mempelai", "Avatar mempelai wanita": "mempelai" };
   function secOf(l) { return /^Galeri/.test(l) ? "foto" : (SEC_OF[l] || "info"); }
 
   function pageEditor() {
     var id = new URLSearchParams(location.search).get("id");
     if (!id) { view.innerHTML = note("Undangan tidak ditemukan", "Buka undangan dari daftar Undangan Saya.", '<a class="btn" href="/akun#undangan">Undangan Saya</a>'); return; }
-    sb.from("invitations").select("id,title,category,template_id,package_type,slug,status,event_date,content,updated_at,moderation,public_url,expires_at").eq("id", id).maybeSingle().then(function (r) {
+    sb.from("invitations").select("id,title,category,template_id,package_type,slug,status,event_date,content,updated_at,moderation,public_url,expires_at,theme_key").eq("id", id).maybeSingle().then(function (r) {
       var inv = r.data;
       if (r.error || !inv) { view.innerHTML = note("Undangan tidak ditemukan", "Undangan ini tidak ada atau bukan milik akun Anda.", '<a class="btn" href="/akun#undangan">Undangan Saya</a>'); return; }
-      return Promise.all([loadTemplate(inv.template_id), loadPlans()]).then(function (z) { startEditor(inv, z[0], z[1]); });
+      return Promise.all([loadTemplate(inv.template_id), loadPlans(), loadAvatarOpts(inv.template_id, inv.theme_key)]).then(function (z) { startEditor(inv, z[0], z[1], z[2]); });
     }, function () { view.innerHTML = note("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang halaman."); });
   }
-  function startEditor(inv, tpl, plans) {
+  function startEditor(inv, tpl, plans, avOpts) {
     var pkg = pkgOk(inv.package_type) || (tpl && pkgOk(tpl.pkg));
     if (!pkg) { view.innerHTML = note("Paket undangan belum ditentukan", "Undangan ini dibuat dengan versi lama. Buat undangan baru melalui Pilih Paket.", '<a class="btn" href="/paket">Pilih Paket</a>'); return; }
     var caps = (tpl && tpl.caps) || {}, cat = CATN[inv.category] ? inv.category : "other", lab = LAB[cat], C0 = fullContent(pkg, caps, inv.content), date = inv.event_date || "";
@@ -191,6 +201,14 @@
     var secs = [], S = function (id, title, sub, body) { secs.push([id, title]); return sec(id, title, sub, body); };
     var html = "";
     html += S("info", "Informasi Acara", "Nama yang akan tampil di undangan.", '<div class="g2f">' + T(lab[0], "names.a", { max: 80 }) + (lab[1] ? T(lab[1], "names.b", { max: 80 }) : "") + T("Kata sambutan", "welcome", { ta: 1, full: 1, max: 1000, ph: "Tulis sapaan hangat untuk tamu Anda..." }) + "</div>");
+    function avSide(side, label) {
+      var list = (avOpts || []).filter(function (o) { return o.side === side; }), cur = (C0.avatars || {})[side] || "";
+      return '<div class="f full"><label>' + esc(label) + '</label>' + (list.length ? '<div class="avg" role="radiogroup" aria-label="' + esc(label) + '">' + list.map(function (o) {
+        return '<label class="avc"><input type="radio" name="r-avatars.' + side + '" data-p="avatars.' + side + '" value="' + esc(o.slot) + '"' + (cur === o.slot ? " checked" : "") + dis() + ">" + avThumb(o) + "<span>" + esc(o.name || o.slot) + "</span></label>";
+      }).join("") + "</div>" : '<p class="avn">Belum ada pilihan ' + esc(label.toLowerCase()) + " untuk tema ini.</p>") + "</div>";
+    }
+    var avSub = avOpts === null ? "Pilihan avatar tidak dapat dimuat sekarang. Muat ulang halaman." : "Pilih karakter yang mewakili mempelai. Pilihan mengikuti tema " + (inv.theme_key ? "yang Anda pilih" : "template ini") + ".";
+    html += S("mempelai", "Avatar Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
     html += S("waktu", "Waktu & Tempat", "", '<div class="g2f">' + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>");
     html += S("foto", "Foto", "PNG, JPG, atau WebP. Foto dikecilkan otomatis agar undangan cepat dibuka.", '<div class="f"><label>Foto sampul</label><div class="cover" id="cv">' + (C0.photos.cover ? '<img src="' + esc(C0.photos.cover) + '" alt="Foto sampul">' : "Belum ada foto sampul") + "</div>" + (locked ? "" : '<label class="drop"><b>Pilih foto sampul</b><span>atau seret ke sini</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-c"></label>') + '<span class="err" id="er-c"></span></div><div class="f"><label>Galeri foto <small>(maks. ' + GMAX + ' foto untuk paket ' + PK[pkg].name + ')</small></label><div class="ph" id="gl"></div>' + (locked ? "" : '<label class="drop"><b>Tambah foto galeri</b><span>Bisa pilih beberapa sekaligus</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-g" multiple></label>') + '<span class="err" id="er-g"></span></div>');
     var comp = SW("features.countdown", "Hitung mundur", "Menampilkan sisa waktu menuju acara.") + SW("features.rsvp", "RSVP", "Tamu mengonfirmasi kehadiran dari link pribadinya.") + SW("features.guestbook", "Buku ucapan", "Ucapan dan doa dari tamu terundang.") + SW("features.gift", "Hadiah digital", "Tampilkan rekening untuk hadiah.") + '<div class="g2f" id="giftf"' + (C0.features.gift ? "" : " hidden") + ">" + T("Nama bank / e-wallet", "gift.bank", { max: 40 }) + T("Nomor rekening", "gift.number", { max: 40 }) + T("Atas nama", "gift.holder", { full: 1, max: 80 }) + "</div>";
@@ -221,7 +239,8 @@
     function content() { return pickKeys(pkg, C0); }
     function title() { var a = (C0.names.a || "").trim(), b = (C0.names.b || "").trim(); return a && b && (cat === "wedding" || cat === "engagement") ? a + " & " + b : a || inv.title; }
     function setSv(s, t) { state = s; var el = $("#sv"); el.className = "save " + (s === "ok" ? "" : s); $("#svt").textContent = t; }
-    function progress() { var ck = baseChecks(C0, date).concat(extraChecks(pkg, C0)), n = ck.filter(function (x) { return x[1]; }).length, p = Math.round(n / ck.length * 100); $("#pc").textContent = p; $("#pb").style.width = p + "%"; $("#ck").innerHTML = ck.map(function (x) { return '<li class="' + (x[1] ? "y" : "") + '">' + esc(x[0]) + "</li>"; }).join(""); }
+    function avChecks() { var o = avOpts || [], a = C0.avatars || {}, r = []; if (o.some(function (v) { return v.side === "groom"; })) r.push(["Avatar mempelai pria", !!a.groom]); if (o.some(function (v) { return v.side === "bride"; })) r.push(["Avatar mempelai wanita", !!a.bride]); return r; }
+    function progress() { var ck = baseChecks(C0, date).concat(extraChecks(pkg, C0)).concat(avChecks()), n = ck.filter(function (x) { return x[1]; }).length, p = Math.round(n / ck.length * 100); $("#pc").textContent = p; $("#pb").style.width = p + "%"; $("#ck").innerHTML = ck.map(function (x) { return '<li class="' + (x[1] ? "y" : "") + '">' + esc(x[0]) + "</li>"; }).join(""); }
     function gallery() { $("#gl").innerHTML = C0.photos.gallery.map(function (u, i) { return '<div class="it"><img src="' + esc(u) + '" alt="Foto galeri ' + (i + 1) + '" loading="lazy">' + (locked ? "" : '<button type="button" data-rm="' + i + '" aria-label="Hapus foto ' + (i + 1) + '">&times;</button>') + "</div>"; }).join(""); progress(); }
     function save(now) { if (locked) return; clearTimeout(timer); dirty = true; setSv("dirty", "Perubahan belum disimpan..."); timer = setTimeout(run, now ? 0 : 1200); }
     function run() {
@@ -309,6 +328,7 @@
   }
   function renderStage(x, host) {
     host.innerHTML = x.pkg === "essential" ? r2d(x) : x.pkg === "signature" ? rCin(x) : rLive(x);
+    host.insertAdjacentHTML("beforeend", avatarBlock(x));
     $$(".i2-cd", host).forEach(function (el) { var ts = Number(el.dataset.ts); function t() { var s = Math.max(0, Math.floor((ts - Date.now()) / 1000)), b = el.querySelectorAll("b"); b[0].textContent = Math.floor(s / 86400); b[1].textContent = Math.floor(s % 86400 / 3600); b[2].textContent = Math.floor(s % 3600 / 60); b[3].textContent = s % 60; } t(); var iv = setInterval(function () { if (!d.body.contains(el)) clearInterval(iv); else t(); }, 1000); });
     $$("form[data-demo]", host).forEach(function (f) { f.addEventListener("submit", function (e) { e.preventDefault(); toast("Contoh tampilan. RSVP aktif setelah undangan dipublikasikan."); }); });
     var rp = $("#replay", host); if (rp) rp.onclick = function () { renderStage(x, host); };
@@ -337,17 +357,17 @@
     if (demo) {
       loadTemplate(demo).then(function (tpl) {
         if (!tpl) { view.innerHTML = note("Template tidak ditemukan", "Template ini tidak tersedia.", '<a class="btn" href="/paket">Pilih Paket</a>'); return; }
-        var cat = tpl.cats[0] || "wedding"; shell({ pkg: tpl.pkg, cat: cat, date: new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10), c: sampleContent(tpl.pkg, tpl), tpl: tpl, caps: tpl.caps, inv: { title: tpl.name } }, "demo");
+        var cat = tpl.cats[0] || "wedding"; loadAvatarOpts(tpl.slug, null).then(function (ao) { shell({ pkg: tpl.pkg, cat: cat, av: { options: ao || [], demo: true }, date: new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10), c: sampleContent(tpl.pkg, tpl), tpl: tpl, caps: tpl.caps, inv: { title: tpl.name } }, "demo"); });
       }); return;
     }
     if (!id) { view.innerHTML = note("Undangan tidak ditemukan", "Buka preview dari editor undangan.", '<a class="btn" href="/akun#undangan">Undangan Saya</a>'); return; }
-    sb.from("invitations").select("id,title,category,template_id,package_type,slug,status,event_date,content,moderation,public_url,expires_at").eq("id", id).maybeSingle().then(function (r) {
+    sb.from("invitations").select("id,title,category,template_id,package_type,slug,status,event_date,content,moderation,public_url,expires_at,theme_key").eq("id", id).maybeSingle().then(function (r) {
       var inv = r.data; if (r.error || !inv) { view.innerHTML = note("Undangan tidak ditemukan", "Undangan ini tidak ada atau bukan milik akun Anda.", '<a class="btn" href="/akun#undangan">Undangan Saya</a>'); return; }
       Promise.all([loadTemplate(inv.template_id), loadPlans()]).then(function (z) {
         var tpl = z[0], pkg = pkgOk(inv.package_type) || (tpl && pkgOk(tpl.pkg));
         if (!pkg) { view.innerHTML = note("Paket undangan belum ditentukan", "Buat undangan baru melalui Pilih Paket.", '<a class="btn" href="/paket">Pilih Paket</a>'); return; }
         var caps = (tpl && tpl.caps) || {};
-        shell({ pkg: pkg, cat: CATN[inv.category] ? inv.category : "other", date: inv.event_date || "", c: fullContent(pkg, caps, inv.content), tpl: tpl, caps: caps, inv: inv, plan: z[1].filter(function (p) { return p.id === pkg; })[0] }, "own");
+        loadAvatarOpts(inv.template_id, inv.theme_key).then(function (ao) { shell({ av: { options: ao || [] }, pkg: pkg, cat: CATN[inv.category] ? inv.category : "other", date: inv.event_date || "", c: fullContent(pkg, caps, inv.content), tpl: tpl, caps: caps, inv: inv, plan: z[1].filter(function (p) { return p.id === pkg; })[0] }, "own"); });
       });
     }, function () { view.innerHTML = note("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang halaman."); });
   }

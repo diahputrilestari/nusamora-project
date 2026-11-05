@@ -499,3 +499,74 @@ grant execute on function public.admin_link_variant(uuid, uuid) to authenticated
 --    agar muncul di katalog pelanggan (katalog memfilter dengan categories). Idempoten.
 update public.templates t set categories = array[c.slug] from public.event_categories c
  where t.category_id = c.id and cardinality(coalesce(t.categories, '{}')) = 0;
+
+
+-- 10. Avatar mempelai pilihan pelanggan: diambil dari aset yang dipetakan admin pada template + tema undangan.
+--     Sisi (groom/bride) ditentukan dari atribut aset: essential character_role pria/wanita, signature model_role
+--     mempelai_pria/mempelai_wanita, luxe avatar_role pengantin_pria/pengantin_wanita.
+create or replace function public.template_avatar_options(p_slug text, p_theme text default null) returns jsonb
+language sql stable security definer set search_path = public as $$
+  with g as (select public.get_template_assets(p_slug, p_theme) as j),
+  a as (select g.j->>'package' as pkg, x as it from g, jsonb_array_elements(coalesce(g.j->'assets', '[]'::jsonb)) x),
+  s as (select pkg, it,
+          case when pkg = 'essential' then it#>>'{attrs,character_role}'
+               when pkg = 'signature' then it#>>'{attrs,model_role}'
+               when pkg = 'luxe' then it#>>'{attrs,avatar_role}' end as role from a),
+  m as (select it, case when (pkg = 'essential' and role = 'pria') or (pkg = 'signature' and role = 'mempelai_pria') or (pkg = 'luxe' and role = 'pengantin_pria') then 'groom'
+                        when (pkg = 'essential' and role = 'wanita') or (pkg = 'signature' and role = 'mempelai_wanita') or (pkg = 'luxe' and role = 'pengantin_wanita') then 'bride' end as side from s)
+  select coalesce(jsonb_agg(jsonb_build_object('slot', it->>'slot', 'side', side, 'name', it->>'name', 'url', it->>'url', 'type', it->>'type', 'width', it->'width', 'height', it->'height')
+                            order by it->>'position', it->>'slot'), '[]'::jsonb)
+  from m where side is not null
+$$;
+revoke execute on function public.template_avatar_options(text, text) from public;
+grant execute on function public.template_avatar_options(text, text) to anon, authenticated;
+
+-- Kunci konten yang diizinkan per paket: ditambah "avatars" (pilihan avatar mempelai).
+create or replace function public.pkg_keys(p text) returns text[] language sql immutable as $$
+  select array['names','welcome','event','photos','music','features','gift','avatars'] || case p
+    when 'essential' then array['design2d','texts','sections']
+    when 'signature' then array['scene','camera','anim','cinematic']
+    when 'luxe' then array['scene','venue','live'] else array[]::text[] end
+$$;
+
+-- save_invitation: sama dengan versi package-schema.sql, ditambah validasi avatars.groom / avatars.bride
+-- (slot harus ada di aset template + tema undangan dan bersisi sesuai; hanya diperiksa bila nilainya berubah).
+create or replace function public.save_invitation(p_id uuid, p_title text, p_event_date date, p_content jsonb) returns timestamptz
+language plpgsql security definer set search_path = public as $$
+declare uid uuid := auth.uid(); r public.invitations; u text; pref text; g jsonb; caps jsonb; iss text; sd text; v text; ok boolean;
+begin
+  if uid is null then raise exception 'unauthorized' using errcode = '28000'; end if;
+  select * into r from public.invitations where id = p_id and user_id = uid for update;
+  if not found then raise exception 'tidak_ditemukan'; end if;
+  if r.status not in ('draft','aktif') or r.moderation = 'takedown' then raise exception 'tidak_dapat_diubah'; end if;
+  if jsonb_typeof(p_content) <> 'object' or length(p_content::text) > 60000 then raise exception 'konten_tidak_valid'; end if;
+  select capabilities into caps from public.templates where slug = r.template_id;
+  iss := public.content_issue(r.package_type, coalesce(caps, '{}'::jsonb), p_content);
+  if iss is not null then raise exception '%', iss; end if;
+  pref := '%/storage/v1/object/public/invitation-media/' || uid::text || '/%';
+  u := coalesce(p_content #>> '{photos,cover}', '');
+  if u <> '' and u not like pref then raise exception 'foto_tidak_valid'; end if;
+  g := p_content #> '{photos,gallery}';
+  if g is not null and g <> 'null'::jsonb then
+    if jsonb_typeof(g) <> 'array' or jsonb_array_length(g) > 40 then raise exception 'foto_tidak_valid'; end if;
+    for u in select jsonb_array_elements_text(g) loop
+      if u not like pref then raise exception 'foto_tidak_valid'; end if;
+    end loop;
+  end if;
+  if p_content ? 'avatars' then
+    if jsonb_typeof(p_content->'avatars') <> 'object' then raise exception 'avatar_tidak_valid'; end if;
+    foreach sd in array array['groom','bride'] loop
+      v := coalesce(p_content #>> array['avatars', sd], '');
+      if v <> '' and v is distinct from coalesce(r.content #>> array['avatars', sd], '') then
+        select exists (select 1 from jsonb_array_elements(public.template_avatar_options(r.template_id, r.theme_key)) o where o->>'slot' = v and o->>'side' = sd) into ok;
+        if not ok then raise exception 'avatar_tidak_valid'; end if;
+      end if;
+    end loop;
+  end if;
+  update public.invitations
+     set title = left(coalesce(nullif(trim(p_title), ''), title), 160), event_date = p_event_date, content = p_content, updated_at = now()
+   where id = p_id;
+  return now();
+end $$;
+revoke execute on function public.save_invitation(uuid,text,date,jsonb) from public, anon;
+grant execute on function public.save_invitation(uuid,text,date,jsonb) to authenticated;

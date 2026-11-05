@@ -65,6 +65,22 @@ Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu
 
 **AI Asset Generator (tambahan, opsional):** tab *AI Generator* di Asset Library. Tidak mengasumsikan provider: tanpa konfigurasi, UI menampilkan "belum dikonfigurasi". Untuk mengaktifkan: `supabase secrets set AI_PROVIDER=openai OPENAI_API_KEY=... [AI_IMAGE_MODEL=gpt-image-1]` lalu `supabase functions deploy asset-generate --no-verify-jwt`. Kunci hanya dibaca di server. Provider baru = tambah adapter `ImageProvider` di `supabase/functions/_shared/ai.ts`. AI hanya membuat gambar (kategori PNG/JPG/WebP), maks. 40 gambar/24 jam per admin; hasil harus dipilih dan disimpan, lewat validator `asset-register` yang sama.
 
+### Avatar mempelai pilihan pelanggan
+
+Di editor undangan (semua paket) ada bagian **Avatar Mempelai**: pelanggan memilih avatar mempelai pria dan wanita. Pilihannya adalah aset yang diunggah admin dan dipetakan ke template **dan tema** undangan itu (tema menimpa aset umum), jadi tiap tema punya avatar sendiri. Tidak ada data contoh: bila admin belum memetakan avatar, editor menampilkan pesan kosong.
+
+Cara admin menyiapkannya: unggah avatar dengan peran yang benar, lalu petakan ke slot template/tema di Template Studio (tab B).
+
+| Paket | Peran aset (isian saat unggah) | Slot saran |
+|---|---|---|
+| Essential | Karakter = Mempelai pria / Mempelai wanita | `groom_illustration`, `bride_illustration` |
+| Signature | Peran model = Avatar mempelai pria / wanita | `avatar_groom`, `avatar_bride` |
+| Luxe | Peran avatar = Pengantin pria / Pengantin wanita | `avatar_groom`, `avatar_bride` |
+
+Beberapa pilihan = beberapa aset dengan peran yang sama pada slot berbeda (slot kustom, mis. `avatar_groom_2`). Avatar tamu (Luxe: Tamu pria/wanita/umum) tidak termasuk pilihan ini.
+
+Backend: RPC `template_avatar_options(slug, tema)` (membaca `get_template_assets`), kunci konten `avatars.groom` / `avatars.bride` (berisi `slot_key`), dan `save_invitation` memvalidasi slot hanya bila nilainya berubah. Preview undangan menampilkan avatar terpilih. Jalankan ulang `backend/asset-schema.sql` (paling akhir).
+
 ### Form aset per paket (modular)
 
 Form **Unggah aset**, **detail aset**, **picker slot** dan **pengaturan aset di Template Studio** berubah otomatis mengikuti paket yang dipilih. Semua definisinya ada di satu file konfigurasi: `assets/asset-forms.js` (`window.NM_ASSET_FORMS`).

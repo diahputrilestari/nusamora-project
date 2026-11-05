@@ -28,7 +28,7 @@
       intro: "Aset gambar 2D: latar per section, ilustrasi, dekorasi, serta animasi GIF/Lottie. Format PNG/WebP transparan disarankan untuk dekorasi.",
       groups: [
         { key: "background", label: "Background per section", hint: "Latar satu section. PNG/JPG/WebP, rasio mengikuti layar ponsel (mis. 1080×1920).", cats: ["background", "section-decoration"], fields: ["section", "orientation"], slots: ["opening_background", "hero_background", "section_background", "closing_background"] },
-        { key: "character", label: "Ilustrasi pengantin & karakter", hint: "Ilustrasi mempelai atau karakter. PNG/WebP/SVG dengan latar transparan.", cats: ["character"], fields: ["character_role"], slots: ["couple_illustration", "groom_illustration", "bride_illustration"] },
+        { key: "character", label: "Ilustrasi pengantin & karakter", hint: "Ilustrasi mempelai atau karakter. PNG/WebP/SVG dengan latar transparan. Karakter \"Mempelai pria/wanita\" menjadi pilihan avatar pelanggan di editor; tambahkan beberapa slot (mis. groom_illustration_2) untuk beberapa pilihan.", cats: ["character"], fields: ["character_role"], slots: ["couple_illustration", "groom_illustration", "bride_illustration"] },
         { key: "decoration", label: "Dekorasi, ornamen, bunga, frame & border", hint: "Elemen dekoratif. PNG/WebP/SVG transparan; border bisa dibuat berulang.", cats: ["floral", "ornament", "frame", "wedding-objects"], fields: ["section", "placement"], slots: ["floral_decoration", "gorga_border", "frame_border", "ornament_corner", "closing_decoration"] },
         { key: "animation", label: "Animasi 2D (GIF / Lottie)", hint: "GIF, Lottie JSON, atau WebP animasi.", cats: ["animation"], fields: ["section", "loop"], slots: ["animated_decoration"] }
       ],
@@ -68,7 +68,7 @@
         { key: "music", label: "Musik latar", hint: "MP3/OGG/WAV, maks. 20 MB.", cats: ["background-music"], fields: ["loop", "volume"], slots: ["background_music"] }
       ],
       fields: {
-        model_role: S("model_role", "Peran model", [["venue", "Venue / ruangan"], ["pasangan", "Pasangan"], ["dekorasi", "Dekorasi / bunga"], ["furnitur", "Furnitur"], ["karakter", "Karakter lain"]]),
+        model_role: S("model_role", "Peran model", [["venue", "Venue / ruangan"], ["mempelai_pria", "Avatar mempelai pria (dipilih pelanggan)"], ["mempelai_wanita", "Avatar mempelai wanita (dipilih pelanggan)"], ["pasangan", "Pasangan"], ["dekorasi", "Dekorasi / bunga"], ["furnitur", "Furnitur"], ["karakter", "Karakter lain"]]),
         has_clip: B("has_clip", "Model memiliki animasi bawaan"),
         clip_name: T("clip_name", "Nama animasi utama", { max: 60, help: "Nama clip di dalam model, jika ada." }),
         map_type: S("map_type", "Jenis peta", [["albedo", "Albedo / warna"], ["normal", "Normal"], ["roughness", "Roughness"], ["metalness", "Metalness"], ["emissive", "Emissive"], ["ao", "Ambient occlusion"]], { req: 1 }),
@@ -80,7 +80,7 @@
         volume: N("volume", "Volume bawaan (0-1)", { min: 0, max: 1, ph: 0.6 })
       },
       slots: [
-        { key: "3d_wedding_venue", label: "Venue pernikahan 3D", group: "model" }, { key: "3d_couple", label: "Mempelai 3D", group: "model" }, { key: "3d_flower", label: "Bunga / dekorasi 3D", group: "model" }, { key: "3d_decoration", label: "Dekorasi 3D lain", group: "model" },
+        { key: "3d_wedding_venue", label: "Venue pernikahan 3D", group: "model" }, { key: "3d_couple", label: "Mempelai 3D", group: "model" }, { key: "avatar_groom", label: "Avatar mempelai pria", group: "model" }, { key: "avatar_bride", label: "Avatar mempelai wanita", group: "model" }, { key: "3d_flower", label: "Bunga / dekorasi 3D", group: "model" }, { key: "3d_decoration", label: "Dekorasi 3D lain", group: "model" },
         { key: "texture_floor", label: "Texture lantai", group: "material" }, { key: "texture_wall", label: "Texture dinding", group: "material" }, { key: "texture_custom", label: "Texture kustom", group: "material" },
         { key: "environment_map", label: "Environment (HDR)", group: "environment" }, { key: "sky_background", label: "Langit / backdrop", group: "environment" },
         { key: "cinematic_camera_scene", label: "Kamera sinematik", group: "camera" }, { key: "particle_effect", label: "Efek partikel", group: "camera" },

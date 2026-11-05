@@ -91,3 +91,20 @@ dialog.fdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);o
 @media(max-width:960px){.pkg3{grid-template-columns:1fr}.cg{grid-template-columns:repeat(2,minmax(0,1fr))}.lv-g{grid-template-columns:1fr}}
 @media(max-width:600px){.pvact{justify-content:stretch;width:100%}.pvact .btn{flex:1}.cg{grid-template-columns:1fr}.i2-h{min-height:340px}}
 .thm{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}.thm legend{font:700 12px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding:0;margin-bottom:6px;float:left;width:100%}.thc{position:relative}.thc input{position:absolute;opacity:0;inset:0}.thc span{display:inline-block;padding:7px 14px;border:1.5px solid var(--line);border-radius:999px;font:600 13.5px var(--sans);cursor:pointer;background:#fff}.thc input:checked+span{border-color:var(--deep);background:var(--lilac);color:var(--deep)}.thc input:focus-visible+span{outline:3px solid var(--primary);outline-offset:2px}
+
+/* Avatar mempelai (editor) dan ringkasan di preview */
+.avg{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.avc{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border:1.5px solid var(--line);border-radius:16px;background:#fff;cursor:pointer;text-align:center;transition:border-color .15s,box-shadow .15s}
+.avc input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.avc img,.avc .av3d{width:100%;aspect-ratio:3/4;object-fit:contain;border-radius:12px;background:var(--lilac)}
+.av3d{display:grid;place-items:center;font:700 20px var(--sans);color:var(--deep)}
+.avc span:not(.av3d){font:600 13px/1.25 var(--sans);overflow-wrap:anywhere}
+.avc:hover{border-color:var(--primary)}
+.avc:has(input:checked){border-color:var(--deep);box-shadow:0 0 0 2px var(--deep)}
+.avc:has(input:focus-visible){outline:3px solid var(--primary);outline-offset:2px}
+.avc:has(input:disabled){opacity:.6;cursor:not-allowed}
+.avn{margin:0;color:var(--mute);font-size:14px}
+.avb{margin-top:16px;padding:18px}.avb h3{margin:0 0 12px;font:700 18px var(--display)}
+.avr{display:flex;flex-wrap:wrap;gap:16px}.avp{margin:0;display:flex;align-items:center;gap:12px}
+.avp img,.avp .av3d{width:72px;aspect-ratio:3/4;object-fit:contain;border-radius:12px;background:var(--lilac)}
+.avp figcaption{display:grid;gap:2px}.avp figcaption span{color:var(--mute);font-size:13px}
