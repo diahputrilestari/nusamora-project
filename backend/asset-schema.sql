@@ -40,7 +40,7 @@ insert into public.asset_categories (package_type, slug, name, kind, allowed_ext
  ('signature','hdr-environment','HDR environment','hdr','{hdr}',31457280,100),
  ('signature','image-assets','Image assets','image','{png,jpg,jpeg,webp}',10485760,110),
  -- Luxe: 3D Live Guest
- ('luxe','virtual-environment','Virtual environment','model','{glb,gltf}',52428800,10),
+ ('luxe','virtual-environment','Virtual environment','model','{glb,gltf,png,jpg,jpeg,webp}',52428800,10),
  ('luxe','guest-avatar','Guest avatars','model','{glb,gltf}',52428800,20),
  ('luxe','couple-avatar','Bride and groom avatars','model','{glb,gltf}',52428800,30),
  ('luxe','interactive-objects','Interactive objects','model','{glb,gltf}',52428800,40),
@@ -53,6 +53,8 @@ insert into public.asset_categories (package_type, slug, name, kind, allowed_ext
  ('luxe','texture','Texture','texture','{png,jpg,jpeg,webp}',20971520,110),
  ('luxe','hdr-environment','HDR environment','hdr','{hdr}',31457280,120)
 on conflict (package_type, slug) do nothing;
+-- Luxe > Virtual environment juga menerima gambar latar (PNG/JPG/WebP), bukan hanya model 3D. Menyusul untuk database yang sudah terisi.
+update public.asset_categories set allowed_ext = '{glb,gltf,png,jpg,jpeg,webp}' where package_type = 'luxe' and slug = 'virtual-environment' and not ('png' = any (allowed_ext));
 
 -- ============================================================ 2. Asset Library
 create table if not exists public.assets (
