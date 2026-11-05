@@ -413,3 +413,46 @@ end $$;
 revoke execute on function public.set_invitation_theme(uuid, text) from public, anon;
 grant execute on function public.set_invitation_theme(uuid, text) to authenticated;
 grant execute on function public.get_template_themes(text[]) to anon, authenticated;
+
+-- ============================================================ 8. AI Asset Generator (tanpa asumsi provider; kunci API hanya di server)
+create or replace function public.ai_category(p_id uuid) returns jsonb
+language sql stable security definer set search_path = public as $$
+  select to_jsonb(c) - 'created_at' from public.asset_categories c where c.id = p_id and c.active
+$$;
+
+-- Batas harian per admin (40 gambar / 24 jam) agar biaya provider terkendali.
+create or replace function public.admin_generation_allowed(p_user uuid, p_count int) returns boolean
+language sql stable security definer set search_path = public as $$
+  select coalesce((select sum(g.count) from public.asset_generations g where g.requested_by = p_user and g.created_at > now() - interval '1 day'), 0) + coalesce(p_count, 0) <= 40
+$$;
+
+create or replace function public.admin_record_generation(p_user uuid, p_package text, p_theme text, p_category uuid, p_prompt text, p_provider text, p_count int, p_status text, p_error text, p_variants jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare gid uuid; v jsonb; vid uuid; outv jsonb := '[]'::jsonb;
+begin
+  if not public.has_perm_user(p_user, 'templates.write') then raise exception 'forbidden' using errcode = '42501'; end if;
+  if p_package not in ('essential','signature','luxe') then return jsonb_build_object('ok', false, 'error', 'paket_tidak_valid'); end if;
+  if p_status not in ('done','failed') then return jsonb_build_object('ok', false, 'error', 'status_tidak_valid'); end if;
+  insert into public.asset_generations (requested_by, package_type, theme_key, category_id, prompt, provider, count, status, error, finished_at)
+  values (p_user, p_package, nullif(p_theme, ''), p_category, left(p_prompt, 2000), left(p_provider, 40), greatest(1, least(8, coalesce(p_count, 1))), p_status, left(p_error, 300), now()) returning id into gid;
+  for v in select * from jsonb_array_elements(coalesce(p_variants, '[]'::jsonb)) loop
+    insert into public.asset_variants (generation_id, file_path, file_url) values (gid, v->>'file_path', v->>'file_url') returning id into vid;
+    outv := outv || jsonb_build_array(jsonb_build_object('id', vid, 'file_path', v->>'file_path', 'file_url', v->>'file_url'));
+  end loop;
+  return jsonb_build_object('ok', true, 'generation_id', gid, 'variants', outv);
+end $$;
+
+-- Menandai varian yang sudah disimpan ke library.
+create or replace function public.admin_link_variant(p_variant uuid, p_asset uuid) returns jsonb
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.has_perm('templates.write') then raise exception 'forbidden' using errcode = '42501'; end if;
+  if not exists (select 1 from public.assets where id = p_asset and deleted_at is null) then return jsonb_build_object('ok', false, 'error', 'asset_tidak_tersedia'); end if;
+  update public.asset_variants set selected = true, asset_id = p_asset where id = p_variant;
+  return jsonb_build_object('ok', found);
+end $$;
+
+revoke execute on function public.ai_category(uuid), public.admin_generation_allowed(uuid,int), public.admin_record_generation(uuid,text,text,uuid,text,text,int,text,text,jsonb) from public, anon, authenticated;
+grant execute on function public.ai_category(uuid), public.admin_generation_allowed(uuid,int), public.admin_record_generation(uuid,text,text,uuid,text,text,int,text,text,jsonb) to service_role;
+revoke execute on function public.admin_link_variant(uuid, uuid) from public, anon;
+grant execute on function public.admin_link_variant(uuid, uuid) to authenticated;

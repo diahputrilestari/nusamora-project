@@ -61,6 +61,10 @@ Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu
 
 **Aturan:** aset tidak disalin; template mengacu lewat tabel `template_assets` (template, tema, slot, section, posisi, config). Melepas relasi tidak menghapus file. Menghapus aset = soft delete dan, jika masih dipakai, butuh konfirmasi (relasi dilepas, file tetap ada). Slot bersifat bebas (admin menambah kunci slot baru tanpa ubah kode). Renderer 2D memakai posisi/animasi dari `config`; pratinjau Signature/Luxe adalah **simulasi** tata letak, bukan mesin 3D penuh.
 
+**Tema untuk pelanggan:** pelanggan memilih tema di langkah *Pilih Template* (`get_template_themes`), tersimpan di `invitations.theme_key` lewat `set_invitation_theme`. Renderer undangan membaca aset lewat `get_template_assets(slug, tema)` (aset tema menimpa aset umum pada slot yang sama). Halaman tamu `nusamora.com/{slug}` yang merender aset ini belum dibangun.
+
+**AI Asset Generator (tambahan, opsional):** tab *AI Generator* di Asset Library. Tidak mengasumsikan provider: tanpa konfigurasi, UI menampilkan "belum dikonfigurasi". Untuk mengaktifkan: `supabase secrets set AI_PROVIDER=openai OPENAI_API_KEY=... [AI_IMAGE_MODEL=gpt-image-1]` lalu `supabase functions deploy asset-generate --no-verify-jwt`. Kunci hanya dibaca di server. Provider baru = tambah adapter `ImageProvider` di `supabase/functions/_shared/ai.ts`. AI hanya membuat gambar (kategori PNG/JPG/WebP), maks. 40 gambar/24 jam per admin; hasil harus dipilih dan disimpan, lewat validator `asset-register` yang sama.
+
 ## Publikasi & Pembayaran (Midtrans Snap)
 Alur: editor (Preview / Publikasikan) → dialog ringkasan paket → Edge Function `midtrans-checkout` → halaman pembayaran Snap → `/pembayaran?order_id=…` (hasil).
 Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + verifikasi Status API) dan `midtrans-sync` memanggil `apply_payment` (idempoten). Harga selalu dari tabel `plans`.

@@ -30,6 +30,7 @@
       asset_dipakai: "Aset masih dipakai template.", asset_tidak_kompatibel: "Aset tidak kompatibel dengan paket template.", masih_dipakai_paket_lain: "Aset masih dipakai template paket yang akan dilepas.",
       slot_tidak_valid: "Nama slot hanya huruf kecil, angka, dan garis bawah (2-40 karakter).", asset_tidak_tersedia: "Ada aset yang sudah dihapus/diarsipkan.", terlalu_banyak_asset: "Maksimal 200 aset per template.",
       config_tidak_valid: "Konfigurasi aset terlalu besar/tidak valid.", layout_tidak_valid: "Layout tidak valid (maks. 30 section).", tema_tidak_ditemukan: "Tema tidak ditemukan.", template_tidak_ditemukan: "Template tidak ditemukan.",
+      belum_dikonfigurasi: "AI Asset Generator belum dikonfigurasi.", kuota_harian: "Batas 40 gambar per 24 jam tercapai.", provider_gagal: "Provider AI gagal membuat gambar. Coba lagi nanti.", hasil_tidak_valid: "Provider tidak menghasilkan gambar yang valid untuk kategori ini.", kategori_tidak_didukung_ai: "AI hanya membuat gambar. Kategori 3D/audio/animasi diunggah manual.", prompt_tidak_valid: "Prompt 3-2000 karakter.", jumlah_tidak_valid: "Jumlah 1-4 gambar.", kategori_tidak_cocok: "Kategori bukan milik paket yang dipilih.", perlu_login: "Silakan masuk terlebih dahulu.", jaringan: "Tidak bisa terhubung ke server.",
       unauthorized: "Sesi berakhir. Muat ulang dan masuk lagi.", status_tidak_valid: "Status tidak valid.", tidak_ditemukan: "Aset tidak ditemukan."
     };
     const errText = (c, fb) => ERR[c] || fb || ("Gagal: " + c);
@@ -79,14 +80,15 @@
     const closeBtn = '<button class="icon-btn x" type="button" data-close aria-label="Tutup"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
 
     /* ---------- panggilan Edge Function ---------- */
-    async function callRegister(body) {
-      const r = await sb.functions.invoke("asset-register", { body });
+    async function callFn(name, body) {
+      const r = await sb.functions.invoke(name, { body });
       if (r.error) {
         let j = null; try { j = await r.error.context.json(); } catch (e) { /* abaikan */ }
-        return { ok: false, error: (j && j.error) || (r.error.name === "FunctionsFetchError" ? "jaringan" : "gagal"), detail: j };
+        return { ok: false, error: (j && j.error) || (r.error.name === "FunctionsFetchError" ? "jaringan" : "gagal"), message: j && j.message, detail: j };
       }
-      return r.data && r.data.ok ? r.data : { ok: false, error: (r.data && r.data.error) || "gagal" };
+      return r.data && r.data.ok ? r.data : { ok: false, error: (r.data && r.data.error) || "gagal", message: r.data && r.data.message };
     }
+    const callRegister = (body) => callFn("asset-register", body);
 
     /* ============================================================
        UNGGAH ASET (multi-file, drag & drop)
@@ -528,6 +530,75 @@
     }
 
     /* ============================================================
+       AI ASSET GENERATOR (tambahan; provider diatur di server)
+       ============================================================ */
+    const AIL = { pkg: "essential", cat: "", theme: "", prompt: "", count: 2, run: null };
+    function renderAI(root) {
+      const canW = can("templates", "write");
+      root.innerHTML = skel();
+      Promise.all([loadCats(true), loadThemes().catch(() => []), callFn("asset-generate", { action: "status" })]).then(([, , st]) => {
+        const configured = !!(st.ok && st.configured), svcDown = !st.ok && (st.error === "jaringan" || st.error === "gagal");
+        const imgCats = () => CATS.filter(c => c.package_type === AIL.pkg && c.active && c.allowed_ext.some(x => ["png", "jpg", "jpeg", "webp"].indexOf(x) > -1));
+        const dis = !configured || !canW ? "disabled" : "";
+        root.innerHTML = `${configured ? "" : `<div class="note" role="status"><b>AI Asset Generator belum dikonfigurasi.</b> ${svcDown ? "Fungsi <code>asset-generate</code> belum di-deploy atau tidak terjangkau." : "Provider dan kunci API belum diatur di server."} Atur <code>AI_PROVIDER</code> dan kunci API lewat <code>supabase secrets set</code>, lalu deploy <code>asset-generate</code>. Kunci tidak pernah dikirim ke browser. Unggah manual dan Asset Library tetap berfungsi penuh.</div>`}
+        <div class="card"><div class="card-h"><h2>Buat aset dengan AI</h2>${configured ? `<span class="badge ok">Provider: ${esc(st.provider)}</span>` : '<span class="badge warn">Belum dikonfigurasi</span>'}</div>
+        <form id="ai-f" novalidate class="fgrid" style="margin-top:6px">
+          <label class="fld">Paket<select id="ai-pkg" ${dis}>${PKGS.map(p => `<option value="${p}" ${AIL.pkg === p ? "selected" : ""}>${esc(PKG[p])}</option>`).join("")}</select></label>
+          <label class="fld">Kategori (gambar)<select id="ai-cat" ${dis}></select></label>
+          <label class="fld">Tema (opsional)<input id="ai-theme" list="ai-themes" maxlength="60" value="${esc(AIL.theme)}" ${dis}><datalist id="ai-themes">${(THEMES || []).map(t => `<option value="${esc(t.slug)}">${esc(t.name)}</option>`).join("")}</datalist></label>
+          <label class="fld">Jumlah variasi<select id="ai-n" ${dis}>${[1, 2, 3, 4].map(n => `<option ${AIL.count === n ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+          <label class="fld full">Prompt<textarea id="ai-prompt" maxlength="2000" rows="3" placeholder="mis. ornamen gorga Batak warna merah-hitam-putih, simetris, latar polos" ${dis}>${esc(AIL.prompt)}</textarea></label>
+          <div class="full" id="ai-e" role="alert"></div>
+          <div class="row-end full"><button class="btn" type="submit" id="ai-go" ${dis}>Generate</button></div>
+        </form><p class="sub">AI hanya membuat gambar 2D/tekstur. Aset 3D (GLB), audio, dan animasi diunggah manual. Hasil harus dipilih dan disimpan ke library; tidak ada yang otomatis dipakai template. Maks. 40 gambar per 24 jam per admin.</p></div>
+        <div id="ai-res"></div><div class="card"><div class="card-h"><h2>Riwayat generasi</h2></div><div id="ai-hist"><div class="sk h4"></div></div></div>`;
+        const fillCat = () => { const cs = imgCats(); if (!cs.some(c => c.id === AIL.cat)) AIL.cat = cs[0] ? cs[0].id : ""; $("#ai-cat").innerHTML = cs.length ? cs.map(c => `<option value="${c.id}" ${c.id === AIL.cat ? "selected" : ""}>${esc(c.name)}</option>`).join("") : '<option value="">Tidak ada kategori gambar</option>'; };
+        fillCat();
+        $("#ai-pkg").onchange = (e) => { AIL.pkg = e.target.value; fillCat(); };
+        $("#ai-cat").onchange = (e) => { AIL.cat = e.target.value; };
+        const hist = () => sb.from("asset_generations").select("id,package_type,theme_key,prompt,count,status,provider,error,created_at").order("created_at", { ascending: false }).limit(10).then(r => {
+          const rows = r.data || [];
+          $("#ai-hist").innerHTML = rows.length ? `<div class="tbl-w"><table><thead><tr><th>Waktu</th><th>Paket</th><th>Prompt</th><th class="num">Jml</th><th>Status</th></tr></thead><tbody>${rows.map(x => `<tr><td>${X.dt(x.created_at, true)}</td><td>${esc(PKG[x.package_type] || x.package_type)}</td><td>${esc(x.prompt.slice(0, 70))}${x.theme_key ? ' <i class="al-pkb">' + esc(x.theme_key) + "</i>" : ""}</td><td class="num">${x.count}</td><td>${badge(x.status === "done" ? "selesai" : "gagal")}</td></tr>`).join("")}</tbody></table></div>` : '<p class="sub">Belum ada riwayat.</p>';
+        }, () => { $("#ai-hist").innerHTML = '<p class="sub">Riwayat tidak bisa dimuat.</p>'; });
+        hist();
+        function showRun(run) {
+          const box = $("#ai-res");
+          box.innerHTML = `<div class="card"><div class="card-h"><h2>Hasil (${run.variants.length})</h2><div><button class="btn o sm" type="button" id="ai-re">Buat ulang</button> <button class="btn sm" type="button" id="ai-save" disabled>Simpan terpilih ke library</button></div></div>
+            <ul class="al-grid">${run.variants.map((v, i) => `<li><label class="al-card ai-v" data-i="${i}"><img class="al-th" src="${esc(v.file_url)}" alt="Hasil ${i + 1}" loading="lazy"><span class="chk-l"><input type="checkbox" data-sel="${i}"> Pilih</span><input class="ai-name" data-nm="${i}" maxlength="120" value="${esc((run.theme || run.catName) + " AI " + (i + 1))}" aria-label="Nama aset ${i + 1}"><span class="al-m" data-st="${i}"></span></label></li>`).join("")}</ul></div>`;
+          const upd = () => { $("#ai-save").disabled = !$$("[data-sel]:checked", box).length; };
+          box.onchange = (e) => { if (e.target.matches("[data-sel]")) upd(); };
+          $("#ai-re").onclick = () => generate(true);
+          $("#ai-save").onclick = async () => {
+            const sel = $$("[data-sel]:checked", box).map(x => Number(x.dataset.sel)); $("#ai-save").disabled = true; let okn = 0;
+            for (const i of sel) {
+              const v = run.variants[i], st = $('[data-st="' + i + '"]', box); st.textContent = "Menyimpan...";
+              const r = await callRegister({ path: v.file_path, name: $('[data-nm="' + i + '"]', box).value.trim() || "Aset AI", category_id: run.cat, package_types: [run.pkg], theme_key: run.theme || null, tags: ["ai"] });
+              if (!r.ok) { st.textContent = errText(r.error, r.message); st.style.color = "var(--bad)"; continue; }
+              const l = await sb.rpc("admin_link_variant", { p_variant: v.id, p_asset: r.asset.id });
+              st.textContent = "Tersimpan di library" + (l.error ? " (riwayat tidak diperbarui)" : ""); st.style.color = "var(--ok)"; okn++;
+              const cb = $('[data-sel="' + i + '"]', box); cb.checked = false; cb.disabled = true;
+            }
+            if (okn) toast(okn + " aset AI masuk ke library.", "ok"); upd(); hist();
+          };
+        }
+        async function generate(again) {
+          const er = $("#ai-e"); er.textContent = ""; const a = again && AIL.run ? AIL.run : null;
+          const prm = a ? { pkg: a.pkg, cat: a.cat, theme: a.theme, prompt: a.prompt, count: a.count } : { pkg: $("#ai-pkg").value, cat: $("#ai-cat").value, theme: $("#ai-theme").value.trim().toLowerCase(), prompt: $("#ai-prompt").value.trim(), count: Number($("#ai-n").value) };
+          if (!prm.cat) { er.textContent = "Pilih kategori gambar."; return; } if (prm.prompt.length < 3) { er.textContent = "Prompt minimal 3 karakter."; return; }
+          AIL.theme = prm.theme; AIL.prompt = prm.prompt; AIL.count = prm.count;
+          const b = $("#ai-go"); b.disabled = true; b.textContent = "Membuat gambar..."; $("#ai-res").innerHTML = '<div class="card"><div class="sk h4"></div><p class="sub">AI sedang membuat gambar, biasanya 10-40 detik...</p></div>';
+          const r = await callFn("asset-generate", { action: "generate", package_type: prm.pkg, category_id: prm.cat, theme_key: prm.theme || null, prompt: prm.prompt, count: prm.count });
+          b.disabled = false; b.textContent = "Generate";
+          if (!r.ok) { $("#ai-res").innerHTML = ""; er.textContent = errText(r.error, r.message); hist(); return; }
+          const cn = (CATS.filter(c => c.id === prm.cat)[0] || {}).name || "Aset";
+          AIL.run = Object.assign({}, prm, { variants: r.variants, catName: cn }); showRun(AIL.run); hist();
+        }
+        $("#ai-f").onsubmit = (e) => { e.preventDefault(); if (!configured || !canW) return; generate(false); };
+        if (AIL.run && configured) showRun(AIL.run);
+      }).catch(e => { root.innerHTML = errBox("Terjadi kendala saat memuat.", 1); });
+    }
+
+    /* ============================================================
        PENDAFTARAN MODUL
        ============================================================ */
     const tm = M.filter(m => m.key === "templates")[0];
@@ -544,6 +615,7 @@
     const lib = {
       key: "assetlib", label: "Asset Library", icon: "layout", perm: "templates", grp: "Pelanggan & Acara", tabs: [
         { key: "lib", label: "Library", render: renderLibrary },
+        { key: "ai", label: "AI Generator", render: renderAI },
         {
           key: "cats", label: "Kategori Aset", table: "asset_categories", order: ["package_type", true], search: ["name", "slug"], title: r => r.name,
           filters: [{ k: "package_type", l: "Paket", o: PKGS.map(p => [p, PKG[p]]) }],

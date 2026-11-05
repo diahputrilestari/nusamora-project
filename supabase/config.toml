@@ -7,3 +7,6 @@ verify_jwt = false
 verify_jwt = false
 [functions.asset-register]
 verify_jwt = false
+
+[functions.asset-generate]
+verify_jwt = false
