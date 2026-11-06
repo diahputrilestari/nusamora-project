@@ -1,3 +1,4 @@
+import { rateCheck, tooMany } from "./ratelimit.ts";
 // Validasi & pendaftaran asset (runtime-agnostic; dipakai Edge Function asset-register dan tes Node).
 // File diperiksa dari ISINYA (magic bytes, struktur), bukan hanya ekstensi/MIME dari browser.
 import { cors } from "./handlers.ts";
@@ -114,6 +115,7 @@ export async function handleAssetRegister(req: Request, d: AssetDeps): Promise<R
   if (req.method !== "POST") return R(req, d, 405, { error: "metode_tidak_didukung" });
   const m = /^Bearer\s+(.+)$/i.exec(req.headers.get("authorization") || ""); const token = m ? m[1] : "";
   const u = token ? await d.getUser(token) : null; if (!u) return R(req, d, 401, { error: "perlu_login", message: "Silakan masuk terlebih dahulu." });
+  { const w = await rateCheck(d, "asset-register-user", u.id, 60, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   let b: any; try { b = await req.json(); } catch { return R(req, d, 400, { error: "permintaan_tidak_valid" }); }
   const path = String(b?.path || ""); if (!PATH.test(path) || path.includes("..")) return R(req, d, 400, { error: "path_tidak_valid", message: MSG.path_tidak_valid });
   const ext = (path.split(".").pop() || "").toLowerCase(); if (!V[ext]) return R(req, d, 400, { error: "format_tidak_didukung", message: MSG.format_tidak_didukung });

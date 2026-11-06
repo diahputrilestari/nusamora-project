@@ -1,3 +1,4 @@
+import { rateCheck, tooMany } from "./ratelimit.ts";
 // AI Asset Generator: lapisan adapter provider + handler. Tidak mengasumsikan provider; tanpa konfigurasi -> "belum_dikonfigurasi".
 // Kunci API hanya dibaca di server (Deno.env) dan tidak pernah dikirim ke browser.
 import { cors } from "./handlers.ts";
@@ -50,6 +51,7 @@ export async function handleAssetGenerate(req: Request, d: GenDeps): Promise<Res
   let b: any; try { b = await req.json(); } catch { return R(req, d, 400, { error: "permintaan_tidak_valid" }); }
   if (b?.action === "status") return R(req, d, 200, { ok: true, configured: !!d.provider, provider: d.provider ? d.provider.name : null });
   if (b?.action !== "generate") return R(req, d, 400, { error: "aksi_tidak_dikenal" });
+  { const w = await rateCheck(d, "asset-generate-user", u.id, 10, 60); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   if (!d.provider) return R(req, d, 503, { error: "belum_dikonfigurasi", message: "AI Asset Generator belum dikonfigurasi. Atur AI_PROVIDER dan kunci API di Supabase secrets." });
 
   const pkg = String(b.package_type || ""), prompt = String(b.prompt || "").trim(), theme = String(b.theme_key || "").trim().toLowerCase(), count = Number(b.count);
