@@ -22,6 +22,8 @@ Semua uji memakai data staging. **Dilarang** memakai kredensial/proyek produksi.
 | BACKUP_PASSPHRASE | passphrase acak ≥32 karakter (khusus staging) |
 | STAGING_RATE_LIMIT_SALT | acak ≥32 karakter |
 | STAGING_ALLOWED_ORIGINS | origin staging, dipisah koma |
+| STAGING_PROJECT_REF | Reference ID proyek staging (pengaman: harus sama dengan ref di URL) |
+| STAGING_SUPABASE_ACCESS_TOKEN | Personal Access Token Supabase (untuk deploy Edge Functions); buat di Account > Access Tokens, beri nama `ci-staging`, cabut setelah uji selesai |
 
 Cara mengisi: `gh secret set NAMA --env staging` (nilai dimasukkan interaktif di terminal Anda) atau lewat UI GitHub. Jangan menempel nilainya di chat.
 
