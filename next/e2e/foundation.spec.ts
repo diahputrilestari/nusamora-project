@@ -1,5 +1,20 @@
 import { expect, test } from "@playwright/test";
 
+test.describe("deteksi bahasa dari Accept-Language", () => {
+  test("browser id-ID -> /id", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "id-ID" }); const page = await c.newPage();
+    await page.goto("/"); await expect(page).toHaveURL(/\/id$/); await c.close();
+  });
+  test("browser en-US -> /en", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "en-US" }); const page = await c.newPage();
+    await page.goto("/"); await expect(page).toHaveURL(/\/en$/); await c.close();
+  });
+  test("bahasa tak didukung (fr-FR) -> bahasa default /id", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "fr-FR" }); const page = await c.newPage();
+    await page.goto("/"); await expect(page).toHaveURL(/\/id$/); await c.close();
+  });
+});
+
 test("/ dialihkan ke bahasa default /id", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/id$/);
