@@ -39,3 +39,20 @@ test("tanpa overflow horizontal di 390px", async ({ page }) => {
   await page.goto("/en");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test("header keamanan: CSP bernonce (report-only), frame-ancestors, nosniff", async ({ request }) => {
+  const r = await request.get("/id");
+  const h = r.headers();
+  const csp = h["content-security-policy-report-only"] ?? h["content-security-policy"];
+  expect(csp).toBeTruthy();
+  expect(csp).toMatch(/nonce-[A-Za-z0-9+/=]+/);
+  expect(csp).toContain("frame-ancestors 'self'");
+  expect(csp).toContain("object-src 'none'");
+  expect(h["x-content-type-options"]).toBe("nosniff");
+  expect(h["x-frame-options"]).toBe("SAMEORIGIN");
+});
+
+test("endpoint laporan CSP menerima laporan dan tidak error", async ({ request }) => {
+  const r = await request.post("/api/csp-report", { data: { "csp-report": { "blocked-uri": "https://x.example/a?token=SECRET", "effective-directive": "script-src" } }, headers: { "content-type": "application/csp-report" } });
+  expect(r.status()).toBe(204);
+});
