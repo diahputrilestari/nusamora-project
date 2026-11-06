@@ -1,0 +1,107 @@
+name: supabase-stack
+# Verifikasi terhadap layanan Supabase NYATA (GoTrue, PostgREST, Storage, Edge Runtime) yang dijalankan lokal di runner
+# lewat `supabase start`. BUKAN proyek Supabase hosted milik pemilik; proyek staging hosted diuji dengan skrip yang sama
+# (lihat docs/security/STAGING-RUNBOOK.md). Tidak ada secret: semua kunci berasal dari stack lokal sekali pakai.
+on:
+  push:
+    branches: [security/p0, "security/p0-*"]
+    paths: ["ops/**", "backend/**", "supabase/**", "assets/**", "*.html", ".htaccess", ".github/workflows/supabase-stack.yml"]
+  workflow_dispatch:
+jobs:
+  stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PROJ: ${{ github.workspace }}/../sbproj
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      - name: Klien PostgreSQL 17 (cocok dengan server) dan dependensi uji
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-common >/dev/null
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          pg_dump --version
+          npm install --prefix ops --no-audit --no-fund
+      - name: Proyek Supabase lokal (fase A - tanpa CAPTCHA)
+        run: |
+          mkdir -p "$PROJ" && cd "$PROJ" && supabase init --force
+          cp -r "$GITHUB_WORKSPACE/supabase/functions" supabase/
+          grep -A1 '^\[functions\.' "$GITHUB_WORKSPACE/supabase/config.toml" | grep -v '^--' >> supabase/config.toml
+          python3 "$GITHUB_WORKSPACE/ops/stack/configure.py" supabase/config.toml \
+            "auth.mfa.totp:enroll_enabled=true" "auth.mfa.totp:verify_enabled=true" \
+            "auth.rate_limit:sign_in_sign_ups=20" "auth.rate_limit:email_sent=2" \
+            "auth.hook.password_verification_attempt:enabled=true" \
+            'auth.hook.password_verification_attempt:uri="pg-functions://postgres/public/hook_password_verification_attempt"' \
+            "auth.email:enable_confirmations=false"
+          echo "--- config relevan"; grep -n -A6 -E '^\[auth\.(mfa\.totp|rate_limit|hook\.password_verification_attempt)\]' supabase/config.toml | head -40
+          supabase start -x studio,imgproxy,logflare,vector,postgres-meta,supavisor,realtime 2>&1 | tail -15
+          supabase status -o env > "$RUNNER_TEMP/stack.env"
+          sed -n 's/^\(API_URL\|ANON_KEY\|SERVICE_ROLE_KEY\|DB_URL\)=/\1=/p' "$RUNNER_TEMP/stack.env" | sed 's/=.*/=<disembunyikan>/'
+      - name: Terapkan SQL skema (urutan README) - uji pertama pada Supabase nyata
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          for f in supabase-schema dashboard-schema admin-schema invitation-schema payment-schema package-schema asset-schema security-schema security-mfa; do
+            echo "== $f"; psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f "backend/$f.sql" 2>&1 | grep -v NOTICE | head -20 || true
+            test ${PIPESTATUS[0]} -eq 0
+          done
+          psql "$DB_URL" -Atc "select 'tabel public: '||count(*) from pg_tables where schemaname='public'"
+          echo "== idempoten (jalankan ulang 3 file terakhir)"
+          for f in asset-schema security-schema security-mfa; do psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f "backend/$f.sql" 2>&1 | grep -v NOTICE | head -5; test ${PIPESTATUS[0]} -eq 0; done
+      - name: Edge Functions (serve lokal, kode repo)
+        run: |
+          cd "$PROJ"
+          printf 'ALLOWED_ORIGINS=http://localhost\nRATE_LIMIT_SALT=ci-salt-sekali-pakai\n' > "$RUNNER_TEMP/fn.env"
+          nohup supabase functions serve --env-file "$RUNNER_TEMP/fn.env" > "$RUNNER_TEMP/fn.log" 2>&1 &
+          . "$RUNNER_TEMP/stack.env"
+          for i in $(seq 1 60); do c=$(curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: http://localhost' "$API_URL/functions/v1/admin-password"); [ "$c" = "204" ] && break; sleep 2; done
+          echo "admin-password OPTIONS -> $c"; tail -5 "$RUNNER_TEMP/fn.log"; test "$c" = "204"
+      - name: "Uji MFA (GoTrue/PostgREST/Edge nyata)"
+        id: mfa
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node mfa.mjs 2>&1 | tee "$RUNNER_TEMP/mfa.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji batas Auth & lockout"
+        id: authlimits
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          SIGNIN_LIMIT=20 SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node authlimits.mjs 2>&1 | tee "$RUNNER_TEMP/authlimits.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji backup/restore end-to-end"
+        id: dr
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY SUPABASE_DB_URL=$DB_URL node dr.mjs 2>&1 | tee "$RUNNER_TEMP/dr.log"; exit ${PIPESTATUS[0]}
+      - name: Proyek Supabase lokal (fase B - CAPTCHA)
+        id: captcha
+        continue-on-error: true
+        run: |
+          cd "$PROJ"; supabase stop >/dev/null 2>&1
+          python3 "$GITHUB_WORKSPACE/ops/stack/configure.py" supabase/config.toml \
+            "auth.captcha:enabled=true" 'auth.captcha:provider="turnstile"' 'auth.captcha:secret="1x0000000000000000000000000000000AA"'
+          supabase start -x studio,imgproxy,logflare,vector,postgres-meta,supavisor,realtime 2>&1 | tail -3
+          supabase status -o env > "$RUNNER_TEMP/stack.env"; set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          cd "$GITHUB_WORKSPACE/ops/stack"
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node captcha.mjs 2>&1 | tee "$RUNNER_TEMP/captcha.log"; exit ${PIPESTATUS[0]}
+      - name: Kumpulkan hasil
+        if: always()
+        run: |
+          mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
+          for f in mfa authlimits dr captcha fn; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          cd ops/stack && ls dr-work 2>/dev/null | head -0
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: stack-results, path: out, retention-days: 14 }
+      - name: Ringkasan
+        if: always()
+        run: |
+          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }}"
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success

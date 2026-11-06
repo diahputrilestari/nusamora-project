@@ -12,7 +12,7 @@ if [[ "$F" == *.enc ]]; then : "${BACKUP_PASSPHRASE_FILE:?isi BACKUP_PASSPHRASE_
 tar -xf "$TAR" -C "$TMP"; D="$(find "$TMP" -mindepth 1 -maxdepth 1 -type d | head -1)"
 ( cd "$D" && sha256sum -c SHA256SUMS )
 # 1) data akun (users, identities, faktor MFA) dulu (public punya FK ke auth.users)
-psql "$TARGET" -v ON_ERROR_STOP=1 -qc "truncate auth.users cascade"
+psql "$TARGET" -v ON_ERROR_STOP=1 -qc "delete from auth.users"
 pg_restore --data-only --no-owner --no-privileges --exit-on-error -d "$TARGET" "$D/authstorage.dump"
 # 2) skema + data aplikasi
 pg_restore --clean --if-exists --no-owner --no-privileges --exit-on-error -d "$TARGET" "$D/public.dump"
