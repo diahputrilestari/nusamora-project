@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -11,10 +12,6 @@ import "../globals.css";
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap" });
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
 const dmsans = DM_Sans({ subsets: ["latin"], variable: "--font-dmsans", display: "swap" });
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -32,6 +29,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  // Membaca header permintaan membuat rute dirender dinamis per-permintaan. Ini WAJIB agar Next menyisipkan
+  // nonce CSP (dari middleware) ke tag <script>; halaman yang dirender statis saat build tidak bisa bernonce.
+  await headers();
   return (
     <html lang={locale} className={`${playfair.variable} ${jakarta.variable} ${dmsans.variable}`}>
       <body>
