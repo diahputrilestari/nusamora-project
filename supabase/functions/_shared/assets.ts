@@ -100,7 +100,7 @@ export function validateAsset(bytes: Uint8Array, ext: string): AssetMeta {
 // ---------------------------------------------------------------- handler
 export interface AssetDeps {
   env: { allowedOrigins: string[]; publicBase: string };
-  getUser(token: string): Promise<{ id: string } | null>;
+  getUser(token: string): Promise<{ id: string; aal?: string | null } | null>;
   download(path: string): Promise<Uint8Array | null>;
   remove(path: string): Promise<void>;
   rpc(name: string, args: Record<string, unknown>): Promise<{ data: any; error: { message: string } | null }>;
@@ -120,7 +120,7 @@ export async function handleAssetRegister(req: Request, d: AssetDeps): Promise<R
   const path = String(b?.path || ""); if (!PATH.test(path) || path.includes("..")) return R(req, d, 400, { error: "path_tidak_valid", message: MSG.path_tidak_valid });
   const ext = (path.split(".").pop() || "").toLowerCase(); if (!V[ext]) return R(req, d, 400, { error: "format_tidak_didukung", message: MSG.format_tidak_didukung });
   // izin dicek dulu (tanpa membaca file) agar pengguna tanpa izin tidak bisa memicu pengunduhan
-  const perm = await d.rpc("has_perm_user", { uid: u.id, p: "templates.write" }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
+  const perm = await d.rpc("has_perm_session", { uid: u.id, p: "templates.write", aal: u.aal ?? null }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
   const bytes = await d.download(path); if (!bytes) return R(req, d, 404, { error: "file_tidak_ditemukan", message: MSG.file_tidak_ditemukan });
   const v = validateAsset(bytes, ext);
   if (!v.ok) { await d.remove(path); return R(req, d, 422, { error: v.error, message: v.message }); }
