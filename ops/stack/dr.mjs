@@ -69,7 +69,7 @@ let okFiles = 0, badFiles = []; for (const f of files) { const d = await svc.sto
 check("semua berkas seed kembali dengan SHA-256 identik", okFiles === files.length, `${okFiles}/${files.length} ${badFiles.slice(0, 3)}`);
 // relasi DB <-> berkas: setiap folder pemilik di Storage = akun yang ada; setiap berkas terdaftar di storage.objects
 const owners = new Set((await svc.auth.admin.listUsers({ perPage: 1000 })).data.users.map((u) => u.id));
-const objs = (await svc.schema("storage").from("objects").select("name,bucket_id").eq("bucket_id", "invitation-media")).data || [];
+const objs = sh("psql", [DB, "-Atc", "select name from storage.objects where bucket_id='invitation-media'"]).out.split("\n").filter(Boolean).map((name) => ({ name }));
 const orphan = objs.filter((o) => !owners.has(o.name.split("/")[0]));
 check("relasi: tiap berkas invitation-media berpemilik akun yang ada setelah restore", orphan.length === 0 && objs.length >= 90, `yatim=${orphan.length} total=${objs.length}`);
 const prof = await svc.from("profiles").select("id", { count: "exact", head: true }); check("profil pengguna kembali (relasi profiles<->auth.users)", prof.count >= 26, prof.count);
