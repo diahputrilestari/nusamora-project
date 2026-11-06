@@ -105,7 +105,10 @@ jobs:
           for f in mfa authlimits dr captcha; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
       - if: always()
         uses: actions/upload-artifact@v4
-        with: { name: staging-results-${{ inputs.phase }}, path: out, retention-days: 14 }
+        with:
+          name: staging-results-${{ inputs.phase }}
+          path: out
+          retention-days: 14
       - name: Ringkasan
         if: always() && inputs.phase != 'prepare'
         run: |
