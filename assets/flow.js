@@ -44,7 +44,7 @@
   /* Pilihan avatar mempelai = aset yang diunggah admin untuk template + tema undangan (RPC template_avatar_options). */
   function loadAvatarOpts(slug, theme) { return sb.rpc("template_avatar_options", { p_slug: slug, p_theme: theme || null }).then(function (r) { return r.error || !Array.isArray(r.data) ? null : r.data; }, function () { return null; }); }
   var IMGT = { png: 1, jpg: 1, jpeg: 1, webp: 1, gif: 1, svg: 1 };
-  function avThumb(o) { var ty = String(o.type || "").toLowerCase(); return IMGT[ty] && /^https?:\/\//i.test(o.url || "") ? '<img src="' + esc(o.url) + '" alt="" loading="lazy">' : '<span class="av3d" aria-hidden="true">3D</span>'; }
+  function avThumb(o) { var ty = String(o.type || "").toLowerCase(); return IMGT[ty] && /^(https?:\/\/|\/(?!\/))/i.test(o.url || "") ? '<img src="' + esc(o.url) + '" alt="" loading="lazy">' : '<span class="av3d" aria-hidden="true">3D</span>'; }
   function avatarBlock(x) {
     var A = x.av || {}, c = (x.c && x.c.avatars) || {}, parts = [["groom", "Mempelai pria"], ["bride", "Mempelai wanita"]].map(function (s) {
       var o = (A.options || []).filter(function (v) { return v.side === s[0] && (A.demo ? true : v.slot === c[s[0]]); })[0]; return o ? '<figure class="avp">' + avThumb(o) + "<figcaption><b>" + esc(s[1]) + "</b><span>" + esc(o.name || "") + "</span></figcaption></figure>" : "";

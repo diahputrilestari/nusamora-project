@@ -81,6 +81,10 @@ Beberapa pilihan = beberapa aset dengan peran yang sama pada slot berbeda (slot 
 
 Backend: RPC `template_avatar_options(slug, tema)` (membaca `get_template_assets`), kunci konten `avatars.groom` / `avatars.bride` (berisi `slot_key`), dan `save_invitation` memvalidasi slot hanya bila nilainya berubah. Preview undangan menampilkan avatar terpilih. Jalankan ulang `backend/asset-schema.sql` (paling akhir).
 
+### Impor avatar bawaan template Jawa Tengah
+
+Avatar tamu laki-laki template **Adat Jawa Tengah** (7 avatar, sebelumnya hanya tertanam di demo Live Guest) diimpor ke Asset Library dan slot `avatar_male` lewat `backend/seed-jawa-tengah-avatars.sql` (jalankan setelah `asset-schema.sql`, idempoten). Gambarnya ada di `assets/avatars/jawa-tengah/guest-male/` dan disimpan sebagai URL relatif `/assets/...` (ikut domain situs). Avatar wanita, pengantin pria dan pengantin wanita template yang sama dapat diimpor dengan cara yang sama.
+
 ### Form aset per paket (modular)
 
 Form **Unggah aset**, **detail aset**, **picker slot** dan **pengaturan aset di Template Studio** berubah otomatis mengikuti paket yang dipilih. Semua definisinya ada di satu file konfigurasi: `assets/asset-forms.js` (`window.NM_ASSET_FORMS`).
