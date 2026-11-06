@@ -1,3 +1,5 @@
+> **Pembaruan 2026-11-06:** pernyataan 'BELUM TERVERIFIKASI' di bawah sudah usang. CI `next-ci` (run 42170637508) lulus: install, build, typecheck strict, standalone, 15/15 Playwright. Lihat docs/security/04-p0-verification-report.md.
+
 # Verifikasi Foundation (Tahap 1) — status aktual
 
 **Status: BELUM TERVERIFIKASI (build/tes belum dijalankan).** Dicek ulang pada 2026-11-06 dari sandbox pengembangan:
