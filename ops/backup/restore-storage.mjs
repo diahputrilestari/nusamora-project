@@ -10,8 +10,8 @@ const { files } = JSON.parse(await readFile(join(dir, "MANIFEST.json"), "utf8"))
 for (const f of files) {
   const buf = await readFile(join(dir, f.bucket, f.path)), enc = f.path.split("/").map(encodeURIComponent).join("/");
   if (createHash("sha256").update(buf).digest("hex") !== f.sha256) { console.error("CHECKSUM backup rusak:", f.path); bad++; continue; }
-  const r = await fetch(`${url}/storage/v1/object/${f.bucket}/${enc}`, { method: "POST", headers: { ...H, "x-upsert": "true", "Content-Type": "application/octet-stream" }, body: buf });
-  if (!r.ok) { console.error("gagal unggah", f.path, r.status); bad++; continue; }
+  const r = await fetch(`${url}/storage/v1/object/${f.bucket}/${enc}`, { method: "POST", headers: { ...H, "x-upsert": "true", "Content-Type": f.contentType || "application/octet-stream" }, body: buf });
+  if (!r.ok) { console.error("gagal unggah", f.bucket + "/" + f.path, r.status, (await r.text()).slice(0, 200)); bad++; continue; }
   const back = Buffer.from(await (await fetch(`${url}/storage/v1/object/${f.bucket}/${enc}`, { headers: H })).arrayBuffer());
   if (createHash("sha256").update(back).digest("hex") === f.sha256) ok++; else { console.error("hasil restore berbeda:", f.path); bad++; }
 }

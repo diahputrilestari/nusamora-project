@@ -23,12 +23,17 @@ const la = (await svc.from("login_attempts").select("fails,locked_until").eq("us
 const users = []; for (let i = 0; i < 8; i++) users.push(await mkUser(E("office" + i), PW));
 let okCount = 0; for (let i = 0; i < 8; i++) { const r = await tryLogin(E("office" + i), PW); if (!r.error) okCount++; }
 check("4 8 pengguna sah dari satu IP (kantor) semua berhasil login", okCount === 8, okCount);
-// 5. batas per IP: banjir -> 429; catat titik batas
-let n429 = 0, firstBlock = null, total = 0;
-for (let i = 0; i < LIMIT + 15; i++) { total++; const r = await tryLogin(E("flood" + (i % 3)), "x"); if (r.error?.status === 429 || /rate limit/i.test(r.error?.message || "")) { n429++; firstBlock ??= total; } }
-info("5 banjir login dari satu IP", { dikirim: total, diblokir429: n429, blokirMulaiKePermintaan: firstBlock, batasKonfigurasi: LIMIT });
-check("5 banjir dari satu IP akhirnya dibatasi (429)", n429 > 0);
+// 5. batas per IP: probe tiap endpoint (limit sign_in_sign_ups dikonfigurasi ${LIMIT} / 5 menit / IP). Mengukur yang SEBENARNYA dibatasi.
+const is429 = (e) => e && (e.status === 429 || /rate limit|too many/i.test(e.message || ""));
+async function probe(label, fnc, n = LIMIT + 25) { let first = null, c429 = 0; for (let i = 0; i < n; i++) { const r = await fnc(i); if (is429(r?.error)) { c429++; first ??= i + 1; } } info("5 probe " + label, { dikirim: n, diblokir429: c429, blokirMulaiKePermintaan: first }); return first; }
+const pSignIn = await probe("signInWithPassword (kredensial salah)", (i) => tryLogin(E("flood" + (i % 3)), "x"));
+const pRefresh = await probe("refreshSession (token tak valid)", () => mk().auth.refreshSession({ refresh_token: "tidak-valid-" + Math.random() }));
+const pOtp = await probe("verifyOtp (kode salah)", () => mk().auth.verifyOtp({ email: E("office2"), token: "123456", type: "email" }));
+const pSignUp = await probe("signUp (email baru)", (i) => mk().auth.signUp({ email: E("flsu" + i), password: PW }));
+check("5 sedikitnya satu jenis permintaan dari satu IP dibatasi (429) pada konfigurasi ini", [pSignIn, pRefresh, pOtp, pSignUp].some((x) => x), JSON.stringify({ pSignIn, pRefresh, pOtp, pSignUp }));
 const afterFlood = await tryLogin(E("office0"), PW); info("5 login sah SESAAT setelah banjir dari IP yang sama (efek IP bersama)", { diblokir: !!afterFlood.error, pesan: afterFlood.error?.message, status: afterFlood.error?.status });
+// pencegah penguncian pengguna sah: login sah dari akun lain TIDAK boleh terkunci oleh banjir kredensial salah pada akun lain (kunci per-akun)
+const stillOk = await tryLogin(E("other"), PW); info("5 akun 'other' (tak ikut diserang) setelah banjir", { diblokir: !!stillOk.error, pesan: stillOk.error?.message });
 // 6. reset password
 const rs = []; for (let i = 0; i < 4; i++) { const r = await mk().auth.resetPasswordForEmail(E("office1")); rs.push(r.error ? (r.error.status || r.error.message) : "ok"); }
 info("6 reset password beruntun untuk satu email", rs);

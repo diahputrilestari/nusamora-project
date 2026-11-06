@@ -19,9 +19,11 @@ async function walk(bucket, prefix = "") {
 const manifest = []; let bytes = 0;
 for (const b of await (await api("/storage/v1/bucket")).json()) {
   for (const p of await walk(b.name)) {
-    const buf = Buffer.from(await (await api(`/storage/v1/object/${b.name}/${p.split("/").map(encodeURIComponent).join("/")}`)).arrayBuffer());
+    const resp = await api(`/storage/v1/object/${b.name}/${p.split("/").map(encodeURIComponent).join("/")}`);
+    const contentType = (resp.headers.get("content-type") || "application/octet-stream").split(";")[0];
+    const buf = Buffer.from(await resp.arrayBuffer());
     const f = join(root, b.name, p); await mkdir(dirname(f), { recursive: true }); await writeFile(f, buf);
-    manifest.push({ bucket: b.name, path: p, bytes: buf.length, sha256: createHash("sha256").update(buf).digest("hex") }); bytes += buf.length;
+    manifest.push({ bucket: b.name, path: p, contentType, bytes: buf.length, sha256: createHash("sha256").update(buf).digest("hex") }); bytes += buf.length;
   }
 }
 await writeFile(join(root, "MANIFEST.json"), JSON.stringify({ createdAt: new Date().toISOString(), files: manifest }, null, 1));

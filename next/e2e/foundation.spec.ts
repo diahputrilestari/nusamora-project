@@ -71,3 +71,30 @@ test("endpoint laporan CSP menerima laporan dan tidak error", async ({ request }
   const r = await request.post("/api/csp-report", { data: { "csp-report": { "blocked-uri": "https://x.example/a?token=SECRET", "effective-directive": "script-src" } }, headers: { "content-type": "application/csp-report" } });
   expect(r.status()).toBe(204);
 });
+
+test("nonce CSP benar-benar diteruskan ke HTML: semua <script> bernonce yang sama dengan header", async ({ request }) => {
+  const r = await request.get("/id");
+  const csp = r.headers()["content-security-policy-report-only"] ?? r.headers()["content-security-policy"] ?? "";
+  const nonce = /'nonce-([^']+)'/.exec(csp)?.[1];
+  expect(nonce).toBeTruthy();
+  const html = await r.text();
+  const tags = html.match(/<script\b[^>]*>/g) ?? [];
+  expect(tags.length).toBeGreaterThan(0);
+  const without = tags.filter((t) => !t.includes(`nonce="${nonce}"`));
+  expect(without, `script tanpa nonce yang cocok: ${without.slice(0, 3).join(" | ")}`).toEqual([]);
+  // nonce berbeda di setiap permintaan
+  const r2 = await request.get("/id");
+  const n2 = /'nonce-([^']+)'/.exec(r2.headers()["content-security-policy-report-only"] ?? r2.headers()["content-security-policy"] ?? "")?.[1];
+  expect(n2).not.toBe(nonce);
+});
+
+for (const path of ["/id", "/en", "/id/halaman-tidak-ada"]) {
+  test(`tanpa pelanggaran CSP di browser: ${path}`, async ({ page }) => {
+    const viol: string[] = [];
+    await page.exposeFunction("__viol", (v: string) => viol.push(v));
+    await page.addInitScript(() => document.addEventListener("securitypolicyviolation", (e) => (window as any).__viol(`${e.effectiveDirective} ${e.blockedURI}`)));
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    expect(viol).toEqual([]);
+  });
+}

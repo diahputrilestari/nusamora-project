@@ -44,11 +44,7 @@ jobs:
       - name: Terapkan SQL skema (urutan README) - uji pertama pada Supabase nyata
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
-          for f in supabase-schema dashboard-schema admin-schema invitation-schema payment-schema package-schema asset-schema security-schema security-mfa; do
-            echo "== $f"; psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f "backend/$f.sql" 2>&1 | grep -v NOTICE | head -20 || true
-            test ${PIPESTATUS[0]} -eq 0
-          done
-          psql "$DB_URL" -Atc "select 'tabel public: '||count(*) from pg_tables where schemaname='public'"
+          ops/stack/apply-sql.sh
           echo "== idempoten (jalankan ulang 3 file terakhir)"
           for f in asset-schema security-schema security-mfa; do psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f "backend/$f.sql" 2>&1 | grep -v NOTICE | head -5; test ${PIPESTATUS[0]} -eq 0; done
       - name: Edge Functions (serve lokal, kode repo)
@@ -89,6 +85,7 @@ jobs:
             "auth.captcha:enabled=true" 'auth.captcha:provider="turnstile"' 'auth.captcha:secret="1x0000000000000000000000000000000AA"'
           supabase start -x studio,imgproxy,logflare,vector,postgres-meta,supavisor,realtime 2>&1 | tail -3
           supabase status -o env > "$RUNNER_TEMP/stack.env"; set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          cd "$GITHUB_WORKSPACE" && ops/stack/apply-sql.sh | tail -1
           cd "$GITHUB_WORKSPACE/ops/stack"
           SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node captcha.mjs 2>&1 | tee "$RUNNER_TEMP/captcha.log"; exit ${PIPESTATUS[0]}
       - name: Kumpulkan hasil

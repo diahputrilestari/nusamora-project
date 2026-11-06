@@ -7,7 +7,7 @@ import { readdirSync, writeFileSync, statSync, mkdirSync, rmSync, existsSync, re
 const DB = env("SUPABASE_DB_URL"), OPS = new URL("..", import.meta.url).pathname;
 const WORK = process.env.DR_WORK || "dr-work"; rmSync(WORK, { recursive: true, force: true }); mkdirSync(WORK, { recursive: true });
 writeFileSync(`${WORK}/pass.txt`, randomBytes(24).toString("hex") + "\n", { mode: 0o600 });
-const sh = (cmd, args, e = {}) => { const t0 = Date.now(); const r = spawnSync(cmd, args, { env: { ...process.env, ...e }, encoding: "utf8" }); return { ms: Date.now() - t0, code: r.status, out: (r.stdout || "") + (r.stderr || "") }; };
+const sh = (cmd, args, e = {}) => { const t0 = Date.now(); const r = spawnSync(cmd, args, { env: { ...process.env, ...e }, encoding: "utf8", maxBuffer: 1 << 28 }); const o = { ms: Date.now() - t0, code: r.status, out: (r.stdout || "") + (r.stderr || "") }; if (r.status !== 0) console.log(`--- [${cmd.split("/").pop()} ${args.slice(0, 1).join(" ").split("/").pop()}] exit=${r.status}\n${o.out.slice(-1500)}\n---`); return o; };
 const sha = (b) => createHash("sha256").update(b).digest("hex");
 const PW = "Uji-Sandi-Panjang#2026", stamp = Date.now().toString(36), E = (n) => `${n}.${stamp}@uji.nusamora.test`;
 
