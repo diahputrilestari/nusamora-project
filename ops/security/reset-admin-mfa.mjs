@@ -13,5 +13,5 @@ const f = await sb.auth.admin.mfa.listFactors({ userId: user.id }); if (f.error)
 console.log(`${email}: ${f.data.factors.length} faktor (${f.data.factors.map((x) => x.status).join(", ") || "-"})`);
 if (!yes) { console.log("Tambahkan --yes untuk menghapus semua faktor tersebut."); process.exit(0); }
 for (const x of f.data.factors) { const d = await sb.auth.admin.mfa.deleteFactor({ userId: user.id, id: x.id }); if (d.error) { console.error("gagal menghapus", x.id, d.error.message); process.exit(1); } }
-await sb.rpc("log_security_event", { p_kind: "admin_mfa_reset", p_actor: user.id, p_detail: { by: "operator-script" } });
+const mk = await sb.rpc("admin_mfa_reset_mark", { uid: user.id }); if (mk.error) { console.error("faktor dihapus tetapi pencabutan persetujuan gagal:", mk.error.message); process.exit(1); }
 console.log("Selesai. Admin harus mendaftar ulang MFA di /admin-keamanan. Catat insiden ini (INCIDENT_RESPONSE.md).");

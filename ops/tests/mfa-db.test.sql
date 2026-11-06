@@ -117,6 +117,36 @@ select pg_temp.as_user('00000000-0000-0000-0000-0000000000f1','aal2') \gset
 set role authenticated;
 do $$ begin assert not public.has_perm('templates.write'), 'admin baru tanpa password policy ditolak'; assert (public.my_admin()->'mfa'->>'password_ok')::boolean = false; end $$;
 reset role; delete from public.admin_users where user_id='00000000-0000-0000-0000-0000000000f1';
+\echo == 6b. persetujuan faktor pertama (admin baru tidak otomatis dipercaya)
+insert into auth.users(id,email) values ('00000000-0000-0000-0000-0000000000f2','newadmin2@x.id') on conflict do nothing;
+insert into public.admin_users(user_id, role, active, password_policy_at, mfa_approved_at) values ('00000000-0000-0000-0000-0000000000f2','super_admin',true, now(), null)
+  on conflict (user_id) do update set active=true, password_policy_at=now(), mfa_approved_at=null;
+insert into auth.mfa_factors(user_id,status) values ('00000000-0000-0000-0000-0000000000f2','verified');   -- penyerang mendaftar faktornya sendiri
+select pg_temp.as_user('00000000-0000-0000-0000-0000000000f2','aal2') \gset
+set role authenticated;
+do $$ begin
+  assert not public.has_perm('templates.write'), 'aal2 tetapi belum disetujui -> ditolak';
+  assert (public.my_admin()->'mfa'->>'needed')::boolean and not (public.my_admin()->'mfa'->>'approved')::boolean, 'needed & belum approved';
+  begin perform public.admin_approve_mfa('00000000-0000-0000-0000-0000000000f2'); raise exception 'SEHARUSNYA DITOLAK'; exception when insufficient_privilege then null; end;   -- tidak bisa menyetujui diri sendiri (juga tidak lolos mfa_ok)
+end $$;
+reset role; select pg_temp.as_user(:'ct','aal2') \gset
+set role authenticated;
+do $$ begin begin perform public.admin_approve_mfa('00000000-0000-0000-0000-0000000000f2'); raise exception 'SEHARUSNYA DITOLAK'; exception when insufficient_privilege then null; end; end $$;   -- admin non-super tidak boleh
+reset role; select pg_temp.as_user(:'sa','aal2') \gset
+set role authenticated;
+do $$ begin
+  begin perform public.admin_approve_mfa(auth.uid()); raise exception 'SEHARUSNYA DITOLAK'; exception when sqlstate 'P0001' then assert sqlerrm like '%diri sendiri%', sqlerrm; end;
+  begin perform public.admin_approve_mfa(gen_random_uuid()); raise exception 'SEHARUSNYA DITOLAK'; exception when sqlstate 'P0001' then assert sqlerrm like '%faktor%', sqlerrm; end;
+  perform public.admin_approve_mfa('00000000-0000-0000-0000-0000000000f2');
+end $$;
+reset role; select pg_temp.as_user('00000000-0000-0000-0000-0000000000f2','aal2') \gset
+set role authenticated;
+do $$ begin assert public.has_perm('templates.write'), 'setelah disetujui super admin lain -> boleh'; end $$;
+reset role;
+set role service_role; select public.admin_mfa_reset_mark('00000000-0000-0000-0000-0000000000f2'); reset role;
+set role authenticated;
+do $$ begin assert not public.has_perm('templates.write'), 'setelah reset MFA persetujuan dicabut'; end $$;
+reset role; delete from auth.mfa_factors where user_id='00000000-0000-0000-0000-0000000000f2'; delete from public.admin_users where user_id='00000000-0000-0000-0000-0000000000f2';
 \echo == 7. mematikan kembali (prosedur darurat lewat super admin aal2) & jejak audit
 select pg_temp.as_user(:'sa','aal2') \gset
 set role authenticated; select public.admin_set_security(false,false) \gset

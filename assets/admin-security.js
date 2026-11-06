@@ -24,6 +24,7 @@
     if (!sb) { view.innerHTML = '<div class="card"><h2>Sistem belum dikonfigurasi</h2><p>Isi SUPABASE_URL dan SUPABASE_ANON_KEY di assets/config.js.</p></div>'; return Promise.resolve(); }
     return sb.auth.getSession().then(function (r) {
       if (!r.data || !r.data.session) { location.replace("/masuk?next=" + encodeURIComponent("/admin-keamanan")); return; }
+      S.uid = (r.data.session.user && r.data.session.user.id) || "";
       return Promise.all([sb.rpc("my_admin"), sb.auth.mfa.listFactors(), sb.auth.mfa.getAuthenticatorAssuranceLevel()]).then(function (a) {
         if (a[0].error) { view.innerHTML = '<div class="card"><h2>Panel admin belum siap</h2><p>Jalankan backend/security-mfa.sql di Supabase.</p></div>'; return; }
         S.me = a[0].data; S.factors = (a[1].data && a[1].data.totp) || []; S.all = (a[1].data && a[1].data.all) || [];
@@ -116,11 +117,15 @@
       var b = $("#adm-b"); if (!b) return;
       if (r.error) { b.innerHTML = '<div class="sec-err" role="alert">' + esc(cleanMsg(r.error)) + "</div>"; return; }
       var s = r.data;
-      b.innerHTML = '<div class="sec-wrap"><table class="sec-tbl"><thead><tr><th>Email</th><th>Peran</th><th>Perangkat MFA</th><th>Password</th></tr></thead><tbody>' +
-        s.admins.map(function (a) { return "<tr><td>" + esc(a.email) + "</td><td>" + esc(a.role) + "</td><td>" + (a.factors > 0 ? pill(a.factors + " aktif", "ok") : pill("belum", "bad")) + "</td><td>" + (a.password_ok ? pill("ok", "ok") : pill("belum", "bad")) + "</td></tr>"; }).join("") + "</tbody></table></div>" +
+      b.innerHTML = '<div class="sec-wrap"><table class="sec-tbl"><thead><tr><th>Email</th><th>Peran</th><th>Perangkat MFA</th><th>Password</th><th>Persetujuan MFA</th></tr></thead><tbody>' +
+        s.admins.map(function (a) { return "<tr><td>" + esc(a.email) + "</td><td>" + esc(a.role) + "</td><td>" + (a.factors > 0 ? pill(a.factors + " aktif", "ok") : pill("belum", "bad")) + "</td><td>" + (a.password_ok ? pill("ok", "ok") : pill("belum", "bad")) + "</td><td>" + (a.approved ? pill("disetujui", "ok") : (a.user_id !== S.uid && a.factors > 0 ? '<button class="btn o sm" type="button" data-ap="' + esc(a.user_id) + '">Setujui</button>' : pill(a.user_id === S.uid ? "perlu admin lain" : "menunggu MFA", "bad"))) + "</td></tr>"; }).join("") + "</tbody></table></div>" +
         "<p>MFA wajib: " + pill(s.mfa_required ? "AKTIF" : "belum", s.mfa_required ? "ok" : "") + " &middot; Kebijakan password wajib: " + pill(s.password_policy_required ? "AKTIF" : "belum", s.password_policy_required ? "ok" : "") + "</p>" +
         "<p>Pengaktifan ditolak otomatis bila ada admin aktif yang belum siap (mencegah terkunci). Disarankan: semua admin punya 2 perangkat.</p>" +
         '<div class="sec-row"><button class="btn" type="button" id="a-mfa">' + (s.mfa_required ? "Matikan MFA wajib" : "Aktifkan MFA wajib") + '</button><button class="btn o" type="button" id="a-pw">' + (s.password_policy_required ? "Matikan kebijakan password" : "Aktifkan kebijakan password") + '</button></div><div class="sec-err" id="e-adm" role="alert" hidden></div>';
+      Array.prototype.forEach.call(b.querySelectorAll("[data-ap]"), function (x) { x.addEventListener("click", function () {
+        if (x.dataset.sure !== "1") { x.dataset.sure = "1"; x.textContent = "Sudah verifikasi identitasnya? Klik lagi"; return; }
+        sb.rpc("admin_approve_mfa", { p_user: x.dataset.ap }).then(function (y) { if (y.error) { var er = $("#e-adm"); er.textContent = cleanMsg(y.error); er.hidden = false; x.dataset.sure = ""; return; } toast("Admin disetujui.", "ok"); loadAdmin(); });
+      }); });
       function set(mfa, pw, btn) {
         if (btn.dataset.sure !== "1") { btn.dataset.sure = "1"; btn.textContent = "Klik lagi untuk konfirmasi"; return; }
         sb.rpc("admin_set_security", { p_mfa: mfa, p_password: pw }).then(function (x) {

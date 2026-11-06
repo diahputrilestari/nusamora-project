@@ -14,6 +14,10 @@ alter table public.security_settings enable row level security;
 revoke all on public.security_settings from anon, authenticated;
 insert into public.security_settings(key, value) values ('admin_mfa_required', 'false'), ('admin_password_policy_required', 'false') on conflict do nothing;
 alter table public.admin_users add column if not exists password_policy_at timestamptz;
+-- Persetujuan faktor pertama: mencegah penyerang yang memegang password admin baru mendaftarkan faktornya sendiri.
+-- Saat MFA wajib, admin hanya berfungsi setelah super admin LAIN (aal2) menyetujui setelah verifikasi identitas di luar sistem.
+alter table public.admin_users add column if not exists mfa_approved_at timestamptz;
+alter table public.admin_users add column if not exists mfa_approved_by uuid;
 
 create or replace function public.setting_bool(k text) returns boolean
 language sql stable security definer set search_path = public as $$
@@ -32,7 +36,8 @@ grant execute on function public.has_verified_factor(uuid) to service_role;
 -- Syarat tambahan untuk akses admin: sesi aal2 (MFA terverifikasi) dan password lolos kebijakan, bila penegakan aktif.
 create or replace function public.mfa_ok(uid uuid, aal text) returns boolean
 language sql stable security definer set search_path = public as $$
-  select (not public.setting_bool('admin_mfa_required') or coalesce(aal, '') = 'aal2')
+  select (not public.setting_bool('admin_mfa_required')
+          or (coalesce(aal, '') = 'aal2' and exists (select 1 from public.admin_users m where m.user_id = uid and m.mfa_approved_at is not null)))
      and (not public.setting_bool('admin_password_policy_required')
           or exists (select 1 from public.admin_users a where a.user_id = uid and a.password_policy_at is not null));
 $$;
@@ -70,7 +75,7 @@ begin
   return jsonb_build_object('role', a.role, 'perms', v_perms, 'mfa', jsonb_build_object(
     'required', public.setting_bool('admin_mfa_required'), 'aal', v_aal, 'enrolled', public.has_verified_factor(auth.uid()),
     'password_required', public.setting_bool('admin_password_policy_required'), 'password_ok', a.password_policy_at is not null,
-    'needed', not v_ok));
+    'approved', a.mfa_approved_at is not null, 'needed', not v_ok));
 end $$;
 grant execute on function public.my_admin() to authenticated;
 
@@ -83,7 +88,7 @@ begin
   return jsonb_build_object('mfa_required', public.setting_bool('admin_mfa_required'), 'password_policy_required', public.setting_bool('admin_password_policy_required'),
     'admins', coalesce((select jsonb_agg(jsonb_build_object('email', u.email, 'role', a.role, 'active', a.active,
         'factors', (select count(*) from auth.mfa_factors f where f.user_id = a.user_id and f.status::text = 'verified'),
-        'password_ok', a.password_policy_at is not null) order by a.created_at)
+        'password_ok', a.password_policy_at is not null, 'user_id', a.user_id, 'approved', a.mfa_approved_at is not null) order by a.created_at)
       from public.admin_users a join auth.users u on u.id = a.user_id where a.active), '[]'::jsonb));
 end $$;
 revoke all on function public.security_status() from public, anon;
@@ -106,6 +111,9 @@ begin
     select string_agg(u.email, ', ') into v_missing from public.admin_users a join auth.users u on u.id = a.user_id
       where a.active and a.password_policy_at is null;
     if v_missing is not null then raise exception 'prasyarat: admin belum memperbarui password sesuai kebijakan: %', v_missing using errcode = 'P0001'; end if;
+  end if;
+  if p_mfa and not public.setting_bool('admin_mfa_required') then   -- admin yang ada sudah diperiksa di atas: setujui sebagai titik awal
+    update public.admin_users set mfa_approved_at = now(), mfa_approved_by = auth.uid() where active and mfa_approved_at is null;
   end if;
   insert into public.security_settings(key, value, updated_by) values ('admin_mfa_required', to_jsonb(p_mfa), auth.uid()), ('admin_password_policy_required', to_jsonb(p_password), auth.uid())
     on conflict (key) do update set value = excluded.value, updated_by = excluded.updated_by, updated_at = now();
@@ -131,3 +139,28 @@ language sql stable security definer set search_path = public as $$
 $$;
 revoke all on function public.is_admin_for_password(uuid, text) from public, anon, authenticated;
 grant execute on function public.is_admin_for_password(uuid, text) to service_role;
+
+-- Persetujuan admin baru / setelah reset MFA. Tidak boleh menyetujui diri sendiri; wajib super admin aal2 yang lolos mfa_ok.
+create or replace function public.admin_approve_mfa(p_user uuid) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  if not exists (select 1 from public.admin_users where user_id = auth.uid() and active and role = 'super_admin')
+     or not public.mfa_ok(auth.uid(), coalesce(auth.jwt()->>'aal', '')) then raise exception 'forbidden' using errcode = '42501'; end if;
+  if p_user = auth.uid() then raise exception 'tidak boleh menyetujui diri sendiri' using errcode = 'P0001'; end if;
+  if not public.has_verified_factor(p_user) then raise exception 'admin tersebut belum punya faktor MFA terverifikasi' using errcode = 'P0001'; end if;
+  update public.admin_users set mfa_approved_at = now(), mfa_approved_by = auth.uid() where user_id = p_user and active;
+  if not found then raise exception 'admin tidak ditemukan' using errcode = 'P0001'; end if;
+  insert into public.security_events(kind, actor, detail) values ('admin_mfa_approved', auth.uid()::text, jsonb_build_object('target', p_user));
+end $$;
+revoke all on function public.admin_approve_mfa(uuid) from public, anon;
+grant execute on function public.admin_approve_mfa(uuid) to authenticated;
+
+-- Dipanggil prosedur reset MFA (service_role): cabut persetujuan agar faktor baru harus disetujui ulang.
+create or replace function public.admin_mfa_reset_mark(uid uuid) returns void
+language plpgsql security definer set search_path = public as $$
+begin
+  update public.admin_users set mfa_approved_at = null, mfa_approved_by = null where user_id = uid;
+  insert into public.security_events(kind, actor, detail) values ('admin_mfa_reset', uid::text, '{}'::jsonb);
+end $$;
+revoke all on function public.admin_mfa_reset_mark(uuid) from public, anon, authenticated;
+grant execute on function public.admin_mfa_reset_mark(uuid) to service_role;

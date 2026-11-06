@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Backup database NusaMora: skema+data `public` (pg_dump -Fc) dan DATA SAJA tabel auth/storage (agar tidak menimpa DDL milik Supabase).
+# Backup database NusaMora: skema+data `public` (pg_dump -Fc) dan DATA SAJA akun (auth.users, auth.identities, auth.mfa_factors).
+# Catatan: auth.mfa_factors WAJIB ikut (tanpa itu admin kehilangan MFA setelah restore). Berkas Storage dan baris storage.objects TIDAK ada di dump
+# DB; berkas dipulihkan lewat Storage API (restore-storage.mjs) agar baris & blob konsisten. Bucket dibuat oleh skrip SQL skema.
 # Rahasia hanya dari environment, TIDAK disimpan di repo:
 #   SUPABASE_DB_URL         string koneksi Postgres (Supabase > Project Settings > Database)
 #   BACKUP_DIR              folder tujuan (default ./backups)
@@ -11,7 +13,7 @@ BASE="${BACKUP_DIR:-./backups}"; KEEP="${BACKUP_KEEP:-14}"; mkdir -p "$BASE"; ch
 NAME="nusamora-db-$(date -u +%Y%m%dT%H%M%SZ)"; W="$BASE/$NAME"; mkdir "$W"; T0=$(date +%s)
 pg_dump "$SUPABASE_DB_URL" -Fc --no-owner --no-privileges --schema=public -f "$W/public.dump"
 pg_dump "$SUPABASE_DB_URL" -Fc --no-owner --no-privileges --data-only \
-  --table=auth.users --table=auth.identities --table=storage.buckets --table=storage.objects -f "$W/authstorage.dump"
+  --table=auth.users --table=auth.identities --table=auth.mfa_factors -f "$W/authstorage.dump"
 pg_restore -l "$W/public.dump" >/dev/null; pg_restore -l "$W/authstorage.dump" >/dev/null   # arsip harus terbaca
 ( cd "$W" && sha256sum public.dump authstorage.dump > SHA256SUMS )
 ( cd "$BASE" && tar -cf "$NAME.tar" "$NAME" && rm -rf "$NAME" )
