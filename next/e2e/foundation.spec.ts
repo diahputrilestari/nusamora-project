@@ -98,3 +98,33 @@ for (const path of ["/id", "/en", "/id/halaman-tidak-ada"]) {
     expect(viol).toEqual([]);
   });
 }
+
+test.describe("aturan bahasa (keputusan produk)", () => {
+  test("browser en-GB -> /en", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "en-GB" }); const page = await c.newPage();
+    await page.goto("/"); await expect(page).toHaveURL(/\/en$/); await c.close();
+  });
+  test("URL /id dibuka langsung oleh browser en-US dihormati, tanpa redirect", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "en-US" }); const page = await c.newPage();
+    const urls: string[] = []; page.on("response", (r) => { if (r.status() >= 300 && r.status() < 400) urls.push(r.url()); });
+    const r = await page.goto("/id"); expect(r?.status()).toBe(200); expect(urls).toEqual([]);
+    await expect(page).toHaveURL(/\/id$/); await c.close();
+  });
+  test("URL /en dibuka langsung oleh browser id-ID dihormati", async ({ page }) => {
+    await page.goto("/en"); await expect(page).toHaveURL(/\/en$/); await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  });
+  test("preferensi tersimpan (cookie) mengalahkan bahasa browser, dua arah", async ({ browser }) => {
+    for (const [browserLang, pref] of [["id-ID", "en"], ["en-US", "id"]] as const) {
+      const c = await browser.newContext({ locale: browserLang });
+      await c.addCookies([{ name: "NEXT_LOCALE", value: pref, url: "http://localhost:3000" }]);
+      const page = await c.newPage(); await page.goto("/");
+      await expect(page).toHaveURL(new RegExp(`/${pref}$`)); await c.close();
+    }
+  });
+  test("tanpa redirect loop: / berakhir di satu tujuan dengan ≤1 redirect", async ({ browser }) => {
+    const c = await browser.newContext({ locale: "en-US" }); const page = await c.newPage();
+    let n = 0; page.on("response", (r) => { if (r.status() >= 300 && r.status() < 400) n++; });
+    await page.goto("/"); await page.waitForLoadState("networkidle");
+    expect(n).toBeLessThanOrEqual(1); await expect(page).toHaveURL(/\/en$/); await c.close();
+  });
+});
