@@ -41,6 +41,12 @@
       .filter(function (x) { return x && /^[\w./-]+$/.test(x.src || "") && x.src.indexOf("..") < 0; });
   }
   function has(slot) { return items(slot).length > 0; }
+  /* latar: foto sampul pelanggan, atau backdrop tema bila foto belum ada */
+  function bgImg(vm, eager) {
+    if (vm.cover) return img(vm.cover, "", "", eager);
+    var b = TH.backdrop(P); if (!b) return "";
+    return '<img src="' + esc(b.sm) + '" srcset="' + esc(b.sm) + " 900w, " + esc(b.lg) + " " + b.w + 'w" sizes="(min-width: 1024px) 60vw, 100vw" alt="" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">';
+  }
   function art(slot, cls, eager, only) {
     var L = items(slot); if (only != null) L = L[only] ? [L[only]] : [];
     return L.map(function (x) { return '<img class="art ' + (cls || "") + '" src="' + esc(P.base + x.src) + '" alt="" aria-hidden="true"' + (x.w ? ' style="--w:' + (+x.w || 0) + "px;--wn:" + (+x.w || 0) + '"' : "") + (eager ? "" : ' loading="lazy"') + ' decoding="async">'; }).join("");
@@ -102,7 +108,7 @@
   function hero(vm) {
     var e = vm.events[0] || {};
     return '<section class="hero" id="beranda" data-nav="Beranda" data-ico="home">' +
-      '<div class="hero-bg" data-px="0.18">' + (vm.cover ? img(vm.cover, "", "", true) : "") + "</div><div class=\"hero-sh\"></div>" +
+      '<div class="hero-bg" data-px="0.18">' + bgImg(vm, true) + "</div><div class=\"hero-sh\"></div>" +
       '<div class="hero-in"><p class="eb lt" data-rv="down" style="--dl:200ms">' + esc(vm.isCouple ? tx("coverEyebrow", "The Wedding of") : tx("coverEyebrowEvent", "Undangan")) + '</p><h1 class="hero-nm" id="hero-nm">' + esc(vm.displayNames) + "</h1>" +
       '<div class="dv lt" data-rv="draw" style="--dl:900ms">' + div() + "</div>" +
       (e.at ? '<p class="hero-dt" data-rv="up" style="--dl:1100ms">' + esc(fdate(e.at, e.tz)) + "</p>" : "") +
@@ -217,7 +223,7 @@
 
   function closing(vm) {
     return '<section class="sec deep end" id="terima-kasih" data-nav="Terima kasih" data-ico="flower">' +
-      (vm.cover ? '<div class="end-bg" data-px="0.12">' + img(vm.cover, "") + "</div>" : "") + '<div class="pat"></div><div class="wrap">' +
+      (vm.cover || TH.backdrop(P) ? '<div class="end-bg" data-px="0.12">' + bgImg(vm) + "</div>" : "") + '<div class="pat"></div><div class="wrap">' +
       (has("closingScene") ? '<div class="end-art" data-rv="up">' + art("closingScene", "eg") + '<div class="cp">' + art("closingFigures") + "</div></div>" : '<div class="bloom-dec lt" data-rv="zoom" aria-hidden="true">' + O("bloom") + "</div>") +
       '<p class="lead lt" data-rv="up">' + nl(vm.closing || tx("closingText", "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.")) + "</p>" +
       '<p class="eb lt" data-rv="fade">' + esc(tx("closingEyebrow", "Kami yang berbahagia")) + '</p><h2 class="end-nm" data-rv="zoom">' + esc(vm.displayNames) + "</h2>" +
@@ -385,7 +391,7 @@
       '<div class="bgfx" aria-hidden="true"></div>' +
       (P.ornament.corner !== "none" && !has("coverCorner") ? '<div class="corners" aria-hidden="true">' + ["tl", "tr", "bl", "br"].map(function (k) { return '<i class="co ' + k + '">' + O(P.ornament.corner) + "</i>"; }).join("") + "</div>" : "") +
       cover(vm, guest) +
-      '<div class="layout"><aside class="side" aria-hidden="true"><div class="side-bg">' + (vm.cover ? img(vm.cover, "", "", true) : "") + '</div><div class="side-in"><p class="eb lt">' + esc(vm.isCouple ? tx("coverEyebrow", "The Wedding of") : tx("coverEyebrowEvent", "Undangan")) + '</p><p class="side-nm">' + esc(vm.displayNames) + '</p><div class="dv lt">' + div() + "</div>" + (vm.events[0] && vm.events[0].at ? '<p class="side-dt">' + esc(fdate(vm.events[0].at, vm.events[0].tz)) + "</p>" : "") + (guest ? '<p class="side-to">Kepada Yth. <b>' + esc(guest) + "</b></p>" : "") + "</div></aside>" +
+      '<div class="layout"><aside class="side" aria-hidden="true"><div class="side-bg">' + bgImg(vm, true) + '</div><div class="side-in"><p class="eb lt">' + esc(vm.isCouple ? tx("coverEyebrow", "The Wedding of") : tx("coverEyebrowEvent", "Undangan")) + '</p><p class="side-nm">' + esc(vm.displayNames) + '</p><div class="dv lt">' + div() + "</div>" + (vm.events[0] && vm.events[0].at ? '<p class="side-dt">' + esc(fdate(vm.events[0].at, vm.events[0].tz)) + "</p>" : "") + (guest ? '<p class="side-to">Kepada Yth. <b>' + esc(guest) + "</b></p>" : "") + "</div></aside>" +
       '<main class="col" id="main" tabindex="-1">' + hero(vm) + '<span id="main-start"></span>' + body + closing(vm) + "</main></div>" +
       '<div class="tsts" id="tsts" aria-live="polite"></div>';
 

@@ -475,3 +475,20 @@ svg { display: block; }
 /* ---------- variasi transisi cover (theme.json: cover.transition) ---------- */
 .cvt-fade .gate { transition: opacity 1.2s ease; } .cvt-fade .cover.opening .gate { transform: none; opacity: 0; }
 .cvt-rise .cover { transition: transform 1.3s var(--ease-io); } .cvt-rise .cover.opening { transform: translateY(-100%); } .cvt-rise .cover.opening .gate { transform: none; }
+
+/* ---------- ornamen dari file tema (theme.json ornament.* berisi path file) ---------- */
+.orn { display: block; width: 100%; height: auto; pointer-events: none; }
+.pt .orn { height: 100%; object-fit: contain; animation: swayp calc(var(--dur) / 3) ease-in-out infinite alternate; }
+[data-rv="draw"] .orn { opacity: 0; transform: scaleX(.6); transition: opacity 1s ease var(--dl, 0ms), transform 1.4s var(--ease) var(--dl, 0ms); }
+[data-rv="draw"].in .orn { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { [data-rv="draw"] .orn { opacity: 1 !important; transform: none !important; } }
+
+/* ---------- backdrop tema (art.backdrop): pemandangan terbelah di pintu cover ---------- */
+.has-backdrop .gate { overflow: hidden; }
+.has-backdrop .gate::before { content: ""; position: absolute; top: 0; bottom: 0; width: 198%; background: var(--backdrop-sm) center / cover no-repeat; animation: bdZoom 14s ease-out both; }
+.has-backdrop .gate.l::before { left: 0; } .has-backdrop .gate.r::before { right: 0; }
+.has-backdrop .gate::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--deep) 18%, transparent) 0%, color-mix(in srgb, var(--deep) 46%, transparent) 45%, color-mix(in srgb, var(--deep) 70%, transparent) 100%); }
+.has-backdrop .gate.l { box-shadow: inset -1px 0 0 rgba(255, 255, 255, .18); }
+.has-backdrop .cv-nm { text-shadow: 0 2px 22px rgba(0, 0, 0, .45); }
+@keyframes bdZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+@media (min-width: 900px) { .has-backdrop .gate::before { background-image: var(--backdrop); } }

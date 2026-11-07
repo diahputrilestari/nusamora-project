@@ -18,7 +18,7 @@ themes/
 2. Ubah `theme.json` (lihat skema di bawah). Taruh ilustrasi di `art/` sebagai WebP transparan.
 3. Daftarkan di `index.json` pada array `themes` (id, name, description, categories, thumb, swatch).
 4. Buka `/undangan?demo=1&theme=jawa-sogan` untuk melihat hasilnya, lalu buat `thumb.webp` dari cover.
-5. Tambahkan baris tema di `backend/themes-seed.sql` dan jalankan di Supabase, atau buat template dengan slug yang sama di Admin > Manajemen Template. Slug template = id tema.
+5. Tambahkan baris tema di `backend/themes-seed.sql` dan jalankan di Supabase. Template dibuat sebagai paket Essential dengan `capabilities = {"engine":"universal-2d"}` dan slug = id tema; editor dan halaman preview otomatis memakai engine ini.
 
 Tema langsung muncul di galeri `/template` dan di pilihan **Tema undangan** pada editor.
 
@@ -27,17 +27,18 @@ Tema langsung muncul di galeri `/template` dan di pilihan **Tema undangan** pada
 | Kunci | Isi |
 |---|---|
 | `colors` | `deep`, `deep2` (latar gelap), `paper`, `soft` (latar terang), `ink`, `muted` (teks), `accent`, `accent2` (emas/aksen), `petal` (warna partikel) |
-| `fonts` | `script` (nama pasangan), `serif` (judul & kutipan), `sans` (teks). Nama keluarga Google Fonts. |
-| `ornament.pattern` | `lattice`, `dots`, `kawung`, `none` |
-| `ornament.border` | `tumpal`, `line`, `none` (strip atas-bawah cover) |
-| `ornament.corner` | `vine`, `none` |
-| `ornament.divider` | `diamond`, `simple` |
+| `fonts` | `script` (nama pasangan), `serif` (judul & kutipan), `sans` (teks). Nama keluarga Google Fonts. `extra`: font cadangan untuk aksara lain, mis. `[{"family":"Nanum Myeongjo","axes":"wght@400;700"}]` untuk Hangul. |
+| `ornament.pattern` | `lattice`, `dots`, `kawung`, `none`, atau file tema (mis. `art/pattern.svg`). `patternPaper` = pola untuk bagian terang (opsional). |
+| `ornament.border` | `tumpal`, `line`, `none`, atau file tema (strip atas-bawah cover) |
+| `ornament.corner` | `vine`, `none`, atau file tema |
+| `ornament.divider` | `diamond`, `simple`, atau file tema |
 | `ornament.frame` | `arch` (bingkai lengkung foto), `none` |
-| `ornament.petals` | daftar dari `bloom`, `leaf`, `dot`, `heart`; kosong = tanpa partikel |
+| `ornament.petals` | daftar dari `bloom`, `leaf`, `dot`, `heart` dan/atau file tema (mis. `art/petal-2.webp`); kosong = tanpa partikel |
 | `ornament.petalCount` | jumlah partikel dasar (mobile otomatis lebih sedikit) |
 | `cover.transition` | `gate` (pintu terbelah), `fade`, `rise` |
 | `cover.photo` | `false` untuk menyembunyikan foto sampul di cover |
 | `sections` | urutan bagian: `salam`, `mempelai`, `hitung`, `acara`, `kisah`, `galeri`, `rsvp`, `hadiah`, `ucapan`. Hapus untuk menyembunyikan. Hero di awal dan penutup di akhir selalu ada. |
+| `css` | file CSS tambahan di folder tema (mis. `theme.css`), untuk mengatur ukuran ilustrasi. Pakai awalan `.th-<id-tema>`. |
 | `copy` | teks pengganti, lihat daftar di bawah |
 | `art` | ilustrasi per slot, lihat daftar di bawah |
 
@@ -49,6 +50,7 @@ Nilai: path relatif ke folder tema, `{ "src": "...", "w": 300 }` (w = lebar maks
 
 | Slot | Tempat |
 |---|---|
+| `backdrop` | pemandangan penuh `{ "src": "art/backdrop.webp", "small": "art/backdrop-sm.webp", "width": 1672 }`. Tampil di pintu cover (terbelah saat dibuka), dan sebagai latar hero, panel desktop, serta penutup bila pelanggan belum mengunggah foto sampul. |
 | `coverCorner` | sudut atas cover (dicerminkan kiri-kanan); menggantikan sulur SVG |
 | `coverHang` | dua hiasan bergantung dan berayun di atas cover |
 | `coverGround` | deretan ilustrasi di dasar cover (mis. rumah adat diapit jambangan) |

@@ -7,7 +7,8 @@
     "navy": "biru-malam",
     "blush": "blush-rose",
     "batak": "batak-ulos",
-    "nusa-essential": "marun-songket"
+    "nusa-essential": "marun-songket",
+    "korean": "korean-royal"
   },
   "themes": [
     {
@@ -87,6 +88,21 @@
       "swatch": [
         "#5A0A0F",
         "#D4A243"
+      ],
+      "art": true
+    },
+    {
+      "id": "korean-royal",
+      "name": "Korean Royal Wedding",
+      "description": "Istana hanok di bawah bunga sakura: lentera kertas, gerbang bunga, jembatan merah, kantong bokjumeoni, dan sentuhan aksara Hangul.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3B2C57",
+        "#F4C6D6"
       ],
       "art": true
     }

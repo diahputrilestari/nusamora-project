@@ -69,8 +69,14 @@
   }
 
   var FONT_W = { script: ":wght@400", serif: ":ital,wght@0,500;0,600;1,500", sans: ":wght@400;500;600" };
+  function famQ(name, axes) { return "family=" + encodeURIComponent(name).replace(/%20/g, "+") + (axes ? ":" + axes : ""); }
+  /* fonts.extra: font cadangan untuk aksara lain (mis. Hangul, Arab), [{ "family": "Nanum Myeongjo", "axes": "wght@400;700" }].
+     Dimuat bersama dan disisipkan di belakang font utama, jadi huruf Latin tetap memakai font tema. */
+  function extras(f) { return (Array.isArray(f.extra) ? f.extra : []).filter(function (x) { return x && /^[A-Za-z0-9 ]{2,40}$/.test(x.family || "") && /^[a-z,@;.0-9]*$/.test(x.axes || ""); }); }
+  function stack(main, f, tail) { return ['"' + main + '"'].concat(extras(f).map(function (x) { return '"' + x.family + '"'; })).concat(tail).join(", "); }
   function fonts(f) {
-    var fam = Object.keys(FONT_W).filter(function (k) { return f[k]; }).map(function (k) { return "family=" + encodeURIComponent(f[k]).replace(/%20/g, "+") + FONT_W[k]; });
+    var fam = Object.keys(FONT_W).filter(function (k) { return f[k]; }).map(function (k) { return famQ(f[k], FONT_W[k].slice(1)); })
+      .concat(extras(f).map(function (x) { return famQ(x.family, x.axes); }));
     var href = "https://fonts.googleapis.com/css2?" + fam.join("&") + "&display=swap", l = d.getElementById("nm-fonts");
     if (!l) { l = d.createElement("link"); l.id = "nm-fonts"; l.rel = "stylesheet"; d.head.appendChild(l); }
     if (l.getAttribute("href") !== href) l.setAttribute("href", href);
@@ -79,23 +85,36 @@
   function apply(p, root) {
     var s = (root || d.documentElement).style, c = p.colors, o = p.ornament;
     Object.keys(c).forEach(function (k) { if (/^[a-z0-9]+$/i.test(k)) s.setProperty("--" + k, c[k]); });
-    s.setProperty("--script", '"' + p.fonts.script + '", "Great Vibes", cursive');
-    s.setProperty("--serif", '"' + p.fonts.serif + '", Georgia, serif');
-    s.setProperty("--sans", '"' + p.fonts.sans + '", system-ui, -apple-system, "Segoe UI", sans-serif');
-    var pat = PATTERN[o.pattern] || PATTERN.none;
-    s.setProperty("--pattern", pat(c.accent, 0.16)); s.setProperty("--pattern-paper", pat(c.accent, 0.12));
-    s.setProperty("--tumpal", (BORDER[o.border] || BORDER.none)(c.accent));
+    BASE = p.base;
+    s.setProperty("--script", stack(p.fonts.script, p.fonts, ['"Great Vibes"', "cursive"]));
+    s.setProperty("--serif", stack(p.fonts.serif, p.fonts, ["Georgia", "serif"]));
+    s.setProperty("--sans", stack(p.fonts.sans, p.fonts, ["system-ui", "-apple-system", '"Segoe UI"', "sans-serif"]));
+    /* pola & strip boleh berupa nama dari pustaka bawaan atau file di folder tema (mis. "art/pola.svg") */
+    if (isFile(o.pattern)) { s.setProperty("--pattern", fileUrl(o.pattern)); s.setProperty("--pattern-paper", fileUrl(isFile(o.patternPaper) ? o.patternPaper : o.pattern)); }
+    else { var pat = PATTERN[o.pattern] || PATTERN.none; s.setProperty("--pattern", pat(c.accent, 0.16)); s.setProperty("--pattern-paper", pat(c.accent, 0.12)); }
+    s.setProperty("--tumpal", isFile(o.border) ? fileUrl(o.border) : (BORDER[o.border] || BORDER.none)(c.accent));
     fonts(p.fonts);
     var m = d.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", c.deep);
     var b = d.body; b.className = b.className.replace(/\b(th|cvt)-[\w-]+/g, "").trim();
     b.classList.add("th-" + p.id, "cvt-" + (p.cover.transition || "gate"));
     b.classList.toggle("has-art", Object.keys(p.art || {}).length > 0);
+    /* art.backdrop: pemandangan penuh untuk pintu cover (terbelah saat dibuka) serta latar hero/penutup bila foto belum ada */
+    var bd = backdrop(p); b.classList.toggle("has-backdrop", !!bd);
+    if (bd) { s.setProperty("--backdrop", 'url("' + bd.lg + '")'); s.setProperty("--backdrop-sm", 'url("' + bd.sm + '")'); }
     if (p.css && !d.getElementById("nm-theme-css")) { var l = d.createElement("link"); l.id = "nm-theme-css"; l.rel = "stylesheet"; l.href = p.base + p.css; d.head.appendChild(l); }
     return p;
   }
-  /* svg ornamen menurut nama (dipakai engine), kosong bila "none" */
-  function orn(name) { return ORN[name] || ""; }
+  /* ornamen menurut nama (pustaka svg bawaan) atau path file di folder tema aktif; kosong bila "none" */
+  var BASE = "";
+  function isFile(v) { return typeof v === "string" && /^[\w-]+(\/[\w.-]+)*\.(svg|webp|png)$/.test(v) && v.indexOf("..") < 0; }
+  function fileUrl(v) { return 'url("' + BASE + v + '")'; }
+  function backdrop(p) {
+    var v = (p.art || {}).backdrop; if (typeof v === "string") v = { src: v };
+    if (!v || !isFile(v.src)) return null;
+    return { lg: p.base + v.src, sm: p.base + (isFile(v.small) ? v.small : v.src), w: +v.width || 1600 };
+  }
+  function orn(name) { if (isFile(name)) return '<img class="orn" src="' + BASE + name + '" alt="" aria-hidden="true" decoding="async">'; return ORN[name] || ""; }
 
   w.NMInvite = w.NMInvite || {};
-  w.NMInvite.theme = { load: load, apply: apply, index: index, orn: orn, root: ROOT, sections: SECTIONS };
+  w.NMInvite.theme = { load: load, apply: apply, index: index, orn: orn, backdrop: backdrop, root: ROOT, sections: SECTIONS };
 })(window, document);

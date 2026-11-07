@@ -121,11 +121,12 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
 
 ## Undangan 2D universal (engine + tema)
-Semua undangan 2D (`nusamora.com/{slug}`) dirender satu engine; tampilannya ditentukan paket tema.
+Semua undangan paket Essential yang templatenya bertanda `capabilities.engine = "universal-2d"` dirender satu engine di `nusamora.com/{slug}`; tampilannya ditentukan paket tema.
 - `undangan.html` memuat `assets/invite/core/`: `data.js` (ambil & normalisasi undangan, RSVP/ucapan), `theme.js` (muat & terapkan paket tema), `motion.js` (reveal, parallax, partikel, animasi huruf, gulir otomatis; menghormati prefers-reduced-motion), `engine.js` + `engine.css` (semua section dan interaksi).
-- Paket tema di `assets/invite/themes/<id>/theme.json`: warna, font, ornamen, transisi cover, urutan section, teks, dan slot ilustrasi. Panduan lengkap & cara menambah tema: `assets/invite/themes/README.md`.
-- Tema bawaan: Marun Songket, Sage Garden, Biru Malam, Blush Rose, Batak Ulos (berilustrasi).
-- URL: `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik, `?demo=1&theme=<id>` = demo untuk galeri template.
-- Galeri `/template` dan pilihan **Tema undangan** di editor membaca `themes/index.json`, jadi tema baru muncul otomatis. Pelanggan dapat berganti tema kapan saja tanpa kehilangan isi.
+- Paket tema di `assets/invite/themes/<id>/`: warna, font (termasuk font aksara lain), ornamen bawaan atau file, transisi cover, urutan section, teks, backdrop pemandangan, dan slot ilustrasi. Panduan: `assets/invite/themes/README.md`.
+- Tema bawaan: Marun Songket, Sage Garden, Biru Malam, Blush Rose, Batak Ulos, Korean Royal Wedding.
+- Alur paket tetap sama (`/paket` → `/template` → `/buat` → `/editor` → `/preview`). Untuk template engine, editor Essential menampilkan Tema Undangan, Mempelai, Acara lainnya, Love Story, Hadiah Digital, dan Tamu & Ucapan; `/preview` menampilkan engine asli di dalam bingkai desktop/ponsel.
+- Konten disimpan dengan kunci paket Essential: `design2d.theme`, `texts.quote/quoteSource/closing`, `sections`, `gift.address`, ditambah `couple`, `events`, `story`, `accounts`.
+- URL: `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik, `?demo=1&theme=<id>` = demo tema.
 
-**Setup:** jalankan `backend/essential-schema.sql` (RSVP, ucapan, validasi foto) lalu `backend/themes-seed.sql` (daftar tema sebagai template) setelah `payment-schema.sql`. Routing slug sudah diatur di `vercel.json` dan `.htaccess`.
+**Setup:** setelah `asset-schema.sql`, jalankan `backend/essential-schema.sql` (RSVP, ucapan, kunci konten engine, validasi foto; menimpa `pkg_keys` dan `save_invitation`) lalu `backend/themes-seed.sql` (tema sebagai template Essential). Jika `package-schema.sql` atau `asset-schema.sql` dijalankan ulang, jalankan ulang kedua file ini. Routing slug sudah diatur di `vercel.json` dan `.htaccess`.
