@@ -9,11 +9,13 @@
   var CATD = { wedding: "Akad, resepsi, dan hari bahagia.", engagement: "Lamaran dan pertunangan.", birthday: "Ulang tahun dan perayaan.", graduation: "Wisuda dan kelulusan.", aqiqah: "Syukuran kelahiran.", seminar: "Seminar, workshop, dan pelatihan.", corporate: "Acara perusahaan dan peluncuran.", other: "Acara lain yang ingin Anda rayakan." };
   /* Tiga paket = tiga jenis produk. Harga & masa aktif dibaca dari tabel plans; teks di bawah hanya deskripsi produk. */
   var PK = {
-    essential: { name: "Essential", kind: "Undangan digital 2D", icon: "2D", desc: "Undangan berbasis website 2D yang ringan, cepat dibuka, dan mudah dibagikan.", feats: ["Template website 2D", "Editor teks, foto, musik, dan warna", "RSVP dan buku ucapan", "Hitung mundur dan lokasi peta", "Galeri foto"], gal: 10 },
-    signature: { name: "Signature", kind: "Undangan 3D Cinematic", icon: "3D", desc: "Film pembuka sinematik: scene 3D, gerakan kamera, animasi, dan musik yang membuat tamu terkesan.", feats: ["Template 3D cinematic", "Editor scene, background, dan objek 3D", "Pengaturan kamera dan animasi", "Teks dan efek sinematik", "RSVP dan buku ucapan"], gal: 20 },
-    luxe: { name: "Luxe", kind: "Undangan 3D Live Guest", icon: "Live", desc: "Venue virtual 3D tempat tamu memilih avatar, berjalan-jalan, dan menyapa secara langsung.", feats: ["Virtual venue 3D interaktif", "Avatar dan pemilihan karakter tamu", "Dekorasi, area resepsi, dan area kuliner", "Photo booth dan galeri di venue", "Fitur interaktif Live Guest"], gal: 40 }
+    essential: { name: "Essential", kind: "Undangan digital 2D", icon: "2D", desc: "Undangan berbasis website 2D yang ringan, cepat dibuka, dan mudah dibagikan.", feats: ["Template website 2D", "Editor teks, foto, musik, dan warna", "RSVP dan buku ucapan", "Hitung mundur dan lokasi peta", "Galeri foto", "Statistik tamu"], gal: 10 },
+    signature: { name: "Signature", kind: "Undangan 3D Cinematic", icon: "3D", desc: "Film pembuka sinematik: scene 3D, gerakan kamera, animasi, dan musik yang membuat tamu terkesan.", feats: ["Template 3D cinematic", "Editor scene, background, dan objek 3D", "Pengaturan kamera dan animasi", "Teks dan efek sinematik", "RSVP dan buku ucapan", "Statistik tamu"], gal: 20 },
+    luxe: { name: "Luxe", kind: "Undangan 3D Live Guest", icon: "Live", desc: "Venue virtual 3D tempat tamu memilih avatar, berjalan-jalan, dan menyapa secara langsung.", feats: ["Virtual venue 3D interaktif", "Avatar dan pemilihan karakter tamu", "Dekorasi, area resepsi, dan area kuliner", "Photo booth dan galeri di venue", "Fitur interaktif Live Guest", "Statistik tamu"], gal: 40 }
   };
   var PKS = ["essential", "signature", "luxe"];
+  /* Perbandingan fitur (urutan kolom = PKS). 1 = termasuk, 0 = tidak termasuk. Masa aktif, galeri, dan harga selalu dari tabel plans. */
+  var CMP = [["Website undangan 2D", [1, 0, 0]], ["Cinematic 3D", [0, 1, 0]], ["Virtual Venue", [0, 0, 1]], ["Avatar tamu", [0, 0, 1]], ["RSVP", [1, 1, 1]], ["Buku ucapan", [1, 1, 1]], ["Statistik tamu", [1, 1, 1]]];
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function toast(t, k) { var e = d.createElement("div"); e.className = "toast " + (k || ""); e.setAttribute("role", k === "bad" ? "alert" : "status"); e.textContent = t; $("#toasts").appendChild(e); setTimeout(function () { e.remove(); }, 4500); }
   /* Progress: 7 tahap. cur = indeks tahap aktif (0-6). */
@@ -57,16 +59,35 @@
   /* ================= 1. PILIH PAKET ================= */
   function pagePaket() {
     var q = new URLSearchParams(location.search), want = pkgOk(q.get("paket"));
-    Promise.all([loadPlans(), sb.from("profiles").select("plan").eq("id", U.id).maybeSingle().then(function (r) { return r.data && r.data.plan; }, function () { return null; })]).then(function (r) {
-      var P = r[0], sel = want || pkgOk(r[1]) || "signature", by = {}; P.forEach(function (p) { by[p.id] = p; });
+    Promise.all([loadPlans(), sb.from("profiles").select("plan").eq("id", U.id).maybeSingle().then(function (r) { return r.data && r.data.plan; }, function () { return null; })].concat(PKS.map(function (k) { return loadTemplates(k); }))).then(function (r) {
+      var P = r[0], sel = want || pkgOk(r[1]) || "signature", by = {}, demo = {}; P.forEach(function (p) { by[p.id] = p; });
+      PKS.forEach(function (k, i) { var t = r[2 + i][0]; demo[k] = t ? t.demo : ""; });
       if (!P.length) { view.innerHTML = note("Paket belum tersedia", "Daftar paket belum dapat dimuat. Muat ulang halaman atau coba lagi nanti.", '<a class="btn" href="/paket">Muat ulang</a>'); return; }
+      var shown = PKS.filter(function (k) { return by[k]; });
+      function notIn(k) { var i = PKS.indexOf(k); return CMP.filter(function (c) { return !c[1][i]; }).map(function (c) { return c[0]; }); }
+      function cmpTable() {
+        var th = '<tr><th scope="col">Fitur</th>' + shown.map(function (k) { return '<th scope="col"' + (k === sel ? ' class="on"' : "") + ">" + PK[k].name + "</th>"; }).join("") + "</tr>";
+        var yes = '<td class="y"><span aria-hidden="true">\u2713</span><span class="sr">Termasuk</span></td>', no = '<td class="n"><span aria-hidden="true">\u2013</span><span class="sr">Tidak termasuk</span></td>';
+        var rows = CMP.map(function (c) { return "<tr><th scope=\"row\">" + esc(c[0]) + "</th>" + shown.map(function (k) { return c[1][PKS.indexOf(k)] ? yes : no; }).join("") + "</tr>"; }).join("");
+        var nums = [["Masa aktif", function (p) { return p.duration_days + " hari"; }], ["Batas galeri foto", function (p) { return p.gallery_limit + " foto"; }], ["Harga", function (p) { return rp(p.price); }]].map(function (n) { return '<tr class="num"><th scope="row">' + n[0] + "</th>" + shown.map(function (k) { return "<td>" + n[1](by[k]) + "</td>"; }).join("") + "</tr>"; }).join("");
+        return '<section class="cmpw card" aria-labelledby="cmp-h"><h2 id="cmp-h">Bandingkan fitur paket</h2><p class="cmph">Geser tabel ke samping untuk melihat semua paket.</p><div class="cmps" tabindex="0" role="region" aria-labelledby="cmp-h"><table class="cmp"><thead>' + th + "</thead><tbody>" + rows + nums + "</tbody></table></div></section>";
+      }
+      function info() {
+        return '<section class="pkinfo card" aria-labelledby="pki-h"><h2 id="pki-h">Informasi penting</h2><dl>' +
+          "<dt>Harga</dt><dd>Harga yang tertera adalah total tagihan per undangan, tanpa biaya tambahan dari NusaMora. Jumlah yang Anda bayar sama dengan harga paket.</dd>" +
+          "<dt>Masa aktif</dt><dd>Dihitung sejak pembayaran berhasil, sesuai jumlah hari pada paket. Setelah masa aktif berakhir, undangan tidak lagi dapat dibuka tamu.</dd>" +
+          "<dt>Batas galeri</dt><dd>Jumlah foto galeri mengikuti paket yang dipilih dan berlaku sama di editor dan saat publikasi.</dd>" +
+          "<dt>Ganti paket</dt><dd>Paket dapat diganti selama pesanan belum dibayar. Upgrade paket setelah undangan dipublikasikan belum tersedia; untuk paket lain, buat undangan baru.</dd></dl></section>";
+      }
       function draw() {
-        view.innerHTML = '<div class="fw">' + steps(0, "") + '<div class="hd"><h1>Pilih paket undangan Anda</h1><p>Setiap paket adalah jenis undangan yang berbeda, lengkap dengan template dan editornya sendiri. Pilih yang paling cocok dengan acara Anda.</p></div>' +
-          '<div class="pkg3" role="radiogroup" aria-label="Pilih paket">' + PKS.filter(function (k) { return by[k]; }).map(function (k) {
-            var p = by[k], m = PK[k];
-            return '<label class="card pkc' + (k === sel ? " on" : "") + (k === "signature" ? " hot" : "") + '"><input type="radio" name="pk" value="' + k + '"' + (k === sel ? " checked" : "") + '>' + (k === "signature" ? '<span class="ribbon">Paling dipilih</span>' : "") +
-              '<span class="pk-ic">' + m.icon + '</span><h2>' + m.name + '</h2><b class="pk-kind">' + m.kind + '</b><p>' + m.desc + '</p><div class="pk-pr">' + rp(p.price) + "<small> / undangan</small></div><div class=\"pk-du\">Aktif " + p.duration_days + " hari &middot; galeri " + p.gallery_limit + " foto</div><ul>" + m.feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul></label>";
-          }).join("") + '</div><div class="acts stk"><a class="btn o" href="/akun#undangan">Batal</a><button class="btn" type="button" id="go">Lanjut dengan paket ' + PK[sel].name + "</button></div></div>";
+        view.innerHTML = '<div class="fw">' + steps(0, "") + '<div class="hd"><h1>Pilih paket undangan Anda</h1><p>Setiap paket adalah jenis undangan yang berbeda, lengkap dengan template dan editornya sendiri. Bandingkan fiturnya, bukan hanya harganya.</p></div>' +
+          '<div class="pkg3" role="radiogroup" aria-label="Pilih paket">' + shown.map(function (k) {
+            var p = by[k], m = PK[k], ex = notIn(k);
+            return '<div class="pkw"><label class="card pkc' + (k === sel ? " on" : "") + (k === "signature" ? " hot" : "") + '"><input type="radio" name="pk" value="' + k + '"' + (k === sel ? " checked" : "") + '>' + (k === "signature" ? '<span class="ribbon">Paling dipilih</span>' : "") +
+              '<span class="pk-ic">' + m.icon + '</span><h2>' + m.name + '</h2><b class="pk-kind">' + m.kind + '</b><p>' + m.desc + '</p><div class="pk-pr">' + rp(p.price) + "<small> / undangan</small></div><div class=\"pk-du\">Aktif " + p.duration_days + " hari &middot; galeri maks. " + p.gallery_limit + " foto</div><ul>" + m.feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>" +
+              (ex.length ? '<div class="pk-no"><b>Tidak termasuk:</b> ' + ex.map(esc).join(", ") + "</div>" : "") + "</label>" +
+              (demo[k] ? '<a class="btn o pk-demo" target="_blank" rel="noopener" href="' + esc(demo[k]) + '">Lihat demo ' + m.name + "</a>" : '<span class="btn o pk-demo off" aria-disabled="true">Demo segera hadir</span>') + "</div>";
+          }).join("") + "</div>" + cmpTable() + info() + '<div class="acts stk"><a class="btn o" href="/akun#undangan">Batal</a><button class="btn" type="button" id="go">Lanjut dengan paket ' + PK[sel].name + "</button></div></div>";
         $$("input[name=pk]").forEach(function (i) { i.addEventListener("change", function () { sel = i.value; try { sessionStorage.setItem("nm:paket", sel); } catch (e) { } draw(); var c = $("input[name=pk]:checked"); if (c) c.focus(); }); });
         $("#go").onclick = function () { location.href = "/template?paket=" + sel; };
       }
