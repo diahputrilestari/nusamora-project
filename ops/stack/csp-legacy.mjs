@@ -49,7 +49,7 @@ cur = "/masuk (login)"; await page.goto(BASE + "/masuk?next=/akun"); await page.
 try { await page.waitForURL((u) => new URL(u).pathname === "/akun", { timeout: 20000 }); } catch { /* dicek di bawah */ }
 check("login lewat UI berhasil (diarahkan ke /akun)", new URL(page.url()).pathname === "/akun", page.url().replace(BASE, ""));
 await page.waitForTimeout(3000);
-for (const p of ["/akun", `/editor?id=${inv.data?.id}`, `/preview?id=${inv.data?.id}`, "/pembayaran?order_id=NM000000000000"]) { const end = await visit(p, 3500); info("login " + p.split("?")[0], { akhir: end }); }
+for (const p of ["/akun", "/paket", "/template?paket=essential", "/buat?paket=essential", `/editor?id=${inv.data?.id}`, `/preview?id=${inv.data?.id}`, "/pembayaran?order_id=NM000000000000"]) { const end = await visit(p, 3500); info("login " + p.split("?")[0], { akhir: end }); }
 cur = "/admin (non-admin)"; const endAdmin = await visit("/admin", 2500); info("admin oleh non-admin", { akhir: endAdmin });
 
 // kontrol negatif: alat harus menangkap pelanggaran sungguhan
