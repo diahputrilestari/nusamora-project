@@ -17,8 +17,6 @@ LoadModule alias_module $MODS/mod_alias.so
 LoadModule headers_module $MODS/mod_headers.so
 LoadModule rewrite_module $MODS/mod_rewrite.so
 LoadModule setenvif_module $MODS/mod_setenvif.so
-LoadModule unixd_module $MODS/mod_unixd.so
-LoadModule log_config_module $MODS/mod_log_config.so
 TypesConfig /etc/mime.types
 ErrorLog "$W/error.log"
 DocumentRoot "$ROOT"
