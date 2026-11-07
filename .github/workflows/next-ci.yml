@@ -1,7 +1,7 @@
 name: next-ci
 on:
   push:
-    branches: [migration/nextjs, security/p0, "security/p0-*"]
+    branches: [migration/nextjs, security/p0, "security/p0-*", "feature/next-*"]
     paths: ["next/**", ".github/workflows/next-ci.yml"]
   pull_request:
     paths: ["next/**"]

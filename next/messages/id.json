@@ -3,8 +3,19 @@
     "title": "NusaMora - Undangan Digital Interaktif",
     "description": "Buat undangan digital 2D, 3D sinematik, dan Live Guest yang berkesan untuk setiap momen."
   },
-  "language": { "label": "Bahasa", "id": "ID", "en": "EN" },
-  "navigation": { "label": "Navigasi utama", "home": "Beranda", "templates": "Template", "pricing": "Harga", "login": "Masuk", "register": "Daftar" },
+  "language": {
+    "label": "Bahasa",
+    "id": "ID",
+    "en": "EN"
+  },
+  "navigation": {
+    "label": "Navigasi utama",
+    "home": "Beranda",
+    "templates": "Template",
+    "pricing": "Harga",
+    "login": "Masuk",
+    "register": "Daftar"
+  },
   "hero": {
     "title": "Setiap Momen Menjadi Kenangan",
     "description": "Buat undangan digital interaktif yang lebih berkesan.",
@@ -17,5 +28,33 @@
     "errorTitle": "Terjadi kesalahan",
     "errorText": "Halaman tidak dapat dimuat. Coba lagi beberapa saat.",
     "retry": "Coba lagi"
+  },
+  "invitation": {
+    "label": "Undangan",
+    "place": "Lokasi",
+    "openMap": "Buka peta",
+    "guestSection": "Konfirmasi dan ucapan tamu",
+    "greeting": "Halo, {name}",
+    "intro": "Mohon konfirmasi kehadiran dan tinggalkan ucapan untuk kami.",
+    "rsvpTitle": "Konfirmasi Kehadiran",
+    "rsvpQuestion": "Apakah Anda akan hadir?",
+    "attending": "Hadir",
+    "declining": "Tidak bisa hadir",
+    "unsure": "Masih ragu",
+    "guests": "Jumlah tamu yang hadir",
+    "guestsOption": "{count} orang",
+    "note": "Pesan (opsional)",
+    "sendRsvp": "Kirim Konfirmasi",
+    "rsvpThanks": "Terima kasih, konfirmasi Anda sudah kami terima.",
+    "wishTitle": "Ucapan & Doa",
+    "wishLabel": "Tulis ucapan",
+    "sendWish": "Kirim Ucapan",
+    "wishThanks": "Terima kasih atas ucapan Anda.",
+    "wishEmpty": "Tulis ucapan Anda dulu.",
+    "sending": "Mengirim...",
+    "invalidLink": "Tautan undangan ini tidak berlaku atau undangan sudah berakhir.",
+    "linkNotValid": "Tautan tamu tidak berlaku.",
+    "tooMany": "Terlalu banyak percobaan. Coba lagi nanti.",
+    "failed": "Gagal mengirim. Periksa koneksi lalu coba lagi."
   }
 }

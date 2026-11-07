@@ -3,8 +3,19 @@
     "title": "NusaMora - Interactive Digital Invitations",
     "description": "Create memorable 2D, 3D cinematic and Live Guest digital invitations for every celebration."
   },
-  "language": { "label": "Language", "id": "ID", "en": "EN" },
-  "navigation": { "label": "Main navigation", "home": "Home", "templates": "Templates", "pricing": "Pricing", "login": "Login", "register": "Sign Up" },
+  "language": {
+    "label": "Language",
+    "id": "ID",
+    "en": "EN"
+  },
+  "navigation": {
+    "label": "Main navigation",
+    "home": "Home",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "login": "Login",
+    "register": "Sign Up"
+  },
   "hero": {
     "title": "Every Moment, Made Memorable.",
     "description": "Create interactive digital invitations that make every celebration unforgettable.",
@@ -17,5 +28,33 @@
     "errorTitle": "Something went wrong",
     "errorText": "The page could not be loaded. Please try again shortly.",
     "retry": "Try again"
+  },
+  "invitation": {
+    "label": "Invitation",
+    "place": "Venue",
+    "openMap": "Open map",
+    "guestSection": "Guest RSVP and wishes",
+    "greeting": "Hello, {name}",
+    "intro": "Please confirm your attendance and leave a message for us.",
+    "rsvpTitle": "RSVP",
+    "rsvpQuestion": "Will you attend?",
+    "attending": "Attending",
+    "declining": "Can't make it",
+    "unsure": "Not sure yet",
+    "guests": "Number of guests attending",
+    "guestsOption": "{count, plural, one {# guest} other {# guests}}",
+    "note": "Message (optional)",
+    "sendRsvp": "Send RSVP",
+    "rsvpThanks": "Thank you, we have received your RSVP.",
+    "wishTitle": "Wishes & Prayers",
+    "wishLabel": "Write your wishes",
+    "sendWish": "Send Wishes",
+    "wishThanks": "Thank you for your kind wishes.",
+    "wishEmpty": "Please write your wishes first.",
+    "sending": "Sending...",
+    "invalidLink": "This invitation link is not valid or the invitation has ended.",
+    "linkNotValid": "This guest link is not valid.",
+    "tooMany": "Too many attempts. Please try again later.",
+    "failed": "Could not send. Check your connection and try again."
   }
 }
