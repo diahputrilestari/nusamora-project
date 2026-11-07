@@ -27,8 +27,10 @@ do $$ declare i int; u uuid; owner uuid; inv_l uuid; inv_e uuid; cat uuid; av uu
   insert into public.invitations (user_id, title, status, slug, plan_id, expires_at, content) values (owner, 'Uji Essential', 'aktif', 'dt-ess', 'essential', now() + interval '30 days', '{}') returning id into inv_e;
   insert into pg_temp.ids values ('inv_l', inv_l), ('inv_e', inv_e);
   select id into cat from public.asset_categories where slug = 'guest-avatar';
-  insert into public.assets (name, category_id, package_types, file_path, file_url, thumbnail_url, file_type, file_size, status) values ('Chibi uji', cat, '{luxe}', 'dt/av1.glb', 'https://x.test/av1.glb', 'https://x.test/av1.png', 'glb', 10, 'active') returning id into av;
+  insert into public.assets (name, category_id, package_types, file_path, file_url, thumbnail_url, file_type, file_size, status) values ('Chibi uji', cat, '{luxe}', 'dt/av1.webp', '/assets/avatars/uji/av1.webp', null, 'webp', 10, 'active') returning id into av;
   insert into pg_temp.ids values ('av', av);
+  insert into public.assets (name, category_id, package_types, file_path, file_url, thumbnail_url, file_type, file_size, status) values ('Model 3D uji', cat, '{luxe}', 'dt/av3d.glb', 'https://x.test/av3d.glb', 'https://x.test/av3d.png', 'glb', 10, 'active') returning id into av;
+  insert into pg_temp.ids values ('av3d', av);
 end $$;
 grant all on pg_temp.ids to public;
 
@@ -67,6 +69,8 @@ do $$ declare e text; u1 uuid := (select v from pg_temp.ids where k='u1'); u2 uu
   assert (select count(*) from public.dating_profiles) = 1, 'hanya profil sendiri terlihat';
   e := pg_temp.err(format($q$select public.dating_upsert_profile('Ayu', %L, 'wanita', 'Semarang', %L, '', '{}', null, null, 'teman_baru')$q$, (current_date - interval '25 years')::date, gen_random_uuid()));
   assert e = 'avatar_tidak_valid', 'avatar sembarang ditolak: ' || e;
+  e := pg_temp.err(format($q$select public.dating_upsert_profile('Ayu', %L, 'wanita', 'Semarang', %L, '', '{}', null, null, 'teman_baru')$q$, (current_date - interval '25 years')::date, (select v from pg_temp.ids where k='av3d')));
+  assert e = 'avatar_tidak_valid', 'avatar 3D (glb) ditolak, hanya 2D: ' || e;
   e := pg_temp.err(format($q$select public.dating_upsert_profile('A', %L, 'wanita', 'Semarang', null, '', '{}', null, null, 'teman_baru')$q$, (current_date - interval '25 years')::date)); assert e = 'nama_panggilan_tidak_valid', 'nama pendek: ' || e;
   e := pg_temp.err(format($q$select public.dating_upsert_profile('Ayu', %L, 'x', 'Semarang', null, '', '{}', null, null, 'teman_baru')$q$, (current_date - interval '25 years')::date)); assert e = 'gender_tidak_valid', 'gender: ' || e;
   perform pg_temp.as_user(u2); assert (select count(*) from public.dating_profiles) = 0, 'pengguna lain tidak melihat profil u1 secara langsung';
