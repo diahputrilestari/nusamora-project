@@ -30,8 +30,8 @@ check("live_log aksi liar ditolak", !(await call("live_log", { p_token: T, p_act
 const cnt = async (t) => (await svc.from(t).select("id", { count: "exact", head: true }).eq("invitation_id", a.data.id)).count;
 check("data tercatat di DB: 1 RSVP, 1 ucapan, 1 aktivitas live", (await cnt("invitation_rsvps")) === 1 && (await cnt("guestbook_entries")) === 1 && (await cnt("live_guest_events")) === 1);
 const cg = (await svc.from("invitations").select("guest_count,wish_count").eq("id", a.data.id).single()).data; check("penghitung undangan tersinkron (guest_count=1, wish_count=1)", cg?.guest_count === 1 && cg?.wish_count === 1, JSON.stringify(cg));
-const pub = await call("get_public_invitation", { p_slug: `gt-a-${stamp}` }); check("get_public_invitation (anon) mengembalikan undangan aktif", pub.ok && pub.j && !JSON.stringify(pub.j).includes(T), pub.t.slice(0, 200));
-check("get_public_invitation draft: null", (await call("get_public_invitation", { p_slug: `gt-d-${stamp}` })).j === null);
+const pub = await call("get_public_invitation", { p_slug: `gt-a-${stamp}` }); check("get_public_invitation (anon) mengembalikan undangan aktif", pub.ok && pub.j?.title === `Uji Tamu a` && !JSON.stringify(pub.j).includes(T), pub.t.slice(0, 200));
+const pd = await call("get_public_invitation", { p_slug: `gt-d-${stamp}` }); check("get_public_invitation draft: error tidak_tersedia, tanpa judul/isi", pd.ok && pd.j?.error === "tidak_tersedia" && !pd.j?.title && !pd.j?.content, pd.t.slice(0, 200));
 await cleanup();
 const left = (await svc.from("invitations").select("id", { count: "exact", head: true }).in("id", [a.data.id, d.data.id])).count; check("data uji bersih", left === 0, left);
 finish();
