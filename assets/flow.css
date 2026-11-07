@@ -116,3 +116,13 @@ dialog.fdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);o
 .fw>.cmpw,.fw>.pkinfo{min-width:0;max-width:100%}.cmpw .cmps{max-width:100%}
 .cmps{position:relative}
 .cmph{display:none;margin:-6px 0 10px;font-size:13px;color:var(--mute)}@media(max-width:640px){.cmph{display:block}}
+
+/* Step 2: kartu kategori dengan thumbnail/ilustrasi, jumlah template, Coming Soon halus */
+.cgsum{margin:-8px 0 18px;color:var(--mute);font-size:14px}
+.cgi{padding:0;overflow:hidden;gap:0;align-content:start}.cgi .cgi-im{aspect-ratio:16/10;display:grid;place-items:center;background:linear-gradient(135deg,var(--lilac),#fff);color:var(--primary);overflow:hidden}.cgi .cgi-im img{width:100%;height:100%;object-fit:cover;transition:transform .5s}.cgi.hov:hover .cgi-im img{transform:scale(1.05)}.cgi-ill{width:46%;max-width:92px;height:auto}
+.cgi-bd{display:grid;gap:6px;padding:16px 18px 18px}
+.cgi em.cnt{display:inline-flex;width:fit-content;margin-top:4px;padding:4px 11px;border-radius:999px;background:var(--lilac);color:var(--deep);font:700 12px var(--sans);font-style:normal}
+.cgi.off{opacity:1;cursor:default;pointer-events:none;user-select:none}.cgi.off .cgi-im{background:linear-gradient(135deg,#f4f1f8,#fbfafd);color:#b9aecb}.cgi.off .cgi-bd>b,.cgi.off .cgi-bd>span:not(.sr){opacity:.62}
+.cgi em.soon{display:inline-flex;align-items:center;gap:7px;width:fit-content;margin-top:4px;padding:4px 12px 4px 10px;border-radius:999px;border:1px dashed #cdbfe0;background:rgba(255,255,255,.7);color:#7d6f93;font:600 12px var(--sans);font-style:normal;letter-spacing:.02em}.cgi em.soon i{width:6px;height:6px;border-radius:50%;background:#b39ad6}
+.cgi .cgi-im{position:relative;height:0;padding-bottom:62.5%}.cgi .cgi-im>*{position:absolute}.cgi .cgi-im img{inset:0}.cgi .cgi-im .cgi-ill{left:50%;top:50%;transform:translate(-50%,-50%)}
+@media(max-width:600px){.cg{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cgi-bd{padding:12px 12px 14px}.cgi b{font-size:17px}.cgi-bd>span:not(.sr){font-size:12.5px}.cgi em.cnt,.cgi em.soon{font-size:11px}}
