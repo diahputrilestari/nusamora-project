@@ -131,3 +131,10 @@ html.fx .mbar{transition:transform .35s ease,opacity .35s}
 
 /* hover/pointer halus hanya untuk perangkat dengan mouse */
 @media (hover:none){html.fx .tilt::after{display:none}}
+
+/* logo gambar */
+.brand{display:inline-flex;align-items:center;line-height:0}
+.brand img{height:52px;width:auto;display:block;transition:height .3s ease}
+header.top.scrolled .brand img{height:42px}
+.foot .brand img{height:64px}
+@media(max-width:640px){.brand img{height:44px}header.top.scrolled .brand img{height:38px}.foot .brand img{height:56px}}
