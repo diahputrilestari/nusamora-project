@@ -64,7 +64,7 @@ Nilai: path relatif ke folder tema, `{ "src": "...", "w": 300 }` (w = lebar maks
 | `closingScene`, `closingFigures` | latar penutup (mis. pelaminan) dan figur di depannya |
 
 ## Kategori & demo
-`categories` di `theme.json` dan `index.json` menentukan kategori acara yang bisa memakai tema. Demo (`/undangan?demo=1&theme=<id>`) otomatis memakai data contoh kategori pertama tema, mis. ulang tahun untuk Istana Pink.
+`categories` di `theme.json` dan `index.json` menentukan kategori acara yang bisa memakai tema. Demo (`/undangan?demo=1&theme=<id>`) otomatis memakai data contoh kategori pertama tema, mis. ulang tahun untuk Istana Pink. Nama di data contoh bisa diatur lewat `"demo": { "name", "full", "parents", "age" }` di `theme.json`.
 
 ## Alias
 `index.json > aliases` memetakan id lama ke tema baru, sehingga undangan yang sudah terbit tetap tampil saat tema diganti nama.

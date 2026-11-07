@@ -13,7 +13,9 @@
     "javanese": "javanese-wedding",
     "chinese": "chinese-wedding",
     "tionghoa": "chinese-wedding",
-    "pink-castle": "istana-pink"
+    "pink-castle": "istana-pink",
+    "dinosaurus": "dino-adventure",
+    "dino": "dino-adventure"
   },
   "themes": [
     {
@@ -152,6 +154,20 @@
       "swatch": [
         "#B04593",
         "#F9A8D4"
+      ],
+      "art": true
+    },
+    {
+      "id": "dino-adventure",
+      "name": "Dino Adventure",
+      "description": "Pesta ulang tahun petualangan di lembah dinosaurus: gunung berapi, obor, telur dino, fosil, gua, balon jejak kaki, dan para dino lucu.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3A6136",
+        "#FFD15C"
       ],
       "art": true
     }

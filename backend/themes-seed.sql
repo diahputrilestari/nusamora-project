@@ -12,7 +12,8 @@ with t(slug, name, cats, description, sort) as (values
   ('korean-royal',  'Korean Royal Wedding',  '{wedding,engagement}'::text[],                    'Istana hanok di bawah bunga sakura: lentera kertas, gerbang bunga, jembatan merah, kantong bokjumeoni, dan sentuhan aksara Hangul.', 35),
   ('javanese-wedding', 'Javanese Wedding',   '{wedding,engagement}'::text[],                    'Pawiwahan adat Jawa: pendopo joglo berukir emas, gunungan, pelaminan, lentera, payung songsong, batik kawung, dan sentuhan aksara Jawa.', 36),
   ('chinese-wedding', 'Chinese Wedding',     '{wedding,engagement}'::text[],                    'Pernikahan Tionghoa: aula merah berukir naga, lampion merah, gerbang bulan 囍, bunga plum dan peony, kipas, serta pelaminan merah-emas.', 37),
-  ('istana-pink',   'Istana Pink',           '{birthday}'::text[],                              'Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.', 40)
+  ('istana-pink',   'Istana Pink',           '{birthday}'::text[],                              'Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.', 40),
+  ('dino-adventure', 'Dino Adventure',       '{birthday}'::text[],                              'Pesta ulang tahun petualangan di lembah dinosaurus: gunung berapi, obor, telur dino, fosil, gua, balon jejak kaki, dan para dino lucu.', 41)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

@@ -140,30 +140,32 @@
     { id: "k3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
   /* demo per kategori acara: tema ulang tahun memakai data contoh ulang tahun */
-  function demoFor(theme, cat) {
+  /* o = theme.json "demo" (opsional): { name, full, parents, age } untuk menyesuaikan data contoh */
+  function demoFor(theme, cat, o) {
     if (cat !== "birthday") return demoData(theme);
+    o = o || {}; var nm = str(o.name, 30) || "Alesha", age = str(o.age, 10) || "5";
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
     var content = {
       theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
-      names: { a: "Alesha" },
-      couple: { bride: { full: "Alesha Putri Maharani", parents: "Putri kecil Bapak Dimas Pratama & Ibu Rania Larasati" } },
-      welcome: "Hore, Alesha genap 5 tahun! Kami mengundang keluarga dan teman-teman untuk merayakan pesta ulang tahunnya bersama kami.",
+      names: { a: nm },
+      couple: { bride: { full: str(o.full, 80) || "Alesha Putri Maharani", parents: str(o.parents, 120) || "Putri kecil Bapak Dimas Pratama & Ibu Rania Larasati" } },
+      welcome: "Hore, " + nm + " genap " + age + " tahun! Kami mengundang keluarga dan teman-teman untuk merayakan pesta ulang tahunnya bersama kami.",
       quote: { text: "Setiap tahun bersamamu adalah hadiah terindah bagi kami.", source: "Ayah & Bunda" },
       photos: { cover: u("nm-kid-cover", 900, 1200), bride: u("nm-kid", 600, 800), gallery: ["k1", "k2", "k3", "k4", "k5", "k6"].map(function (s, i) { return u("nm-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
-      event: { name: "Pesta Ulang Tahun ke-5", start: "15:00", end: "18:00", tz: "WIB", venue: "Ballroom Taman Ceria", address: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      event: { name: "Pesta Ulang Tahun ke-" + age, start: "15:00", end: "18:00", tz: "WIB", venue: "Ballroom Taman Ceria", address: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
       story: [
-        { date: "Maret 2021", title: "Hari Pertama di Dunia", text: "Alesha lahir di pagi yang cerah dan langsung jadi pusat dunia kecil kami.", photo: u("nm-kid-s1", 700, 500) },
-        { date: "Maret 2022", title: "Langkah Pertama", text: "Di ulang tahun pertamanya, Alesha berjalan sendiri menuju kue ulang tahunnya.", photo: "" },
-        { date: "Juli 2025", title: "Hari Pertama Sekolah", text: "Dengan tas berpita merah muda, Alesha berangkat ke TK dengan senyum lebar.", photo: u("nm-kid-s3", 700, 500) }
+        { date: "Maret 2021", title: "Hari Pertama di Dunia", text: nm + " lahir di pagi yang cerah dan langsung jadi pusat dunia kecil kami.", photo: u("nm-kid-s1", 700, 500) },
+        { date: "Maret 2022", title: "Langkah Pertama", text: "Di ulang tahun pertamanya, " + nm + " berjalan sendiri menuju kue ulang tahunnya.", photo: "" },
+        { date: "Juli 2025", title: "Hari Pertama Sekolah", text: "Dengan tas barunya, " + nm + " berangkat ke TK dengan senyum lebar.", photo: u("nm-kid-s3", 700, 500) }
       ],
       gift: { bank: "BCA", number: "1234567890", holder: "Rania Larasati" },
       giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
-      closing: "Terima kasih sudah menjadi bagian dari hari istimewa Alesha. Kami tunggu kehadiranmu di pesta!",
+      closing: "Terima kasih sudah menjadi bagian dari hari istimewa " + nm + ". Kami tunggu kehadiranmu di pesta!",
       music: { enabled: true, track: "we-are" },
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
-    return { vm: normalize(content, { slug: "demo", title: "Ulang Tahun Alesha", category: "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
+    return { vm: normalize(content, { slug: "demo", title: "Ulang Tahun " + nm, category: "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
   }
   function demoData(theme) {
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
