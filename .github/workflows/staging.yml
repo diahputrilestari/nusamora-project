@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual"
+        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual; content = terapkan SQL proteksi konten, deploy fungsi asset-url, lalu uji perlindungan aset"
         type: choice
-        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp, content]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -144,11 +144,24 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
           node csp-legacy.mjs 2>&1 | tee "$RUNNER_TEMP/csp.log"; exit ${PIPESTATUS[0]}
 
+      - name: "[content] Terapkan SQL (idempoten), deploy asset-url, uji perlindungan aset di staging"
+        id: content
+        if: inputs.phase == 'content'
+        continue-on-error: true
+        run: |
+          ops/stack/apply-sql.sh | tail -2
+          P="$RUNNER_TEMP/sbproj"; mkdir -p "$P" && cd "$P" && supabase init --force >/dev/null
+          cp -r "$GITHUB_WORKSPACE/supabase/functions" supabase/
+          grep -A1 '^\[functions\.' "$GITHUB_WORKSPACE/supabase/config.toml" | grep -v '^--' >> supabase/config.toml
+          supabase functions deploy asset-url --yes --project-ref "$PROJECT_REF" --use-api --no-verify-jwt
+          cd "$GITHUB_WORKSPACE/ops/stack"
+          node content-protection.mjs 2>&1 | tee "$RUNNER_TEMP/content-protection.log"; exit ${PIPESTATUS[0]}
+
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp content-protection; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -158,5 +171,5 @@ jobs:
       - name: Ringkasan
         if: always() && inputs.phase != 'prepare'
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }}"
-          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
+          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }} content=${{ steps.content.outcome }}"
+          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}" "${{ steps.content.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
