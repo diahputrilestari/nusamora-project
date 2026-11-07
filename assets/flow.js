@@ -470,16 +470,20 @@
     function avShow(v) { var o = by[v], i = $("#avpi"); if (!i) return; var nm = (opts(caps.avatars).filter(function (x) { return x[0] === v; })[0] || [v, v])[1]; i.innerHTML = (o ? avThumb(o) : '<span class="av3d" aria-hidden="true">3D</span>') + "<b>" + esc(nm) + "</b>" + (o ? "<span>" + (o.side === "bride" ? "Karakter wanita" : o.side === "groom" ? "Karakter pria" : "Karakter") + "</span>" : "<span>Pratinjau gambar belum tersedia untuk avatar ini.</span>"); }
     var avl = $(".avsel"); if (avl) { ["mouseover", "focusin"].forEach(function (ev) { avl.addEventListener(ev, function (e) { var c = e.target.closest(".avc input,.avc"); if (!c) return; var inp = c.tagName === "INPUT" ? c : c.querySelector("input"); if (inp) avShow(inp.dataset.v); }); }); avl.addEventListener("change", function (e) { if (e.target.dataset.v) avShow(e.target.dataset.v); }); }
     /* preview langsung */
+    function ovl(base, over) { var o = JSON.parse(JSON.stringify(base)); Object.keys(over || {}).forEach(function (k) { var v = over[k]; if (v && typeof v === "object" && !Array.isArray(v) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = ovl(o[k], v); else if (v === "" || v == null || (Array.isArray(v) && !v.length && Array.isArray(o[k]) && o[k].length && k !== "avatars" && k !== "objects" && k !== "decorations")) return; else o[k] = v; }); return o; }
     var lpT, lpMode = "m";
     function lpDraw() {
       var h = $("#lpi"), box = $("#lpv"); if (!h || !box) return; var w = lpMode === "m" ? 390 : 900, top = box.scrollTop; h.style.width = w + "px"; h.className = "lpi" + (lpMode === "m" ? " mob" : "");
-      try { renderStage({ pkg: pkg, cat: cat, date: date, c: C0, tpl: tpl, caps: caps, inv: inv, av: { options: avOpts || [] } }, h); } catch (e) { h.textContent = "Preview tidak dapat ditampilkan."; }
-      var z = box.clientWidth / w; h.style.zoom = z > 0 && z < 1 ? z : 1; box.scrollTop = top;
+      var ca = C0.avatars || {}, c2 = C0, dt = date;
+      try { if (tpl) { c2 = ovl(sampleContent(pkg, tpl), C0); dt = date || new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10); } } catch (e) { c2 = C0; }
+      h.className += " stage pk-" + pkg;
+      try { renderStage({ pkg: pkg, cat: cat, date: dt, c: c2, tpl: tpl, caps: caps, inv: inv, av: { options: avOpts || [], demo: !(ca.groom || ca.bride) } }, h); } catch (e) { h.textContent = "Preview tidak dapat ditampilkan."; }
+      var z = (box.clientWidth - 20) / w; h.style.zoom = z > 0 && z < 1 ? z : 1; box.scrollTop = top;
     }
     function lp(now) { clearTimeout(lpT); lpT = setTimeout(lpDraw, now ? 0 : 250); }
     $$("input[name=lpd]").forEach(function (r) { r.addEventListener("change", function () { lpMode = r.value; lpDraw(); }); });
     $("#lp-o").addEventListener("click", function () { $("#lpc").classList.add("open"); lpDraw(); }); $("#lp-x").addEventListener("click", function () { $("#lpc").classList.remove("open"); });
-    $("#lpn").innerHTML = pkg === "luxe" ? "Preview venue memakai tampilan ringkas dari pengaturan Anda." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Preview ikut berubah saat Anda mengetik atau mengubah pilihan.";
+    $("#lpn").innerHTML = pkg === "luxe" ? "Preview venue memakai tampilan ringkas. Bagian yang belum diisi memakai contoh, seperti di halaman demo." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Preview ikut berubah saat Anda mengetik. Bagian yang belum diisi memakai contoh, seperti di halaman demo.";
     addEventListener("resize", function () { lp(); });
     progress(); lpDraw();
     (function () { var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
