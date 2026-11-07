@@ -41,3 +41,9 @@ Cara mengisi: `gh secret set NAMA --env staging` (nilai dimasukkan interaktif di
 - [ ] URL/ref yang dipakai ≠ produksi (verifikasi manual ref proyek).
 - [ ] `dr.mjs` hanya dijalankan terhadap staging (skrip menghapus data).
 - [ ] Tidak ada MFA wajib/CSP Enforce di produksi.
+
+## 6. Midtrans Sandbox (uji pembayaran)
+- Secret GitHub (environment staging): `STAGING_MIDTRANS_SERVER_KEY` = Server Key **Sandbox** (awalan `SB-Mid-server-`). Skrip menolak kunci lain (mencegah kunci produksi terpakai).
+- Dashboard Midtrans **Sandbox** → Settings → Configuration → Payment Notification URL: `https://<ref>.supabase.co/functions/v1/midtrans-webhook`.
+- Urutan fase workflow `staging`: `secrets` → (CAPTCHA harus mati) `midtrans-pay` → bayar manual lewat tautan di log (kartu uji 4811 1111 1111 1114, exp 12/30, CVV 123, OTP 112233) → `midtrans-verify`.
+- Client Key tidak dipakai oleh backend (pembayaran memakai Snap redirect).

@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA (aktifkan dulu di dashboard)"
+        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual"
         type: choice
-        options: [prepare, verify, captcha]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -27,6 +27,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
       PROJECT_REF: ${{ secrets.STAGING_PROJECT_REF }}
       ORIGIN: http://localhost
+      MIDTRANS_SERVER_KEY: ${{ secrets.STAGING_MIDTRANS_SERVER_KEY }}
     steps:
       - name: Pengaman (hanya staging)
         run: |
@@ -98,11 +99,31 @@ jobs:
         working-directory: ops/stack
         run: node captcha.mjs 2>&1 | tee "$RUNNER_TEMP/captcha.log"; exit ${PIPESTATUS[0]}
 
+      # ---------------- midtrans ----------------
+      - name: "[secrets] Pasang Server Key SANDBOX ke Edge Functions"
+        if: inputs.phase == 'secrets'
+        run: |
+          case "$MIDTRANS_SERVER_KEY" in SB-Mid-server-*) ;; *) echo "STAGING_MIDTRANS_SERVER_KEY kosong atau BUKAN kunci Sandbox (harus SB-Mid-server-...). Dihentikan."; exit 1;; esac
+          supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SERVER_KEY="$MIDTRANS_SERVER_KEY" MIDTRANS_IS_PRODUCTION=false
+          echo "Server Key Sandbox terpasang; MIDTRANS_IS_PRODUCTION=false"
+      - name: "[midtrans-pay] Uji checkout & webhook (otomatis) lalu cetak tautan bayar"
+        id: mpay
+        if: inputs.phase == 'midtrans-pay'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: MODE=pay node midtrans.mjs 2>&1 | tee "$RUNNER_TEMP/midtrans-pay.log"; exit ${PIPESTATUS[0]}
+      - name: "[midtrans-verify] Verifikasi setelah pembayaran manual + idempotensi webhook"
+        id: mver
+        if: inputs.phase == 'midtrans-verify'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: MODE=verify node midtrans.mjs 2>&1 | tee "$RUNNER_TEMP/midtrans-verify.log"; exit ${PIPESTATUS[0]}
+
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -112,5 +133,5 @@ jobs:
       - name: Ringkasan
         if: always() && inputs.phase != 'prepare'
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }}"
-          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
+          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }}"
+          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
