@@ -39,7 +39,7 @@
     var c = raw || {}, names = c.names || {}, cp = c.couple || {}, ph = c.photos || {}, ev = c.event || {}, ft = c.features || {};
     var tx = c.texts || {}, dz = c.design2d || {}, sc = c.sections || {}, gf = c.gift || {};
     var cat = meta.category || "wedding", isCouple = cat === "wedding" || cat === "engagement";
-    var bride = { nick: str(names.a, 80), full: str((cp.bride || {}).full, 120) || str(names.a, 80), parents: str((cp.bride || {}).parents, 200), ig: ig((cp.bride || {}).ig), photo: okUrl(ph.bride), sex: "f" };
+    var bride = { nick: str(names.a, 80), full: str((cp.bride || {}).full, 120) || str(names.a, 80), parents: str((cp.bride || {}).parents, 200), ig: ig((cp.bride || {}).ig), photo: okUrl(ph.bride), sex: !isCouple && (cp.bride || {}).sex === "m" ? "m" : "f" };
     var groom = { nick: str(names.b, 80), full: str((cp.groom || {}).full, 120) || str(names.b, 80), parents: str((cp.groom || {}).parents, 200), ig: ig((cp.groom || {}).ig), photo: okUrl(ph.groom), sex: "m" };
     var groomFirst = cp.order !== "wanita";
     var people = isCouple ? (groomFirst ? [groom, bride] : [bride, groom]) : [bride];
@@ -136,7 +136,7 @@
   ];
   var DEMO_WISHES_KID = [
     { id: "k1", name: "Tante Mira & Om Bayu", message: "Selamat ulang tahun, Sayang! Semoga sehat, ceria, dan makin pintar.", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
-    { id: "k2", name: "Kirana (teman TK)", message: "Happy birthday! Sampai ketemu di pesta istana!", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
+    { id: "k2", name: "Kirana (teman TK)", message: "Happy birthday! Sampai ketemu di pesta ya!", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
     { id: "k3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
   /* demo per kategori acara: tema ulang tahun memakai data contoh ulang tahun */

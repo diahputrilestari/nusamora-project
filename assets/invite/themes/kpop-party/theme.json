@@ -1,0 +1,144 @@
+{
+  "id": "kpop-party",
+  "name": "K-Pop Party",
+  "version": 1,
+  "description": "Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Nayla",
+    "full": "Nayla Azzahra Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "17"
+  },
+  "colors": {
+    "deep": "#2B1A57",
+    "deep2": "#4A2C8C",
+    "paper": "#FCF9FF",
+    "soft": "#F2E9FD",
+    "ink": "#2E2145",
+    "muted": "#776A90",
+    "accent": "#9446D6",
+    "accent2": "#F4C55A",
+    "petal": "#E59BEF",
+    "heading": "#3A1F73"
+  },
+  "fonts": {
+    "script": "Pacifico",
+    "serif": "Poppins",
+    "sans": "Quicksand",
+    "extra": [
+      {
+        "family": "Jua",
+        "axes": ""
+      }
+    ]
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "art/bintang.webp",
+      "dot"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "K-Pop Birthday Party",
+    "guestSalute": "Para fans tersayang",
+    "profileEyebrow": "Idola hari ini",
+    "profileTitle": "Birthday Idol",
+    "countdownEyebrow": "Panggung dibuka dalam",
+    "countdownTitle": "Comeback Countdown",
+    "eventsEyebrow": "Jadwal konser",
+    "eventsTitle": "Concert Day",
+    "storyEyebrow": "Era demi era",
+    "storyTitle": "My Era",
+    "galleryEyebrow": "Koleksi momen",
+    "galleryTitle": "Photocard",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Fan Meeting RSVP",
+    "rsvpLead": "Siapkan lightstick-mu! Kabari kami apakah kamu bisa ikut meramaikan pesta.",
+    "giftEyebrow": "Fan support",
+    "giftTitle": "Kado Spesial",
+    "giftLead": "Kehadiranmu sudah jadi kado terbaik. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Ucapan & doa",
+    "wishesTitle": "Fan Letter",
+    "closingEyebrow": "생일 축하해 · Sampai jumpa!",
+    "closingText": "Terima kasih sudah jadi bagian dari hari istimewa ini. Sampai jumpa di panggung pesta, bawa lightstick terbaikmu!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/lentera-ungu.webp",
+    "coverGround": [
+      {
+        "src": "art/semak-bunga.webp",
+        "w": 104
+      },
+      {
+        "src": "art/kelinci.webp",
+        "w": 78
+      },
+      {
+        "src": "art/semak-bintang.webp",
+        "w": 94
+      }
+    ],
+    "heading": "art/mahkota.webp",
+    "introTop": "art/lightstick.webp",
+    "figureBride": "art/cewek-5.webp",
+    "figureGroom": "art/cowok-2.webp",
+    "countdownRow": [
+      {
+        "src": "art/moving-head.webp",
+        "w": 54
+      },
+      {
+        "src": "art/bola-disko.webp",
+        "w": 84
+      },
+      {
+        "src": "art/moving-head.webp",
+        "w": 54
+      }
+    ],
+    "eventBadge": "art/mikrofon.webp",
+    "storyTop": "art/headphone.webp",
+    "rsvpHang": "art/balon-hati.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/panggung.webp",
+    "closingFigures": [
+      "art/cowok-1.webp",
+      "art/cewek-2.webp",
+      "art/cewek-1.webp",
+      "art/cowok-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

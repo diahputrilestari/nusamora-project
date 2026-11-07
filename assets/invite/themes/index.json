@@ -16,7 +16,9 @@
     "pink-castle": "istana-pink",
     "dinosaurus": "dino-adventure",
     "dino": "dino-adventure",
-    "rock": "metal-rock"
+    "rock": "metal-rock",
+    "kpop": "kpop-party",
+    "k-pop": "kpop-party"
   },
   "themes": [
     {
@@ -183,6 +185,20 @@
       "swatch": [
         "#0D0609",
         "#E3243A"
+      ],
+      "art": true
+    },
+    {
+      "id": "kpop-party",
+      "name": "K-Pop Party",
+      "description": "Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2B1A57",
+        "#9446D6"
       ],
       "art": true
     }
