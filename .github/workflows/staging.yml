@@ -179,6 +179,7 @@ jobs:
         if: inputs.phase == 'guest'
         continue-on-error: true
         run: |
+          set -o pipefail
           ops/stack/apply-sql.sh | tail -4
           {
           psql "$DB_URL" -v ON_ERROR_STOP=1 -Atc "
@@ -186,9 +187,10 @@ jobs:
           select 'tabel '||n||' ada='||(to_regclass('public.'||n) is not null)||' rls='||coalesce((select relrowsecurity::text from pg_class where oid=to_regclass('public.'||n)),'-') from t;
           select 'rpc '||p.proname||' anon='||has_function_privilege('anon',p.oid,'execute')||' auth='||has_function_privilege('authenticated',p.oid,'execute')
             from pg_proc p join pg_namespace n on n.oid=p.pronamespace and n.nspname='public'
-            where p.proname in ('my_notifications','mark_notifications_read','support_create_ticket','support_my_tickets','support_reply','guest_add','guest_delete','guest_mark_sent','guest_stats','wish_set_visible','wish_delete','live_event_delete','guest_open','guest_rsvp','guest_wish','live_log','get_public_invitation') order by 2;
+            where p.proname in ('my_notifications','mark_notifications_read','support_create_ticket','support_my_tickets','support_reply','guest_add','guest_delete','guest_mark_sent','guest_stats','wish_set_visible','wish_delete','live_event_delete','guest_open','guest_rsvp','guest_wish','live_log','get_public_invitation') order by p.proname;
           select 'anon BISA baca langsung '||c.relname||' = '||has_table_privilege('anon',c.oid,'select') from pg_class c where c.relnamespace='public'::regnamespace and c.relname in ('invitation_guests','invitation_rsvps','guestbook_entries','live_guest_events','announcement_reads');"
           } 2>&1 | tee "$RUNNER_TEMP/guest.log"
+          [ "$(grep -c '^rpc ' "$RUNNER_TEMP/guest.log")" -ge 17 ] || { echo "RPC kurang dari 17"; exit 1; }
           ! grep -q "ada=false" "$RUNNER_TEMP/guest.log"
           ! grep -q "BISA baca langsung .* = true" "$RUNNER_TEMP/guest.log"
           ! grep -E "^rpc (my_|mark_|support_|guest_add|guest_delete|guest_mark|guest_stats|wish_|live_event)" "$RUNNER_TEMP/guest.log" | grep -q "anon=true"
