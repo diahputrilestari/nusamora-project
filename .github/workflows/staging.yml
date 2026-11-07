@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual; content = terapkan SQL proteksi konten, deploy asset-url, uji perlindungan aset; dating = terapkan SQL lalu uji Cari Teman (API+Realtime+UI Chromium) di staging, CAPTCHA harus mati"
+        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual; guest = terapkan SQL fitur pelanggan + modul tamu lalu periksa hanya-baca (tabel, RLS, RPC, hak akses); content = terapkan SQL proteksi konten, deploy asset-url, uji perlindungan aset; dating = terapkan SQL lalu uji Cari Teman (API+Realtime+UI Chromium) di staging, CAPTCHA harus mati"
         type: choice
-        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp, dating, content]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp, dating, content, guest]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -174,11 +174,30 @@ jobs:
           cd "$GITHUB_WORKSPACE/ops/stack"
           node content-protection.mjs 2>&1 | tee "$RUNNER_TEMP/content-protection.log"; exit ${PIPESTATUS[0]}
 
+      - name: "[guest] Terapkan SQL (idempoten) + periksa hanya-baca tabel, RLS, RPC, hak akses"
+        id: guest
+        if: inputs.phase == 'guest'
+        continue-on-error: true
+        run: |
+          ops/stack/apply-sql.sh | tail -4
+          {
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -Atc "
+          with t(n) as (values ('announcement_reads'),('invitation_guests'),('invitation_rsvps'),('guestbook_entries'),('live_guest_events'))
+          select 'tabel '||n||' ada='||(to_regclass('public.'||n) is not null)||' rls='||coalesce((select relrowsecurity::text from pg_class where oid=to_regclass('public.'||n)),'-') from t;
+          select 'rpc '||p.proname||' anon='||has_function_privilege('anon',p.oid,'execute')||' auth='||has_function_privilege('authenticated',p.oid,'execute')
+            from pg_proc p join pg_namespace n on n.oid=p.pronamespace and n.nspname='public'
+            where p.proname in ('my_notifications','mark_notifications_read','support_create_ticket','support_my_tickets','support_reply','guest_add','guest_delete','guest_mark_sent','guest_stats','wish_set_visible','wish_delete','live_event_delete','guest_open','guest_rsvp','guest_wish','live_log','get_public_invitation') order by 2;
+          select 'anon BISA baca langsung '||c.relname||' = '||has_table_privilege('anon',c.oid,'select') from pg_class c where c.relnamespace='public'::regnamespace and c.relname in ('invitation_guests','invitation_rsvps','guestbook_entries','live_guest_events','announcement_reads');"
+          } 2>&1 | tee "$RUNNER_TEMP/guest.log"
+          ! grep -q "ada=false" "$RUNNER_TEMP/guest.log"
+          ! grep -q "BISA baca langsung .* = true" "$RUNNER_TEMP/guest.log"
+          ! grep -E "^rpc (my_|mark_|support_|guest_add|guest_delete|guest_mark|guest_stats|wish_|live_event)" "$RUNNER_TEMP/guest.log" | grep -q "anon=true"
+
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp dating dating-ui content-protection; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp dating dating-ui content-protection guest; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -188,5 +207,5 @@ jobs:
       - name: Ringkasan
         if: always() && inputs.phase != 'prepare'
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }} dating=${{ steps.dating.outcome }} datingui=${{ steps.datingui.outcome }} content=${{ steps.content.outcome }}"
-          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}" "${{ steps.dating.outcome }}" "${{ steps.datingui.outcome }}" "${{ steps.content.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
+          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }} dating=${{ steps.dating.outcome }} datingui=${{ steps.datingui.outcome }} content=${{ steps.content.outcome }} guest=${{ steps.guest.outcome }}"
+          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}" "${{ steps.dating.outcome }}" "${{ steps.datingui.outcome }}" "${{ steps.content.outcome }}" "${{ steps.guest.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
