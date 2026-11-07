@@ -1,0 +1,162 @@
+name: staging
+# Uji terhadap proyek Supabase HOSTED "nusamora-staging". Hanya manual (workflow_dispatch) dan wajib persetujuan reviewer
+# environment `staging`. Semua kunci dari GitHub Environment Secrets; tidak ada nilai di repo. JANGAN diarahkan ke produksi:
+# job berhenti jika ref di STAGING_SUPABASE_URL tidak sama dengan STAGING_PROJECT_REF atau konfirmasi tidak diketik.
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual"
+        type: choice
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp]
+        required: true
+      confirm:
+        description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
+        required: true
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: staging
+    env:
+      SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.STAGING_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SERVICE_ROLE_KEY }}
+      DB_URL: ${{ secrets.STAGING_DB_URL }}
+      SUPABASE_DB_URL: ${{ secrets.STAGING_DB_URL }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.STAGING_SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: ${{ secrets.STAGING_PROJECT_REF }}
+      ORIGIN: http://localhost
+      MIDTRANS_SERVER_KEY: ${{ secrets.STAGING_MIDTRANS_SERVER_KEY }}
+      MIDTRANS_SIGNATURE_KEY: ${{ secrets.STAGING_MIDTRANS_SIGNATURE_KEY }}
+    steps:
+      - name: Pengaman (hanya staging)
+        run: |
+          test "${{ inputs.confirm }}" = "SAYA-YAKIN-INI-STAGING" || { echo "konfirmasi salah"; exit 1; }
+          for v in SUPABASE_URL SUPABASE_ANON_KEY SUPABASE_SERVICE_ROLE_KEY DB_URL PROJECT_REF; do [ -n "${!v}" ] || { echo "secret kosong: $v"; exit 1; }; done
+          host=$(echo "$SUPABASE_URL" | sed -E 's#https://([^.]+)\.supabase\.co/?$#\1#')
+          [ "$host" = "$PROJECT_REF" ] || { echo "ref pada URL tidak sama dengan STAGING_PROJECT_REF"; exit 1; }
+          echo "Target: proyek dengan ref ${PROJECT_REF:0:4}... (dikonfirmasi sama dengan URL)"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      - name: Klien PostgreSQL 17 dan dependensi uji
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-common >/dev/null
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y >/dev/null
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          npm install --prefix ops --no-audit --no-fund
+          echo "versi server:"; psql "$DB_URL" -Atc "show server_version"
+
+      # ---------------- prepare ----------------
+      - name: "[prepare] Terapkan SQL skema + jalankan ulang (idempoten)"
+        if: inputs.phase == 'prepare'
+        run: |
+          ops/stack/apply-sql.sh
+          for f in asset-schema security-schema security-mfa; do rc=0; psql "$DB_URL" -v ON_ERROR_STOP=1 -q -f "backend/$f.sql" >/dev/null 2>&1 || rc=$?; echo "ulang $f rc=$rc"; [ $rc -eq 0 ]; done
+      - name: "[prepare] Deploy Edge Functions + secrets fungsi"
+        if: inputs.phase == 'prepare'
+        run: |
+          P="$RUNNER_TEMP/sbproj"; mkdir -p "$P" && cd "$P" && supabase init --force
+          cp -r "$GITHUB_WORKSPACE/supabase/functions" supabase/
+          grep -A1 '^\[functions\.' "$GITHUB_WORKSPACE/supabase/config.toml" | grep -v '^--' >> supabase/config.toml
+          SALT=$(openssl rand -base64 32)
+          supabase secrets set --yes --project-ref "$PROJECT_REF" ALLOWED_ORIGINS="${{ secrets.STAGING_ALLOWED_ORIGINS }}" RATE_LIMIT_SALT="$SALT"
+          supabase functions deploy --yes --project-ref "$PROJECT_REF" --use-api
+          supabase functions list --project-ref "$PROJECT_REF"
+      - name: "[prepare] Catatan langkah manual"
+        if: inputs.phase == 'prepare'
+        run: |
+          echo "SELANJUTNYA: Auth Hook Password verification butuh plan Team/Enterprise (tidak tersedia di Free; lockout per-akun TIDAK aktif)."
+          echo "  Pastikan MFA TOTP aktif, Confirm email mati, CAPTCHA mati. Lalu jalankan phase=verify."
+
+      # ---------------- verify ----------------
+      - name: "[verify] Uji MFA"
+        id: mfa
+        if: inputs.phase == 'verify'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: node mfa.mjs 2>&1 | tee "$RUNNER_TEMP/mfa.log"; exit ${PIPESTATUS[0]}
+      - name: "[verify] Uji backup/restore (MENGHAPUS & memulihkan data staging)"
+        id: dr
+        if: inputs.phase == 'verify'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: node dr.mjs 2>&1 | tee "$RUNNER_TEMP/dr.log"; exit ${PIPESTATUS[0]}
+      - name: "[verify] Uji batas Auth & lockout (terakhir: membanjiri endpoint dari IP runner)"
+        id: authlimits
+        if: inputs.phase == 'verify'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: HOOK_ENABLED=false SIGNIN_LIMIT=30 node authlimits.mjs 2>&1 | tee "$RUNNER_TEMP/authlimits.log"; exit ${PIPESTATUS[0]}
+
+      # ---------------- captcha ----------------
+      - name: "[captcha] Uji CAPTCHA (Turnstile kunci uji sudah diaktifkan di dashboard)"
+        id: captcha
+        if: inputs.phase == 'captcha'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: node captcha.mjs 2>&1 | tee "$RUNNER_TEMP/captcha.log"; exit ${PIPESTATUS[0]}
+
+      # ---------------- midtrans ----------------
+      - name: "[secrets] Pasang Server Key SANDBOX ke Edge Functions"
+        if: inputs.phase == 'secrets'
+        run: |
+          [ -n "$MIDTRANS_SERVER_KEY" ] || { echo "STAGING_MIDTRANS_SERVER_KEY kosong. Dihentikan."; exit 1; }
+          code=$(curl -s -o "$RUNNER_TEMP/mt.json" -w '%{http_code}' -u "$MIDTRANS_SERVER_KEY:" -H 'Accept: application/json' "https://api.sandbox.midtrans.com/v2/nm-probe-$RANDOM/status")
+          sc=$(python3 -c "import json;print(json.load(open('$RUNNER_TEMP/mt.json')).get('status_code',''))" 2>/dev/null || echo "")
+          echo "probe Sandbox: http=$code status_code=$sc"
+          [ "$sc" = "404" ] || { echo "Kunci DITOLAK oleh API Sandbox Midtrans (kemungkinan kunci Production/salah). Dihentikan, tidak ada yang dipasang."; exit 1; }
+          supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SERVER_KEY="$MIDTRANS_SERVER_KEY" MIDTRANS_IS_PRODUCTION=false
+          if [ -n "$MIDTRANS_SIGNATURE_KEY" ]; then supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SIGNATURE_KEY="$MIDTRANS_SIGNATURE_KEY"; echo "Signature Secret Key juga dipasang"; fi
+          echo "Server Key Sandbox terpasang; MIDTRANS_IS_PRODUCTION=false"
+      - name: "[midtrans-pay] Uji checkout & webhook (otomatis) lalu cetak tautan bayar"
+        id: mpay
+        if: inputs.phase == 'midtrans-pay'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: MODE=pay node midtrans.mjs 2>&1 | tee "$RUNNER_TEMP/midtrans-pay.log"; exit ${PIPESTATUS[0]}
+      - name: "[midtrans-verify] Verifikasi setelah pembayaran manual + idempotensi webhook"
+        id: mver
+        if: inputs.phase == 'midtrans-verify'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: MODE=verify node midtrans.mjs 2>&1 | tee "$RUNNER_TEMP/midtrans-verify.log"; exit ${PIPESTATUS[0]}
+      - name: "[fnlogs] Baca log Edge Function staging (6 jam terakhir)"
+        if: inputs.phase == 'fnlogs'
+        working-directory: ops/stack
+        run: node fnlogs.mjs
+
+      - name: "[replay] Putar ulang notifikasi Midtrans asli tanpa header autentikasi"
+        if: inputs.phase == 'replay'
+        working-directory: ops/stack
+        run: node replay.mjs
+
+      - name: "[csp] Uji CSP Report-Only situs lama pada alur nyata (login ke staging)"
+        id: csp
+        if: inputs.phase == 'csp'
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          npm install --prefix .. --no-save --no-audit --no-fund playwright >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+          node csp-legacy.mjs 2>&1 | tee "$RUNNER_TEMP/csp.log"; exit ${PIPESTATUS[0]}
+
+      - name: Kumpulkan hasil (tanpa berkas backup)
+        if: always()
+        run: |
+          mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
+          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-results-${{ inputs.phase }}
+          path: out
+          retention-days: 14
+      - name: Ringkasan
+        if: always() && inputs.phase != 'prepare'
+        run: |
+          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }}"
+          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done

@@ -114,8 +114,12 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 3. Secret (Server Key TIDAK boleh ada di kode/GitHub):
    `supabase secrets set MIDTRANS_SERVER_KEY=SB-Mid-server-xxxx MIDTRANS_IS_PRODUCTION=false ALLOWED_ORIGINS=https://dodgerblue-cod-965274.hostingersite.com,https://nusamora.com`
 4. `supabase functions deploy midtrans-checkout midtrans-sync midtrans-webhook --no-verify-jwt`
-5. Dashboard Midtrans (Sandbox) → Settings → Configuration → Payment Notification URL:
-   `https://ixzmogwaaajkyltcnwaf.supabase.co/functions/v1/midtrans-webhook`
+5. Dashboard Midtrans → Settings → Configuration → Payment Notification URL, **sesuai lingkungan** (Sandbox dan Production terpisah; jangan mengarahkan Sandbox uji ke proyek produksi). Produksi:
+   `https://ixzmogwaaajkyltcnwaf.supabase.co/functions/v1/midtrans-webhook`. Staging: URL proyek staging. Catatan: status "Completed" di Notification history hanya berarti URL membalas 2xx — pastikan event `webhook` benar-benar tercatat di `payment_events`.
 6. (Opsional) jadwalkan `select public.expire_invitations();` tiap hari (pg_cron) untuk menonaktifkan undangan yang masa aktifnya habis.
 
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
+
+
+## Keamanan P0 (branch `security/p0`)
+Urutan SQL setelah `asset-schema.sql`: `backend/security-schema.sql` lalu `backend/security-mfa.sql` (jalankan ulang `security-mfa.sql` bila `admin-schema.sql` dijalankan ulang, karena `has_perm()` ditimpa). Edge Function baru/berubah: `admin-password`, `midtrans-*`, `asset-*` (secret baru: `RATE_LIMIT_SALT`). Dokumen: `docs/security/` (AUDIT-KEAMANAN, BACKUP_POLICY, DISASTER_RECOVERY, SECURITY-HEADERS, RATE-LIMITING, MFA-ADMIN). Skrip & uji: `ops/backup`, `ops/security`, `ops/tests`.

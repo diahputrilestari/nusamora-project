@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "NusaMora - Undangan Digital Interaktif",
+    "description": "Buat undangan digital 2D, 3D sinematik, dan Live Guest yang berkesan untuk setiap momen."
+  },
+  "language": { "label": "Bahasa", "id": "ID", "en": "EN" },
+  "navigation": { "label": "Navigasi utama", "home": "Beranda", "templates": "Template", "pricing": "Harga", "login": "Masuk", "register": "Daftar" },
+  "hero": {
+    "title": "Setiap Momen Menjadi Kenangan",
+    "description": "Buat undangan digital interaktif yang lebih berkesan.",
+    "cta": "Mulai Sekarang"
+  },
+  "errors": {
+    "notFoundTitle": "Halaman tidak ditemukan",
+    "notFoundText": "Alamat yang Anda buka tidak tersedia atau sudah dipindahkan.",
+    "backHome": "Kembali ke beranda",
+    "errorTitle": "Terjadi kesalahan",
+    "errorText": "Halaman tidak dapat dimuat. Coba lagi beberapa saat.",
+    "retry": "Coba lagi"
+  }
+}

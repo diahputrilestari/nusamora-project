@@ -10,3 +10,6 @@ verify_jwt = false
 
 [functions.asset-generate]
 verify_jwt = false
+
+[functions.admin-password]
+verify_jwt = false

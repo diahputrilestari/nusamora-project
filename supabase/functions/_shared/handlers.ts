@@ -1,3 +1,4 @@
+import { clientIp, logSecurityEvent, rateCheck, tooMany } from "./ratelimit.ts";
 // Logika Midtrans yang tidak bergantung pada runtime (Deno/Node), supaya bisa diuji. Server Key hanya datang dari env backend.
 export interface Env { serverKey: string; signatureKey?: string; isProd: boolean; allowedOrigins: string[] }
 export interface Deps {
@@ -63,8 +64,11 @@ export async function handleCheckout(req: Request, d: Deps): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, d.env) });
   if (req.method !== "POST") return json(req, d.env, 405, { error: "metode_tidak_didukung" });
   if (!d.env.serverKey) return json(req, d.env, 500, { error: "konfigurasi", message: "Pembayaran belum dikonfigurasi di server." });
+  // batas longgar per IP (kantor/WiFi bersama tetap aman) sebelum memanggil Auth; batas ketat per pengguna sesudahnya
+  { const w = await rateCheck(d, "checkout-ip", clientIp(req), 120, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   const token = bearer(req); const user = token ? await d.getUser(token) : null;
   if (!token || !user) return json(req, d.env, 401, { error: "unauthorized", message: "Sesi berakhir. Silakan masuk kembali." });
+  { const w = await rateCheck(d, "checkout-user", user.id, 20, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   let b: any; try { b = await req.json(); } catch { return json(req, d.env, 400, { error: "permintaan_tidak_valid" }); }
 
   if (b.action === "cancel") {
@@ -119,6 +123,7 @@ export async function handleSync(req: Request, d: Deps): Promise<Response> {
   if (req.method !== "POST") return json(req, d.env, 405, { error: "metode_tidak_didukung" });
   const token = bearer(req); const user = token ? await d.getUser(token) : null;
   if (!token || !user) return json(req, d.env, 401, { error: "unauthorized" });
+  { const w = await rateCheck(d, "sync-user", user.id, 30, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   let b: any; try { b = await req.json(); } catch { return json(req, d.env, 400, { error: "permintaan_tidak_valid" }); }
   if (typeof b.order_id !== "string" || !ORDER.test(b.order_id)) return json(req, d.env, 400, { error: "permintaan_tidak_valid" });
   const own = await d.ownsOrder(token, b.order_id);
@@ -134,7 +139,18 @@ export async function handleSync(req: Request, d: Deps): Promise<Response> {
 }
 
 /* ---------------- POST /midtrans-webhook (notifikasi server-ke-server dari Midtrans) ---------------- */
+// Pembungkus: mencatat jejak aman setiap webhook yang masuk (status balasan + hasil), tanpa signature/kunci/data kartu.
 export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
+  let meta: Record<string, unknown> = { m: req.method, ua: (req.headers.get("user-agent") || "").slice(0, 60), ct: (req.headers.get("content-type") || "").slice(0, 40) };
+  try { const n = await req.clone().json(); meta = { ...meta, order: typeof n?.order_id === "string" ? n.order_id.slice(0, 40) : null, tx: n?.transaction_status ?? null, sc: n?.status_code ?? null }; } catch { /* abaikan */ }
+  let res: Response;
+  try { res = await handleWebhookInner(req, d); } catch (e) { await logSecurityEvent(d, "webhook_trace", "webhook", { ...meta, http: 500, err: "exception" }); throw e; }
+  let result: unknown = null; try { const j = await res.clone().json(); result = j?.result ?? j?.error ?? j?.status ?? null; } catch { /* abaikan */ }
+  // 401 sudah tercatat (dibatasi) sebagai webhook_bad_signature; sisanya dicatat. SEMENTARA untuk diagnosis staging: batasi/hapus sebelum produksi.
+  if (res.status !== 401) await logSecurityEvent(d, "webhook_trace", "webhook", { ...meta, http: res.status, result });
+  return res;
+}
+async function handleWebhookInner(req: Request, d: Deps): Promise<Response> {
   const R = (s: number, b: unknown) => new Response(JSON.stringify(b), { status: s, headers: { "Content-Type": "application/json" } });
   if (req.method !== "POST") return R(405, { error: "metode_tidak_didukung" });
   if (!d.env.serverKey) return R(500, { error: "konfigurasi" });
@@ -145,13 +161,17 @@ export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
   if (orderOk) { for (const k of [d.env.serverKey, d.env.signatureKey || ""]) { if (k && await signatureValid(n, k)) { sigOk = true; break; } } }
   if (!orderOk || !sigOk) {
     // diagnostik aman: tanpa Server Key dan tanpa signature
-    try { console.log("webhook_ditolak", JSON.stringify({ orderOk, hasSig: typeof n?.signature_key === "string", sigLen: typeof n?.signature_key === "string" ? n.signature_key.length : 0, status_code: n?.status_code, gross_amount: n?.gross_amount, gross_type: typeof n?.gross_amount, keyLen: d.env.serverKey.length, keyPrefix: d.env.serverKey.slice(0, 7), keyEndsWithSpace: /\s$/.test(d.env.serverKey), hasSigKeyEnv: !!d.env.signatureKey, tx_status: n?.transaction_status })); } catch { /* abaikan */ }
+    try { console.log("webhook_ditolak", JSON.stringify({ orderOk, hasSig: typeof n?.signature_key === "string", sigLen: typeof n?.signature_key === "string" ? n.signature_key.length : 0, status_code: n?.status_code, gross_amount: n?.gross_amount, gross_type: typeof n?.gross_amount, keyEndsWithSpace: /\s$/.test(d.env.serverKey), hasSigKeyEnv: !!d.env.signatureKey, tx_status: n?.transaction_status })); } catch { /* abaikan */ }
+    // kejadian mencurigakan: dicatat (tanpa signature/Server Key) dan dibatasi agar log tidak dibanjiri
+    { const w = await rateCheck(d, "webhook-bad", clientIp(req), 5, 600); if (w === null) await logSecurityEvent(d, "webhook_bad_signature", "webhook", { orderOk, hasSig: typeof n?.signature_key === "string" }); }
     return R(401, { error: "signature_tidak_valid" });
   }
   try {
     // jangan percaya isi notifikasi: ambil status resmi dari Midtrans, lalu terapkan
     const st = await midtransStatus(n.order_id, d);
-    if (st.notFound) return R(200, { result: "order_tidak_ditemukan" });
+    // order NusaMora (awalan NM) yang belum terbaca di API status = jeda sesaat setelah pembayaran: balas 503 agar Midtrans mengirim ulang.
+    // order lain (bukan milik kita) tetap dibalas 200 supaya tidak dikirim ulang terus.
+    if (st.notFound) return n.order_id.startsWith("NM") ? R(503, { error: "status_belum_tersedia" }) : R(200, { result: "order_tidak_ditemukan" });
     if (!st.ok || st.data.order_id !== n.order_id) return R(500, { error: "verifikasi_gagal" });      // 5xx: Midtrans akan mengirim ulang
     const r = await applyFromMidtrans(st.data, "webhook", d);
     if (r.error) return R(500, { error: "server" });
