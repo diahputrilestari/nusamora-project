@@ -8,7 +8,7 @@ on:
       phase:
         description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual"
         type: choice
-        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -124,6 +124,10 @@ jobs:
         continue-on-error: true
         working-directory: ops/stack
         run: MODE=verify node midtrans.mjs 2>&1 | tee "$RUNNER_TEMP/midtrans-verify.log"; exit ${PIPESTATUS[0]}
+      - name: "[fnlogs] Baca log Edge Function staging (6 jam terakhir)"
+        if: inputs.phase == 'fnlogs'
+        working-directory: ops/stack
+        run: node fnlogs.mjs
 
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
