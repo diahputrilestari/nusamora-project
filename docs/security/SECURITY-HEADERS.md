@@ -18,6 +18,9 @@ jsDelivr (supabase-js 2.58.0), cdnjs (three.js r128, hanya Live Guest), Google F
 - **Batas uji:** sandbox tidak bisa memuat CDN/Supabase/Midtrans sungguhan dan tidak login, jadi alur setelah login (dashboard, editor dengan data, redirect pembayaran) belum teruji. Karena itu CSP **tetap Report-Only**. `THREE is not defined` di halaman Live Guest adalah akibat CDN tak terjangkau di sandbox, bukan CSP.
 - Next.js: **belum dibangun/diuji** (npm diblokir). Kode CSP: logika `makeNonce/buildCsp/cspHeaderName` dijalankan langsung (nonce unik, `frame-ancestors`, nama header berubah sesuai `CSP_MODE`). Yang BELUM terbukti: next-intl meneruskan header `x-nonce` ke render sehingga skrip inline Next bernonce — jika tidak, akan muncul laporan pelanggaran (tidak memblokir selama Report-Only). Tes e2e baru (`foundation.spec.ts`) memeriksa header dan endpoint `/api/csp-report`.
 
+## Hasil uji pada staging nyata (2026-11-07)
+Situs lama, Report-Only, login nyata ke staging: 0 pelanggaran pada halaman publik dan akun/paket/template/buat/editor/preview/pembayaran; kontrol negatif terdeteksi. Cakupan terbatas (tanpa interaksi mendalam/admin+MFA). Rincian: `04-p0-verification-report.md` A3. Tetap Report-Only.
+
 ## Rencana naik ke enforce
 1. Deploy (Report-Only) ke staging dan produksi; pantau 7 hari: Next → log server `[csp-violation]`; situs lama → konsol browser (belum ada kolektor).
 2. Telusuri alur lengkap sebagai pengguna: daftar, masuk, buat undangan, bayar (Sandbox), dashboard, admin, Live Guest.

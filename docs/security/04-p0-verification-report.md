@@ -19,7 +19,8 @@ Lingkungan: proyek `nusamora-staging` (organisasi plan **Free**), runner GitHub 
 | Lockout per akun (Auth Hook) | **TIDAK TERSEDIA** — Password Verification Attempt hook butuh plan Team/Enterprise (dropdown dashboard menolak di plan Free). Terukur: 6 password salah lalu password benar tetap **berhasil** → tidak ada lockout per akun |
 | CAPTCHA (Turnstile uji) | **6 dari 7 lulus**; 1 pemeriksaan tidak dapat dipastikan karena batas email SMTP bawaan (signUp 429) — dicatat INFO, bukan lulus |
 | Midtrans Sandbox + webhook | **Lulus setelah konfigurasi diperbaiki** — lihat bagian A2 |
-| CSP domain staging, CSP alur legacy, Hostinger | **Belum diuji** (lihat §6) |
+| CSP alur situs lama (login ke staging) | **0 pelanggaran** pada cakupan terbatas — lihat A3 |
+| CSP Next.js pada domain staging, deploy Hostinger | **Belum diuji** (lihat §6) |
 
 ### Metrik backup/restore pada hosted (334 baris, 39 tabel, 91 berkas, 9,5 MB)
 | Metrik | Hosted | (lokal CI) |
@@ -63,6 +64,17 @@ Pada tiga pembayaran pertama, Midtrans menampilkan notifikasi "Completed" tetapi
 - Jejak `webhook_trace` (metode, User-Agent, content-type, order_id, status balasan; tanpa signature/kunci/kartu) pada setiap webhook non-401. **Bersifat sementara untuk diagnosis**: permintaan tak terautentikasi dapat menambah baris `security_events` — batasi (rate limit) atau hapus sebelum produksi.
 - Fase staging baru: `fnlogs` (membaca log fungsi; token `ci-staging` tidak punya izin `analytics_logs_read`, 403) dan `replay` (memutar ulang notifikasi asli).
 
+## A3. CSP situs lama pada alur nyata terhadap staging (run `staging` csp `42367804543`, Chromium/Playwright, runner GitHub dengan internet)
+Situs lama disajikan lokal dengan header `Content-Security-Policy-Report-Only` persis dari `.htaccess`; `config.js` diarahkan ke staging (skrip berhenti bila URL = produksi). Login lewat UI ke GoTrue staging dengan akun uji (dihapus setelahnya).
+
+| Cakupan | Hasil |
+|---|---|
+| Halaman publik: `/`, `/masuk`, `/daftar`, `/lupa-password`, `/live/jawa-tengah` | **0 pelanggaran** |
+| Setelah login: `/akun`, `/paket`, `/template`, `/buat`, `/editor?id=`, `/preview?id=`, `/pembayaran?order_id=` | **0 pelanggaran**, 0 galat JS |
+| Kontrol negatif (skrip + fetch ke `evil.example`) | **Terdeteksi** (script-src-elem, connect-src) → alat uji bekerja |
+
+**Batas cakupan (jangan dibaca sebagai "CSP siap Enforce"):** hanya pemuatan halaman, tanpa interaksi mendalam (unggah gambar/Storage di editor, simpan, publikasi); `/admin` hanya dibuka oleh non-admin (tidak diuji sebagai admin+MFA); modal checkout dan pengalihan ke Midtrans tidak dijalankan (alur memakai **redirect** Snap, bukan Snap popup — sehingga skrip Midtrans pada halaman kita praktis tidak termuat; `connect-src` Midtrans tidak teramati terpakai); Live Guest 3D hanya dimuat sebagai halaman; tidak ada pemantauan pengguna nyata. **CSP tetap Report-Only.** Enforce menunggu pemantauan menurut SECURITY-HEADERS.md dan persetujuan Anda.
+
 ## 1. Implemented
 Foundation Next.js; MFA admin + gerbang persetujuan faktor pertama; kebijakan password admin; rate limit `rl_hit`; lockout per-akun (Auth Hook); upload quota; header legacy & CSP bernonce Next; backup/restore terenkripsi + SHA-256 (DB & Storage); skrip reset MFA; 5 dokumen operasional + runbook.
 
@@ -101,7 +113,7 @@ Semua butir §3 di atas.
 - Bug yang ditemukan lalu diperbaiki selama verifikasi: restore `--clean` merusak hook & tidak atomik; Storage restore salah MIME; **nonce tidak diterapkan** karena halaman statis (diperbaiki: render dinamis + 404 lewat catch-all); `apply-sql.sh` rusak oleh pipefail. Semuanya kini lulus di CI.
 
 ## 6. Not tested
-- CSP pada domain staging; CSP situs **legacy** (login/register/dashboard/editor/preview/admin, Storage) pada layanan nyata; CSP **Midtrans Snap** (pembayaran Sandbox sukses tetapi tanpa pemantauan laporan CSP); alur Next selain halaman publik (belum ada: dashboard/editor/admin ada di legacy).
+- CSP **Next.js** pada domain staging (hanya diuji lokal/CI); CSP situs lama pada interaksi mendalam (unggah/Storage, admin+MFA, publikasi) dan pemantauan pengguna nyata; pengalihan Midtrans (redirect) tidak punya skrip pada halaman kita; alur Next selain halaman publik (belum ada: dashboard/editor/admin ada di legacy).
 - Widget CAPTCHA di form login legacy (belum diintegrasikan; default mati).
 - Backup terjadwal, restore skala produksi, hosting Next.js di Hostinger.
 
@@ -109,7 +121,7 @@ Semua butir §3 di atas.
 Jalankan SQL `security-schema` & `security-mfa` (setelah staging hosted lulus); deploy Edge Functions + secrets; konfigurasi Auth (RATE-LIMITING.md); setujui lalu aktifkan MFA wajib (DEPLOYMENT_CHECKLIST §E); jadwalkan backup. **Tidak ada yang diaktifkan di produksi**; MFA wajib & CSP Enforce menunggu persetujuan Anda.
 
 ## 8. Remaining risks
-Tanpa lockout per akun (plan Free); SMTP bawaan 2 email/jam (SMTP kustom wajib sebelum go-live); `ALLOWED_ORIGINS` staging hanya localhost (halaman finish Midtrans gagal dibuka); token `ci-staging` harus dicabut; fase staging memerlukan reviewer; jejak `webhook_trace` sementara; URL Notification Sandbox harus dikembalikan/diatur sesuai kebutuhan; RTO diperkirakan ~1,65 dtk/berkas (restore Storage berurutan; ~8.700 berkas ≈ 4 jam) dan belum diparalelkan; hosting Next.js di Hostinger (dukungan Node.js) belum diverifikasi; widget CAPTCHA belum ada di form legacy; CSP legacy/Midtrans belum diverifikasi (tetap Report-Only); RTO/RPO belum terbukti; ketergantungan operator pada passphrase backup & service_role; P1 (SVG allowlist, SRI, retensi/privasi, monitoring) belum dikerjakan. Deteksi bahasa diputuskan dan terverifikasi (id→/id, en→/en, lainnya→/id, preferensi tersimpan menang, tanpa loop; next-ci 20/20).
+Tanpa lockout per akun (plan Free); SMTP bawaan 2 email/jam (SMTP kustom wajib sebelum go-live); `ALLOWED_ORIGINS` staging hanya localhost (halaman finish Midtrans gagal dibuka); token `ci-staging` harus dicabut; fase staging memerlukan reviewer; jejak `webhook_trace` sementara; URL Notification Sandbox harus dikembalikan/diatur sesuai kebutuhan; RTO diperkirakan ~1,65 dtk/berkas (restore Storage berurutan; ~8.700 berkas ≈ 4 jam) dan belum diparalelkan; hosting Next.js di Hostinger (dukungan Node.js) belum diverifikasi; widget CAPTCHA belum ada di form legacy; CSP tetap Report-Only (cakupan uji terbatas, lihat A3); RTO/RPO belum terbukti; ketergantungan operator pada passphrase backup & service_role; P1 (SVG allowlist, SRI, retensi/privasi, monitoring) belum dikerjakan. Deteksi bahasa diputuskan dan terverifikasi (id→/id, en→/en, lainnya→/id, preferensi tersimpan menang, tanpa loop; next-ci 20/20).
 
 ## Rekomendasi berikutnya
 1. Buat proyek Supabase staging + secrets GitHub `staging`; jalankan ulang suite (runbook).
