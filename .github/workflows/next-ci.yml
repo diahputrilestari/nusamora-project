@@ -1,0 +1,44 @@
+name: next-ci
+on:
+  push:
+    branches: [migration/nextjs, security/p0, "security/p0-*"]
+    paths: ["next/**", ".github/workflows/next-ci.yml"]
+  pull_request:
+    paths: ["next/**"]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: next } }
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: sb_publishable_ci_placeholder
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+      - run: npm ls next react react-dom next-intl tailwindcss @tailwindcss/postcss @supabase/ssr typescript @playwright/test --depth=0
+      - run: npm run check:messages
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Standalone output (Hostinger)
+        run: |
+          test -f .next/standalone/server.js
+          test -d .next/standalone/.next/static
+          du -sh .next/standalone
+      - name: Env Supabase kosong - server standalone harus tetap melayani halaman publik
+        run: |
+          cd .next/standalone
+          env -u NEXT_PUBLIC_SUPABASE_URL -u NEXT_PUBLIC_SUPABASE_ANON_KEY PORT=3100 HOSTNAME=127.0.0.1 node server.js > /tmp/nosb.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf -o /dev/null http://127.0.0.1:3100/id && break; sleep 1; done
+          echo "halaman /id: $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3100/id)"
+          echo "health: $(curl -s http://127.0.0.1:3100/api/health)"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3100/id)" = "200"
+          kill %1 || true; tail -5 /tmp/nosb.log
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: playwright-report, path: next/playwright-report, retention-days: 7 }

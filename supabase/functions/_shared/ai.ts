@@ -1,3 +1,4 @@
+import { rateCheck, tooMany } from "./ratelimit.ts";
 // AI Asset Generator: lapisan adapter provider + handler. Tidak mengasumsikan provider; tanpa konfigurasi -> "belum_dikonfigurasi".
 // Kunci API hanya dibaca di server (Deno.env) dan tidak pernah dikirim ke browser.
 import { cors } from "./handlers.ts";
@@ -32,7 +33,7 @@ export function providerFromEnv(get: (k: string) => string | undefined, f: typeo
 export interface GenDeps {
   env: { allowedOrigins: string[]; publicBase: string };
   provider: ImageProvider | null;
-  getUser(token: string): Promise<{ id: string } | null>;
+  getUser(token: string): Promise<{ id: string; aal?: string | null } | null>;
   upload(path: string, bytes: Uint8Array, mime: string): Promise<boolean>;
   rpc(name: string, args: Record<string, unknown>): Promise<{ data: any; error: { message: string } | null }>;
 }
@@ -46,10 +47,11 @@ export async function handleAssetGenerate(req: Request, d: GenDeps): Promise<Res
   if (req.method !== "POST") return R(req, d, 405, { error: "metode_tidak_didukung" });
   const m = /^Bearer\s+(.+)$/i.exec(req.headers.get("authorization") || ""); const token = m ? m[1] : "";
   const u = token ? await d.getUser(token) : null; if (!u) return R(req, d, 401, { error: "perlu_login", message: "Silakan masuk terlebih dahulu." });
-  const perm = await d.rpc("has_perm_user", { uid: u.id, p: "templates.write" }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
+  const perm = await d.rpc("has_perm_session", { uid: u.id, p: "templates.write", aal: u.aal ?? null }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
   let b: any; try { b = await req.json(); } catch { return R(req, d, 400, { error: "permintaan_tidak_valid" }); }
   if (b?.action === "status") return R(req, d, 200, { ok: true, configured: !!d.provider, provider: d.provider ? d.provider.name : null });
   if (b?.action !== "generate") return R(req, d, 400, { error: "aksi_tidak_dikenal" });
+  { const w = await rateCheck(d, "asset-generate-user", u.id, 10, 60); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   if (!d.provider) return R(req, d, 503, { error: "belum_dikonfigurasi", message: "AI Asset Generator belum dikonfigurasi. Atur AI_PROVIDER dan kunci API di Supabase secrets." });
 
   const pkg = String(b.package_type || ""), prompt = String(b.prompt || "").trim(), theme = String(b.theme_key || "").trim().toLowerCase(), count = Number(b.count);

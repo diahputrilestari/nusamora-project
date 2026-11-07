@@ -383,7 +383,7 @@
   d.addEventListener("click", function (e) { if (!e.target.closest(".pop-w")) $$(".pop").forEach(function (p) { p.hidden = true; }); });
   function shell() {
     var n = (A.user.email || "Admin"); $("#chip-i").textContent = n.charAt(0).toUpperCase(); $("#chip-n").textContent = ROLE[A.role] || A.role;
-    $("#pm-p").innerHTML = '<p><b>' + esc(A.user.email) + "</b><br>" + esc(ROLE[A.role] || A.role) + '</p><a href="/akun">' + ico("user") + ' Dashboard pelanggan</a><button class="mi" type="button" id="lo">' + ico("out") + " Keluar</button>";
+    $("#pm-p").innerHTML = '<p><b>' + esc(A.user.email) + "</b><br>" + esc(ROLE[A.role] || A.role) + '</p><a href="/admin-keamanan">' + ico("user") + ' Keamanan akun</a><a href="/akun">' + ico("user") + ' Dashboard pelanggan</a><button class="mi" type="button" id="lo">' + ico("out") + " Keluar</button>";
     pop($("#pm"), $("#pm-p")); pop($("#bell"), $("#bell-p"));
     $("#lo").onclick = function () { sb.auth.signOut().then(function () { location.replace("/masuk"); }); };
     alertsData().then(function (a) { var on = a.filter(function (x) { return x.n > 0; }), tot = on.reduce(function (t, x) { return t + x.n; }, 0); var b = $("#bell-n"); b.hidden = !tot; b.textContent = tot > 99 ? "99+" : tot; $("#bell-p").innerHTML = "<h3>Notifikasi</h3>" + (on.length ? on.map(function (x) { return '<a href="' + x.to + '"><b>' + x.n + "</b> " + esc(x.t) + "</a>"; }).join("") : "<p>Tidak ada notifikasi baru.</p>"); });
@@ -397,6 +397,7 @@
       return sb.rpc("my_admin").then(function (x) {
         if (x.error) return denied("Panel admin belum siap", "Jalankan backend/admin-schema.sql di Supabase, lalu muat ulang halaman ini.");
         if (!x.data) return denied("Akses ditolak", "Akun ini bukan admin. Hubungi super admin untuk mendapatkan akses.");
+        if (x.data.mfa && x.data.mfa.needed) { location.replace("/admin-keamanan?next=" + encodeURIComponent("/admin")); return; } /* MFA/password admin belum terpenuhi: ditegakkan di database, halaman ini hanya mengarahkan */
         A.role = x.data.role; (x.data.perms || []).forEach(function (p) { A.perms[p] = 1; });
         var pre = can("admins", "read") ? sb.rpc("admin_list_admins").then(function (a) { (a.data || []).forEach(function (u) { adminMap[u.user_id] = u.email; }); }) : Promise.resolve();
         return pre.then(function () { shell(); route(); });
