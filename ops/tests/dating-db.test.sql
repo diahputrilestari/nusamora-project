@@ -286,4 +286,12 @@ do $$ declare u5 uuid := (select v from pg_temp.ids where k='u5'); u1 uuid := (s
   assert not (select consent_active from (select bool_or(withdrawn_at is null) consent_active from public.dating_consents where user_id = u5) q), 'consent ditandai ditarik';
   raise notice 'OK 10: hapus profil';
 end $$;
+-- pembersihan: tidak meninggalkan akun/admin/undangan uji (tes lain, mis. MFA, bergantung pada admin_users bersih)
+reset role;
+delete from public.dating_reports;
+delete from auth.users where email like 'dt.%@uji.nusamora.test';
+delete from public.invitations where slug like 'dt-%';
+delete from public.assets where file_path like 'dt/%';
+delete from public.rate_limits where key like 'dating-%';
+delete from public.audit_logs where action like 'dating.%';
 select 'SEMUA UJI DB DATING LULUS' as hasil;

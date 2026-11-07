@@ -42,7 +42,8 @@ check("semua peserta: consent + profil + join berhasil", users.every((u) => !u.e
   }
   const ms = await svc.from("dating_matches").select("profile_a,profile_b").eq("invitation_id", inv.data.id);
   check(`balapan: tepat 1 match per pasangan (${pairs.length} pasangan)`, (ms.data || []).length === pairs.length, "match=" + (ms.data || []).length);
-  const cv = await svc.from("dating_conversations").select("id,match_id"); const sm = await svc.from("dating_messages").select("id").eq("kind", "system");
+  const mids = (await svc.from("dating_matches").select("id").eq("invitation_id", inv.data.id)).data.map((x) => x.id);
+  const cv = await svc.from("dating_conversations").select("id,match_id").in("match_id", mids); const sm = await svc.from("dating_messages").select("id").eq("kind", "system").in("conversation_id", (cv.data || []).map((x) => x.id));
   check("tepat 1 percakapan + 1 pesan sistem per match", (cv.data || []).length === pairs.length && (sm.data || []).length === pairs.length, `conv=${cv.data?.length} sys=${sm.data?.length}`);
   // like ganda paralel dari pengguna yang sama: tetap satu baris
   const [a, , c3] = [users[0], users[1], users[2]];
@@ -54,23 +55,27 @@ check("semua peserta: consent + profil + join berhasil", users.every((u) => !u.e
 { const A = users[0], B = users[1], C = users[2];
   const m = await rpc(A.c, "dating_my_matches"); const conv = m.data?.[0]?.conversation_id;
   check("daftar match memuat percakapan", !m.err && !!conv, m.err);
-  const got = { B: [], C: [] };
+  const got = { B: [], C: [], D: [] };
   const sub = (cl, tag, tok) => new Promise((res) => { cl.realtime.setAuth(tok); const ch = cl.channel("dating-" + tag + stamp).on("postgres_changes", { event: "INSERT", schema: "public", table: "dating_messages" }, (p) => got[tag].push(p.new?.body)).subscribe((st) => { if (st === "SUBSCRIBED") res(ch); if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") res(null); }); setTimeout(() => res(null), 15000); });
   const chB = await sub(B.c, "B", B.token), chC = await sub(C.c, "C", C.token);
+  // D = service_role (melewati RLS): bila D menerima tetapi B tidak => masalah evaluasi RLS di Realtime; bila D juga tidak => publikasi/WAL
+  const chD = await sub(svc, "D", process.env.SUPABASE_SERVICE_ROLE_KEY);
   check("Realtime: langganan terhubung (stack nyata dengan layanan Realtime)", !!chB && !!chC, "B=" + !!chB + " C=" + !!chC);
   if (chB && chC) {
     await sleep(1500);
     const s = await rpc(A.c, "dating_send_message", { p_conversation: conv, p_body: "Halo realtime 😊" });
     check("kirim pesan via RPC", !s.err, s.err);
     for (let i = 0; i < 20 && !got.B.length; i++) await sleep(500);
+    info("Realtime diagnosis: D(service_role, tanpa RLS) menerima?", { D: got.D, B: got.B });
     check("Realtime: lawan bicara menerima pesan", got.B.includes("Halo realtime 😊"), JSON.stringify(got.B));
     await sleep(1500); check("Realtime: non-anggota TIDAK menerima pesan (RLS)", got.C.length === 0, JSON.stringify(got.C));
-    await B.c.removeChannel(chB); await C.c.removeChannel(chC); } }
+    await B.c.removeChannel(chB); await C.c.removeChannel(chC); if (chD) await svc.removeChannel(chD); } }
 
 // ---- otorisasi & rate limit lewat API nyata
 { const A = users[0], C = users[2]; const m = await rpc(A.c, "dating_my_matches"); const conv = m.data?.[0]?.conversation_id;
   const r = await rpc(C.c, "dating_send_message", { p_conversation: conv, p_body: "intip" }); check("non-anggota tidak bisa mengirim ke percakapan orang lain", r.err === "tidak_ditemukan", r.err);
-  const msgs = await C.c.from("dating_messages").select("id"); check("non-anggota tidak bisa membaca pesan lewat API", (msgs.data || []).length === 0, JSON.stringify(msgs.data?.length));
+  const msgs = await C.c.from("dating_messages").select("id").eq("conversation_id", conv); check("non-anggota tidak bisa membaca pesan percakapan orang lain lewat API", !msgs.error && (msgs.data || []).length === 0, JSON.stringify(msgs.data?.length) + (msgs.error?.message || ""));
+  const own = await C.c.from("dating_messages").select("id,conversation_id"); info("C hanya melihat pesan percakapan miliknya", { baris: (own.data || []).length, semuaMilikSendiri: (own.data || []).every((m) => m.conversation_id !== conv) });
   const bad = await rpc(A.c, "dating_like", { p_inv: inv.data.id, p_to: A.profile }); check("like diri sendiri ditolak", bad.err === "target_tidak_valid", bad.err);
   let limited = ""; for (let i = 0; i < 40 && !limited; i++) { const x = await rpc(A.c, "dating_send_message", { p_conversation: conv, p_body: "spam " + i }); if (x.err) limited = x.err; }
   check("rate limit pesan aktif (30/menit)", limited === "terlalu_banyak_permintaan", limited); }

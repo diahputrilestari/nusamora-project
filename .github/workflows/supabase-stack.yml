@@ -55,6 +55,13 @@ jobs:
           . "$RUNNER_TEMP/stack.env"
           for i in $(seq 1 60); do c=$(curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: http://localhost' "$API_URL/functions/v1/admin-password"); [ "$c" = "204" ] && break; sleep 2; done
           echo "admin-password OPTIONS -> $c"; tail -5 "$RUNNER_TEMP/fn.log"; test "$c" = "204"
+      - name: "Diagnosis Realtime (publikasi & kebijakan)"
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -Atc "select 'publikasi: '||pubname||' '||schemaname||'.'||tablename from pg_publication_tables where tablename like 'dating%'"
+          psql "$DB_URL" -Atc "select 'policy: '||policyname||' '||cmd from pg_policies where tablename='dating_messages'"
+          docker ps --format '{{.Names}}' | grep -i realtime || echo "kontainer realtime tidak terlihat"
       - name: "Uji DB Cari Teman Kondangan (RLS, usia, consent, match, chat, block, report)"
         id: datingdb
         continue-on-error: true
