@@ -52,5 +52,10 @@ with sync_playwright() as pw:
     pg.route("**/fonts.*/**", lambda r: r.abort())
     pg.goto(BASE + "/preview?id=" + LX); pg.wait_for_selector("#stage")
     chk("template Luxe tanpa demo: pesan jelas, tanpa ringkasan konfigurasi pengganti", "belum tersedia" in pg.inner_text("#stage") and "Denah venue" not in pg.inner_text("#stage") and pg.locator("#demo-b").count() == 0, pg.inner_text("#stage")[:150])
+    # mode admin (?admin=1): hanya baca, tanpa tombol checkout/editor milik pelanggan
+    pg.goto(BASE + "/preview?id=" + LX + "&admin=1"); pg.wait_for_selector("#stage")
+    chk("mode admin: judul Pratinjau admin, tanpa langkah checkout", "Pratinjau admin" in pg.inner_text(".hd") and pg.locator(".stn").count() == 0)
+    chk("mode admin: tanpa tombol Lanjut ke Checkout / Kembali ke Editor / Lanjutkan pembayaran", pg.locator("#pub-b, #pay-b, a[href^='/editor']").count() == 0, pg.inner_text(".pvbar"))
+    chk("mode admin: kontrol layar tetap ada", pg.locator("#fs-b").count() == 1 and pg.locator("input[name=dv]").count() == 3)
     ctx.close(); b.close()
 print(f"\n{ok_n} lulus, {bad_n} gagal"); sys.exit(1 if bad_n else 0)
