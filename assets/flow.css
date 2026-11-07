@@ -169,3 +169,11 @@ dialog.fdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);o
  .ed>nav{grid-area:nav}.ed>.ped{grid-area:canvas;position:sticky;top:84px}.ed>.edcol{grid-area:panel;position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto;padding:2px 6px 2px 2px;align-content:start}
  .lpv{height:calc(100vh - 330px);min-height:420px}
 }
+
+/* Preview Luxe: pengalaman Live Guest asli */
+.pvwrap.tab .stage{max-width:820px}.lxp{position:relative;min-height:min(60vh,520px);background:#2a2036 center/cover;display:grid;place-items:center}.lxp:before{content:"";position:absolute;inset:0;background:rgba(30,20,45,.55)}.lxp-c{position:relative;display:grid;gap:12px;justify-items:center;text-align:center;color:#fff;padding:24px;max-width:460px}.lxp-c b{font:700 24px var(--display)}.lxn{padding:32px;text-align:center}.lxn p{color:var(--mute,#6b6277)}
+.dvw{background:#15101f;display:grid;justify-items:center;overflow:hidden}.dvf{background:#fff;transform-origin:0 0}.dvf iframe{width:100%;height:100%;border:0;display:block}
+.pvwrap:fullscreen{background:#0d0a14;padding:0;align-content:stretch}.pvwrap:fullscreen .stage{max-width:none;border-radius:0;height:100vh}.pvwrap:fullscreen .dvw{height:100vh!important}.pvwrap:fullscreen .dvf{width:100%!important;height:100%!important;zoom:1!important}
+.pvinfo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}.pvinfo .full{grid-column:1/-1}.pvinfo h3 small{font:600 13px var(--sans);color:var(--mute,#6b6277);margin-left:8px}
+.chk2{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.chk2 li{padding-left:26px;position:relative;font:600 14px var(--sans)}.chk2 li:before{position:absolute;left:0;top:0}.chk2 li.y:before{content:"\2713";color:#1f8a5b}.chk2 li.n:before{content:"!";color:#b3261e}.chk2 li.o{color:var(--mute,#6b6277)}.chk2 li.o:before{content:"\2013"}.chk2 a{color:#b3261e}
+@media(max-width:760px){.pvinfo{grid-template-columns:1fr}}
