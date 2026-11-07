@@ -4,6 +4,8 @@ const PW = "Uji-Sandi-Panjang#2026", stamp = Date.now().toString(36), E = (n) =>
 const LIMIT = Number(process.env.SIGNIN_LIMIT || 20);
 const L = await mkUser(E("lock"), PW), M = await mkUser(E("other"), PW);
 const tryLogin = async (email, pw) => { const r = await mk().auth.signInWithPassword({ email, password: pw }); return r; };
+const HOOK = process.env.HOOK_ENABLED !== "false"; // false = plan Supabase tanpa Auth Hook (Free): lockout per-akun TIDAK aktif
+if (HOOK) {
 // 1. brute-force per akun (hook): 4 gagal -> masih normal
 let last;
 for (let i = 1; i <= 4; i++) last = await tryLogin(E("lock"), "salah-" + i);
@@ -19,6 +21,11 @@ const other = await tryLogin(E("other"), PW); check("2 akun lain dari IP sama te
 await svc.from("login_attempts").update({ locked_until: new Date(Date.now() - 1000).toISOString() }).eq("user_id", L.id);
 const rec = await tryLogin(E("lock"), PW); check("3 kunci berakhir -> login benar berhasil dan penghitung direset", !rec.error, rec.error?.message);
 const la = (await svc.from("login_attempts").select("fails,locked_until").eq("user_id", L.id).single()).data; check("3 fails=0 setelah sukses", la?.fails === 0 && la?.locked_until === null, JSON.stringify(la));
+} else {
+  for (let i = 1; i <= 6; i++) await tryLogin(E("lock"), "salah-" + i);
+  const c = await tryLogin(E("lock"), PW);
+  info("1-3 TIDAK TERUJI: Password Verification Attempt hook butuh plan Team/Enterprise. Perilaku aktual tanpa hook (6 gagal lalu password benar)", { loginBenarBerhasil: !c.error, artinya: c.error ? "akun terkunci/ditolak oleh mekanisme lain" : "TIDAK ADA lockout per-akun" });
+}
 // 4. IP bersama: banyak pengguna sah dalam satu IP
 const users = []; for (let i = 0; i < 8; i++) users.push(await mkUser(E("office" + i), PW));
 let okCount = 0; for (let i = 0; i < 8; i++) { const r = await tryLogin(E("office" + i), PW); if (!r.error) okCount++; }
