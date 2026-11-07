@@ -108,8 +108,8 @@
   var BASE = "";
   function isFile(v) { return typeof v === "string" && /^[\w-]+(\/[\w.-]+)*\.(svg|webp|png)$/.test(v) && v.indexOf("..") < 0; }
   function fileUrl(v) { return 'url("' + BASE + v + '")'; }
-  function backdrop(p) {
-    var v = (p.art || {}).backdrop; if (typeof v === "string") v = { src: v };
+  function backdrop(p, key) {
+    var v = (p.art || {})[key || "backdrop"]; if (typeof v === "string") v = { src: v };
     if (!v || !isFile(v.src)) return null;
     return { lg: p.base + v.src, sm: p.base + (isFile(v.small) ? v.small : v.src), w: +v.width || 1600 };
   }

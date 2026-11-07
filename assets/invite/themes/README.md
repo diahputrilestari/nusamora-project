@@ -52,6 +52,7 @@ Nilai: path relatif ke folder tema, `{ "src": "...", "w": 300 }` (w = lebar maks
 | Slot | Tempat |
 |---|---|
 | `backdrop` | pemandangan penuh `{ "src": "art/backdrop.webp", "small": "art/backdrop-sm.webp", "width": 1672 }`. Tampil di pintu cover (terbelah saat dibuka), dan sebagai latar hero, panel desktop, serta penutup bila pelanggan belum mengunggah foto sampul. |
+| `heroBackdrop` | latar khusus halaman Beranda (hero), format sama dengan `backdrop`. Bila diisi, selalu dipakai di Beranda walau pelanggan mengunggah foto sampul; foto sampul tetap tampil di panel desktop dan penutup. |
 | `coverCorner` | sudut atas cover (dicerminkan kiri-kanan); menggantikan sulur SVG |
 | `coverHang` | dua hiasan bergantung dan berayun di atas cover |
 | `coverGround` | deretan ilustrasi di dasar cover (mis. rumah adat diapit jambangan) |

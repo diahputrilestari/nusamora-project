@@ -42,9 +42,11 @@
   }
   function has(slot) { return items(slot).length > 0; }
   /* latar: foto sampul pelanggan, atau backdrop tema bila foto belum ada */
-  function bgImg(vm, eager) {
-    if (vm.cover) return img(vm.cover, "", "", eager);
-    var b = TH.backdrop(P); if (!b) return "";
+  /* hero: art.heroBackdrop (bila ada) selalu menjadi latar Beranda, mendahului foto sampul */
+  function bgImg(vm, eager, hero) {
+    var hb = hero && TH.backdrop(P, "heroBackdrop");
+    if (!hb && vm.cover) return img(vm.cover, "", "", eager);
+    var b = hb || TH.backdrop(P); if (!b) return "";
     return '<img src="' + esc(b.sm) + '" srcset="' + esc(b.sm) + " 900w, " + esc(b.lg) + " " + b.w + 'w" sizes="(min-width: 1024px) 60vw, 100vw" alt="" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async">';
   }
   function art(slot, cls, eager, only) {
@@ -108,7 +110,7 @@
   function hero(vm) {
     var e = vm.events[0] || {};
     return '<section class="hero" id="beranda" data-nav="Beranda" data-ico="home">' +
-      '<div class="hero-bg" data-px="0.18">' + bgImg(vm, true) + "</div><div class=\"hero-sh\"></div>" +
+      '<div class="hero-bg" data-px="0.18">' + bgImg(vm, true, true) + "</div><div class=\"hero-sh\"></div>" +
       '<div class="hero-in"><p class="eb lt" data-rv="down" style="--dl:200ms">' + esc(vm.isCouple ? tx("coverEyebrow", "The Wedding of") : tx("coverEyebrowEvent", "Undangan")) + '</p><h1 class="hero-nm" id="hero-nm">' + esc(vm.displayNames) + "</h1>" +
       '<div class="dv lt" data-rv="draw" style="--dl:900ms">' + div() + "</div>" +
       (e.at ? '<p class="hero-dt" data-rv="up" style="--dl:1100ms">' + esc(fdate(e.at, e.tz)) + "</p>" : "") +
