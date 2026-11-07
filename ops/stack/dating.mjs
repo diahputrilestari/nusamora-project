@@ -56,10 +56,16 @@ check("semua peserta: consent + profil + join berhasil", users.every((u) => !u.e
   const m = await rpc(A.c, "dating_my_matches"); const conv = m.data?.[0]?.conversation_id;
   check("daftar match memuat percakapan", !m.err && !!conv, m.err);
   const got = { B: [], C: [], D: [] };
-  const sub = (cl, tag, tok) => new Promise((res) => { cl.realtime.setAuth(tok); const ch = cl.channel("dating-" + tag + stamp).on("postgres_changes", { event: "INSERT", schema: "public", table: "dating_messages" }, (p) => got[tag].push(p.new?.body)).subscribe((st) => { if (st === "SUBSCRIBED") res(ch); if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") res(null); }); setTimeout(() => res(null), 15000); });
+  const states = {}; const sysmsgs = [];
+  const sub = (cl, tag, tok) => new Promise((res) => { cl.realtime.setAuth(tok); let pc = false, sb = false; const done = () => { if (pc && sb) res(ch); };
+    const ch = cl.channel("dating-" + tag + stamp).on("postgres_changes", { event: "INSERT", schema: "public", table: "dating_messages" }, (p) => got[tag].push(p.new?.body))
+      .on("system", {}, (p) => { sysmsgs.push(tag + ":" + JSON.stringify(p).slice(0, 140)); if (p?.extension === "postgres_changes" && p?.status === "ok") { pc = true; done(); } })
+      .subscribe((st, err) => { states[tag] = st + (err ? ":" + err.message : ""); if (st === "SUBSCRIBED") { sb = true; done(); } if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") res(null); });
+    setTimeout(() => res(pc || sb ? ch : null), 20000); });
   const chB = await sub(B.c, "B", B.token), chC = await sub(C.c, "C", C.token);
   // D = service_role (melewati RLS): bila D menerima tetapi B tidak => masalah evaluasi RLS di Realtime; bila D juga tidak => publikasi/WAL
   const chD = await sub(svc, "D", process.env.SUPABASE_SERVICE_ROLE_KEY);
+  info("Realtime status langganan", { states, sysmsgs });
   check("Realtime: langganan terhubung (stack nyata dengan layanan Realtime)", !!chB && !!chC, "B=" + !!chB + " C=" + !!chC);
   if (chB && chC) {
     await sleep(1500);

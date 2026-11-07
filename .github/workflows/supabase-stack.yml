@@ -75,6 +75,10 @@ jobs:
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
           SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node dating.mjs 2>&1 | tee "$RUNNER_TEMP/dating.log"; exit ${PIPESTATUS[0]}
+      - name: "Log kontainer Realtime (diagnosis, tanpa rahasia)"
+        if: always()
+        continue-on-error: true
+        run: docker logs supabase_realtime_sbproj 2>&1 | grep -v -i "jwt\|secret\|key" | tail -40 | cut -c1-240
       - name: "Uji MFA (GoTrue/PostgREST/Edge nyata)"
         id: mfa
         continue-on-error: true
