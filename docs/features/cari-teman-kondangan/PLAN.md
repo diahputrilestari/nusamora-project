@@ -92,3 +92,10 @@ Landing, Create/Edit Profile, Discover (+filter), Profile Detail, Mutual Match M
 
 ## 10. Risiko
 Live Guest tanpa backend (cakupan membesar); SMTP bawaan 2/jam; Realtime baru & batas plan; data sensitif (UU PDP); penyalahgunaan (pelecehan, penipuan, scraping) → mitigasi blokir/laporan/rate limit/tanpa kontak langsung; deklarasi usia/status tidak terverifikasi (ditulis jelas, tidak diklaim); moderasi butuh manusia.
+
+## Status P0 (diperbarui 2026-11-07)
+- Backend: lulus (DB 10/10; stack 24/24 termasuk balapan like dan Realtime).
+- UI: `/cari-teman` (landing, profil+persetujuan, jelajah+filter, match modal, daftar match, chat realtime, pengaturan, panel pemilik). Uji Chromium 42/42 di stack Supabase lokal nyata (CI run 42374036558).
+- Temuan: tabel `assets` hanya terbaca admin, sehingga pilihan avatar memakai RPC `dating_avatar_options` (RLS tidak dilonggarkan).
+- Belum: uji di Supabase staging yang di-host; uji di perangkat nyata/Safari/Firefox; tombol masuk dari halaman Live Guest (demo Live Guest statis tanpa id undangan, jadi pemilik membagikan tautan `/cari-teman?e=<id>` dari Pengaturan); gambar thumbnail avatar (asset saat ini model 3D); teks kebijakan privasi UU PDP; custom SMTP.
+- P1/P2 belum dimulai.
