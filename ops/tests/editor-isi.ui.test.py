@@ -62,11 +62,14 @@ with sync_playwright() as pw:
         pg.fill("#e-event\\.start", "10:00"); pg.fill("#e-event\\.venue", "Taman Asri")
         chk(f"[{tag}] semua terisi -> 'Lengkap' di judul", pg.inner_text("#s-waktu .ast") == "Lengkap" and pg.get_attribute("#s-waktu", "data-st") == "ok")
         if vw > 860: chk(f"[{tag}] navigasi samping ikut 'Lengkap'", pg.inner_text('.ed nav a[data-nv=waktu] small') == "Lengkap")
+        pg.wait_for_timeout(400); chk(f"[{tag}] preview isian kosong memakai contoh seperti halaman demo (sapaan contoh)", "selamat datang di hari bahagia kami" in pg.inner_text("#lpi").lower(), pg.inner_text("#lpi")[:200])
+        chk(f"[{tag}] preview memakai bingkai stage seperti demo", pg.locator("#lpi.stage").count() == 1)
         # preview langsung
         pg.locator('[data-ac=info]').click(); pg.fill("#e-names\\.a", "Sinta"); pg.fill("#e-names\\.b", "Raka"); pg.wait_for_timeout(500)
         chk(f"[{tag}] preview langsung: nama baru tampil tanpa pindah halaman", "Sinta" in pg.inner_text("#lpi") and pg.url.endswith(LX), pg.inner_text("#lpi")[:120])
         pg.locator('[data-ac=venue]').click(); pg.locator("#s-venue .seg label", has_text="Taman Malam").click(); pg.wait_for_timeout(500)
         chk(f"[{tag}] preview Luxe: ganti scene langsung terlihat", "taman malam" in pg.inner_text("#lpi").lower())
+        chk(f"[{tag}] isian pengguna menimpa contoh (lokasi 'Taman Asri')", "Taman Asri" in pg.evaluate("document.querySelector('#lpi').textContent") and "Gedung Serbaguna Kenanga" not in pg.evaluate("document.querySelector('#lpi').textContent"))
         # avatar & karakter
         pg.locator('[data-ac=avatar]').click()
         chk(f"[{tag}] avatar dikelompokkan pria & wanita", pg.locator("#s-avatar label", has_text="Avatar pria").count() >= 1 and pg.locator("#s-avatar label", has_text="Avatar wanita").count() >= 1)
