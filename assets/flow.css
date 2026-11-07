@@ -108,3 +108,11 @@ dialog.fdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);o
 .avr{display:flex;flex-wrap:wrap;gap:16px}.avp{margin:0;display:flex;align-items:center;gap:12px}
 .avp img,.avp .av3d{width:72px;aspect-ratio:3/4;object-fit:contain;border-radius:12px;background:var(--lilac)}
 .avp figcaption{display:grid;gap:2px}.avp figcaption span{color:var(--mute);font-size:13px}
+
+/* Step 1: demo per paket, perbandingan fitur, informasi */
+.pkw{display:grid;gap:10px;align-content:start}.pkw .pkc{height:100%}.pk-demo{justify-self:stretch;text-align:center}.pk-demo.off{opacity:.55;cursor:not-allowed}.pk-no{margin-top:6px;padding-top:10px;border-top:1px dashed var(--line);font-size:13px;color:var(--mute)}.pk-no b{color:var(--ink)}
+.cmpw,.pkinfo{margin-top:24px;padding:24px}.cmpw h2,.pkinfo h2{font:700 22px var(--display);margin:0 0 14px}.cmps{overflow-x:auto;-webkit-overflow-scrolling:touch}.cmp{width:100%;border-collapse:collapse;min-width:520px;font-size:14px}.cmp th,.cmp td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:center}.cmp thead th{font-weight:700;color:var(--deep)}.cmp thead th.on{background:var(--lilac);border-radius:10px 10px 0 0}.cmp tbody th{text-align:left;font-weight:600}.cmp td.y{color:var(--ok);font-weight:800}.cmp td.n{color:var(--mute)}.cmp tr.num td{font-weight:700}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.pkinfo dl{display:grid;grid-template-columns:max-content 1fr;gap:10px 18px;margin:0}.pkinfo dt{font-weight:700;color:var(--deep)}.pkinfo dd{margin:0;color:var(--mute);font-size:14px}@media(max-width:640px){.pkinfo dl{grid-template-columns:1fr;gap:4px}.pkinfo dd{margin-bottom:10px}}
+.fw>.cmpw,.fw>.pkinfo{min-width:0;max-width:100%}.cmpw .cmps{max-width:100%}
+.cmps{position:relative}
+.cmph{display:none;margin:-6px 0 10px;font-size:13px;color:var(--mute)}@media(max-width:640px){.cmph{display:block}}
