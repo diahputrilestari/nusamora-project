@@ -188,7 +188,8 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('theme-assets', 'theme-assets', true, 52428800, array['image/png','image/jpeg','image/webp','image/gif','image/svg+xml','application/json','model/gltf-binary','model/gltf+json','audio/mpeg','audio/ogg','audio/wav','audio/x-wav','image/vnd.radiance','application/octet-stream'])
 on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
 drop policy if exists "theme-assets baca" on storage.objects;
-create policy "theme-assets baca" on storage.objects for select using (bucket_id = 'theme-assets');
+-- TIDAK untuk publik: URL objek bucket publik dilayani tanpa kebijakan SELECT, sedangkan SELECT publik membuka list() (enumerasi). Lihat content-protection.sql.
+create policy "theme-assets baca" on storage.objects for select to authenticated using (bucket_id = 'theme-assets' and (public.has_perm('templates.read') or public.has_perm('templates.write')));
 drop policy if exists "theme-assets tulis" on storage.objects;
 create policy "theme-assets tulis" on storage.objects for insert to authenticated with check (bucket_id = 'theme-assets' and public.has_perm('templates.write') and name ~ '^(incoming|generated)/');
 drop policy if exists "theme-assets hapus" on storage.objects;
