@@ -81,6 +81,12 @@ jobs:
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
           psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/customer-features.test.sql 2>&1 | tee "$RUNNER_TEMP/customer-features.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji DB data tamu (isolasi pemilik, token tamu, RSVP, ucapan, Live Guest)"
+        id: guestdb
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/guest-db.test.sql 2>&1 | tee "$RUNNER_TEMP/guest-db.log"; exit ${PIPESTATUS[0]}
       - name: "Uji UI Cari Teman Kondangan (Chromium: profil, jelajah, match, chat realtime, XSS, CSP, 3 viewport)"
         id: datingui
         continue-on-error: true
@@ -138,7 +144,7 @@ jobs:
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha fn dating-db dating dating-ui content-protection customer-features; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha fn dating-db dating dating-ui content-protection customer-features guest-db; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
           cd ops/stack && ls dr-work 2>/dev/null | head -0
       - if: always()
         uses: actions/upload-artifact@v4
@@ -146,5 +152,5 @@ jobs:
       - name: Ringkasan
         if: always()
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }} contentprot=${{ steps.contentprot.outcome }} custfeat=${{ steps.custfeat.outcome }}"
-          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success
+          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }} contentprot=${{ steps.contentprot.outcome }} custfeat=${{ steps.custfeat.outcome }} guestdb=${{ steps.guestdb.outcome }}"
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success -a "${{ steps.guestdb.outcome }}" = success

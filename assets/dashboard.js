@@ -194,6 +194,98 @@
     var snap = S.notif.map(function (n) { return n.read; });  // tampilkan penanda 'baru' dulu, tandai dibaca di server
     sb.rpc("mark_notifications_read").then(function (r) { if (r.error) return; S.unread = 0; buildNav("notifikasi"); void snap; });
   }
+
+  /* ===== Data tamu per undangan: Statistik Tamu, RSVP, Buku Tamu, Live Guest (backend/guest-schema.sql) ===== */
+  var G = { inv: "", kind: "", data: null, err: false, filter: "semua" };
+  var GM = { nama_tidak_valid: "Isi nama tamu (maksimal 100 karakter).", telepon_tidak_valid: "Nomor telepon belum benar.", batas_tamu_tercapai: "Batas 1.000 tamu per undangan tercapai.", terlalu_banyak_permintaan: "Terlalu banyak permintaan. Coba lagi nanti.", tidak_ditemukan: "Data tidak ditemukan." };
+  function gErr(e) { var m = (e && e.message) || ""; for (var k in GM) if (m.indexOf(k) >= 0) return GM[k]; return "Gagal. Coba lagi."; }
+  function gPick(kind) {
+    if (!S.inv.length) return { html: empty("mail", "Belum ada undangan", "Buat undangan terlebih dulu untuk mengelola tamu.", cta()) };
+    if (!G.inv || !S.inv.some(function (i) { return i.id === G.inv; })) G.inv = S.inv[0].id;
+    if (G.kind !== kind) { G.kind = kind; G.data = null; G.err = false; G.filter = "semua"; }
+    return { sel: '<label class="fld" style="max-width:360px;margin-bottom:14px">Undangan<select id="g-inv">' + S.inv.map(function (i) { return '<option value="' + esc(i.id) + '"' + (i.id === G.inv ? " selected" : "") + ">" + esc(i.title) + "</option>"; }).join("") + "</select></label>" };
+  }
+  function gLoad(kind) {
+    var id = G.inv, q;
+    if (kind === "statistik") q = Promise.all([sb.rpc("guest_stats", { p_inv: id }), sb.from("invitation_guests").select("id,name,phone,token,sent_at,opened_at,open_count,invitation_rsvps(status,pax)").eq("invitation_id", id).order("created_at", { ascending: true }).limit(1000)]).then(function (r) { return r[0].error || r[1].error ? false : { stats: r[0].data, guests: r[1].data || [] }; });
+    else if (kind === "rsvp") q = sb.from("invitation_rsvps").select("status,pax,message,updated_at,invitation_guests(name)").eq("invitation_id", id).order("updated_at", { ascending: false }).limit(1000).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    else if (kind === "bukutamu") q = sb.from("guestbook_entries").select("id,name,message,visible,created_at").eq("invitation_id", id).order("created_at", { ascending: false }).limit(500).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    else q = sb.from("live_guest_events").select("id,guest_name,action,detail,created_at").eq("invitation_id", id).order("created_at", { ascending: false }).limit(300).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    q.then(function (d) { if (G.inv !== id || G.kind !== kind) return; if (d === false) G.err = true; else G.data = d; if (curRoute() === kind) route(); }, function () { G.err = true; if (curRoute() === kind) route(); });
+  }
+  function curRoute() { return (location.hash || "#dashboard").slice(1); }
+  function gHead(t, sub) { return '<div class="pghead"><div><h1>' + t + '</h1><p class="sub">' + sub + "</p></div></div>"; }
+  function gBody(kind, title, sub, render) {
+    var p = gPick(kind), h = gHead(title, sub); if (!p.sel) return h + '<div class="card">' + p.html + "</div>";
+    h += p.sel;
+    if (G.err) return h + '<div class="card">' + empty("chat", "Data belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div>";
+    if (!G.data) { gLoad(kind); return h + '<div class="card"><div class="sk h3"></div></div>'; }
+    return h + render(G.data);
+  }
+  function waLink(g, link) { var ph = (g.phone || "").replace(/^\+/, "").replace(/^0/, "62"); return "https://wa.me/" + ph + "?text=" + encodeURIComponent("Halo " + g.name + ", kami mengundang Anda: " + link); }
+  function guestLink(g) { var u = (S.inv.filter(function (i) { return i.id === G.inv; })[0] || {}).public_url; if (!u) return ""; return u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + g.token; }
+  var RS = { hadir: ["Hadir", "ok"], tidak_hadir: ["Tidak hadir", "bad"], ragu: ["Ragu-ragu", "warn"] };
+  V.statistik = function () {
+    return gBody("statistik", "Statistik Tamu", "Undangan terkirim, dibuka, dan konfirmasi kehadiran", function (d) {
+      var s = d.stats || {}, K = [["Tamu", s.total], ["Terkirim", s.terkirim], ["Dibuka", s.dibuka], ["Sudah RSVP", s.rsvp], ["Hadir", s.hadir], ["Tidak hadir", s.tidak_hadir], ["Ragu-ragu", s.ragu], ["Total orang hadir", s.pax_hadir]];
+      var h = '<div class="grid g4" style="margin-bottom:16px">' + K.map(function (k) { return '<div class="card stat"><div><b>' + Number(k[1] || 0).toLocaleString("id-ID") + "</b><span>" + k[0] + "</span></div></div>"; }).join("") + "</div>";
+      h += '<form class="card form" id="f-gadd" novalidate style="margin-bottom:16px"><h2>Tambah tamu</h2><div class="grid g2"><label class="fld">Nama<input type="text" id="ga-name" maxlength="100"><span class="err" id="e-ga"></span></label><label class="fld">WhatsApp (opsional)<input type="tel" id="ga-ph" placeholder="0812..."></label></div><div class="row-end"><button class="btn" type="submit" id="ga-go">Tambah</button></div></form>';
+      h += '<div class="card"><div class="card-h"><h2>Daftar tamu</h2></div>';
+      if (!d.guests.length) return h + empty("users", "Belum ada tamu", "Tambahkan tamu untuk membuat tautan undangan pribadi dan memantau statusnya.") + "</div>";
+      h += '<p class="sub" style="margin-bottom:10px">Tautan pribadi tamu mulai berfungsi penuh setelah halaman undangan mendukung RSVP.</p><div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th>RSVP</th><th>Aksi</th></tr></thead><tbody>' + d.guests.map(function (g) {
+        var r = g.invitation_rsvps && (Array.isArray(g.invitation_rsvps) ? g.invitation_rsvps[0] : g.invitation_rsvps), l = guestLink(g);
+        return "<tr><td><b>" + esc(g.name) + "</b>" + (g.phone ? "<br><small>" + esc(g.phone) + "</small>" : "") + "</td><td>" + (g.opened_at ? '<span class="badge ok">Dibuka ' + g.open_count + "x</span>" : g.sent_at ? '<span class="badge">Terkirim</span>' : '<span class="badge warn">Belum dikirim</span>') + "</td><td>" + (r ? '<span class="badge ' + RS[r.status][1] + '">' + RS[r.status][0] + (r.status === "hadir" ? " (" + r.pax + ")" : "") + "</span>" : "-") + '</td><td class="acts">' +
+          (l ? '<button class="btn o sm" type="button" data-copy="' + esc(l) + '">Salin tautan</button>' : "") + (l && g.phone ? '<a class="btn o sm" target="_blank" rel="noopener" href="' + esc(waLink(g, l)) + '">WhatsApp</a>' : "") +
+          '<button class="btn o sm" type="button" data-g="sent" data-id="' + esc(g.id) + '" data-v="' + (g.sent_at ? "0" : "1") + '">' + (g.sent_at ? "Batal terkirim" : "Tandai terkirim") + '</button><button class="btn o sm" type="button" data-g="gdel" data-id="' + esc(g.id) + '">Hapus</button></td></tr>';
+      }).join("") + "</tbody></table></div></div>";
+      return h;
+    });
+  };
+  V.rsvp = function () {
+    return gBody("rsvp", "RSVP", "Konfirmasi kehadiran tamu", function (d) {
+      var rows = d.rows.filter(function (r) { return G.filter === "semua" || r.status === G.filter; });
+      var h = '<div class="card"><div class="card-h"><h2>Konfirmasi (' + d.rows.length + ')</h2><div class="acts"><select id="g-flt" aria-label="Filter status"><option value="semua">Semua status</option>' + Object.keys(RS).map(function (k) { return '<option value="' + k + '"' + (G.filter === k ? " selected" : "") + ">" + RS[k][0] + "</option>"; }).join("") + '</select><button class="btn o sm" type="button" data-g="csv">Unduh CSV</button></div></div>';
+      if (!rows.length) return h + empty("mail", "Belum ada RSVP", "Konfirmasi dari tamu akan tampil di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th class="num">Jumlah</th><th>Pesan</th><th>Diperbarui</th></tr></thead><tbody>' + rows.map(function (r) { var g = r.invitation_guests || {}; return "<tr><td><b>" + esc(g.name || "-") + '</b></td><td><span class="badge ' + RS[r.status][1] + '">' + RS[r.status][0] + '</span></td><td class="num">' + r.pax + "</td><td>" + esc(r.message || "-") + "</td><td>" + dt(r.updated_at) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+    });
+  };
+  V.bukutamu = function () {
+    return gBody("bukutamu", "Buku Tamu", "Ucapan dan doa dari tamu", function (d) {
+      var h = '<div class="card"><div class="card-h"><h2>Ucapan (' + d.rows.length + ")</h2></div>";
+      if (!d.rows.length) return h + empty("book", "Belum ada ucapan", "Ucapan dan doa dari tamu akan tampil di sini.") + "</div>";
+      return h + '<ul class="nt">' + d.rows.map(function (w) { return "<li" + (w.visible ? "" : ' class="muted"') + "><b>" + esc(w.name) + "</b>" + (w.visible ? "" : ' <span class="badge warn">Disembunyikan</span>') + "<p>" + esc(w.message) + "</p><small>" + dt(w.created_at, true) + '</small><div class="acts"><button class="btn o sm" type="button" data-g="wvis" data-id="' + esc(w.id) + '" data-v="' + (w.visible ? "0" : "1") + '">' + (w.visible ? "Sembunyikan" : "Tampilkan") + '</button><button class="btn o sm" type="button" data-g="wdel" data-id="' + esc(w.id) + '">Hapus</button></div></li>'; }).join("") + "</ul></div>";
+    });
+  };
+  var LA = { masuk: "Masuk venue", sapa: "Menyapa", reaksi: "Reaksi", keluar: "Keluar" };
+  V.live = function () {
+    return gBody("live", "Live Guest", "Aktivitas dan interaksi tamu di venue", function (d) {
+      var h = '<div class="card"><div class="card-h"><h2>Aktivitas terbaru</h2></div>';
+      if (!d.rows.length) return h + empty("star", "Belum ada aktivitas", "Tamu yang masuk, menyapa, dan bereaksi di Live Guest akan tampil di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Waktu</th><th>Tamu</th><th>Aktivitas</th><th>Detail</th><th></th></tr></thead><tbody>' + d.rows.map(function (e) { return "<tr><td>" + dt(e.created_at) + "</td><td><b>" + esc(e.guest_name) + "</b></td><td>" + esc(LA[e.action] || e.action) + "</td><td>" + esc(e.detail || "-") + '</td><td><button class="btn o sm" type="button" data-g="edel" data-id="' + esc(e.id) + '">Hapus</button></td></tr>'; }).join("") + "</tbody></table></div></div>";
+    });
+  };
+  function csvCell(v) { v = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
+  function bindGuests(r) {
+    var sel = $("#g-inv"); if (sel) sel.addEventListener("change", function () { G.inv = sel.value; G.data = null; G.err = false; route(); });
+    var fl = $("#g-flt"); if (fl) fl.addEventListener("change", function () { G.filter = fl.value; route(); });
+    var f = $("#f-gadd"); if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); var n = $("#ga-name").value.trim(); $("#e-ga").textContent = ""; if (!n) { $("#e-ga").textContent = "Isi nama tamu."; return; }
+      var bt = $("#ga-go"); bt.disabled = true; sb.rpc("guest_add", { p_inv: G.inv, p_name: n, p_phone: $("#ga-ph").value.trim() || null }).then(function (x) { bt.disabled = false; if (x.error) return toast(gErr(x.error), "bad"); toast("Tamu ditambahkan.", "ok"); G.data = null; route(); });
+    });
+  }
+  d.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-g]"); if (!b) return; var a = b.dataset.g, id = b.dataset.id, call;
+    if (a === "csv") {
+      var rows = (G.data && G.data.rows || []).map(function (r) { return [(r.invitation_guests || {}).name, r.status, r.pax, r.message, r.updated_at].map(csvCell).join(","); });
+      var blob = new Blob(["﻿Nama,Status,Jumlah,Pesan,Diperbarui\n" + rows.join("\n")], { type: "text/csv;charset=utf-8" }), l = d.createElement("a"); l.href = URL.createObjectURL(blob); l.download = "rsvp.csv"; l.click(); setTimeout(function () { URL.revokeObjectURL(l.href); }, 1000); return;
+    }
+    if (a === "sent") call = sb.rpc("guest_mark_sent", { p_guest: id, p_sent: b.dataset.v === "1" });
+    else if (a === "gdel") { if (!confirm("Hapus tamu ini beserta RSVP-nya?")) return; call = sb.rpc("guest_delete", { p_guest: id }); }
+    else if (a === "wvis") call = sb.rpc("wish_set_visible", { p_id: id, p_visible: b.dataset.v === "1" });
+    else if (a === "wdel") { if (!confirm("Hapus ucapan ini?")) return; call = sb.rpc("wish_delete", { p_id: id }); }
+    else if (a === "edel") call = sb.rpc("live_event_delete", { p_id: id });
+    if (call) call.then(function (x) { if (x.error) return toast(gErr(x.error), "bad"); G.data = null; route(); });
+  });
   /* ---- Bantuan & Dukungan: tiket lewat RPC (support_*) ---- */
   var CAT = { bantuan: "Bantuan umum", pembayaran: "Pembayaran", teknis: "Masalah teknis", komplain: "Komplain", lainnya: "Lainnya" };
   V.bantuan = function () {
@@ -235,8 +327,8 @@
     return '<div class="pghead"><div><h1>Edit Profil</h1><p class="sub">Perbarui data akun Anda</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-prof" novalidate><h2>Data diri</h2><label class="fld">Nama lengkap<input type="text" id="p-name" maxlength="80" value="' + esc(S.profile.full_name || "") + '" autocomplete="name"><span class="err" id="e-name"></span></label><label class="fld">Email<input type="email" value="' + esc(S.user.email) + '" readonly><small>Email tidak dapat diubah di sini.</small></label><label class="fld">Nomor WhatsApp<input type="tel" id="p-wa" value="' + esc(S.profile.whatsapp || "") + '" placeholder="08123456789" autocomplete="tel"><span class="err" id="e-wa"></span></label><div class="row-end"><button class="btn" type="submit" id="p-go">Simpan perubahan</button></div></form>' +
       '<form class="card form" id="f-pw" novalidate><h2>Ganti kata sandi</h2><label class="fld">Kata sandi baru<input type="password" id="w-new" autocomplete="new-password"><small>Minimal 8 karakter, campur huruf dan angka.</small><span class="err" id="e-pw"></span></label><div class="row-end"><button class="btn" type="submit" id="w-go">Perbarui kata sandi</button></div></form></div>';
   };
-  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", notifikasi: "Notifikasi", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
-  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["notifikasi", "chat", "Notifikasi"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
+  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", statistik: "Statistik Tamu", rsvp: "RSVP", bukutamu: "Buku Tamu", live: "Live Guest", notifikasi: "Notifikasi", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
+  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["statistik", "users", "Statistik Tamu"], ["rsvp", "mail", "RSVP"], ["bukutamu", "book", "Buku Tamu"], ["live", "star", "Live Guest"], ["notifikasi", "chat", "Notifikasi"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
   function visible(k) { return FEATURES[k] !== false; }
   function buildNav(cur) {
     $("#nav").innerHTML = NAV.filter(function (n) { return visible(n[0]); }).map(function (n) {
@@ -261,6 +353,7 @@
     if (r === "profil") bindProfile();
     if (r === "bantuan") bindSupport();
     if (r === "notifikasi") markNotifRead();
+    if (["statistik", "rsvp", "bukutamu", "live"].indexOf(r) >= 0) bindGuests(r);
     $$("[data-dtab]").forEach(function (t) { t.addEventListener("click", function () { S.dtab = t.dataset.dtab; route(); }); });
   }
   function copyText(t) { function fb() { var ta = d.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0"; d.body.appendChild(ta); ta.select(); var ok = false; try { ok = d.execCommand("copy"); } catch (e) { } ta.remove(); toast(ok ? "Tersalin." : "Gagal menyalin. Salin manual dari kolom.", ok ? "ok" : "bad"); } try { navigator.clipboard.writeText(t).then(function () { toast("Tersalin.", "ok"); }, fb); } catch (e) { fb(); } }
