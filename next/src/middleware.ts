@@ -8,7 +8,7 @@ const intl = createMiddleware(routing);
 
 // Tanda kutip tunggal (%27 / ') di alamat membuat Next 15 + next-intl macet pada proxy internal ("socket hang up" sampai timeout),
 // termasuk rute lama /[locale]/[...rest]. Tak ada alamat sah NusaMora yang memuatnya, jadi ditolak lebih awal dengan 404 seragam.
-const BAD_PATH = /'|%27/i;
+const BAD_PATH = /'|\||%27|%7c/i;
 
 export default async function middleware(request: NextRequest) {
   if (BAD_PATH.test(request.nextUrl.pathname)) return new NextResponse("Not Found", { status: 404, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
