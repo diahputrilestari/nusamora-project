@@ -70,9 +70,10 @@ if (MODE === "pay") {
   check("Midtrans mencatat transaksi lunas (settlement/capture)", ["settlement", "capture"].includes(ms.transaction_status), ms.transaction_status + " " + ms.status_message);
   const ev0 = (await svc.from("payment_events").select("source,transaction_status,result").eq("order_id", order)).data || [];
   info("event pembayaran sebelum sync", ev0);
-  { const since = new Date(Date.now() - 3 * 3600e3).toISOString();
-    const se = (await svc.from("security_events").select("kind,created_at").in("kind", ["webhook_bad_signature"]).gte("created_at", since)).data || [];
-    info("DIAGNOSTIK: percobaan webhook ber-signature salah tercatat 3 jam terakhir (>0 = Midtrans MENGIRIM tetapi signature ditolak; 0 = kemungkinan tidak pernah dikirim)", { jumlah: se.length }); }
+  { const since = new Date(Date.now() - 6 * 3600e3).toISOString();
+    const r = await svc.from("security_events").select("kind,at,detail").eq("kind", "webhook_bad_signature").gte("at", since).order("at", { ascending: false }).limit(20);
+    if (r.error) info("DIAGNOSTIK: gagal membaca security_events", { error: r.error.message });
+    else info("DIAGNOSTIK: webhook ber-signature salah tercatat 6 jam terakhir (>0 = Midtrans MENGIRIM tetapi ditolak 401)", { jumlah: r.data.length, terbaru: r.data.slice(0, 5).map((e) => ({ at: e.at, ...e.detail })) }); }
   const viaWebhook = ev0.some((e) => e.source === "webhook" && ["settlement", "capture"].includes(e.transaction_status));
   check("webhook Midtrans -> Edge Function benar-benar diterima (Notification URL dikonfigurasi benar)", viaWebhook, viaWebhook ? "ya" : "TIDAK: periksa Notification URL di dashboard Sandbox");
   const A = await login(email, PW);
