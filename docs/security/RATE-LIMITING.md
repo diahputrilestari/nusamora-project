@@ -40,3 +40,8 @@ Rekomendasi pengaturan Auth (nilai awal, sesuaikan): email dikirim ≤ 4/jam (pa
 - `ops/tests/rate-limit-handlers.test.mjs` (13 pemeriksaan): 429 + Retry-After + CORS, batas per pengguna vs IP bersama, banjir tanpa token berhenti sebelum memanggil Auth, fail-open, sync, webhook palsu dicatat ≤5 tanpa rahasia, kunci ter-hash — lulus.
 - Regresi: `assets_test` 47/47, `gen_test` 33/33 (stub `rl_hit`), uji signature webhook lulus.
 **Belum teruji:** Edge Function yang ter-deploy di Supabase sungguhan (tidak ada Deno/akses di sandbox), perilaku Auth rate limit/CAPTCHA/hook (konfigurasi dashboard), `cf-connecting-ip` pada runtime nyata.
+
+
+## Catatan hosted (2026-11-07, plan Free)
+- Password Verification Attempt hook **tidak tersedia** (butuh Team/Enterprise): lockout per akun tidak aktif. Kontrol yang berlaku: batas per-IP Supabase (sign-in 30/5 mnt teramati memblok), CAPTCHA (belum diuji hosted), MFA admin, password kuat.
+- SMTP bawaan membatasi email 2/jam → pendaftaran/reset dapat 429. Pasang SMTP kustom sebelum go-live.
