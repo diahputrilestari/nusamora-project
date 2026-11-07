@@ -93,8 +93,7 @@
   }
   function loadAvatars() {
     if (S.avatars) return Promise.resolve(S.avatars);
-    return sb.from("assets").select("id,name,thumbnail_url,file_url,asset_categories!inner(slug)").eq("asset_categories.slug", "guest-avatar").eq("status", "active").is("deleted_at", null).limit(60)
-      .then(function (r) { if (r.error) throw r.error; S.avatars = (r.data || []).map(function (a) { return { id: a.id, name: a.name, url: a.thumbnail_url || a.file_url }; }); return S.avatars; });
+    return rpc("dating_avatar_options").then(function (rows) { S.avatars = (rows || []).map(function (a) { return { id: a.id, name: a.name, url: a.avatar_url }; }); return S.avatars; });
   }
   function myAvatarUrl() { var a = (S.avatars || []).filter(function (x) { return S.profile && x.id === S.profile.avatar_id; })[0]; return a ? a.url : ""; }
   function isActive() { return !!(S.part && S.part.status === "aktif"); }

@@ -32,7 +32,7 @@ check("semua peserta: consent + profil + join berhasil", users.every((u) => !u.e
   const dis = await rpc(a.c, "dating_discover", { p_inv: inv.data.id, p_filter: {}, p_limit: 20, p_offset: 0 });
   const keys = new Set((dis.data || []).flatMap((r) => Object.keys(r)));
   check("discover: tidak memuat data sensitif, tidak menyertakan diri sendiri", !dis.err && dis.data.length === N - 1 && !["birth_date", "user_id", "email", "whatsapp"].some((k) => keys.has(k)) && dis.data.every((r) => r.profile_id !== a.profile), dis.err + [...keys].join(","));
-  const anon = (await import("./lib.mjs")).mk(); const ar = await rpc(anon, "dating_discover", { p_inv: inv.data.id }); check("anon tidak bisa discover", !!ar.err, ar.err); }
+  const anon = (await import("./lib.mjs")).mk(); const ar = await rpc(anon, "dating_discover", { p_inv: inv.data.id }); check("anon tidak bisa discover", !!ar.err, ar.err); const av0 = await rpc(anon, "dating_avatar_options"); check("anon tidak bisa memanggil dating_avatar_options", !!av0.err, av0.err); const av1 = await rpc(a.c, "dating_avatar_options"); check("pengguna masuk bisa memanggil dating_avatar_options (tanpa membaca tabel assets langsung)", !av1.err, av1.err); }
 
 // ---- BALAPAN: like saling-silang paralel tidak boleh menghasilkan 0 atau >1 match
 { const pairs = []; for (let i = 0; i + 1 < N; i += 2) pairs.push([users[i], users[i + 1]]);

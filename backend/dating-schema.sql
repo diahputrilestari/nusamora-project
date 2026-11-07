@@ -556,6 +556,15 @@ begin
   return jsonb_build_object('ok', true);
 end $$;
 
+----------------------------------------------------------------------------- 9b. Pilihan avatar (tabel assets hanya dapat dibaca admin; klien memakai RPC ini)
+create or replace function public.dating_avatar_options() returns table (id uuid, name text, avatar_url text)
+language plpgsql stable security definer set search_path = public as $$
+begin
+  perform public._dating_uid();
+  return query select a.id, a.name, coalesce(a.thumbnail_url, a.file_url) from public.assets a join public.asset_categories c on c.id = a.category_id
+    where c.slug = 'guest-avatar' and a.status = 'active' and a.deleted_at is null order by a.created_at limit 60;
+end $$;
+
 ----------------------------------------------------------------------------- 10. Hak eksekusi (default PUBLIC dicabut; hanya pengguna masuk, kecuali statistik landing)
 do $$ declare f text; begin
   foreach f in array array[
@@ -563,7 +572,7 @@ do $$ declare f text; begin
     'dating_owner_set_event(uuid,boolean,int,int)','dating_join(uuid)','dating_set_status(uuid,text)','dating_delete_my_profile()',
     'dating_discover(uuid,jsonb,int,int)','dating_like(uuid,uuid)','dating_pass(uuid,uuid)','dating_my_matches()','dating_send_message(uuid,text)','dating_mark_read(uuid)',
     'dating_unmatch(uuid)','dating_block(uuid)','dating_unblock(uuid)','dating_report(uuid,uuid,text,text,boolean)',
-    'dating_admin_reports(text,int)','dating_admin_resolve_report(uuid,text,text)','dating_admin_set_event(uuid,boolean)','dating_stats(uuid)'] loop
+    'dating_admin_reports(text,int)','dating_admin_resolve_report(uuid,text,text)','dating_admin_set_event(uuid,boolean)','dating_stats(uuid)','dating_avatar_options()'] loop
     execute format('revoke all on function public.%s from public, anon, authenticated', f);
     execute format('grant execute on function public.%s to authenticated', f);
   end loop;
