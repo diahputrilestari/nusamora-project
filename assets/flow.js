@@ -261,7 +261,7 @@
     var f = function (a, def) { var i = ids(a); return i.length ? i[0] : def; };
     if (pkg === "essential") return { design2d: { palette: f(caps.palettes, "lavender"), font: f(caps.fonts, "romantic"), accent: "" }, texts: { opening: "", quote: "", closing: "" }, sections: { gallery: true, map: true } };
     if (pkg === "signature") return { scene: { preset: f(caps.scenes, ""), objects: ids(caps.objects).slice(0, 2) }, camera: { path: f(caps.camera, "orbit"), speed: 5 }, anim: { intro: f(caps.intro, "fade"), particles: f(caps.particles, "none"), intensity: 5 }, cinematic: { title: "", subtitle: "", letterbox: true, grade: f(caps.grades, "warm") } };
-    if (pkg === "luxe") { var ar = {}; ids(caps.areas).forEach(function (a) { ar[a] = true; }); return { scene: { preset: f(caps.scenes, "") }, venue: { areas: ar, decorations: ids(caps.decorations).slice(0, 2) }, live: { avatars: ids(caps.avatars), allowSelect: true, greeting: "" } }; }
+    if (pkg === "luxe") { var ar = {}; ids(caps.areas).forEach(function (a) { ar[a] = true; }); return { scene: { preset: f(caps.scenes, "") }, venue: { areas: ar, decorations: ids(caps.decorations).slice(0, 2) }, live: { avatars: ids(caps.avatars), allowSelect: true, greeting: "", avatarLimit: 0, rsvpMax: 2 }, features: { livechat: true, photobooth: true, gallery: true, video: false, games: false } }; }
     return {};
   }
   function fullContent(pkg, caps, saved) { return merge(merge(DEF, pkgDefaults(pkg, caps || {})), saved || {}); }
@@ -291,17 +291,20 @@
     var caps = (tpl && tpl.caps) || {}, cat = CATN[inv.category] ? inv.category : "other", lab = LAB[cat], C0 = fullContent(pkg, caps, inv.content), date = inv.event_date || "";
     var locked = !(inv.status === "draft" || inv.status === "aktif") || inv.moderation === "takedown", pend = inv.status === "menunggu_pembayaran";
     var plan = plans.filter(function (p) { return p.id === pkg; })[0], GMAX = plan ? plan.gallery_limit : PK[pkg].gal;
-    var dirty = false, busy = false, timer = null, retry = 0, state = "ok";
+    var dirty = false, busy = false, timer = null, retry = 0, state = "ok", restored = false, BK = "nm:draft:" + inv.id, couple = cat === "wedding" || cat === "engagement";
+    try { var bk = JSON.parse(localStorage.getItem(BK) || "null"); if (bk && bk.c && !locked && bk.t > Date.parse(inv.updated_at || 0)) { C0 = fullContent(pkg, caps, bk.c); date = bk.d || ""; restored = true; } } catch (e) {}
+    function bkSave() { try { localStorage.setItem(BK, JSON.stringify({ t: Date.now(), c: content(), d: date })); } catch (e) {} }
+    function bkClear() { try { localStorage.removeItem(BK); } catch (e) {} }
     function dis() { return locked ? " disabled" : ""; }
-    function T(label, p, o) { o = o || {}; var v = p === "date" ? date : (get(C0, p) || ""); return '<div class="f' + (o.full ? " full" : "") + '"><label for="e-' + p + '">' + esc(label) + '</label><' + (o.ta ? "textarea" : 'input type="' + (o.type || "text") + '"') + ' id="e-' + p + '" data-p="' + p + '"' + (o.max ? ' maxlength="' + o.max + '"' : "") + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : "") + dis() + (o.ta ? ">" + esc(v) + "</textarea>" : ' value="' + esc(v) + '">') + (o.help ? "<small>" + esc(o.help) + "</small>" : "") + "</div>"; }
+    function T(label, p, o) { o = o || {}; var v = p === "date" ? date : (get(C0, p) || ""); return '<div class="f' + (o.full ? " full" : "") + '"><label for="e-' + p + '">' + esc(label) + '</label><' + (o.ta ? "textarea" : 'input type="' + (o.type || "text") + '"') + ' id="e-' + p + '" data-p="' + p + '"' + (o.max ? ' maxlength="' + o.max + '"' : "") + (o.inputmode ? ' inputmode="' + o.inputmode + '"' : "") + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : "") + dis() + (o.ta ? ">" + esc(v) + "</textarea>" : ' value="' + esc(v) + '">') + (o.help ? "<small>" + esc(o.help) + "</small>" : "") + "</div>"; }
     function SW(p, t, s) { return '<label class="sw"><input type="checkbox" data-p="' + p + '"' + (get(C0, p) ? " checked" : "") + dis() + "><div><b>" + esc(t) + "</b><span>" + esc(s) + "</span></div></label>"; }
     function SEG(label, p, os, o) { o = o || {}; if (!os.length) return ""; return '<div class="f full"><label>' + esc(label) + '</label><div class="seg' + (o.sw ? " swt" : "") + '" role="radiogroup" aria-label="' + esc(label) + '">' + os.map(function (x) { return '<label class="sgi"><input type="radio" name="r-' + p + '" data-p="' + p + '" value="' + esc(x[0]) + '"' + (get(C0, p) === x[0] ? " checked" : "") + dis() + ">" + (o.sw && PCOL[x[0]] ? '<i style="background:' + PCOL[x[0]][0] + '"></i>' : "") + "<span>" + esc(x[1]) + "</span></label>"; }).join("") + "</div>" + (o.help ? "<small>" + esc(o.help) + "</small>" : "") + "</div>"; }
     function CH(label, p, os, help) { if (!os.length) return ""; var cur = get(C0, p) || []; return '<div class="f full"><label>' + esc(label) + '</label><div class="seg chs">' + os.map(function (x) { return '<label class="sgi"><input type="checkbox" data-p="' + p + '" data-v="' + esc(x[0]) + '"' + (cur.indexOf(x[0]) > -1 ? " checked" : "") + dis() + "><span>" + esc(x[1]) + "</span></label>"; }).join("") + "</div>" + (help ? "<small>" + esc(help) + "</small>" : "") + "</div>"; }
     function RNG(label, p, min, max, help) { var v = get(C0, p); return '<div class="f full"><label for="e-' + p + '">' + esc(label) + ' <output id="o-' + p + '">' + esc(v) + '</output></label><input type="range" id="e-' + p + '" data-p="' + p + '" min="' + min + '" max="' + max + '" value="' + esc(v) + '"' + dis() + (help ? "><small>" + esc(help) + "</small>" : ">") + "</div>"; }
-    function sec(id, title, sub, body) { return '<section class="card sec" id="s-' + id + '"><h2>' + esc(title) + "</h2>" + (sub ? '<p class="sub">' + esc(sub) + "</p>" : "") + body + "</section>"; }
+    function sec(id, title, sub, body) { return '<section class="card sec acc" id="s-' + id + '" data-s="' + id + '"><h2><button type="button" class="ach" aria-expanded="false" aria-controls="b-' + id + '" data-ac="' + id + '"><span class="asi" aria-hidden="true"></span><span class="att">' + esc(title) + '</span><small class="ast"></small><span class="chev" aria-hidden="true"></span></button></h2><div class="acb" id="b-' + id + '" hidden>' + (sub ? '<p class="sub">' + esc(sub) + "</p>" : "") + body + "</div></section>"; }
     var secs = [], S = function (id, title, sub, body) { secs.push([id, title]); return sec(id, title, sub, body); };
     var html = "";
-    html += S("info", "Informasi Acara", "Nama yang akan tampil di undangan.", '<div class="g2f">' + T(lab[0], "names.a", { max: 80 }) + (lab[1] ? T(lab[1], "names.b", { max: 80 }) : "") + T("Kata sambutan", "welcome", { ta: 1, full: 1, max: 1000, ph: "Tulis sapaan hangat untuk tamu Anda..." }) + "</div>");
+    html += S("info", "Informasi Acara", "Nama acara dan sapaan yang tampil di undangan.", '<div class="g2f">' + T(lab[0], "names.a", { max: 80 }) + (lab[1] ? T(lab[1], "names.b", { max: 80 }) : "") + T("Kata sambutan", "welcome", { ta: 1, full: 1, max: 1000, ph: "Tulis sapaan hangat untuk tamu Anda..." }) + "</div>");
     function avSide(side, label) {
       var list = (avOpts || []).filter(function (o) { return o.side === side; }), cur = (C0.avatars || {})[side] || "";
       return '<div class="f full"><label>' + esc(label) + '</label>' + (list.length ? '<div class="avg" role="radiogroup" aria-label="' + esc(label) + '">' + list.map(function (o) {
@@ -309,47 +312,58 @@
       }).join("") + "</div>" : '<p class="avn">Belum ada pilihan ' + esc(label.toLowerCase()) + " untuk tema ini.</p>") + "</div>";
     }
     var avSub = avOpts === null ? "Pilihan avatar tidak dapat dimuat sekarang. Muat ulang halaman." : "Pilih karakter yang mewakili mempelai. Pilihan mengikuti tema " + (inv.theme_key ? "yang Anda pilih" : "template ini") + ".";
-    html += S("mempelai", "Avatar Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
-    html += S("waktu", "Waktu & Tempat", "", '<div class="g2f">' + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>");
-    html += S("foto", "Foto", "PNG, JPG, atau WebP. Foto dikecilkan otomatis agar undangan cepat dibuka.", '<div class="f"><label>Foto sampul</label><div class="cover" id="cv">' + (C0.photos.cover ? '<img src="' + esc(C0.photos.cover) + '" alt="Foto sampul">' : "Belum ada foto sampul") + "</div>" + (locked ? "" : '<label class="drop"><b>Pilih foto sampul</b><span>atau seret ke sini</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-c"></label>') + '<span class="err" id="er-c"></span></div><div class="f"><label>Galeri foto <small>(maks. ' + GMAX + ' foto untuk paket ' + PK[pkg].name + ')</small></label><div class="ph" id="gl"></div>' + (locked ? "" : '<label class="drop"><b>Tambah foto galeri</b><span>Bisa pilih beberapa sekaligus</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-g" multiple></label>') + '<span class="err" id="er-g"></span></div>');
-    var comp = SW("features.countdown", "Hitung mundur", "Menampilkan sisa waktu menuju acara.") + SW("features.rsvp", "RSVP", "Tamu mengonfirmasi kehadiran dari link pribadinya.") + SW("features.guestbook", "Buku ucapan", "Ucapan dan doa dari tamu terundang.") + SW("features.gift", "Hadiah digital", "Tampilkan rekening untuk hadiah.") + '<div class="g2f" id="giftf"' + (C0.features.gift ? "" : " hidden") + ">" + T("Nama bank / e-wallet", "gift.bank", { max: 40 }) + T("Nomor rekening", "gift.number", { max: 40 }) + T("Atas nama", "gift.holder", { full: 1, max: 80 }) + "</div>";
+    html += S("mempelai", "Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
+    html += S("waktu", "Waktu & Lokasi", "", '<div class="g2f">' + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>");
+    html += S("foto", "Galeri", "Foto sampul dan galeri. Format PNG, JPG, atau WebP, maks. 15 MB per foto; dikecilkan otomatis (sisi terpanjang 1600 px, hasil maks. 3 MB).", '<div class="f"><label>Foto sampul</label><div class="cover" id="cv">' + (C0.photos.cover ? '<img src="' + esc(C0.photos.cover) + '" alt="Foto sampul">' : "Belum ada foto sampul") + "</div>" + (locked ? "" : '<label class="drop"><b>Pilih foto sampul</b><span>atau seret ke sini</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-c"></label>') + '<span class="err" id="er-c"></span></div><div class="f"><label>Galeri foto <small>(maks. ' + GMAX + ' foto untuk paket ' + PK[pkg].name + ')</small></label><div class="ph" id="gl"></div>' + (locked ? "" : '<label class="drop"><b>Tambah foto galeri</b><span>Bisa pilih beberapa sekaligus</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-g" multiple></label>') + '<span class="err" id="er-g"></span></div>');
+    function giftBlock() { return SW("features.gift", "Hadiah digital", "Tampilkan rekening untuk hadiah.") + '<div class="g2f" id="giftf"' + (C0.features.gift ? "" : " hidden") + ">" + T("Nama bank / e-wallet", "gift.bank", { max: 40 }) + T("Nomor rekening", "gift.number", { max: 40, inputmode: "numeric" }) + T("Atas nama", "gift.holder", { full: 1, max: 80 }) + "</div>"; }
+    function rsvpSel() { var v = Number(get(C0, "live.rsvpMax")) || 2, o = ""; for (var i = 1; i <= 10; i++) o += '<option value="' + i + '"' + (i === v ? " selected" : "") + ">" + i + " orang</option>"; return '<div class="f full"><label for="e-live.rsvpMax">Maksimal jumlah tamu per undangan</label><select id="e-live.rsvpMax" data-p="live.rsvpMax" data-num="1"' + dis() + ">" + o + "</select></div>"; }
+    function limitSel() { var n = ids(caps.avatars).length, v = Number(get(C0, "live.avatarLimit")) || 0, o = '<option value="0"' + (v === 0 ? " selected" : "") + ">Tampilkan semua yang dipilih</option>"; for (var i = 1; i < n; i++) o += '<option value="' + i + '"' + (i === v ? " selected" : "") + ">Maksimal " + i + " pilihan</option>"; return '<div class="f full"><label for="e-live.avatarLimit">Jumlah pilihan avatar yang ditawarkan ke tamu</label><select id="e-live.avatarLimit" data-p="live.avatarLimit" data-num="1"' + dis() + ">" + o + "</select></div>"; }
+    function guestAv(caps) {
+      var list = opts(caps.avatars), cur = get(C0, "live.avatars") || [], by = {}; (avOpts || []).forEach(function (o) { by[o.slot] = o; });
+      function card(x) { var o = by[x[0]]; return '<label class="avc"><input type="checkbox" data-p="live.avatars" data-v="' + esc(x[0]) + '"' + (cur.indexOf(x[0]) > -1 ? " checked" : "") + dis() + ">" + (o ? avThumb(o) : '<span class="av3d" aria-hidden="true">3D</span>') + "<span>" + esc(x[1]) + "</span></label>"; }
+      var g = { groom: [], bride: [], other: [] }; list.forEach(function (x) { var o = by[x[0]]; g[o && g[o.side] ? o.side : "other"].push(x); });
+      function grp(t, a) { return a.length ? '<div class="f full"><label>' + t + '</label><div class="avg" role="group" aria-label="' + t + '">' + a.map(card).join("") + "</div></div>" : ""; }
+      if (!list.length) return '<p class="avn">Belum ada pilihan avatar untuk template ini.</p>';
+      return '<div class="avsel"><div class="avl">' + (g.groom.length || g.bride.length ? grp("Avatar pria", g.groom) + grp("Avatar wanita", g.bride) + grp("Avatar lainnya", g.other) : grp("Pilihan avatar untuk tamu", g.other)) + '<p class="avcnt" id="avcnt"></p></div><div class="avpv" id="avpv" aria-live="polite"><small>Pratinjau avatar</small><div class="avpi" id="avpi">Arahkan atau pilih avatar untuk melihat pratinjau.</div></div></div>';
+    }
+    var comp = SW("features.countdown", "Hitung mundur", "Menampilkan sisa waktu menuju acara.") + SW("features.rsvp", "RSVP", "Tamu mengonfirmasi kehadiran dari link pribadinya.") + SW("features.guestbook", "Buku ucapan", "Ucapan dan doa dari tamu terundang.") + giftBlock();
     var music = SW("music.enabled", "Putar musik latar", "Tamu dapat mematikannya kapan saja.") + '<div class="f"><label for="e-music.track">Pilihan lagu</label><select id="e-music.track" data-p="music.track"' + dis() + '><option value="we-are">We Are - Moavii (bawaan)</option></select></div>';
     if (pkg === "essential") {
       html += S("design", "Warna & Tipografi", "Tampilan undangan 2D Anda.", '<div class="g2f">' + SEG("Palet warna", "design2d.palette", opts(caps.palettes).map(function (x) { return [x[0], (PCOL[x[0]] || [0, 0, x[1]])[2]]; }), { sw: 1 }) + SEG("Gaya huruf", "design2d.font", opts(caps.fonts).map(function (x) { return [x[0], (FONTS[x[0]] || [0, x[1]])[1]]; })) + '<div class="f"><label for="e-design2d.accent">Warna aksen khusus <small>(opsional)</small></label><div class="colr"><input type="color" id="e-design2d.accent" data-p="design2d.accent" value="' + esc(/^#[0-9a-f]{6}$/i.test(C0.design2d.accent) ? C0.design2d.accent : (PCOL[C0.design2d.palette] || PCOL.lavender)[0]) + '"' + dis() + '><button type="button" class="btn o sm" id="acc-x"' + dis() + ">Pakai warna palet</button></div></div></div>");
       html += S("teks", "Teks Undangan", "Kalimat pembuka, kutipan, dan penutup.", '<div class="g2f">' + T("Kalimat pembuka", "texts.opening", { full: 1, max: 200, ph: "Dengan penuh syukur, kami mengundang Anda..." }) + T("Kutipan / ayat", "texts.quote", { ta: 1, full: 1, max: 500 }) + T("Kalimat penutup", "texts.closing", { ta: 1, full: 1, max: 300, ph: "Terima kasih atas doa dan kehadiran Anda." }) + "</div>");
       html += S("musik", "Musik", "Musik latar yang diputar saat tamu membuka undangan.", music);
-      html += S("fitur", "Komponen Undangan", "", comp + SW("sections.gallery", "Bagian galeri", "Tampilkan galeri foto di undangan.") + SW("sections.map", "Bagian lokasi & peta", "Tampilkan kartu lokasi dengan tombol peta."));
+      html += S("fitur", "Interaksi", "", comp + SW("sections.gallery", "Bagian galeri", "Tampilkan galeri foto di undangan.") + SW("sections.map", "Bagian lokasi & peta", "Tampilkan kartu lokasi dengan tombol peta."));
     } else if (pkg === "signature") {
       html += S("scene", "Scene & Background", "Latar dan objek 3D yang tersedia di template ini.", '<div class="g2f">' + SEG("Scene", "scene.preset", opts(caps.scenes)) + CH("Objek 3D", "scene.objects", opts(caps.objects), "Objek yang ditampilkan di dalam scene.") + "</div>");
       html += S("kamera", "Kamera", "Gerakan kamera saat film pembuka diputar.", '<div class="g2f">' + SEG("Gerakan kamera", "camera.path", opts(caps.camera).map(function (x) { return [x[0], CAMN[x[0]] || x[1]]; })) + RNG("Kecepatan kamera", "camera.speed", 1, 10, "1 = sangat pelan, 10 = cepat.") + "</div>");
       html += S("animasi", "Animasi & Efek", "Pembukaan dan partikel yang menghidupkan scene.", '<div class="g2f">' + SEG("Animasi pembuka", "anim.intro", opts(caps.intro).map(function (x) { return [x[0], INTN[x[0]] || x[1]]; })) + SEG("Efek partikel", "anim.particles", opts(caps.particles).map(function (x) { return [x[0], PARN[x[0]] || x[1]]; })) + RNG("Intensitas efek", "anim.intensity", 1, 10) + "</div>");
       html += S("sinema", "Teks & Elemen Sinematik", "Judul film pembuka dan tampilan layar lebar.", '<div class="g2f">' + T("Judul sinematik", "cinematic.title", { full: 1, max: 80, ph: "Kosongkan untuk memakai nama acara" }) + T("Subjudul", "cinematic.subtitle", { full: 1, max: 120, ph: "Mis. Sebuah kisah yang dimulai di taman" }) + SEG("Warna sinematik (color grade)", "cinematic.grade", opts(caps.grades).map(function (x) { return [x[0], GRN[x[0]] || x[1]]; })) + '<div class="f full">' + SW("cinematic.letterbox", "Layar lebar (letterbox)", "Bilah hitam atas dan bawah ala film.") + "</div></div>");
       html += S("musik", "Musik Sinematik", "Musik yang mengiringi film pembuka.", music);
-      html += S("fitur", "Komponen Undangan", "", comp);
+      html += S("fitur", "Interaksi", "", comp);
     } else {
       html += S("venue", "Virtual Venue", "Tampilan venue 3D dan area yang dapat dikunjungi tamu.", '<div class="g2f">' + SEG("Scene venue", "scene.preset", opts(caps.scenes)) + '<div class="f full"><label>Area venue</label>' + ids(caps.areas).map(function (a) { var nm = opts(caps.areas).filter(function (x) { return x[0] === a; })[0][1]; return SW("venue.areas." + a, nm, { resepsi: "Area utama tempat tamu berkumpul dan menyapa.", kuliner: "Area makanan dan minuman virtual.", photobooth: "Tamu berfoto bersama avatar mereka.", galeri: "Foto-foto Anda ditampilkan di venue." }[a] || "Area yang dapat dikunjungi tamu."); }).join("") + "</div>" + CH("Dekorasi", "venue.decorations", opts(caps.decorations), "Dekorasi yang dipasang di venue.") + "</div>");
-      html += S("avatar", "Avatar & Karakter", "Karakter yang dapat dipakai tamu di venue.", '<div class="g2f">' + CH("Pilihan avatar untuk tamu", "live.avatars", opts(caps.avatars)) + '<div class="f full">' + SW("live.allowSelect", "Tamu boleh memilih karakter", "Jika dimatikan, tamu memakai avatar pertama yang Anda aktifkan.") + "</div>" + T("Sapaan avatar mempelai", "live.greeting", { full: 1, max: 160, ph: "Selamat datang di hari bahagia kami!" }) + "</div>");
-      html += S("interaktif", "Fitur Interaktif Live Guest", "Cara tamu berinteraksi di venue.", comp);
+      html += S("avatar", "Avatar & Karakter", "Karakter yang dapat dipakai tamu di venue. Avatar pengantin diatur di bagian Mempelai.", guestAv(caps) + '<div class="g2f"><div class="f full">' + SW("live.allowSelect", "Tamu boleh memilih karakter", "Jika dimatikan, tamu memakai avatar pertama yang Anda aktifkan.") + "</div>" + limitSel() + T("Pesan sambutan", "live.greeting", { ta: 1, full: 1, max: 160, ph: "Selamat datang di hari bahagia kami!", help: "Disampaikan avatar mempelai saat tamu masuk venue (maks. 160 karakter)." }) + "</div>");
+      html += S("interaktif", "Interaksi", "Cara tamu berinteraksi di venue.", SW("features.countdown", "Hitung mundur", "Menampilkan sisa waktu menuju acara.") + SW("features.rsvp", "RSVP dan jumlah tamu", "Tamu mengonfirmasi kehadiran dan jumlah orang yang datang.") + '<div class="g2f" id="rsvpf"' + (C0.features.rsvp ? "" : " hidden") + ">" + rsvpSel() + "</div>" + SW("features.guestbook", "Buku ucapan", "Ucapan dan doa dari tamu terundang.") + SW("features.livechat", "Live chat", "Tamu mengobrol langsung di venue saat acara berlangsung.") + SW("features.photobooth", "Photo booth", "Tamu berfoto bersama avatarnya.") + SW("features.gallery", "Galeri foto", "Foto Anda ditampilkan di venue.") + SW("features.video", "Video ucapan", "Tamu dapat mengirim atau menonton video ucapan.") + SW("features.games", "Mini games", "Permainan singkat untuk tamu di venue.") + giftBlock());
       html += S("musik", "Musik", "Musik latar venue.", music);
     }
-    view.innerHTML = '<div class="fw">' + steps(4, pkg) + '<div class="hd"><h1 id="ttl">' + esc(inv.title) + "</h1><p>Isi dan sesuaikan undangan " + esc(PK[pkg].kind) + ' Anda. Perubahan tersimpan otomatis, jadi Anda bisa keluar dan melanjutkan kapan saja.</p></div>' + banner(inv, locked) +
-      '<div class="ed"><nav aria-label="Bagian editor">' + secs.map(function (s) { return '<a href="#s-' + s[0] + '">' + esc(s[1]) + "</a>"; }).join("") + '</nav><div class="edcol">' + html + "</div>" +
-      '<aside class="ped"><div class="card"><div class="save" id="sv" role="status" aria-live="polite"><i></i><span id="svt">Tersimpan</span></div><div class="f" style="margin-top:14px"><b style="font-size:14px">Kelengkapan <span id="pc">0</span>%</b><div class="bar2"><i id="pb" style="width:0"></i></div><ul class="chk" id="ck"></ul></div></div>' +
+    view.innerHTML = '<div class="fw">' + steps(4, pkg) + '<div class="hd"><h1 id="ttl">' + esc(inv.title) + "</h1><p>Isi dan sesuaikan undangan " + esc(PK[pkg].kind) + ' Anda. Perubahan tersimpan otomatis, jadi Anda bisa keluar dan melanjutkan kapan saja.</p></div>' + banner(inv, locked) + '<div class="vsum" id="vsum" role="alert" hidden></div>' +
+      '<div class="ed"><nav aria-label="Bagian editor">' + secs.map(function (s) { return '<a href="#s-' + s[0] + '" data-nv="' + s[0] + '"><span class="asi" aria-hidden="true"></span><span class="nt">' + esc(s[1]) + "</span><small></small></a>"; }).join("") + '</nav><div class="edcol">' + html + "</div>" +
+      '<button type="button" class="btn lpb" id="lp-o">Preview</button><aside class="ped"><div class="card lpc" id="lpc"><div class="lph"><b>Preview langsung</b><span class="lpm"><label><input type="radio" name="lpd" value="m" checked>HP</label><label><input type="radio" name="lpd" value="d">Desktop</label></span><button type="button" class="lpx" id="lp-x" aria-label="Tutup preview">&times;</button></div><div class="lpv" id="lpv"><div class="lpi" id="lpi"></div></div><small class="lpn" id="lpn"></small></div><div class="card"><div class="save" id="sv" role="status" aria-live="polite"><i></i><span id="svt">Tersimpan</span></div><div class="f" style="margin-top:14px"><b style="font-size:14px">Kelengkapan <span id="pc">0</span>%</b><div class="bar2"><i id="pb" style="width:0"></i></div><ul class="chk" id="ck"></ul></div></div>' +
       '<div class="card"><div class="f" style="margin-top:0"><small>Paket &amp; template</small><b>' + PK[pkg].name + " &middot; " + esc(tpl ? tpl.name : inv.template_id) + '</b><small>Link undangan</small><b style="word-break:break-all">nusamora.com/' + esc(inv.slug || "") + "</b><small>Kategori: " + esc(CATN[cat]) + " &middot; Status: " + esc(inv.status) + '</small></div><div class="acts" style="margin-top:14px;flex-direction:column"><button class="btn" type="button" id="pv-b"' + (inv.moderation === "takedown" ? " disabled" : "") + ">" + (pend ? "Lanjutkan pembayaran" : inv.status === "aktif" ? "Lihat preview" : "Lanjut ke Preview") + '</button><button class="btn o" type="button" id="sv-b"' + dis() + '>Simpan sekarang</button><a class="btn o" href="/akun#undangan">Simpan &amp; ke dashboard</a></div></div></aside></div></div>';
 
     function content() { return pickKeys(pkg, C0); }
     function title() { var a = (C0.names.a || "").trim(), b = (C0.names.b || "").trim(); return a && b && (cat === "wedding" || cat === "engagement") ? a + " & " + b : a || inv.title; }
     function setSv(s, t) { state = s; var el = $("#sv"); el.className = "save " + (s === "ok" ? "" : s); $("#svt").textContent = t; }
     function avChecks() { var o = avOpts || [], a = C0.avatars || {}, r = []; if (o.some(function (v) { return v.side === "groom"; })) r.push(["Avatar mempelai pria", !!a.groom]); if (o.some(function (v) { return v.side === "bride"; })) r.push(["Avatar mempelai wanita", !!a.bride]); return r; }
-    function progress() { var ck = baseChecks(C0, date).concat(extraChecks(pkg, C0)).concat(avChecks()), n = ck.filter(function (x) { return x[1]; }).length, p = Math.round(n / ck.length * 100); $("#pc").textContent = p; $("#pb").style.width = p + "%"; $("#ck").innerHTML = ck.map(function (x) { return '<li class="' + (x[1] ? "y" : "") + '">' + esc(x[0]) + "</li>"; }).join(""); }
+    function progress() { paintSecs(); avCount(); lp(); var ck = baseChecks(C0, date).concat(extraChecks(pkg, C0)).concat(avChecks()), n = ck.filter(function (x) { return x[1]; }).length, p = Math.round(n / ck.length * 100); $("#pc").textContent = p; $("#pb").style.width = p + "%"; $("#ck").innerHTML = ck.map(function (x) { return '<li class="' + (x[1] ? "y" : "") + '">' + esc(x[0]) + "</li>"; }).join(""); }
     function gallery() { $("#gl").innerHTML = C0.photos.gallery.map(function (u, i) { return '<div class="it"><img src="' + esc(u) + '" alt="Foto galeri ' + (i + 1) + '" loading="lazy">' + (locked ? "" : '<button type="button" data-rm="' + i + '" aria-label="Hapus foto ' + (i + 1) + '">&times;</button>') + "</div>"; }).join(""); progress(); }
-    function save(now) { if (locked) return; clearTimeout(timer); dirty = true; setSv("dirty", "Perubahan belum disimpan..."); timer = setTimeout(run, now ? 0 : 1200); }
+    function save(now) { if (locked) return; bkSave(); lp(); clearTimeout(timer); dirty = true; setSv("dirty", "Perubahan belum disimpan..."); timer = setTimeout(run, now ? 0 : 1200); }
     function run() {
       if (busy) { timer = setTimeout(run, 400); return; } if (!dirty) return; busy = true; dirty = false; setSv("busy", "Menyimpan...");
       sb.rpc("save_invitation", { p_id: inv.id, p_title: title(), p_event_date: date || null, p_content: content() }).then(function (r) {
         busy = false;
         if (r.error) { dirty = true; if (r.error.message && ERR[r.error.message]) { setSv("err", errText(r.error)); return; } retry++; setSv("err", "Gagal menyimpan. " + (retry < 4 ? "Mencoba lagi..." : "Periksa koneksi lalu tekan Simpan sekarang.")); if (retry < 4) timer = setTimeout(run, 2500 * retry); return; }
-        retry = 0; $("#ttl").textContent = title(); var t = new Date(); setSv(dirty ? "dirty" : "ok", dirty ? "Perubahan belum disimpan..." : "Tersimpan " + t.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })); if (dirty) save(false);
+        retry = 0; if (!dirty) bkClear(); $("#ttl").textContent = title(); var t = new Date(); setSv(dirty ? "dirty" : "ok", dirty ? "Perubahan belum disimpan..." : "Tersimpan " + t.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })); if (dirty) save(false);
       }, function () { busy = false; dirty = true; retry++; setSv("err", "Gagal menyimpan. Mencoba lagi..."); if (retry < 4) timer = setTimeout(run, 2500 * retry); });
     }
     function apply(p, v) { if (p === "date") date = v; else set(C0, p, v); progress(); save(false); }
@@ -361,9 +375,9 @@
     view.addEventListener("change", function (e) {
       var el = e.target.closest("[data-p]"); if (!el) return; var p = el.dataset.p;
       if (el.type === "checkbox" && el.dataset.v !== undefined) { var a = (get(C0, p) || []).slice(), i = a.indexOf(el.dataset.v); if (el.checked && i < 0) a.push(el.dataset.v); if (!el.checked && i > -1) a.splice(i, 1); apply(p, a); }
-      else if (el.type === "checkbox") { set(C0, p, el.checked); if (p === "features.gift") $("#giftf").hidden = !el.checked; progress(); save(false); }
+      else if (el.type === "checkbox") { set(C0, p, el.checked); if (p === "features.gift") $("#giftf").hidden = !el.checked; if (p === "features.rsvp") { var rf = $("#rsvpf"); if (rf) rf.hidden = !el.checked; } progress(); save(false); }
       else if (el.type === "radio") { if (el.checked) apply(p, el.value); }
-      else if (el.tagName === "SELECT") apply(p, el.value);
+      else if (el.tagName === "SELECT") apply(p, el.dataset.num ? Number(el.value) : el.value);
     });
     var ax = $("#acc-x"); if (ax) ax.addEventListener("click", function () { C0.design2d.accent = ""; var c = $("#e-design2d\\.accent"); if (c) c.value = (PCOL[C0.design2d.palette] || PCOL.lavender)[0]; save(false); });
     $("#sv-b").addEventListener("click", function () { retry = 0; save(true); });
@@ -381,12 +395,95 @@
       var fs = Array.prototype.slice.call(ug.files), room = GMAX - C0.photos.gallery.length, er = $("#er-g"); er.textContent = ""; if (!fs.length) return; if (room <= 0) { er.textContent = "Galeri sudah penuh (" + GMAX + " foto)."; ug.value = ""; return; } if (fs.length > room) { er.textContent = "Hanya " + room + " foto pertama yang diunggah (batas galeri)."; fs = fs.slice(0, room); }
       er.textContent += (er.textContent ? " " : "") + "Mengunggah..."; Promise.all(fs.map(function (f) { return upload(f).then(function (u) { return { u: u }; }, function (m) { return { e: m }; }); })).then(function (rs) { var bad = rs.filter(function (x) { return x.e; }); rs.forEach(function (x) { if (x.u) C0.photos.gallery.push(x.u); }); er.textContent = bad.length ? (typeof bad[0].e === "string" ? bad[0].e : "Sebagian foto gagal diunggah.") : ""; gallery(); save(true); }); ug.value = "";
     };
-    $("#gl").addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (!b) return; var i = Number(b.dataset.rm), u = C0.photos.gallery[i]; C0.photos.gallery.splice(i, 1); gallery(); save(true); var p = u && u.split("/invitation-media/")[1]; if (p) sb.storage.from("invitation-media").remove([p]); });
+    $("#gl").addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (!b) return; var i = Number(b.dataset.rm), u = C0.photos.gallery[i]; C0.photos.gallery.splice(i, 1); gallery(); progress(); save(true); var p = u && u.split("/invitation-media/")[1]; if (p) sb.storage.from("invitation-media").remove([p]); });
     function flush() { clearTimeout(timer); if (dirty && !busy) { run(); } return new Promise(function (res) { (function w(n) { if (!dirty && !busy) return res(); if (n > 40 || state === "err") return res(); setTimeout(function () { w(n + 1); }, 150); })(0); }); }
-    $("#pv-b").addEventListener("click", function () { if (pend) { goPayNow(inv); return; } this.disabled = true; this.textContent = "Menyimpan..."; flush().then(function () { location.href = "/preview?id=" + encodeURIComponent(inv.id); }); });
+    $("#pv-b").addEventListener("click", function () { if (pend) { goPayNow(inv); return; } if (!locked && showVal()) return; goPv(this); });
+    function goPv(btn) { btn.disabled = true; btn.textContent = "Menyimpan..."; flush().then(function () { location.href = "/preview?id=" + encodeURIComponent(inv.id); }); }
     var cb = $("#bn-cancel"); if (cb) cb.addEventListener("click", function () { cancelPay(inv, cb); });
     var cp = $("#bn-copy"); if (cp) cp.addEventListener("click", function () { copyText(cp.dataset.u, cp); });
-    var links = $$(".ed nav a"); function spy() { var cur = secs[0][0]; secs.forEach(function (s) { var el = d.getElementById("s-" + s[0]); if (el && el.getBoundingClientRect().top < 160) cur = s[0]; }); links.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#s-" + cur); }); } addEventListener("scroll", spy, { passive: true }); spy();
+    /* ---- accordion, kelengkapan per bagian, validasi, preview langsung ---- */
+    var secIds = secs.map(function (x) { return x[0]; }), by = {}; (avOpts || []).forEach(function (o) { by[o.slot] = o; });
+    var REQ = {
+      info: function () { var r = [["Nama acara", !!(C0.names.a || "").trim()]]; if (couple && lab[1]) r.push(["Nama pasangan", !!(C0.names.b || "").trim()]); return r; },
+      mempelai: avChecks,
+      waktu: function () { return [["Tanggal", !!date], ["Jam mulai", !!C0.event.start], ["Lokasi", !!(C0.event.venue || "").trim()]]; },
+      foto: function () { return [["Foto sampul", !!C0.photos.cover], ["Foto galeri", C0.photos.gallery.length > 0]]; },
+      design: function () { return [["Palet", !!get(C0, "design2d.palette")]]; },
+      scene: function () { return [["Scene", !!get(C0, "scene.preset")]]; },
+      kamera: function () { return [["Kamera", !!get(C0, "camera.path")]]; },
+      venue: function () { return [["Scene", !!get(C0, "scene.preset")], ["Area", Object.keys(get(C0, "venue.areas") || {}).some(function (k) { return C0.venue.areas[k]; })]]; },
+      avatar: function () { return [["Avatar tamu", (get(C0, "live.avatars") || []).length > 0]]; },
+      fitur: giftReq, interaktif: giftReq
+    };
+    function giftReq() { return C0.features.gift ? [["Bank", !!(C0.gift.bank || "").trim()], ["Nomor rekening", !!(C0.gift.number || "").trim()], ["Atas nama", !!(C0.gift.holder || "").trim()]] : []; }
+    function secStat(id) { var f = REQ[id], r = f ? f() : []; return r.length ? [r.filter(function (x) { return x[1]; }).length, r.length] : null; }
+    function paintSecs() {
+      secIds.forEach(function (k) {
+        var st = secStat(k), el = d.getElementById("s-" + k), n = $('.ed nav a[data-nv="' + k + '"]'), cls = !st ? "opt" : st[0] === st[1] ? "ok" : st[0] ? "part" : "todo", txt = !st ? "Opsional" : st[0] === st[1] ? "Lengkap" : st[0] + " dari " + st[1];
+        if (!el) return; el.dataset.st = cls; el.querySelector(".ast").textContent = txt; if (n) { n.dataset.st = cls; n.querySelector("small").textContent = txt; }
+      });
+    }
+    function setOpen(id) {
+      secIds.forEach(function (k) { var b = d.getElementById("b-" + k), h = $('[data-ac="' + k + '"]'), o = k === id; if (!b) return; b.hidden = !o; h.setAttribute("aria-expanded", o ? "true" : "false"); d.getElementById("s-" + k).classList.toggle("open", o); });
+      $$(".ed nav a").forEach(function (a) { a.classList.toggle("on", a.dataset.nv === id); });
+    }
+    function goSec(id) { setOpen(id); var el = d.getElementById("s-" + id); if (el) el.scrollIntoView({ block: "start", behavior: "smooth" }); }
+    view.addEventListener("click", function (e) {
+      var h = e.target.closest(".ach"); if (h) { setOpen(h.getAttribute("aria-expanded") === "true" ? "" : h.dataset.ac); return; }
+      var n = e.target.closest(".ed nav a"); if (n) { e.preventDefault(); goSec(n.dataset.nv); }
+    });
+    /* validasi bidang wajib */
+    function vList() {
+      var r = [], must = function (p, ok, m, sec) { if (!ok) r.push([p, m, sec]); };
+      must("names.a", !!(C0.names.a || "").trim(), lab[0] + " wajib diisi.", "info");
+      if (couple && lab[1]) must("names.b", !!(C0.names.b || "").trim(), lab[1] + " wajib diisi.", "info");
+      must("date", !!date, "Tanggal acara wajib diisi.", "waktu"); must("event.start", !!C0.event.start, "Jam mulai wajib diisi.", "waktu"); must("event.venue", !!(C0.event.venue || "").trim(), "Nama lokasi wajib diisi.", "waktu");
+      if (C0.event.maps && !/^https?:\/\//i.test(C0.event.maps)) r.push(["event.maps", "Tautan harus diawali https://", "waktu"]);
+      if (C0.event.end && C0.event.start && C0.event.end < C0.event.start) r.push(["event.end", "Jam selesai harus setelah jam mulai.", "waktu"]);
+      var gs = pkg === "luxe" ? "interaktif" : "fitur";
+      if (C0.features.gift) { must("gift.bank", !!(C0.gift.bank || "").trim(), "Nama bank / e-wallet wajib diisi.", gs); must("gift.number", /^[0-9][0-9 \-]{3,39}$/.test((C0.gift.number || "").trim()), "Nomor rekening wajib diisi (hanya angka, minimal 4 digit).", gs); must("gift.holder", !!(C0.gift.holder || "").trim(), "Atas nama wajib diisi.", gs); }
+      if (pkg === "luxe") must("live.avatars", (get(C0, "live.avatars") || []).length > 0, "Pilih minimal satu avatar untuk tamu.", "avatar");
+      return r;
+    }
+    function showMsg(p, m) {
+      if (p === "live.avatars") { var c = $("#avcnt"); if (c) { c.classList.toggle("bad", !!m); c.dataset.m = m || ""; avCount(); } return; }
+      var el = d.getElementById("e-" + p); if (!el) return; var f = el.closest(".f"), x = f.querySelector(".ferr"); el.setAttribute("aria-invalid", m ? "true" : "false");
+      if (m) { if (!x) { x = d.createElement("small"); x.className = "ferr"; x.id = "fe-" + p; x.setAttribute("role", "alert"); f.appendChild(x); } x.textContent = m; el.setAttribute("aria-describedby", x.id); } else if (x) { x.remove(); el.removeAttribute("aria-describedby"); }
+    }
+    function vField(p) { var l = vList().filter(function (x) { return x[0] === p; })[0]; showMsg(p, l ? l[1] : ""); }
+    function showVal() {
+      var l = vList(), box = $("#vsum"); l.forEach(function (x) { showMsg(x[0], x[1]); });
+      if (!l.length) { box.hidden = true; return false; }
+      box.hidden = false; box.innerHTML = "<b>Lengkapi " + l.length + " isian wajib sebelum melihat preview penuh:</b><ul>" + l.map(function (x) { return '<li><a href="#s-' + x[2] + '" data-vg="' + x[0] + '">' + esc(x[1]) + "</a></li>"; }).join("") + '</ul><button type="button" class="btn o" id="vgo">Tetap lihat preview</button>';
+      var first = l[0]; goSec(first[2]); setTimeout(function () { var f = d.getElementById("e-" + first[0]); if (f) f.focus({ preventScroll: true }); }, 50);
+      return true;
+    }
+    view.addEventListener("click", function (e) {
+      if (e.target.id === "vgo") { goPv($("#pv-b")); return; }
+      var a = e.target.closest("[data-vg]"); if (a) { e.preventDefault(); var l = vList().filter(function (x) { return x[0] === a.dataset.vg; })[0]; if (l) { goSec(l[2]); var f = d.getElementById("e-" + l[0]); if (f) f.focus({ preventScroll: true }); } }
+    });
+    view.addEventListener("focusout", function (e) { var el = e.target.closest && e.target.closest("[data-p]"); if (el && !locked && el.type !== "radio") vField(el.dataset.p); });
+    view.addEventListener("input", function (e) { var el = e.target.closest("[data-p]"); if (el && el.getAttribute("aria-invalid") === "true") vField(el.dataset.p); });
+    view.addEventListener("change", function (e) { var el = e.target.closest("[data-p]"); if (el && (el.dataset.p === "live.avatars" || el.dataset.p === "features.gift")) vField(el.dataset.p); if (el && el.dataset.p === "features.gift") ["gift.bank", "gift.number", "gift.holder"].forEach(function (q) { showMsg(q, ""); }); });
+    /* avatar tamu: jumlah dan pratinjau */
+    function avCount() { var c = $("#avcnt"); if (!c) return; var n = (get(C0, "live.avatars") || []).length, t = ids(caps.avatars).length; c.textContent = c.dataset.m || (n + " dari " + t + " avatar dipilih"); }
+    function avShow(v) { var o = by[v], i = $("#avpi"); if (!i) return; var nm = (opts(caps.avatars).filter(function (x) { return x[0] === v; })[0] || [v, v])[1]; i.innerHTML = (o ? avThumb(o) : '<span class="av3d" aria-hidden="true">3D</span>') + "<b>" + esc(nm) + "</b>" + (o ? "<span>" + (o.side === "bride" ? "Karakter wanita" : o.side === "groom" ? "Karakter pria" : "Karakter") + "</span>" : "<span>Pratinjau gambar belum tersedia untuk avatar ini.</span>"); }
+    var avl = $(".avsel"); if (avl) { ["mouseover", "focusin"].forEach(function (ev) { avl.addEventListener(ev, function (e) { var c = e.target.closest(".avc input,.avc"); if (!c) return; var inp = c.tagName === "INPUT" ? c : c.querySelector("input"); if (inp) avShow(inp.dataset.v); }); }); avl.addEventListener("change", function (e) { if (e.target.dataset.v) avShow(e.target.dataset.v); }); }
+    /* preview langsung */
+    var lpT, lpMode = "m";
+    function lpDraw() {
+      var h = $("#lpi"), box = $("#lpv"); if (!h || !box) return; var w = lpMode === "m" ? 390 : 900, top = box.scrollTop; h.style.width = w + "px"; h.className = "lpi" + (lpMode === "m" ? " mob" : "");
+      try { renderStage({ pkg: pkg, cat: cat, date: date, c: C0, tpl: tpl, caps: caps, inv: inv, av: { options: avOpts || [] } }, h); } catch (e) { h.textContent = "Preview tidak dapat ditampilkan."; }
+      var z = box.clientWidth / w; h.style.zoom = z > 0 && z < 1 ? z : 1; box.scrollTop = top;
+    }
+    function lp(now) { clearTimeout(lpT); lpT = setTimeout(lpDraw, now ? 0 : 250); }
+    $$("input[name=lpd]").forEach(function (r) { r.addEventListener("change", function () { lpMode = r.value; lpDraw(); }); });
+    $("#lp-o").addEventListener("click", function () { $("#lpc").classList.add("open"); lpDraw(); }); $("#lp-x").addEventListener("click", function () { $("#lpc").classList.remove("open"); });
+    $("#lpn").innerHTML = pkg === "luxe" ? "Preview venue memakai tampilan ringkas dari pengaturan Anda." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Preview ikut berubah saat Anda mengetik atau mengubah pilihan.";
+    addEventListener("resize", function () { lp(); });
+    progress(); lpDraw();
+    (function () { var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
+    if (restored) { save(true); toast("Perubahan terakhir yang belum tersimpan sudah dipulihkan dari perangkat ini."); }
     gallery(); setSv("ok", "Tersimpan");
     // draft baru belum punya nilai bawaan paket di database: simpan sekali agar validasi publikasi server melihatnya
     var sv0 = inv.content || {}; if (!locked && inv.status === "draft" && (PKEYS[pkg] || []).some(function (k) { return sv0[k] === undefined; })) save(true);
