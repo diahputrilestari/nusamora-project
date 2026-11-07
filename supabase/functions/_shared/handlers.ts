@@ -158,7 +158,9 @@ export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
   try {
     // jangan percaya isi notifikasi: ambil status resmi dari Midtrans, lalu terapkan
     const st = await midtransStatus(n.order_id, d);
-    if (st.notFound) return R(200, { result: "order_tidak_ditemukan" });
+    // order NusaMora (awalan NM) yang belum terbaca di API status = jeda sesaat setelah pembayaran: balas 503 agar Midtrans mengirim ulang.
+    // order lain (bukan milik kita) tetap dibalas 200 supaya tidak dikirim ulang terus.
+    if (st.notFound) return n.order_id.startsWith("NM") ? R(503, { error: "status_belum_tersedia" }) : R(200, { result: "order_tidak_ditemukan" });
     if (!st.ok || st.data.order_id !== n.order_id) return R(500, { error: "verifikasi_gagal" });      // 5xx: Midtrans akan mengirim ulang
     const r = await applyFromMidtrans(st.data, "webhook", d);
     if (r.error) return R(500, { error: "server" });

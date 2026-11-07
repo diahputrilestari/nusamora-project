@@ -38,4 +38,10 @@ ok("webhook palsu selalu 401", codes.every(c=>c===401));
 ok("kejadian dicatat paling banyak 5 (anti banjir log)", events.length===5&&events[0].p_kind==="webhook_bad_signature");
 ok("event tidak memuat signature/Server Key", !JSON.stringify(events).includes("palsu")&&!JSON.stringify(events).includes("SB-Mid"));
 ok("kunci limiter ter-hash (tanpa IP/ID mentah)", [...counters.keys()].every(k=>!k.includes("6.6.6.6")&&!k.includes("userA")));
+// 8. webhook valid tetapi API status Midtrans belum mengenali order: order NM -> 503 (dikirim ulang), order asing -> 200
+{ const sha=async t=>Array.from(new Uint8Array(await crypto.subtle.digest("SHA-512",new TextEncoder().encode(t)))).map(x=>x.toString(16).padStart(2,"0")).join("");
+  const wh=async oid=>{ const b={order_id:oid,status_code:"200",gross_amount:"79000.00",transaction_status:"capture"}; b.signature_key=await sha(oid+"200"+"79000.00"+"SB-Mid-server-TEST");
+    return handleWebhook(req("midtrans-webhook",b,{"cf-connecting-ip":"7.7.7.7"}),mkDeps({fetch:async()=>new Response(JSON.stringify({status_code:"404"}))})); };
+  const a=await wh("NM2611070454432778D8"); ok("webhook valid + status belum tersedia (order NM) -> 503 agar Midtrans kirim ulang", a.status===503);
+  const b=await wh("XYZ-ORDER-LAIN"); ok("order bukan milik NusaMora -> tetap 200", b.status===200); }
 console.log(fail?`GAGAL ${fail}`:`SEMUA LULUS (${pass})`); process.exit(fail?1:0);
