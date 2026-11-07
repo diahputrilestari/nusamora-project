@@ -15,7 +15,8 @@
     "tionghoa": "chinese-wedding",
     "pink-castle": "istana-pink",
     "dinosaurus": "dino-adventure",
-    "dino": "dino-adventure"
+    "dino": "dino-adventure",
+    "rock": "metal-rock"
   },
   "themes": [
     {
@@ -168,6 +169,20 @@
       "swatch": [
         "#3A6136",
         "#FFD15C"
+      ],
+      "art": true
+    },
+    {
+      "id": "metal-rock",
+      "name": "Metal Rock Party",
+      "description": "Pesta ulang tahun bergaya konser metal rock: panggung neon merah, gitar listrik, drum, ampli, tengkorak bersayap, mahkota krom, dan percikan petir.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#0D0609",
+        "#E3243A"
       ],
       "art": true
     }

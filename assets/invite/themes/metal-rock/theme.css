@@ -1,0 +1,19 @@
+/* Metal Rock: ukuran ilustrasi & sentuhan neon */
+.th-metal-rock .ulos-dec { width: min(170px, 50vw); }
+.th-metal-rock .st-kf { width: min(150px, 46vw); margin-top: -6px; }
+.th-metal-rock .gf-amp { width: min(190px, 56vw); }
+.th-metal-rock .ws-bk { width: min(210px, 60vw); }
+.th-metal-rock .ev-lt { width: 24px; filter: drop-shadow(0 0 8px rgba(255, 42, 68, .6)); }
+.th-metal-rock .cv-lt, .th-metal-rock .rs-lt { filter: drop-shadow(0 0 16px rgba(255, 120, 60, .55)); }
+.th-metal-rock .rs-lt { width: 32px; }
+.th-metal-rock .gable .art { height: 34px; filter: drop-shadow(0 0 8px rgba(255, 42, 68, .7)); }
+.th-metal-rock .end-art { width: min(300px, 80%); margin-bottom: 26px; }
+.th-metal-rock .end-art .eg { filter: drop-shadow(0 0 30px rgba(255, 42, 68, .45)); }
+.th-metal-rock .dv .orn { max-width: 220px; margin: 0 auto; }
+/* judul & nama: krom dengan pendar merah */
+.th-metal-rock .st, .th-metal-rock .cv-nm, .th-metal-rock .hero-nm, .th-metal-rock .end-nm, .th-metal-rock .side-nm { color: #F1F2F5; text-shadow: 0 0 18px rgba(255, 42, 68, .55), 0 2px 0 rgba(0, 0, 0, .5); }
+.th-metal-rock .eb { color: #FF4A5E; }
+.th-metal-rock .cu, .th-metal-rock .ev, .th-metal-rock .card, .th-metal-rock .tl-c, .th-metal-rock .wi { box-shadow: 0 0 0 1px rgba(255, 42, 68, .25), 0 14px 34px rgba(0, 0, 0, .5); }
+.th-metal-rock .btn-open { box-shadow: 0 0 24px rgba(255, 42, 68, .55), 0 10px 30px rgba(0, 0, 0, .4); }
+.th-metal-rock .fl input::placeholder, .th-metal-rock .fl textarea::placeholder { color: #8C7A84; }
+.th-metal-rock .gate::after { background: radial-gradient(46% 40% at 50% 46%, rgba(8, 2, 6, .82), rgba(8, 2, 6, .55) 55%, rgba(8, 2, 6, .2) 80%), linear-gradient(180deg, rgba(8, 2, 6, .15), rgba(8, 2, 6, .7)); }

@@ -27,6 +27,7 @@ Tema langsung muncul di galeri `/template` dan di pilihan **Tema undangan** pada
 | Kunci | Isi |
 |---|---|
 | `colors` | `deep`, `deep2` (latar gelap), `paper`, `soft` (latar terang), `ink`, `muted` (teks), `accent`, `accent2` (emas/aksen), `petal` (warna partikel) |
+| `colors` (opsional, untuk tema gelap) | `onDeep` (teks di atas latar gelap & tombol), `heading` (judul di atas kertas), `surface` (kartu & kolom isian), `btnBg` (tombol), `toastBg`/`toastFg` (notifikasi), `ok`/`err` (warna status). Tema gelap seperti Metal Rock mengisi `paper`/`soft` dengan warna gelap dan `ink` dengan warna terang, lalu mengatur token ini agar semua teks tetap terbaca. |
 | `fonts` | `script` (nama pasangan), `serif` (judul & kutipan), `sans` (teks). Nama keluarga Google Fonts. `extra`: font cadangan untuk aksara lain, mis. `[{"family":"Nanum Myeongjo","axes":"wght@400;700"}]` untuk Hangul. |
 | `ornament.pattern` | `lattice`, `dots`, `kawung`, `none`, atau file tema (mis. `art/pattern.svg`). `patternPaper` = pola untuk bagian terang (opsional). |
 | `ornament.border` | `tumpal`, `line`, `none`, atau file tema (strip atas-bawah cover) |
