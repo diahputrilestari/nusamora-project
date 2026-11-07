@@ -4,7 +4,7 @@ name: supabase-stack
 # (lihat docs/security/STAGING-RUNBOOK.md). Tidak ada secret: semua kunci berasal dari stack lokal sekali pakai.
 on:
   push:
-    branches: [security/p0, "security/p0-*"]
+    branches: [security/p0, "security/p0-*", "feature/cari-teman-*"]
     paths: ["ops/**", "backend/**", "supabase/**", "assets/**", "*.html", ".htaccess", ".github/workflows/supabase-stack.yml"]
   workflow_dispatch:
 jobs:
