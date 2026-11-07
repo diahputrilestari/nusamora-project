@@ -43,7 +43,7 @@
     return e;
   }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); return n; }
-  function safeUrl(u) { u = String(u || ""); return /^https:\/\//i.test(u) ? u : ""; }
+  function safeUrl(u) { u = String(u || ""); return /^https:\/\//i.test(u) || /^\/(?!\/)[^\s"'<>]*$/.test(u) ? u : ""; }
   function heart(sz) { var s = d.createElementNS(NS, "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); if (sz) { s.style.width = s.style.height = sz; }
     var p = d.createElementNS(NS, "path"); p.setAttribute("d", "M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"); p.setAttribute("fill", "currentColor"); s.appendChild(p); return s; }
   function avatar(url, name, cls) {

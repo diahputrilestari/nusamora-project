@@ -272,7 +272,7 @@ begin
   select coalesce(array_agg(x), '{}') into ints from (select distinct left(btrim(regexp_replace(i, '[\x00-\x1f\x7f]', '', 'g')), 30) x
                                                        from unnest(coalesce(p_interests, '{}')) i where btrim(i) <> '' limit 10) q;
   if p_avatar is not null and not exists (select 1 from public.assets a join public.asset_categories c on c.id = a.category_id
-        where a.id = p_avatar and c.slug = 'guest-avatar' and a.status = 'active' and a.deleted_at is null) then raise exception 'avatar_tidak_valid'; end if;
+        where a.id = p_avatar and c.slug = 'guest-avatar' and a.status = 'active' and a.deleted_at is null and lower(a.file_type) in ('png','jpg','jpeg','webp')) then raise exception 'avatar_tidak_valid'; end if;   -- hanya avatar 2D
   insert into public.dating_profiles (user_id, nickname, birth_date, gender, city, avatar_id, bio, interests, education, occupation, intent)
   values (u, nick, p_birth_date, p_gender, cty, p_avatar, public._dating_clean(p_bio, 300), ints, nullif(public._dating_clean(p_education, 60), ''), nullif(public._dating_clean(p_occupation, 60), ''), p_intent)
   on conflict (user_id) do update set nickname = excluded.nickname, birth_date = excluded.birth_date, gender = excluded.gender, city = excluded.city,
@@ -358,7 +358,7 @@ begin
   amax := case when (f->>'age_max') ~ '^[0-9]{1,3}$' then (f->>'age_max')::int end;
   cty := nullif(lower(left(btrim(coalesce(f->>'city', '')), 60)), '');
   return query
-    select p.id, p.nickname, public._dating_age(p.birth_date), p.gender, p.city, p.bio, p.interests, p.education, p.occupation, p.intent, coalesce(a.thumbnail_url, a.file_url)
+    select p.id, p.nickname, public._dating_age(p.birth_date), p.gender, p.city, p.bio, p.interests, p.education, p.occupation, p.intent, case when lower(a.file_type) in ('png','jpg','jpeg','webp') then a.file_url end
       from public.dating_event_participants x
       join public.dating_profiles p on p.id = x.profile_id
       left join public.assets a on a.id = p.avatar_id and a.status = 'active' and a.deleted_at is null
@@ -432,7 +432,7 @@ declare me uuid := public.dating_my_profile();
 begin
   perform public._dating_uid();
   return query
-    select m.id, c.id, m.invitation_id, o.id, o.nickname, public._dating_age(o.birth_date), coalesce(a.thumbnail_url, a.file_url), m.status, m.matched_at,
+    select m.id, c.id, m.invitation_id, o.id, o.nickname, public._dating_age(o.birth_date), case when lower(a.file_type) in ('png','jpg','jpeg','webp') then a.file_url end, m.status, m.matched_at,
            lm.body, lm.created_at, (lm.sender_profile = me),
            (select count(*)::int from public.dating_messages x where x.conversation_id = c.id and x.read_at is null and x.kind = 'user' and x.sender_profile <> me)
       from public.dating_matches m
@@ -561,8 +561,8 @@ create or replace function public.dating_avatar_options() returns table (id uuid
 language plpgsql stable security definer set search_path = public as $$
 begin
   perform public._dating_uid();
-  return query select a.id, a.name, coalesce(a.thumbnail_url, a.file_url) from public.assets a join public.asset_categories c on c.id = a.category_id
-    where c.slug = 'guest-avatar' and a.status = 'active' and a.deleted_at is null order by a.created_at limit 60;
+  return query select a.id, a.name, a.file_url from public.assets a join public.asset_categories c on c.id = a.category_id
+    where c.slug = 'guest-avatar' and a.status = 'active' and a.deleted_at is null and lower(a.file_type) in ('png','jpg','jpeg','webp') order by a.created_at limit 60;   -- hanya 2D
 end $$;
 
 ----------------------------------------------------------------------------- 10. Hak eksekusi (default PUBLIC dicabut; hanya pengguna masuk, kecuali statistik landing)

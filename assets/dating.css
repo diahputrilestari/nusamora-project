@@ -90,3 +90,6 @@ body.dt{min-height:100dvh}
 @media(max-width:820px){.dt-steps{grid-template-columns:1fr}.dt-nav{order:3;width:100%;margin:0;justify-content:center}.dt .bar{flex-wrap:wrap}}
 @media(max-width:520px){.dt-form .row{grid-template-columns:1fr}.dt-grid{grid-template-columns:1fr}.dt-act{grid-template-columns:1fr 1.4fr}.dt-b{max-width:88%}.dt-chat{height:calc(100dvh - 150px)}}
 @media(prefers-reduced-motion:reduce){.dt-pc,.dt-b,.dt-sk,.dt-heart{animation:none!important;transition:none!important}}
+
+/* avatar 2D berupa ilustrasi badan penuh (potret): tampilkan bagian atas */
+img[alt^="Avatar"]{object-fit:cover;object-position:50% 12%}

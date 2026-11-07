@@ -41,9 +41,11 @@ const EV = inv.data.id;
 const O = await login(`dtui.owner.${stamp}@uji.nusamora.test`, PW);
 check("pemilik mengaktifkan fitur", !(await rpc(O.c, "dating_owner_set_event", { p_inv: EV, p_enabled: true, p_like_limit: 50 })).err);
 const cat = await svc.from("asset_categories").select("id").eq("slug", "guest-avatar").eq("package_type", "luxe").maybeSingle();
-const av = cat.data ? await svc.from("assets").insert({ name: "Avatar Uji " + stamp, category_id: cat.data.id, package_types: ["luxe"], file_path: "uji/dtui-" + stamp + ".png", file_url: "https://example.test/a-" + stamp + ".png",
-  thumbnail_url: "https://example.test/t-" + stamp + ".png", file_type: "png", file_size: 1234, status: "active" }).select("id").single() : { error: { message: "kategori guest-avatar tidak ada" } };
-check("avatar uji (guest-avatar) dibuat", !av.error, av.error?.message);
+const av = cat.data ? await svc.from("assets").insert({ name: "Avatar Uji " + stamp, category_id: cat.data.id, package_types: ["luxe"], file_path: "uji/dtui-" + stamp + ".webp", file_url: "/assets/avatars/jawa-tengah/guest-male/jgl0.webp", file_type: "webp", file_size: 1234, status: "active" }).select("id").single() : { error: { message: "kategori guest-avatar tidak ada" } };
+check("avatar uji 2D (guest-avatar, webp) dibuat", !av.error, av.error?.message);
+const av3 = await svc.from("assets").insert({ name: "Avatar 3D Uji " + stamp, category_id: cat.data.id, package_types: ["luxe"], file_path: "uji/dtui3d-" + stamp + ".glb", file_url: "https://example.test/m-" + stamp + ".glb",
+  thumbnail_url: "https://example.test/t3-" + stamp + ".png", file_type: "glb", file_size: 1234, status: "active" }).select("id").single();
+check("avatar uji 3D (glb) dibuat", !av3.error, av3.error?.message);
 
 async function seed(tag, nick, age, city, bio, interests) {
   const email = `dtui.${tag}.${stamp}@uji.nusamora.test`, u = await mkUser(email, PW), L = await login(email, PW);
@@ -55,6 +57,10 @@ async function seed(tag, nick, age, city, bio, interests) {
 const Y = await seed("y", "Yuni", 27, "Solo", "Suka kopi dan jalan pagi.", ["kopi", "musik"]);
 const Z = await seed("z", "<img src=x onerror=__xss=1>", 30, "Jogja", "<script>window.__xss=1</script>", ["traveling"]);
 check("peserta seed siap (Y normal, Z berisi payload XSS)", !Y.err && !Z.err && Y.profile && Z.profile, Y.err + "|" + Z.err);
+{ const opt = await rpc(Y.c, "dating_avatar_options"); const ids = (opt.data || []).map((x) => x.id);
+  check("pilihan avatar hanya 2D: webp ada, glb tidak", ids.includes(av.data.id) && !ids.includes(av3.data.id), JSON.stringify(ids.length));
+  const r3 = await rpc(Y.c, "dating_upsert_profile", { p_nickname: "Yuni", p_birth_date: ymd(27), p_gender: "wanita", p_city: "Solo", p_avatar: av3.data.id, p_bio: "x", p_interests: [], p_education: null, p_occupation: null, p_intent: "teman_baru" });
+  check("server menolak avatar 3D (glb) pada profil", r3.err.includes("avatar_tidak_valid"), r3.err); }
 const xEmail = `dtui.x.${stamp}@uji.nusamora.test`, xUser = await mkUser(xEmail, PW);
 
 // ---- browser
@@ -121,6 +127,7 @@ await page.waitForSelector(".dt-pc"); const cards = page.locator(".dt-pc");
 check("discover menampilkan 2 peserta lain (bukan diri sendiri)", (await cards.count()) === 2, String(await cards.count()));
 const body4 = await page.textContent("body");
 check("discover: payload XSS tampil sebagai teks, tidak dieksekusi", body4.includes("<img src=x onerror=__xss=1>") && !(await page.evaluate(() => window.__xss)), "xss=" + (await page.evaluate(() => window.__xss)));
+check("avatar 2D berasal dari situs sendiri tampil (gambar termuat)", await page.evaluate(() => { const i = document.querySelector(".dt-pc img[alt^=Avatar]"); return !!i && i.complete && i.naturalWidth > 0; }));
 check("discover: tidak ada email/telepon/tanggal lahir", !/@uji\.nusamora|0812|\d{4}-\d{2}-\d{2}/.test(body4));
 await page.screenshot({ path: `${SHOTS}/jelajah-desktop.png`, fullPage: true });
 await page.fill("#f-c", "Solo"); await page.click("button:has-text('Terapkan')"); await page.waitForFunction(() => document.querySelectorAll(".dt-pc").length === 1, null, { timeout: 10000 }).catch(() => {});
@@ -211,5 +218,5 @@ await browser.close(); srv.close();
 for (const u of [Y, Z]) await svc.auth.admin.deleteUser(u.id).catch(() => {});
 await svc.auth.admin.deleteUser(xUser.id).catch(() => {}); await svc.auth.admin.deleteUser(owner.id).catch(() => {});
 await svc.from("dating_reports").delete().eq("invitation_id", EV);
-if (av.data?.id) await svc.from("assets").delete().eq("id", av.data.id);
+for (const a of [av, av3]) if (a.data?.id) await svc.from("assets").delete().eq("id", a.data.id);
 finish();
