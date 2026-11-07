@@ -1,0 +1,12 @@
+/* Javanese Wedding: ukuran ilustrasi per slot */
+.th-javanese-wedding .ulos-dec { width: min(230px, 66vw); }
+.th-javanese-wedding .st-kf { width: min(240px, 70vw); margin-top: -6px; }
+.th-javanese-wedding .ws-bk { width: min(250px, 70vw); }
+.th-javanese-wedding .ev-lt { width: 24px; }
+.th-javanese-wedding .cv-lt { width: clamp(34px, 8.5vw, 52px); top: -2px; }
+.th-javanese-wedding .rs-lt { width: 30px; }
+.th-javanese-wedding .end-art { width: min(400px, 92%); margin-bottom: 26px; }
+.th-javanese-wedding .end-art .eg { filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); }
+.th-javanese-wedding .jb-row { gap: 4px; }
+/* latar pendopo sangat terang: lapisan gelap cover lebih tebal agar teks terbaca */
+.th-javanese-wedding .gate::after { background: radial-gradient(70% 55% at 50% 48%, rgba(38, 20, 8, .62), rgba(38, 20, 8, .28) 70%), linear-gradient(180deg, rgba(38, 20, 8, .25), rgba(38, 20, 8, .7)); }

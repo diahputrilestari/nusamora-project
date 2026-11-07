@@ -8,7 +8,9 @@
     "blush": "blush-rose",
     "batak": "batak-ulos",
     "nusa-essential": "marun-songket",
-    "korean": "korean-royal"
+    "korean": "korean-royal",
+    "jawa": "javanese-wedding",
+    "javanese": "javanese-wedding"
   },
   "themes": [
     {
@@ -103,6 +105,21 @@
       "swatch": [
         "#3B2C57",
         "#F4C6D6"
+      ],
+      "art": true
+    },
+    {
+      "id": "javanese-wedding",
+      "name": "Javanese Wedding",
+      "description": "Pawiwahan adat Jawa: pendopo joglo berukir emas, gunungan, pelaminan, lentera, payung songsong, batik kawung, dan sentuhan aksara Jawa.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3D2416",
+        "#F0D08A"
       ],
       "art": true
     }

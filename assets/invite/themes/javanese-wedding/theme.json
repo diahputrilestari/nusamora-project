@@ -1,0 +1,95 @@
+{
+  "id": "javanese-wedding",
+  "name": "Javanese Wedding",
+  "version": 1,
+  "description": "Pawiwahan adat Jawa: pendopo joglo berukir emas, gunungan, pelaminan, lentera, payung songsong, batik kawung, dan sentuhan aksara Jawa.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#3D2416",
+    "deep2": "#5C3820",
+    "paper": "#FFF9EF",
+    "ink": "#3B2617",
+    "muted": "#7A5E44",
+    "accent": "#A8741F",
+    "accent2": "#F0D08A",
+    "soft": "#F6E8CF",
+    "petal": "#F7D3D9"
+  },
+  "fonts": {
+    "script": "Italianno",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost",
+    "extra": [
+      {
+        "family": "Noto Sans Javanese",
+        "axes": "wght@400;700"
+      }
+    ]
+  },
+  "ornament": {
+    "pattern": "kawung",
+    "border": "tumpal",
+    "corner": "none",
+    "divider": "diamond",
+    "frame": "arch",
+    "petals": [
+      "bloom",
+      "leaf"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "Pawiwahan",
+    "coupleEyebrow": "Temanten kakung & putri",
+    "giftEyebrow": "Tanda katresnan",
+    "wishesTitle": "Buku Tamu",
+    "closingEyebrow": "ꦩꦠꦸꦂꦤꦸꦮꦸꦤ꧀ · Matur nuwun"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/lentera.webp",
+    "introTop": "art/gunungan.webp",
+    "countdownRow": [
+      {
+        "src": "art/tanaman.webp",
+        "w": 70
+      },
+      {
+        "src": "art/payung.webp",
+        "w": 112
+      },
+      {
+        "src": "art/tanaman.webp",
+        "w": 70
+      }
+    ],
+    "eventBadge": "art/lentera.webp",
+    "storyTop": "art/pohon-lentera.webp",
+    "rsvpHang": "art/lentera.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/pelaminan.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
