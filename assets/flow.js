@@ -284,7 +284,10 @@
       }).join("") + "</div>" : '<p class="avn">Belum ada pilihan ' + esc(label.toLowerCase()) + " untuk tema ini.</p>") + "</div>";
     }
     var avSub = avOpts === null ? "Pilihan avatar tidak dapat dimuat sekarang. Muat ulang halaman." : "Pilih karakter yang mewakili mempelai. Pilihan mengikuti tema " + (inv.theme_key ? "yang Anda pilih" : "template ini") + ".";
-    if (ENG) { if (couple2) html += S("mempelai", "Mempelai", "Profil lengkap yang tampil di bagian Mempelai.", engCouple()); }
+    if (ENG) {
+      if (couple2) html += S("mempelai", "Mempelai", "Profil lengkap yang tampil di bagian Mempelai.", engCouple());
+      else html += S("mempelai", "Profil", "Nama lengkap, keterangan, dan foto yang tampil di bagian Profil.", '<div class="g2f">' + T("Nama lengkap", "couple.bride.full", { full: 1, max: 120 }) + T("Keterangan", "couple.bride.parents", { ta: 1, full: 1, max: 200, ph: cat === "birthday" ? "Mis. Putri kecil Bapak ... & Ibu ..." : "Keterangan singkat" }) + T("Instagram (opsional)", "couple.bride.ig", { max: 40, ph: "@username" }) + engPh("Foto", "photos.bride") + "</div>");
+    }
     else html += S("mempelai", "Avatar Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
     html += S("waktu", ENG ? "Acara" : "Waktu & Tempat", "", '<div class="g2f">' + (ENG ? T("Nama acara utama", "event.name", { full: 1, max: 60, ph: "Mis. Akad Nikah" }) : "") + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>" +
       (ENG ? '<h3 class="sub-h">Acara lainnya</h3><p class="sub">Mis. resepsi atau ngunduh mantu. Tanggal kosong berarti sama dengan acara utama.</p>' + rep("events") : ""));
@@ -294,7 +297,7 @@
     if (ENG) {
       html += S("design", "Tema Undangan", "Pilih tampilan undangan. Anda bisa menggantinya kapan saja.", engThemes());
       html += S("teks", "Teks Undangan", "Kutipan dan penutup. Kosongkan untuk memakai teks bawaan tema.", '<div class="g2f">' + T("Kutipan / ayat", "texts.quote", { ta: 1, full: 1, max: 500 }) + T("Sumber kutipan", "texts.quoteSource", { max: 80, ph: "Mis. QS. Ar-Rum: 21" }) + T("Kalimat penutup", "texts.closing", { ta: 1, full: 1, max: 600, ph: "Merupakan suatu kehormatan dan kebahagiaan bagi kami..." }) + "</div>");
-      html += S("kisah", "Love Story", "Perjalanan cinta yang tampil sebagai timeline. Bagian ini disembunyikan bila kosong.", rep("story"));
+      html += S("kisah", couple2 ? "Love Story" : "Cerita & Momen", (couple2 ? "Perjalanan cinta" : "Momen berharga") + " yang tampil sebagai timeline. Bagian ini disembunyikan bila kosong.", rep("story"));
       html += S("musik", "Musik", "Musik latar yang diputar setelah tamu membuka undangan.", music);
       html += S("fitur", "Komponen Undangan", "", comp + SW("sections.gallery", "Bagian galeri", "Tampilkan galeri foto di undangan.") + SW("sections.map", "Tombol peta lokasi", "Tampilkan alamat dan tombol Google Maps di kartu acara."));
       html += S("hadiah", "Hadiah Digital", "Rekening tambahan dan alamat kirim kado. Aktifkan juga Hadiah digital di Komponen Undangan.", rep("accounts") + '<div class="g2f">' + T("Alamat kirim kado (opsional)", "gift.address", { ta: 1, full: 1, max: 300 }) + "</div>");

@@ -43,7 +43,7 @@ Tema langsung muncul di galeri `/template` dan di pilihan **Tema undangan** pada
 | `art` | ilustrasi per slot, lihat daftar di bawah |
 
 ### Teks (`copy`)
-`coverEyebrow`, `coverEyebrowEvent`, `guestTo`, `guestSalute`, `guestDefault`, `openButton`, `coupleEyebrow`, `coupleTitle`, `countdownEyebrow`, `countdownTitle`, `eventsEyebrow`, `eventsTitle`, `storyEyebrow`, `storyTitle`, `galleryEyebrow`, `galleryTitle`, `rsvpEyebrow`, `rsvpTitle`, `rsvpLead`, `giftEyebrow`, `giftTitle`, `giftLead`, `wishesEyebrow`, `wishesTitle`, `closingEyebrow`, `closingText`. Teks yang diisi pelanggan di editor (mis. ucapan penutup) selalu didahulukan.
+`coverEyebrow` (pernikahan), `coverEyebrowEvent` (acara lain, mis. ulang tahun), `profileEyebrow`, `profileTitle` (bagian profil untuk acara satu orang), `guestTo`, `guestSalute`, `guestDefault`, `openButton`, `coupleEyebrow`, `coupleTitle`, `countdownEyebrow`, `countdownTitle`, `eventsEyebrow`, `eventsTitle`, `storyEyebrow`, `storyTitle`, `galleryEyebrow`, `galleryTitle`, `rsvpEyebrow`, `rsvpTitle`, `rsvpLead`, `giftEyebrow`, `giftTitle`, `giftLead`, `wishesEyebrow`, `wishesTitle`, `closingEyebrow`, `closingText`. Teks yang diisi pelanggan di editor (mis. ucapan penutup) selalu didahulukan.
 
 ### Slot ilustrasi (`art`)
 Nilai: path relatif ke folder tema, `{ "src": "...", "w": 300 }` (w = lebar maksimum px), atau daftar keduanya.
@@ -62,6 +62,9 @@ Nilai: path relatif ke folder tema, `{ "src": "...", "w": 300 }` (w = lebar maks
 | `storyTop`, `giftTop`, `wishesTop` | hiasan pembuka Love Story, Hadiah, Ucapan |
 | `rsvpHang` | dua hiasan bergantung di bagian RSVP |
 | `closingScene`, `closingFigures` | latar penutup (mis. pelaminan) dan figur di depannya |
+
+## Kategori & demo
+`categories` di `theme.json` dan `index.json` menentukan kategori acara yang bisa memakai tema. Demo (`/undangan?demo=1&theme=<id>`) otomatis memakai data contoh kategori pertama tema, mis. ulang tahun untuk Istana Pink.
 
 ## Alias
 `index.json > aliases` memetakan id lama ke tema baru, sehingga undangan yang sudah terbit tetap tampil saat tema diganti nama.

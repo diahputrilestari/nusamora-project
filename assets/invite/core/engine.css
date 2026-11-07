@@ -493,3 +493,4 @@ svg { display: block; }
 @keyframes bdZoom { from { transform: scale(1.08); } to { transform: scale(1); } }
 @media (min-width: 900px) { .has-backdrop .gate::before { background-image: var(--backdrop); } }
 .has-backdrop .cv-eb, .has-backdrop .cv-dt, .has-backdrop .cv-to { text-shadow: 0 1px 10px rgba(0, 0, 0, .65); }
+.ev:has(.ev-lt) h3 { padding-inline: 30px; overflow-wrap: anywhere; }

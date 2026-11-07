@@ -1,0 +1,118 @@
+{
+  "id": "istana-pink",
+  "name": "Istana Pink",
+  "version": 1,
+  "description": "Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.",
+  "categories": [
+    "birthday"
+  ],
+  "colors": {
+    "deep": "#7A2766",
+    "deep2": "#B04593",
+    "paper": "#FFF7FB",
+    "ink": "#4A1F42",
+    "muted": "#8A5C7E",
+    "accent": "#C2468E",
+    "accent2": "#FFD27A",
+    "soft": "#FCE6F2",
+    "petal": "#F9A8D4"
+  },
+  "fonts": {
+    "script": "Dancing Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "dot",
+      "bloom"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Royal Birthday Party",
+    "guestSalute": "Teman & keluarga tersayang",
+    "profileEyebrow": "Yang berulang tahun",
+    "profileTitle": "Birthday Princess",
+    "countdownEyebrow": "Menuju pesta istana",
+    "countdownTitle": "Party Time!",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta Ulang Tahun",
+    "storyEyebrow": "Momen tumbuh kembang",
+    "storyTitle": "Cerita Kecilku",
+    "galleryTitle": "Galeri Ceria",
+    "rsvpLead": "Kabari kami apakah kamu bisa datang ke pesta, ya!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado Spesial",
+    "giftLead": "Kehadiranmu sudah jadi kado terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Ucapan Ulang Tahun",
+    "closingEyebrow": "Sampai jumpa di pesta!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa ini. Kami tunggu kehadiranmu di istana!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/balon.webp",
+        "w": 86
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 150
+      },
+      {
+        "src": "art/balon.webp",
+        "w": 86
+      }
+    ],
+    "introTop": "art/air-mancur.webp",
+    "countdownRow": [
+      {
+        "src": "art/lampu-taman.webp",
+        "w": 56
+      },
+      {
+        "src": "art/kereta-permen.webp",
+        "w": 170
+      },
+      {
+        "src": "art/lampu-taman.webp",
+        "w": 56
+      }
+    ],
+    "eventBadge": "art/lampu-pilar.webp",
+    "storyTop": "art/jembatan.webp",
+    "rsvpHang": "art/balon.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/gapura-balon.webp",
+    "closingScene": "art/gerbang-istana.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

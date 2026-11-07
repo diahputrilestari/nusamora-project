@@ -12,7 +12,8 @@
     "jawa": "javanese-wedding",
     "javanese": "javanese-wedding",
     "chinese": "chinese-wedding",
-    "tionghoa": "chinese-wedding"
+    "tionghoa": "chinese-wedding",
+    "pink-castle": "istana-pink"
   },
   "themes": [
     {
@@ -137,6 +138,20 @@
       "swatch": [
         "#8E1A1F",
         "#F2D28B"
+      ],
+      "art": true
+    },
+    {
+      "id": "istana-pink",
+      "name": "Istana Pink",
+      "description": "Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B04593",
+        "#F9A8D4"
       ],
       "art": true
     }

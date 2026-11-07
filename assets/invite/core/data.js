@@ -124,7 +124,7 @@
     return rpc("submit_wish", { p_slug: vm.slug, p_name: d.name, p_message: d.message, p_attendance: d.attendance || null });
   }
   function wishes(vm, before) {
-    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? DEMO_WISHES : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
+    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
     return rpc("list_wishes", { p_slug: vm.slug, p_before: before || null, p_limit: 20 });
   }
 
@@ -134,6 +134,37 @@
     { id: "d2", name: "Rani & Bima", message: "Ikut bahagia! Semoga langgeng sampai kakek nenek.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
     { id: "d3", name: "Teman SMA 3", message: "Maaf belum bisa datang, doa terbaik untuk kalian berdua.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
+  var DEMO_WISHES_KID = [
+    { id: "k1", name: "Tante Mira & Om Bayu", message: "Selamat ulang tahun, Sayang! Semoga sehat, ceria, dan makin pintar.", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
+    { id: "k2", name: "Kirana (teman TK)", message: "Happy birthday! Sampai ketemu di pesta istana!", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
+    { id: "k3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
+  ];
+  /* demo per kategori acara: tema ulang tahun memakai data contoh ulang tahun */
+  function demoFor(theme, cat) {
+    if (cat !== "birthday") return demoData(theme);
+    var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
+    var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
+    var content = {
+      theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
+      names: { a: "Alesha" },
+      couple: { bride: { full: "Alesha Putri Maharani", parents: "Putri kecil Bapak Dimas Pratama & Ibu Rania Larasati" } },
+      welcome: "Hore, Alesha genap 5 tahun! Kami mengundang keluarga dan teman-teman untuk merayakan pesta ulang tahunnya bersama kami.",
+      quote: { text: "Setiap tahun bersamamu adalah hadiah terindah bagi kami.", source: "Ayah & Bunda" },
+      photos: { cover: u("nm-kid-cover", 900, 1200), bride: u("nm-kid", 600, 800), gallery: ["k1", "k2", "k3", "k4", "k5", "k6"].map(function (s, i) { return u("nm-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
+      event: { name: "Pesta Ulang Tahun ke-5", start: "15:00", end: "18:00", tz: "WIB", venue: "Ballroom Taman Ceria", address: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      story: [
+        { date: "Maret 2021", title: "Hari Pertama di Dunia", text: "Alesha lahir di pagi yang cerah dan langsung jadi pusat dunia kecil kami.", photo: u("nm-kid-s1", 700, 500) },
+        { date: "Maret 2022", title: "Langkah Pertama", text: "Di ulang tahun pertamanya, Alesha berjalan sendiri menuju kue ulang tahunnya.", photo: "" },
+        { date: "Juli 2025", title: "Hari Pertama Sekolah", text: "Dengan tas berpita merah muda, Alesha berangkat ke TK dengan senyum lebar.", photo: u("nm-kid-s3", 700, 500) }
+      ],
+      gift: { bank: "BCA", number: "1234567890", holder: "Rania Larasati" },
+      giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+      closing: "Terima kasih sudah menjadi bagian dari hari istimewa Alesha. Kami tunggu kehadiranmu di pesta!",
+      music: { enabled: true, track: "we-are" },
+      features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
+    };
+    return { vm: normalize(content, { slug: "demo", title: "Ulang Tahun Alesha", category: "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
+  }
   function demoData(theme) {
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
@@ -164,5 +195,5 @@
   }
 
   w.NMInvite = w.NMInvite || {};
-  w.NMInvite.data = { resolve: resolve, normalize: normalize, guestName: guestName, sendRsvp: sendRsvp, sendWish: sendWish, wishes: wishes };
+  w.NMInvite.data = { resolve: resolve, demo: demoFor, normalize: normalize, guestName: guestName, sendRsvp: sendRsvp, sendWish: sendWish, wishes: wishes };
 })(window);

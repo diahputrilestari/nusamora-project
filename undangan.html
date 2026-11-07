@@ -8,16 +8,16 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- font tema dimuat oleh core/theme.js sesuai theme.json -->
-<link rel="stylesheet" href="/assets/invite/core/engine.css?v=5">
+<link rel="stylesheet" href="/assets/invite/core/engine.css?v=6">
 </head>
 <body>
 <div id="app"><div class="boot" role="status"><div><div class="bl"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="currentColor"><ellipse cx="20" cy="9" rx="6" ry="9"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(72 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(144 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(216 20 20)"/><ellipse cx="20" cy="9" rx="6" ry="9" transform="rotate(288 20 20)"/></g></svg></div><p>Membuka undangan...</p></div></div></div>
 <noscript><p style="padding:24px;text-align:center;color:#fff">Aktifkan JavaScript untuk membuka undangan ini.</p></noscript>
 <script src="/assets/config.js"></script>
-<script src="/assets/invite/core/data.js?v=4"></script>
+<script src="/assets/invite/core/data.js?v=5"></script>
 <script src="/assets/invite/core/theme.js?v=4"></script>
 <script src="/assets/invite/core/motion.js?v=3"></script>
-<script src="/assets/invite/core/engine.js?v=4"></script>
+<script src="/assets/invite/core/engine.js?v=5"></script>
 <script>
 /* Boot: data undangan -> paket tema (content.theme, lalu template_id, lalu tema bawaan) -> render oleh engine 2D universal. */
 (function () {
@@ -35,6 +35,9 @@
   }
   NI.data.resolve().then(function (r) {
     return NI.theme.load([r.vm.theme, r.template]).then(function (pack) {
+      // demo: pakai data contoh yang sesuai kategori tema (mis. tema ulang tahun)
+      var cats = pack.categories || [];
+      if (r.vm.mode === "demo" && cats.length && cats.indexOf(r.vm.category) < 0) r = NI.data.demo(pack.id, cats[0]);
       NI.theme.apply(pack); NI.engine.render(app, r.vm, pack); sbw(); addEventListener("resize", sbw);
     });
   }).catch(fail);
