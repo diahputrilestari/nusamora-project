@@ -35,7 +35,7 @@ ok("sync: 30 pertama 404, berikutnya 429", codes.slice(0,30).every(c=>c===404)&&
 counters.clear(); events.length=0; codes=[];
 for(let i=0;i<12;i++){ const r=await handleWebhook(req("midtrans-webhook",{order_id:"NM-123456",status_code:"200",gross_amount:"100000.00",signature_key:"palsu".padEnd(128,"0")},{"cf-connecting-ip":"6.6.6.6"}),mkDeps()); codes.push(r.status); }
 ok("webhook palsu selalu 401", codes.every(c=>c===401));
-ok("kejadian dicatat paling banyak 5 (anti banjir log)", events.length===5&&events[0].p_kind==="webhook_bad_signature");
+ok("kejadian dicatat paling banyak 5 (anti banjir log)", events.length===5&&events.every(e=>e.p_kind==="webhook_bad_signature"));
 ok("event tidak memuat signature/Server Key", !JSON.stringify(events).includes("palsu")&&!JSON.stringify(events).includes("SB-Mid"));
 ok("kunci limiter ter-hash (tanpa IP/ID mentah)", [...counters.keys()].every(k=>!k.includes("6.6.6.6")&&!k.includes("userA")));
 // 8. webhook valid tetapi API status Midtrans belum mengenali order: order NM -> 503 (dikirim ulang), order asing -> 200

@@ -141,12 +141,13 @@ export async function handleSync(req: Request, d: Deps): Promise<Response> {
 /* ---------------- POST /midtrans-webhook (notifikasi server-ke-server dari Midtrans) ---------------- */
 // Pembungkus: mencatat jejak aman setiap webhook yang masuk (status balasan + hasil), tanpa signature/kunci/data kartu.
 export async function handleWebhook(req: Request, d: Deps): Promise<Response> {
-  let meta: Record<string, unknown> = {};
-  try { const n = await req.clone().json(); meta = { order: typeof n?.order_id === "string" ? n.order_id.slice(0, 40) : null, tx: n?.transaction_status ?? null, sc: n?.status_code ?? null }; } catch { /* abaikan */ }
+  let meta: Record<string, unknown> = { m: req.method, ua: (req.headers.get("user-agent") || "").slice(0, 60), ct: (req.headers.get("content-type") || "").slice(0, 40) };
+  try { const n = await req.clone().json(); meta = { ...meta, order: typeof n?.order_id === "string" ? n.order_id.slice(0, 40) : null, tx: n?.transaction_status ?? null, sc: n?.status_code ?? null }; } catch { /* abaikan */ }
   let res: Response;
   try { res = await handleWebhookInner(req, d); } catch (e) { await logSecurityEvent(d, "webhook_trace", "webhook", { ...meta, http: 500, err: "exception" }); throw e; }
   let result: unknown = null; try { const j = await res.clone().json(); result = j?.result ?? j?.error ?? j?.status ?? null; } catch { /* abaikan */ }
-  if (res.status !== 401 && res.status !== 405) await logSecurityEvent(d, "webhook_trace", "webhook", { ...meta, http: res.status, result });
+  // 401 sudah tercatat (dibatasi) sebagai webhook_bad_signature; sisanya dicatat. SEMENTARA untuk diagnosis staging: batasi/hapus sebelum produksi.
+  if (res.status !== 401) await logSecurityEvent(d, "webhook_trace", "webhook", { ...meta, http: res.status, result });
   return res;
 }
 async function handleWebhookInner(req: Request, d: Deps): Promise<Response> {
