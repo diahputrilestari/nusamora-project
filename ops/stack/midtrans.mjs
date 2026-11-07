@@ -20,7 +20,7 @@ if (MODE === "pay") {
   const stamp = Date.now().toString(36), em = EMAIL("mid." + stamp), em2 = EMAIL("mid2." + stamp);
   const u = await mkUser(em, PW), u2 = await mkUser(em2, PW);
   const inv = await svc.from("invitations").insert({ user_id: u.id, title: "Uji Midtrans " + stamp, category: "wedding", slug: "uji-" + stamp, event_date: "2027-01-15", status: "draft",
-    content: { names: { a: "Andi", b: "Sari" }, event: { start: "10:00", venue: "Gedung Uji" }, photos: { cover: "https://example.test/cover.webp", gallery: [] } } }).select().single();
+    content: { names: { a: "Andi", b: "Sari" }, event: { start: "10:00", venue: "Gedung Uji" }, photos: { cover: "https://example.test/cover.webp", gallery: [] }, design2d: { palette: "rose" } } }).select().single();
   check("data uji: undangan lengkap dibuat", !inv.error, inv.error?.message);
   const A = await login(em, PW), B = await login(em2, PW);
 
