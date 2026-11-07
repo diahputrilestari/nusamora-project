@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       phase:
-        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual; guestapi = uji sisi tamu lewat API staging (anon, data uji dihapus); guest = terapkan SQL fitur pelanggan + modul tamu lalu periksa hanya-baca (tabel, RLS, RPC, hak akses); content = terapkan SQL proteksi konten, deploy asset-url, uji perlindungan aset; dating = terapkan SQL lalu uji Cari Teman (API+Realtime+UI Chromium) di staging, CAPTCHA harus mati"
+        description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual; guestseed = buat 1 undangan uji + tamu (kedaluwarsa 2 hari) untuk uji browser; guestclean = hapus data itu; guestapi = uji sisi tamu lewat API staging (anon, data uji dihapus); guest = terapkan SQL fitur pelanggan + modul tamu lalu periksa hanya-baca (tabel, RLS, RPC, hak akses); content = terapkan SQL proteksi konten, deploy asset-url, uji perlindungan aset; dating = terapkan SQL lalu uji Cari Teman (API+Realtime+UI Chromium) di staging, CAPTCHA harus mati"
         type: choice
-        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp, dating, content, guest, guestapi]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay, csp, dating, content, guest, guestapi, guestseed, guestclean]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -203,11 +203,19 @@ jobs:
           cd ops/stack
           node guest-staging.mjs 2>&1 | tee "$RUNNER_TEMP/guestapi.log"; exit ${PIPESTATUS[0]}
 
+      - name: "[guestseed/guestclean] Siapkan atau hapus undangan uji di staging"
+        id: guestseed
+        if: inputs.phase == 'guestseed' || inputs.phase == 'guestclean'
+        continue-on-error: true
+        run: |
+          cd ops/stack
+          node guest-seed.mjs "${{ inputs.phase == 'guestseed' && 'seed' || 'clean' }}" 2>&1 | tee "$RUNNER_TEMP/guestseed.log"; exit ${PIPESTATUS[0]}
+
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp dating dating-ui content-protection guest guestapi; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha midtrans-pay midtrans-verify csp dating dating-ui content-protection guest guestapi guestseed; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -217,5 +225,5 @@ jobs:
       - name: Ringkasan
         if: always() && inputs.phase != 'prepare'
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }} dating=${{ steps.dating.outcome }} datingui=${{ steps.datingui.outcome }} content=${{ steps.content.outcome }} guest=${{ steps.guest.outcome }} guestapi=${{ steps.guestapi.outcome }}"
-          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}" "${{ steps.dating.outcome }}" "${{ steps.datingui.outcome }}" "${{ steps.content.outcome }}" "${{ steps.guest.outcome }}" "${{ steps.guestapi.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
+          echo "mfa=${{ steps.mfa.outcome }} dr=${{ steps.dr.outcome }} authlimits=${{ steps.authlimits.outcome }} captcha=${{ steps.captcha.outcome }} mpay=${{ steps.mpay.outcome }} mver=${{ steps.mver.outcome }} csp=${{ steps.csp.outcome }} dating=${{ steps.dating.outcome }} datingui=${{ steps.datingui.outcome }} content=${{ steps.content.outcome }} guest=${{ steps.guest.outcome }} guestapi=${{ steps.guestapi.outcome }} guestseed=${{ steps.guestseed.outcome }}"
+          for o in "${{ steps.mfa.outcome }}" "${{ steps.dr.outcome }}" "${{ steps.authlimits.outcome }}" "${{ steps.captcha.outcome }}" "${{ steps.mpay.outcome }}" "${{ steps.mver.outcome }}" "${{ steps.csp.outcome }}" "${{ steps.dating.outcome }}" "${{ steps.datingui.outcome }}" "${{ steps.content.outcome }}" "${{ steps.guest.outcome }}" "${{ steps.guestapi.outcome }}" "${{ steps.guestseed.outcome }}"; do [ "$o" = success ] || [ "$o" = skipped ] || exit 1; done
