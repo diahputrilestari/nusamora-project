@@ -11,10 +11,20 @@
   function rp(n) { return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
   function dt(s, time) { if (!s) return "-"; var x = new Date(s); if (isNaN(x)) return "-"; var o = { day: "numeric", month: "short", year: "numeric" }; if (time) { o.hour = "2-digit"; o.minute = "2-digit"; } return x.toLocaleDateString("id-ID", o); }
   function toast(t, k) { var e = d.createElement("div"); e.className = "toast " + (k || ""); e.setAttribute("role", k === "bad" ? "alert" : "status"); e.textContent = t; $("#toasts").appendChild(e); setTimeout(function () { e.remove(); }, 4800); }
-  function fail(e, pre) { var c = e && e.code, m = e && e.message || ""; var t = c === "42501" || /forbidden|row-level security/i.test(m) ? "Anda tidak punya izin untuk tindakan ini." : c === "23505" ? "Nilai yang harus unik sudah dipakai data lain." : c === "23514" ? "Nilai tidak memenuhi aturan data." : c === "23503" ? "Data ini masih dipakai oleh data lain." : /fetch|network/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet." : (pre || "Terjadi kendala") + (m ? ": " + m : "."); toast(t, "bad"); return t; }
+  function fail(e, pre) { var c = e && e.code, m = e && e.message || ""; var t = /belum_lunas/.test(m) ? "Pembayaran belum lunas, jadi undangan belum bisa ditayangkan." : /sudah_kedaluwarsa/.test(m) ? "Masa aktif undangan sudah lewat. Perpanjang masa aktif dulu." : /masih_diarsipkan/.test(m) ? "Undangan masih diarsipkan. Pulihkan dari arsip dulu." : c === "42501" || /forbidden|row-level security/i.test(m) ? "Anda tidak punya izin untuk tindakan ini." : c === "23505" ? "Nilai yang harus unik sudah dipakai data lain." : c === "23514" ? "Nilai tidak memenuhi aturan data." : c === "23503" ? "Data ini masih dipakai oleh data lain." : /fetch|network/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet." : (pre || "Terjadi kendala") + (m ? ": " + m : "."); toast(t, "bad"); return t; }
   function ico(n) { var P = { home: '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>', users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.500 20c.5-3.500 3-5.500 6.500-5.500s6 2 6.500 5.500"/><circle cx="17.500" cy="9" r="2.500"/><path d="M17 14.500c2.500.2 4 1.700 4.500 4.500"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>', layout: '<rect x="3.500" y="3.500" width="7.500" height="9" rx="1.500"/><rect x="13" y="3.500" width="7.500" height="5" rx="1.500"/><rect x="13" y="10.500" width="7.500" height="10" rx="1.500"/><rect x="3.500" y="14.500" width="7.500" height="6" rx="1.500"/>', monitor: '<rect x="3" y="4" width="18" height="12.500" rx="2"/><path d="M8 20.500h8M12 16.500v4"/>', card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>', crown: '<path d="M3 8l4.500 4L12 5l4.500 7L21 8l-2 11H5z"/>', doc: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>', share: '<circle cx="6" cy="12" r="2.500"/><circle cx="18" cy="6" r="2.500"/><circle cx="18" cy="18" r="2.500"/><path d="M8.200 10.800l7.600-3.600M8.200 13.200l7.600 3.600"/>', help: '<circle cx="12" cy="12" r="9"/><path d="M9.500 9.500a2.500 2.500 0 1 1 3.500 2.300c-.7.400-1 .9-1 1.700M12 17h.01"/>', bars: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', bell: '<path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7zM10 20a2 2 0 0 0 4 0"/>', cog: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.200 4.200l2.100 2.100M17.700 17.700l2.100 2.100M2 12h3M19 12h3M4.200 19.800l2.100-2.100M17.700 6.300l2.100-2.100"/>', shield: '<path d="M12 3l8 3v6c0 4.500-3.200 7.800-8 9-4.800-1.200-8-4.500-8-9V6z"/>', plus: '<path d="M12 5v14M5 12h14"/>', out: '<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M15 8l4 4-4 4M19 12H9"/>', user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c.6-4 3.800-6 8-6s7.400 2 8 6"/>', pulse: '<path d="M3 12h4l2-6 4 12 2-6h6"/>' }; return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">' + (P[n] || "") + "</svg>"; }
   var ST = { aktif: ["Aktif", "ok"], suspended: ["Suspended", "bad"], draft: ["Draft", ""], menunggu_pembayaran: ["Menunggu bayar", "warn"], selesai: ["Selesai", ""], nonaktif: ["Nonaktif", "warn"], published: ["Published", "ok"], archived: ["Arsip", "warn"], menunggu: ["Menunggu", "warn"], lunas: ["Lunas", "ok"], gagal: ["Gagal", "bad"], dibatalkan: ["Dibatalkan", "bad"], refund: ["Refund", "warn"], diproses: ["Diproses", "warn"], berhasil: ["Berhasil", "ok"], ditolak: ["Ditolak", "bad"], open: ["Open", "warn"], ditutup: ["Ditutup", ""], pending: ["Pending", "warn"], terdaftar: ["Terdaftar", ""], berbayar: ["Berbayar", "ok"], batal: ["Batal", "bad"], ok: ["Normal", "ok"], flagged: ["Terlapor", "warn"], takedown: ["Diturunkan", "bad"], terjadwal: ["Terjadwal", "warn"], terkirim: ["Terkirim", "ok"], tinggi: ["Tinggi", "bad"], normal: ["Normal", ""], rendah: ["Rendah", ""] };
   function badge(s) { var x = ST[s] || [s || "-", ""]; return '<span class="badge ' + x[1] + '">' + esc(x[0]) + "</span>"; }
+  var ACC = { aktif: ["Aktif", "ok"], nonaktif: ["Nonaktif", "warn"], suspended: ["Diblokir", "bad"] };
+  var ACCH = { aktif: "Dapat memakai dashboard dan membuat undangan.", nonaktif: "Dashboard tetap terbuka, tetapi tidak bisa membuat undangan baru atau membayar.", suspended: "Tidak bisa memakai dashboard sampai diaktifkan lagi." };
+  var PLN = { essential: "Essential", signature: "Signature", luxe: "Luxe" }, PKN = { essential: "Essential 2D", signature: "Signature 3D", luxe: "Luxe Live Guest" };
+  /* tiga status undangan yang sengaja dipisah: pembayaran, publikasi, moderasi */
+  var PAYB = { belum_bayar: ["Belum bayar", ""], menunggu: ["Menunggu", "warn"], lunas: ["Lunas", "ok"], gagal: ["Gagal / kedaluwarsa", "bad"], refund: ["Refund", "warn"] };
+  var PUBB = { draft: ["Draft", ""], menunggu_pembayaran: ["Belum tayang", "warn"], aktif: ["Tayang", "ok"], nonaktif: ["Diturunkan", "warn"], selesai: ["Selesai", ""], arsip: ["Diarsipkan", ""] };
+  var MODB = { ok: ["Normal", "ok"], flagged: ["Terlapor", "warn"], takedown: ["Disuspend", "bad"] };
+  function bdg(m, k) { var x = m[k] || [k || "-", ""]; return '<span class="badge ' + x[1] + '">' + esc(x[0]) + "</span>"; }
+  function lopts(m) { return Object.keys(m).map(function (k) { return [k, m[k][0]]; }); }
+  function tri(r) { return '<div class="tri"><span><small>Bayar</small>' + bdg(PAYB, r.pay_status) + "</span><span><small>Tayang</small>" + bdg(PUBB, r.pub_status) + "</span><span><small>Moderasi</small>" + bdg(MODB, r.moderation) + "</span></div>"; }
   var ROLE = { super_admin: "Super Admin", admin: "Admin", finance: "Finance", support: "Support", content: "Konten" };
   function empty(t, p, extra) { return '<div class="empty"><span class="ico">' + ico("doc") + "</span><h3>" + esc(t) + "</h3><p>" + esc(p || "") + "</p>" + (extra || "") + "</div>"; }
   function skel() { return '<div class="card"><div class="sk h1" style="width:35%;margin-bottom:16px"></div><div class="sk h4"></div></div>'; }
@@ -34,23 +44,16 @@
   var M = [];
   M.push({ key: "dashboard", label: "Dashboard", icon: "home", perm: "dashboard", grp: "Ringkasan", render: renderDashboard });
   M.push({ key: "customers", label: "Manajemen Pelanggan", icon: "users", perm: "customers", grp: "Pelanggan & Acara", tabs: [{
-    key: "list", label: "Pelanggan", rpc: "admin_list_customers", search: ["full_name", "email", "whatsapp"], noCreate: true, noDelete: true, noEdit: true,
-    filters: [{ k: "status", l: "Status akun", o: [["aktif", "Aktif"], ["suspended", "Suspended"]] }, { k: "plan", l: "Paket", o: PL }],
-    cols: [{ k: "full_name", l: "Pelanggan", f: function (v, r) { return "<b>" + esc(v || "-") + '</b><span class="cell-s">' + esc(r.email) + "</span>"; } }, { k: "status", l: "Status", f: badge }, { k: "plan", l: "Paket", f: function (v, r) { return v ? esc(v) + '<span class="cell-s">s/d ' + dt(r.plan_expires) + "</span>" : "-"; } }, { k: "last_sign_in_at", l: "Terakhir masuk", f: function (v) { return dt(v); } }, { k: "created_at", l: "Bergabung", f: function (v) { return dt(v); } }],
-    title: function (r) { return r.full_name || r.email; },
-    actions: [{ l: "Suspend akun", perm: "customers", cls: "bad", show: function (r) { return r.status === "aktif"; }, confirm: "Suspend akun ini? Pelanggan tidak bisa memakai dashboard sampai diaktifkan lagi.", rpc: function (r) { return ["admin_set_customer_status", { uid: r.id, s: "suspended" }]; } },
-      { l: "Aktifkan akun", perm: "customers", show: function (r) { return r.status === "suspended"; }, rpc: function (r) { return ["admin_set_customer_status", { uid: r.id, s: "aktif" }]; } },
-      { l: "Tambah / ubah langganan", perm: "customers", o: true, fields: [{ k: "plan", l: "Paket", t: "select", opts: PL, req: 1 }, { k: "days", l: "Durasi (hari)", t: "number", req: 1, min: 1, max: 1100, def: 90 }], run: function (r, v) { var st = new Date(), ex = new Date(st.getTime() + v.days * 864e5); return sb.from("subscriptions").insert({ user_id: r.id, plan: v.plan, status: "aktif", started_at: st.toISOString(), expires_at: ex.toISOString() }); } }],
-    extra: customerExtra }] });
+    key: "list", label: "Pelanggan", rpc: "admin_list_customers", search: ["full_name", "email", "whatsapp"], noCreate: true, noDelete: true, noEdit: true, detail: customerPage,
+    filters: [{ k: "status", l: "Status akun", o: [["aktif", "Aktif"], ["nonaktif", "Nonaktif"], ["suspended", "Diblokir"]] }, { k: "plan", l: "Paket", o: PL }],
+    cols: [{ k: "full_name", l: "Pelanggan", f: function (v, r) { return "<b>" + esc(v || "-") + '</b><span class="cell-s">' + esc(r.email) + "</span>"; } }, { k: "status", l: "Status akun", f: function (v) { return bdg(ACC, v); } }, { k: "plan", l: "Paket aktif", f: function (v, r) { return v ? esc(PLN[v] || v) + '<span class="cell-s">s/d ' + dt(r.plan_expires) + "</span>" : "-"; } }, { k: "last_sign_in_at", l: "Terakhir masuk", f: function (v) { return dt(v); } }, { k: "created_at", l: "Bergabung", f: function (v) { return dt(v); } }],
+    title: function (r) { return r.full_name || r.email; } }] });
   M.push({ key: "invitations", label: "Manajemen Undangan", icon: "mail", perm: "invitations", tabs: (function () {
-    var cols = [{ k: "title", l: "Undangan", f: function (v, r) { return "<b>" + esc(v) + '</b><span class="cell-s">' + esc(nameOf(r)) + "</span>"; } }, { k: "template_id", l: "Template", f: function (v) { return esc(v || "-"); } }, { k: "status", l: "Status", f: badge }, { k: "moderation", l: "Moderasi", f: badge }, { k: "expires_at", l: "Masa aktif", f: function (v) { return dt(v); } }, { k: "guest_count", l: "Tamu", num: 1 }];
-    var fields = [{ k: "title", l: "Judul", req: 1, full: 1, max: 160 }, { k: "event_type", l: "Jenis acara", t: "select", opts: EV }, { k: "template_id", l: "Template (slug)" }, { k: "event_date", l: "Tanggal acara", t: "date" }, { k: "status", l: "Status publikasi", t: "select", opts: [["draft", "Draft"], ["aktif", "Aktif"], ["selesai", "Selesai"], ["nonaktif", "Nonaktif"]], req: 1 }, { k: "public_url", l: "URL publik", full: 1 }, { k: "expires_at", l: "Masa aktif sampai", t: "datetime" }, { k: "guest_count", l: "Jumlah tamu", t: "number", min: 0 }, { k: "wish_count", l: "Jumlah ucapan", t: "number", min: 0 }, { k: "moderation", l: "Moderasi", t: "select", opts: [["ok", "Normal"], ["flagged", "Terlapor"], ["takedown", "Diturunkan"]], req: 1 }, { k: "moderation_note", l: "Catatan moderasi", t: "textarea", full: 1 }];
-    function ext(days) { return { l: "Perpanjang " + days + " hari", perm: "invitations", patch: function (r) { var b = Math.max(Date.now(), r.expires_at ? new Date(r.expires_at).getTime() : 0); return { expires_at: new Date(b + days * 864e5).toISOString() }; } }; }
-    var base = { table: "invitations", select: "*,profiles(full_name)", order: ["created_at", false], search: ["title", "template_id"], noCreate: true, cols: cols, fields: fields, title: function (r) { return r.title; },
-      filters: [{ k: "status", l: "Status", o: [["draft", "Draft"], ["aktif", "Aktif"], ["selesai", "Selesai"], ["nonaktif", "Nonaktif"]] }, { k: "moderation", l: "Moderasi", o: [["ok", "Normal"], ["flagged", "Terlapor"], ["takedown", "Diturunkan"]] }],
-      actions: [ext(30), ext(90), ext(365), { l: "Aktifkan", perm: "invitations", show: function (r) { return r.status !== "aktif"; }, patch: function () { return { status: "aktif" }; } }, { l: "Nonaktifkan", perm: "invitations", o: true, show: function (r) { return r.status === "aktif"; }, patch: function () { return { status: "nonaktif" }; } },
-        { l: "Moderasi", perm: "invitations", o: true, fields: [{ k: "moderation", l: "Tindakan", t: "select", opts: [["ok", "Normal (pulihkan)"], ["flagged", "Tandai terlapor"], ["takedown", "Turunkan dari publikasi"]], req: 1 }, { k: "note", l: "Catatan", t: "textarea", full: 1 }], patch: function (r, v) { var p = { moderation: v.moderation, moderation_note: v.note || null }; if (v.moderation === "takedown") p.status = "nonaktif"; return p; } }] };
-    var t2 = Object.assign({}, base, { key: "flag", label: "Perlu moderasi", fixed: { moderation: "flagged" }, filters: [] });
+    var base = { rpc: "admin_list_invitations", search: ["title", "owner_name", "owner_email", "slug"], noCreate: true, noDelete: true, noEdit: true, detail: invitationPage,
+      cols: [{ k: "title", l: "Undangan", f: function (v, r) { return "<b>" + esc(v) + '</b><span class="cell-s">' + esc(r.owner_name || "-") + " &middot; " + esc(r.owner_email || "") + "</span>"; } }, { k: "package_type", l: "Paket", f: function (v) { return esc(PKN[v] || v || "-"); } }, { k: "pay_status", l: "Status (bayar / tayang / moderasi)", f: function (v, r) { return tri(r); } }, { k: "expires_at", l: "Masa aktif", f: function (v) { return dt(v); } }, { k: "updated_at", l: "Diperbarui", f: function (v) { return dt(v); } }],
+      filters: [{ k: "pay_status", l: "Pembayaran", o: lopts(PAYB) }, { k: "pub_status", l: "Publikasi", o: lopts(PUBB) }, { k: "moderation", l: "Moderasi", o: lopts(MODB) }, { k: "package_type", l: "Paket", o: PL }],
+      title: function (r) { return r.title; } };
+    var t2 = Object.assign({}, base, { key: "flag", label: "Perlu moderasi", fixed: { moderation: "flagged" }, filters: [], emptyText: "Tidak ada undangan yang perlu dimoderasi." });
     return [Object.assign({ key: "all", label: "Semua undangan" }, base), t2];
   })() });
   M.push({ key: "templates", label: "Manajemen Template", icon: "layout", perm: "templates", tabs: [{
@@ -105,7 +108,7 @@
     { key: "list", label: "Admin Users", rpc: "admin_list_admins", search: ["email"], noEdit: true, noDelete: true, title: function (r) { return r.email; }, addBtn: { l: "Tambah admin", fields: [{ k: "email", l: "Email akun terdaftar", t: "email", req: 1, full: 1, help: "Orang ini harus sudah mendaftar di /daftar." }, { k: "role", l: "Peran", t: "select", req: 1, opts: Object.keys(ROLE).map(function (k) { return [k, ROLE[k]]; }) }], run: function (v) { return sb.rpc("admin_add_admin", { p_email: v.email, p_role: v.role }); } }, filters: [{ k: "role", l: "Peran", o: Object.keys(ROLE).map(function (k) { return [k, ROLE[k]]; }) }], cols: [{ k: "email", l: "Admin", f: function (v) { return "<b>" + esc(v) + "</b>"; } }, { k: "role", l: "Peran", f: function (v) { return esc(ROLE[v] || v); } }, { k: "active", l: "Status", f: function (v) { return badge(v ? "aktif" : "nonaktif"); } }, { k: "created_at", l: "Ditambahkan", f: function (v) { return dt(v); } }],
       actions: [{ l: "Ubah peran", perm: "admins", o: true, fields: [{ k: "role", l: "Peran baru", t: "select", req: 1, opts: Object.keys(ROLE).map(function (k) { return [k, ROLE[k]]; }) }], guard: function (r) { return r.user_id === A.user.id ? "Anda tidak dapat mengubah peran akun sendiri." : ""; }, run: function (r, v) { return sb.from("admin_users").update({ role: v.role }).eq("user_id", r.user_id); } }, { l: "Nonaktifkan", perm: "admins", cls: "bad", show: function (r) { return r.active; }, guard: function (r) { return r.user_id === A.user.id ? "Anda tidak dapat menonaktifkan akun sendiri." : ""; }, confirm: "Nonaktifkan admin ini?", run: function (r) { return sb.from("admin_users").update({ active: false }).eq("user_id", r.user_id); } }, { l: "Aktifkan", perm: "admins", show: function (r) { return !r.active; }, run: function (r) { return sb.from("admin_users").update({ active: true }).eq("user_id", r.user_id); } }] },
     { key: "roles", label: "Peran & Izin", render: renderRoles },
-    { key: "audit", label: "Audit Log", table: "audit_logs", order: ["created_at", false], search: ["table_name", "action"], noCreate: true, noEdit: true, noDelete: true, title: function (r) { return r.action + " " + r.table_name; }, filters: [{ k: "action", l: "Aksi", o: [["insert", "Tambah"], ["update", "Ubah"], ["delete", "Hapus"], ["status_pelanggan", "Status pelanggan"]] }], cols: [{ k: "created_at", l: "Waktu", f: function (v) { return dt(v, 1); } }, { k: "actor_id", l: "Admin", f: function (v) { return esc(adminName(v)); } }, { k: "action", l: "Aksi" }, { k: "table_name", l: "Tabel" }, { k: "row_id", l: "ID baris", f: function (v) { return esc(String(v || "-").slice(0, 12)); } }], fields: [{ k: "summary", l: "Ringkasan perubahan", f: function (v) { return "<code>" + esc(JSON.stringify(v)) + "</code>"; } }] }] });
+    { key: "audit", label: "Audit Log", table: "audit_logs", order: ["created_at", false], search: ["table_name", "action"], noCreate: true, noEdit: true, noDelete: true, title: function (r) { return r.action + " " + r.table_name; }, filters: [{ k: "action", l: "Aksi", o: [["insert", "Tambah"], ["update", "Ubah"], ["delete", "Hapus"], ["status_pelanggan", "Status pelanggan"], ["reset_akses", "Reset akses pelanggan"]] }], cols: [{ k: "created_at", l: "Waktu", f: function (v) { return dt(v, 1); } }, { k: "actor_id", l: "Admin", f: function (v) { return esc(adminName(v)); } }, { k: "action", l: "Aksi" }, { k: "table_name", l: "Tabel" }, { k: "row_id", l: "ID baris", f: function (v) { return esc(String(v || "-").slice(0, 12)); } }], fields: [{ k: "summary", l: "Ringkasan perubahan", f: function (v) { return "<code>" + esc(JSON.stringify(v)) + "</code>"; } }] }] });
   var adminMap = {}; function adminName(id) { return adminMap[id] || (id ? String(id).slice(0, 8) : "sistem"); }
 
   /* ================= engine tabel ================= */
@@ -118,7 +121,7 @@
   function fetchRows(tab, st) {
     if (tab.rpc) return sb.rpc(tab.rpc).then(function (r) {
       if (r.error) throw r.error; var rows = r.data || [], q = st.q.toLowerCase();
-      rows = rows.filter(function (x) { return (!q || (tab.search || []).some(function (c) { return String(x[c] || "").toLowerCase().indexOf(q) > -1; })) && Object.keys(st.f).every(function (k) { return !st.f[k] || String(x[k]) === st.f[k]; }); });
+      rows = rows.filter(function (x) { return Object.keys(tab.fixed || {}).every(function (k) { return String(x[k]) === String(tab.fixed[k]); }) && (!q || (tab.search || []).some(function (c) { return String(x[c] || "").toLowerCase().indexOf(q) > -1; })) && Object.keys(st.f).every(function (k) { return !st.f[k] || String(x[k]) === st.f[k]; }); });
       return { rows: rows.slice(st.page * SIZE, st.page * SIZE + SIZE), total: rows.length };
     });
     var qy = sb.from(tab.table).select(tab.select || "*", { count: "exact" });
@@ -142,8 +145,9 @@
       var body = res.rows.map(function (r, i) { return '<tr class="row" tabindex="0" data-i="' + i + '">' + tab.cols.map(function (c) { return "<td" + (c.num ? ' class="num"' : "") + ">" + (c.f ? c.f(r[c.k], r) : esc(r[c.k] == null ? "-" : r[c.k])) + "</td>"; }).join("") + "</tr>"; }).join("");
       var pages = Math.max(1, Math.ceil(res.total / SIZE));
       tb.innerHTML = '<div class="tbl-w"><table><thead><tr>' + head + "</tr></thead><tbody>" + body + '</tbody></table></div><div class="pager"><span>' + (st.page * SIZE + 1) + "&ndash;" + (st.page * SIZE + res.rows.length) + " dari " + res.total + '</span><div><button class="btn o sm" type="button" data-pg="-1"' + (st.page === 0 ? " disabled" : "") + '>Sebelumnya</button><button class="btn o sm" type="button" data-pg="1"' + (st.page + 1 >= pages ? " disabled" : "") + ">Berikutnya</button></div></div>";
-    }).catch(function (e) { tb.innerHTML = empty("Data tidak bisa dimuat", e && e.code === "42P01" || e && e.code === "PGRST205" ? "Tabel belum dibuat. Jalankan backend/admin-schema.sql di Supabase." : (e && e.code === "42501" ? "Anda tidak punya izin untuk melihat data ini." : "Terjadi kendala saat memuat. Coba lagi."), '<button class="btn" type="button" data-retry>Coba lagi</button>'); });
+    }).catch(function (e) { tb.innerHTML = empty("Data tidak bisa dimuat", e && e.code === "42P01" || e && e.code === "PGRST205" ? "Tabel belum dibuat. Jalankan backend/admin-schema.sql di Supabase." : (e && e.code === "42501" ? "Anda tidak punya izin untuk melihat data ini." : "Terjadi kendala saat memuat" + (e && e.message ? ": " + e.message : ". Coba lagi.")), '<button class="btn" type="button" data-retry>Coba lagi</button>'); });
   }
+  function openRow(tab, row, reload) { if (tab.detail) { location.hash = "#" + curMod().key + ":" + tab.key + ":" + row[tab.pk || "id"]; return; } openDetail(tab, row, reload); }
   function bindTable(tab, root) {
     var mod = curMod(), key = mod.key + ":" + tab.key, st = tstate(key), reload = function () { renderTable(tab, root); bindTable(tab, root); };
     root.onclick = function (e) {
@@ -151,9 +155,9 @@
       if (e.target.closest("[data-retry]")) return reload();
       if (e.target.closest("[data-new]")) return openForm(tab, null, reload);
       if (e.target.closest("[data-add]")) return openForm({ fields: tab.addBtn.fields, title: function () { return tab.addBtn.l; }, custom: tab.addBtn.run }, null, reload, tab.addBtn.l);
-      var tr = e.target.closest("tr[data-i]"); if (tr) openDetail(tab, LAST.rows[Number(tr.dataset.i)], reload);
+      var tr = e.target.closest("tr[data-i]"); if (tr) openRow(tab, LAST.rows[Number(tr.dataset.i)], reload);
     };
-    root.onkeydown = function (e) { if (e.key === "Enter" && e.target.matches("tr[data-i]")) openDetail(tab, LAST.rows[Number(e.target.dataset.i)], reload); if (e.key === "Enter" && e.target.matches("[data-q]")) { e.preventDefault(); st.q = e.target.value.trim(); st.page = 0; reload(); $("[data-q]", root).focus(); } };
+    root.onkeydown = function (e) { if (e.key === "Enter" && e.target.matches("tr[data-i]")) openRow(tab, LAST.rows[Number(e.target.dataset.i)], reload); if (e.key === "Enter" && e.target.matches("[data-q]")) { e.preventDefault(); st.q = e.target.value.trim(); st.page = 0; reload(); $("[data-q]", root).focus(); } };
     root.onchange = function (e) { var s = e.target.closest("[data-f]"); if (s) { st.f[s.dataset.f] = s.value; st.page = 0; reload(); } };
   }
 
@@ -261,19 +265,128 @@
   }
 
   /* ---------- extra detail ---------- */
-  function customerExtra(r, box) {
-    box.innerHTML = '<div class="sk h3"></div>';
-    var id = r.id;
-    Promise.all([sb.from("subscriptions").select("plan,status,started_at,expires_at").eq("user_id", id).order("started_at", { ascending: false }).limit(10), sb.from("invoices").select("number,amount,status,created_at").eq("user_id", id).order("created_at", { ascending: false }).limit(10), sb.from("invitations").select("title,status,created_at").eq("user_id", id).order("created_at", { ascending: false }).limit(10), sb.from("tickets").select("subject,status,created_at").eq("user_id", id).order("created_at", { ascending: false }).limit(10), sb.from("audit_logs").select("action,summary,created_at").eq("row_id", id).order("created_at", { ascending: false }).limit(10)]).then(function (rs) {
-      var ev = [{ t: r.created_at, a: "Mendaftar" }];
-      (rs[0].data || []).forEach(function (x) { ev.push({ t: x.started_at, a: "Langganan " + x.plan + " (s/d " + dt(x.expires_at) + ")" }); });
-      (rs[1].data || []).forEach(function (x) { ev.push({ t: x.created_at, a: "Invoice " + x.number + " - " + rp(x.amount) + " (" + x.status + ")" }); });
-      (rs[2].data || []).forEach(function (x) { ev.push({ t: x.created_at, a: "Membuat undangan: " + x.title }); });
-      (rs[3].data || []).forEach(function (x) { ev.push({ t: x.created_at, a: "Tiket: " + x.subject }); });
-      (rs[4].data || []).forEach(function (x) { ev.push({ t: x.created_at, a: "Admin: " + x.action + (x.summary && x.summary.status ? " -> " + x.summary.status : "") }); });
-      ev.sort(function (a, b) { return new Date(b.t) - new Date(a.t); });
-      box.innerHTML = '<div class="sect"><h3>Riwayat aktivitas</h3><ul class="act-list">' + ev.map(function (x) { return "<li><i>" + ico("pulse").replace("class=\"ic\"", 'class="ic" style="width:16px;height:16px"') + "</i><div><b>" + esc(x.a) + "</b><small>" + dt(x.t, 1) + "</small></div></li>"; }).join("") + "</ul></div>";
-    }).catch(function () { box.innerHTML = '<p class="sub">Riwayat tidak bisa dimuat.</p>'; });
+  /* ---------- halaman detail: pelanggan & undangan ---------- */
+  var PT = {};
+  function lbl(m, k) { return (m[k] || [k || "-"])[0]; }
+  function rel(s) { if (!s) return ""; var n = Math.round((new Date(s) - Date.now()) / 864e5); return n >= 0 ? "sisa " + n + " hari" : "lewat " + (-n) + " hari"; }
+  function msgOf(e) { var c = e && e.code, m = e && e.message || ""; return c === "42501" || /forbidden/i.test(m) ? "Anda tidak punya izin untuk melihat data ini." : /tidak ditemukan/i.test(m) ? "Data tidak ditemukan atau sudah dihapus." : "Terjadi kendala saat memuat" + (m ? ": " + m : "") + "."; }
+  function backTo(h, l) { return '<a class="back" href="#' + h + '">&larr; ' + esc(l) + "</a>"; }
+  function stat(l, v) { return '<div class="stat"><span>' + esc(l) + "</span><b>" + v + "</b></div>"; }
+  function kvs(rows) { return '<div class="kv">' + rows.map(function (x) { return "<div><span>" + esc(x[0]) + "</span><b>" + x[1] + "</b></div>"; }).join("") + "</div>"; }
+  function ptabs(list, cur) { return '<div class="tabs" role="tablist">' + list.map(function (t) { return '<button type="button" role="tab" aria-selected="' + (t[0] === cur) + '" data-pt="' + t[0] + '">' + esc(t[1]) + "</button>"; }).join("") + "</div>"; }
+  function tbl(head, rows) { return '<div class="tbl-w"><table><thead><tr>' + head.map(function (h) { return "<th" + (h[1] ? ' class="num"' : "") + ">" + esc(h[0]) + "</th>"; }).join("") + "</tr></thead><tbody>" + rows.join("") + "</tbody></table></div>"; }
+  function noteForm(title, req, help, run, reload) { openForm({ fields: [{ k: "note", l: req ? "Alasan" : "Catatan (opsional)", t: "textarea", req: req, full: 1, max: 300, help: help }], title: function () { return title; }, custom: function (v) { return run(v.note || null); } }, null, reload, title); }
+  function rpcDone(okMsg, reload) { return function (r) { if (r && r.error) { fail(r.error, "Tindakan gagal"); return; } toast(okMsg, "ok"); reload(); }; }
+
+  function customerPage(id, root) {
+    var canW = can("customers", "write"), key = "c:" + id; PT[key] = PT[key] || "profil";
+    var back = backTo("customers", "Semua pelanggan"), D = null;
+    function load() {
+      root.innerHTML = back + skel();
+      sb.rpc("admin_customer_detail", { p_user: id }).then(function (r) { if (r.error) throw r.error; D = r.data; draw(); })
+        .catch(function (e) { root.innerHTML = back + errBox(msgOf(e), 1); var b = $("[data-retry]", root); if (b) b.onclick = load; });
+    }
+    function panel() {
+      var p = D.profile, pl = D.plan, inv = D.invitations || [], ivs = D.invoices || [], t = PT[key];
+      if (t === "profil") {
+        var subs = (D.subscriptions || []).map(function (s) { return "<tr><td>" + esc(PLN[s.plan] || s.plan) + "</td><td>" + '<span class="badge ' + (s.status === "aktif" ? "ok" : "") + '">' + esc(s.status) + "</span>" + "</td><td>" + dt(s.started_at) + "</td><td>" + dt(s.expires_at) + "</td></tr>"; });
+        return kvs([["Nama lengkap", esc(p.full_name || "-")], ["Email", esc(p.email) + (p.email_confirmed_at ? ' <span class="badge ok">Terverifikasi</span>' : ' <span class="badge warn">Belum verifikasi</span>')], ["WhatsApp", esc(p.whatsapp || "-")], ["Status akun", bdg(ACC, p.status) + '<span class="cell-s">' + esc(ACCH[p.status] || "") + "</span>"], ["Paket aktif", planTxt(pl)], ["Bergabung", dt(p.created_at, 1)], ["Terakhir masuk", dt(p.last_sign_in_at, 1)]]) +
+          '<div class="sect" style="margin-top:18px"><h3>Riwayat langganan</h3>' + (subs.length ? tbl([["Paket"], ["Status"], ["Mulai"], ["Berakhir"]], subs) : '<p class="sub">Belum ada langganan.</p>') + "</div>";
+      }
+      if (t === "undangan") return inv.length ? tbl([["Undangan"], ["Paket"], ["Status (bayar / tayang / moderasi)"], ["Masa aktif"]], inv.map(function (v) { return "<tr><td><a href=\"#invitations:all:" + esc(v.id) + '"><b>' + esc(v.title) + "</b></a></td><td>" + esc(PKN[v.package_type] || v.package_type || "-") + "</td><td>" + tri(v) + "</td><td>" + dt(v.expires_at) + "</td></tr>"; })) : empty("Belum ada undangan", "Pelanggan ini belum membuat undangan.");
+      if (t === "transaksi") {
+        if (!D.tx_visible) return '<p class="sub">Peran Anda tidak punya izin melihat transaksi.</p>';
+        return ivs.length ? tbl([["Invoice"], ["Deskripsi"], ["Jumlah", 1], ["Status"], ["Metode"], ["Tanggal"]], ivs.map(function (v) { return "<tr><td><b>" + esc(v.number) + '</b><span class="cell-s">' + esc(v.order_id || "") + "</span></td><td>" + esc(v.description) + '</td><td class="num">' + rp(v.amount) + "</td><td>" + badge(v.status) + "</td><td>" + esc(v.payment_type || "-") + "</td><td>" + dt(v.paid_at || v.created_at, 1) + "</td></tr>"; })) : empty("Belum ada transaksi", "Invoice muncul setelah pelanggan melakukan checkout.");
+      }
+      var acts = D.actors || {};
+      return (D.activity || []).length ? '<ul class="act-list">' + D.activity.map(function (x) { return "<li><i>" + ico("pulse").replace('class="ic"', 'class="ic" style="width:16px;height:16px"') + "</i><div><b>" + esc(x.txt) + (x.actor ? " &middot; oleh " + esc(acts[x.actor] || "admin") : "") + "</b><small>" + dt(x.t, 1) + "</small></div></li>"; }).join("") + "</ul>" : empty("Belum ada aktivitas", "");
+    }
+    function planTxt(pl) { return pl ? esc(PLN[pl.plan] || pl.plan) + (pl.expired ? ' <span class="badge bad">Kedaluwarsa</span>' : "") + '<span class="cell-s">s/d ' + dt(pl.expires_at) + " (" + rel(pl.expires_at) + ")</span>" : "Belum ada paket aktif"; }
+    function draw() {
+      var p = D.profile, inv = D.invitations || [], me = A.user && A.user.id === p.id, b = "";
+      if (canW && !p.is_admin && !me) {
+        if (p.status !== "aktif") b += '<button class="btn" type="button" data-st="aktif">Aktifkan akun</button>';
+        if (p.status === "aktif") b += '<button class="btn o" type="button" data-st="nonaktif">Nonaktifkan</button>';
+        if (p.status !== "suspended") b += '<button class="btn o bad" type="button" data-st="suspended">Blokir akun</button>';
+      }
+      if (canW) b += '<button class="btn o" type="button" data-reset>Kirim reset akses</button><button class="btn o" type="button" data-sub>Tambah / ubah langganan</button>';
+      var tabs = [["profil", "Profil"], ["undangan", "Undangan (" + inv.length + ")"], ["transaksi", "Transaksi" + (D.tx_visible ? " (" + (D.invoices || []).length + ")" : "")], ["aktivitas", "Aktivitas"]];
+      root.innerHTML = back + '<div class="card dhead"><div><h2>' + esc(p.full_name || p.email) + '</h2><p class="sub">' + esc(p.email) + (p.whatsapp ? " &middot; " + esc(p.whatsapp) : "") + "</p><div>" + bdg(ACC, p.status) + (p.is_admin ? ' <span class="badge">Akun admin</span>' : "") + '</div></div><div class="btns">' + b + "</div></div>" +
+        (p.is_admin ? '<p class="note" style="margin-bottom:12px">Ini akun admin. Status akunnya dikelola di menu Admin.</p>' : "") +
+        '<div class="stats">' + stat("Paket aktif", planTxt(D.plan)) + stat("Undangan", inv.length) + stat("Total dibayar", D.tx_visible ? rp(D.paid_total) : "-") + stat("Bergabung", dt(p.created_at)) + stat("Terakhir masuk", dt(p.last_sign_in_at)) + "</div>" +
+        ptabs(tabs, PT[key]) + '<div class="card" id="pbody">' + panel() + "</div>";
+    }
+    root.onclick = function (e) {
+      var t = e.target.closest("[data-pt]"); if (t && D) { PT[key] = t.dataset.pt; return draw(); }
+      if (!D) return; var p = D.profile, s = e.target.closest("[data-st]");
+      if (s) {
+        var to = s.dataset.st, name = { aktif: "Aktifkan akun", nonaktif: "Nonaktifkan akun", suspended: "Blokir akun" }[to], run = function (note) { return sb.rpc("admin_customer_set_status", { p_user: id, p_status: to, p_note: note }); };
+        if (to === "aktif") return dlgConfirm("Aktifkan kembali akun ini? Pelanggan dapat memakai dashboard dan membuat undangan lagi.", name).then(function (ok) { if (ok) run(null).then(rpcDone("Akun diaktifkan.", load)); });
+        return noteForm(name, 1, to === "suspended" ? "Diblokir: pelanggan tidak bisa memakai dashboard sama sekali. Alasan tersimpan di riwayat." : "Nonaktif: dashboard tetap terbuka, tetapi tidak bisa membuat undangan baru atau membayar. Alasan tersimpan di riwayat.", run, load);
+      }
+      if (e.target.closest("[data-reset]")) return dlgConfirm("Kirim email atur ulang kata sandi ke " + p.email + "? Pelanggan menerima tautan untuk membuat kata sandi baru. Admin tidak melihat atau mengubah kata sandi.", "Kirim email").then(function (ok) {
+        if (!ok) return;
+        sb.auth.resetPasswordForEmail(p.email, { redirectTo: location.origin + "/atur-password" }).then(function (r) {
+          if (r.error) return fail(r.error, "Gagal mengirim email");
+          sb.rpc("admin_customer_log", { p_user: id, p_action: "reset_akses" }).then(function () { toast("Email atur ulang kata sandi dikirim.", "ok"); load(); });
+        });
+      });
+      if (e.target.closest("[data-sub]")) openForm({ fields: [{ k: "plan", l: "Paket", t: "select", opts: PL, req: 1 }, { k: "days", l: "Durasi (hari)", t: "number", req: 1, min: 1, max: 1100, def: 90 }], title: function () { return "Tambah / ubah langganan"; }, custom: function (v) { var st = new Date(), ex = new Date(st.getTime() + v.days * 864e5); return sb.from("subscriptions").insert({ user_id: id, plan: v.plan, status: "aktif", started_at: st.toISOString(), expires_at: ex.toISOString() }); } }, null, load, "Tambah / ubah langganan");
+    };
+    load();
+  }
+
+  function invitationPage(id, root) {
+    var canW = can("invitations", "write"), back = backTo("invitations", "Semua undangan"), D = null, pv = "", PNAME = { d: "Desktop", m: "Ponsel" };
+    function load() {
+      root.innerHTML = back + skel();
+      sb.rpc("admin_invitation_detail", { p_id: id }).then(function (r) { if (r.error) throw r.error; D = r.data; draw(); })
+        .catch(function (e) { root.innerHTML = back + errBox(msgOf(e), 1); var b = $("[data-retry]", root); if (b) b.onclick = load; });
+    }
+    function scard(t, badgeHtml, hint) { return '<div class="scard"><span>' + esc(t) + "</span>" + badgeHtml + "<p>" + hint + "</p></div>"; }
+    function draw() {
+      var i = D.invitation, o = D.owner || {}, log = D.log || [], pays = D.payments || [], arch = !!i.archived_at, b = "";
+      var live = i.pub_status === "aktif" && i.moderation !== "takedown" && /^https?:\/\//.test(i.public_url || "");
+      if (canW) {
+        if (!arch && i.moderation !== "takedown") b += '<button class="btn o bad" type="button" data-ia="suspend">Suspend</button>';
+        if (!arch && (i.moderation === "takedown" || i.pub_status === "nonaktif")) b += '<button class="btn" type="button" data-ia="reactivate">Aktifkan kembali</button>';
+        if (i.moderation === "flagged") b += '<button class="btn o" type="button" data-ia="clear">Tolak laporan</button>'; else if (i.moderation === "ok") b += '<button class="btn o" type="button" data-ia="flag">Tandai terlapor</button>';
+        b += arch ? '<button class="btn o" type="button" data-ia="unarchive">Pulihkan dari arsip</button>' : '<button class="btn o" type="button" data-ia="archive">Arsipkan</button>';
+        b += '<button class="btn o" type="button" data-ext>Perpanjang masa aktif</button>';
+      }
+      var hintPay = { lunas: "Terverifikasi dari transaksi pembayaran.", menunggu: "Pelanggan belum menyelesaikan pembayaran.", gagal: "Transaksi gagal, dibatalkan, atau kedaluwarsa.", refund: "Pembayaran dikembalikan.", belum_bayar: "Belum ada transaksi." }[i.pay_status] || "";
+      var hintPub = { aktif: "Tayang dan bisa dibuka tamu.", draft: "Masih disusun pelanggan.", menunggu_pembayaran: "Belum tayang, menunggu pembayaran lunas.", nonaktif: "Tidak tayang.", selesai: "Acara sudah selesai.", arsip: "Diarsipkan admin, tidak tayang." }[i.pub_status] || "";
+      var hintMod = { ok: "Tidak ada laporan atau tindakan.", flagged: "Dilaporkan, menunggu keputusan admin.", takedown: "Diturunkan oleh admin." }[i.moderation] || "";
+      var exp = i.expires_at ? dt(i.expires_at, 1) + " (" + rel(i.expires_at) + ")" : "Belum ditetapkan (diatur saat pembayaran lunas)";
+      var pvUrl = "/preview?id=" + encodeURIComponent(id) + "&admin=1";
+      var pvHtml = '<div class="card"><div class="sect"><h3>Pratinjau undangan</h3><div class="btns" style="margin-bottom:10px">' + (pv ? '<button class="btn o sm" type="button" data-pv="">Tutup pratinjau</button><button class="btn o sm" type="button" data-pv="d">Desktop</button><button class="btn o sm" type="button" data-pv="m">Ponsel</button>' : '<button class="btn sm" type="button" data-pv="d">Tampilkan pratinjau langsung</button>') + '<a class="btn o sm" href="' + pvUrl + '" target="_blank" rel="noopener">Buka di tab baru</a></div>' +
+        (pv ? '<iframe class="pvf ' + pv + '" src="' + pvUrl + '" title="Pratinjau undangan ' + esc(i.title) + '"></iframe><p class="fine">Pratinjau memakai tampilan yang sama seperti yang dilihat pelanggan. Hanya baca.</p>' : '<p class="sub">Lihat undangan persis seperti pelanggan melihatnya, tanpa keluar dari dashboard. Undangan yang belum tayang tetap bisa dipratinjau oleh admin.</p>') + "</div></div>";
+      var payHtml = '<div class="card"><div class="sect"><h3>Transaksi undangan</h3>' + (!D.tx_visible ? '<p class="sub">Peran Anda tidak punya izin melihat transaksi.</p>' : pays.length ? tbl([["Order"], ["Jumlah", 1], ["Status"], ["Metode"], ["Tanggal"]], pays.map(function (p) { return "<tr><td>" + esc(p.order_id) + '</td><td class="num">' + rp(p.amount) + "</td><td>" + badge({ paid: "lunas", pending: "menunggu", failed: "gagal", cancelled: "dibatalkan", expired: "gagal", refunded: "refund" }[p.status] || p.status) + "</td><td>" + esc(p.payment_type || "-") + "</td><td>" + dt(p.paid_at || p.created_at, 1) + "</td></tr>"; })) : '<p class="sub">Belum ada transaksi untuk undangan ini.</p>') + "</div></div>";
+      var logHtml = '<div class="card"><div class="sect"><h3>Riwayat moderasi & status</h3>' + (log.length ? '<ul class="act-list">' + log.map(function (l) {
+        var txt = l.kind === "moderasi" ? "Moderasi: " + esc(lbl(MODB, l.from_value)) + " &rarr; " + esc(lbl(MODB, l.to_value)) : l.kind === "publikasi" ? "Publikasi: " + esc(lbl(PUBB, l.from_value)) + " &rarr; " + esc(lbl(PUBB, l.to_value)) : (l.to_value === "arsip" ? "Diarsipkan" : "Dipulihkan dari arsip");
+        var by = l.actor_name || (l.actor_id ? (l.actor_id === i.user_id ? "Pelanggan" : "Admin") : "Sistem");
+        return "<li><i>" + ico("pulse").replace('class="ic"', 'class="ic" style="width:16px;height:16px"') + "</i><div><b>" + txt + '</b><small>oleh ' + esc(by) + " &middot; " + dt(l.created_at, 1) + "</small>" + (l.note ? '<p class="sub" style="margin:4px 0 0">&ldquo;' + esc(l.note) + "&rdquo;</p>" : "") + "</div></li>";
+      }).join("") + "</ul>" : '<p class="sub">Belum ada perubahan status atau tindakan moderasi.</p>') + "</div></div>";
+      root.innerHTML = back + '<div class="card dhead"><div><h2>' + esc(i.title) + '</h2><p class="sub">Pemilik: ' + (o.id ? '<a href="#customers:list:' + esc(o.id) + '">' + esc(o.full_name || o.email) + "</a> &middot; " + esc(o.email) : "-") + "</p></div><div class=\"btns\">" + b + "</div></div>" +
+        '<div class="scards">' + scard("Status pembayaran", bdg(PAYB, i.pay_status), hintPay) + scard("Status publikasi", bdg(PUBB, i.pub_status), hintPub) + scard("Status moderasi", bdg(MODB, i.moderation), hintMod + (i.moderation_note ? " Catatan: &ldquo;" + esc(i.moderation_note) + "&rdquo;" : "")) + "</div>" +
+        '<div class="card">' + kvs([["Link publik", live ? '<a href="' + esc(i.public_url) + '" target="_blank" rel="noopener">' + esc(i.public_url) + "</a>" : (i.slug ? esc("https://nusamora.com/" + i.slug) + '<span class="cell-s">Belum bisa dibuka tamu (tidak tayang)</span>' : "-")], ["Paket", esc(PKN[i.package_type] || i.package_type || "-") + (i.plan_name ? '<span class="cell-s">Plan: ' + esc(i.plan_name) + "</span>" : "")], ["Template", esc(i.template_name || i.template_id || "-")], ["Jenis acara", esc(i.event_type || i.category || "-")], ["Tanggal acara", dt(i.event_date)], ["Dibuat", dt(i.created_at, 1)], ["Terakhir diperbarui", dt(i.updated_at, 1)], ["Dipublikasikan", dt(i.published_at, 1)], ["Masa aktif sampai", esc(exp)], ["Tamu / ucapan", esc((i.guest_count || 0) + " tamu, " + (i.wish_count || 0) + " ucapan")]]) + "</div>" + pvHtml + payHtml + logHtml;
+    }
+    root.onclick = function (e) {
+      if (!D) return; var i = D.invitation, pb = e.target.closest("[data-pv]");
+      if (pb) { pv = pb.dataset.pv; return draw(); }
+      var a = e.target.closest("[data-ia]");
+      if (a) {
+        var act = a.dataset.ia, run = function (note) { return sb.rpc("admin_invitation_action", { p_id: id, p_action: act, p_note: note }); }, ok = function (m) { return rpcDone(m, load); };
+        if (act === "suspend") return noteForm("Suspend undangan", 1, "Undangan diturunkan dari publikasi dan tamu tidak bisa membukanya. Alasan tersimpan di riwayat moderasi. Status pembayaran tidak berubah.", run, load);
+        if (act === "flag") return noteForm("Tandai terlapor", 1, "Undangan tetap tayang sampai Anda memutuskan. Alasan tersimpan di riwayat.", run, load);
+        if (act === "clear") return noteForm("Tolak laporan", 0, "Moderasi dikembalikan ke Normal. Status tayang tidak berubah.", run, load);
+        if (act === "reactivate") return dlgConfirm("Aktifkan kembali undangan ini? Undangan tayang lagi untuk tamu. Hanya bisa jika pembayaran sudah lunas dan masa aktif belum habis.", "Aktifkan kembali").then(function (y) { if (y) run(null).then(ok("Undangan diaktifkan kembali.")); });
+        if (act === "archive") return dlgConfirm("Arsipkan undangan ini? Undangan tidak lagi tayang. Anda dapat memulihkannya dari arsip.", "Arsipkan").then(function (y) { if (y) run(null).then(ok("Undangan diarsipkan.")); });
+        return run(null).then(ok("Undangan dipulihkan dari arsip."));
+      }
+      if (e.target.closest("[data-ext]")) openForm({ fields: [{ k: "days", l: "Tambah masa aktif", t: "select", req: 1, opts: [["30", "30 hari"], ["90", "90 hari"], ["365", "365 hari"]], def: "30" }], title: function () { return "Perpanjang masa aktif"; }, custom: function (v) { var base = Math.max(Date.now(), i.expires_at ? new Date(i.expires_at).getTime() : 0); return sb.from("invitations").update({ expires_at: new Date(base + Number(v.days) * 864e5).toISOString() }).eq("id", id); } }, null, load, "Perpanjang masa aktif");
+    };
+    load();
   }
   function ticketThread(r, box, reload) {
     var canW = can("support", "write");
@@ -408,17 +521,18 @@
     $("#nav").innerHTML = h;
   }
   function route() {
-    var h = (location.hash || "").slice(1).split(":"), ok = allowed(), wantAdd = h[1] === "add"; if (!ok.length) return; if (wantAdd) { h[1] = ""; try { history.replaceState(null, "", "#" + h[0]); } catch (e) {} }
+    var h = (location.hash || "").slice(1).split(":"), ok = allowed(), wantAdd = h[1] === "add", sub = h[2] || ""; if (!ok.length) return; if (wantAdd) { h[1] = ""; try { history.replaceState(null, "", "#" + h[0]); } catch (e) {} }
     var m = ok.filter(function (x) { return x.key === h[0]; })[0] || ok[0]; R.m = m.key; R.t = h[1] || (m.tabs ? m.tabs[0].key : ""); closeNav(); closeDrawer(); buildNav();
     var tab = curTab(), view = $("#view");
-    $("#crumbs").innerHTML = '<a href="#dashboard">Admin</a><span>/</span>' + (m.tabs ? '<a href="#' + m.key + '">' + esc(m.label) + '</a><span>/</span><span aria-current="page">' + esc(tab.label) + "</span>" : '<span aria-current="page">' + esc(m.label) + "</span>");
+    $("#crumbs").innerHTML = '<a href="#dashboard">Admin</a><span>/</span>' + (m.tabs ? '<a href="#' + m.key + '">' + esc(m.label) + '</a><span>/</span>' + (sub && tab.detail ? '<a href="#' + m.key + ":" + tab.key + '">' + esc(tab.label) + '</a><span>/</span><span aria-current="page">Detail</span>' : '<span aria-current="page">' + esc(tab.label) + "</span>") : '<span aria-current="page">' + esc(m.label) + "</span>");
     d.title = m.label + " | Admin NusaMora";
     var head = '<div class="pghead"><div><h1>' + esc(m.label) + "</h1></div></div>";
     var body = '<div id="body"></div>';
-    var tabs = m.tabs && m.tabs.length > 1 ? '<div class="tabs" role="tablist">' + m.tabs.map(function (t) { return '<button type="button" role="tab" aria-selected="' + (t.key === tab.key) + '" data-tab="' + t.key + '">' + esc(t.label) + "</button>"; }).join("") + "</div>" : "";
+    var tabs = m.tabs && m.tabs.length > 1 && !(sub && tab.detail) ? '<div class="tabs" role="tablist">' + m.tabs.map(function (t) { return '<button type="button" role="tab" aria-selected="' + (t.key === tab.key) + '" data-tab="' + t.key + '">' + esc(t.label) + "</button>"; }).join("") + "</div>" : "";
     view.innerHTML = head + tabs + body; var root = $("#body");
     if (m.render) return m.render(root);
     if (tab.render) return tab.render(root);
+    if (sub && tab.detail) return tab.detail(sub, root);
     if (tab.settings) return renderSettings(tab, root);
     if (tab.note) root.insertAdjacentHTML("beforebegin", '<div class="note" style="margin-bottom:14px">' + esc(tab.note) + "</div>");
     renderTable(tab, root); bindTable(tab, root);
