@@ -1,0 +1,97 @@
+{
+  "id": "chinese-wedding",
+  "name": "Chinese Wedding",
+  "version": 1,
+  "description": "Pernikahan Tionghoa: aula merah berukir naga, lampion merah, gerbang bulan 囍, bunga plum dan peony, kipas, serta pelaminan merah-emas.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#5A0E12",
+    "deep2": "#8E1A1F",
+    "paper": "#FFF8EE",
+    "ink": "#3E1B14",
+    "muted": "#7E5544",
+    "accent": "#A8741F",
+    "accent2": "#F2D28B",
+    "soft": "#F7E6D0",
+    "petal": "#F27C93"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost",
+    "extra": [
+      {
+        "family": "Noto Serif SC",
+        "axes": "wght@400;700"
+      }
+    ]
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "diamond",
+    "frame": "arch",
+    "petals": [
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 11
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "囍 · The Wedding of",
+    "coupleEyebrow": "新郎 · 新娘",
+    "storyEyebrow": "缘分 · Perjalanan kami",
+    "giftEyebrow": "红包 · Tanda kasih",
+    "closingEyebrow": "谢谢 · Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/lampion-bulat.webp",
+    "introTop": "art/gerbang-bulan.webp",
+    "countdownRow": [
+      {
+        "src": "art/lentera-segi.webp",
+        "w": 52
+      },
+      {
+        "src": "art/pot-peony-panjang.webp",
+        "w": 170
+      },
+      {
+        "src": "art/lentera-segi.webp",
+        "w": 52
+      }
+    ],
+    "eventBadge": "art/lampion-tinggi.webp",
+    "storyTop": "art/jembatan-kolam.webp",
+    "rsvpHang": "art/lampion-bulat.webp",
+    "giftTop": "art/kipas-merah.webp",
+    "wishesTop": "art/papan-tamu.webp",
+    "closingScene": "art/pelaminan.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

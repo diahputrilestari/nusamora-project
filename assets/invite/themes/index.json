@@ -10,7 +10,9 @@
     "nusa-essential": "marun-songket",
     "korean": "korean-royal",
     "jawa": "javanese-wedding",
-    "javanese": "javanese-wedding"
+    "javanese": "javanese-wedding",
+    "chinese": "chinese-wedding",
+    "tionghoa": "chinese-wedding"
   },
   "themes": [
     {
@@ -120,6 +122,21 @@
       "swatch": [
         "#3D2416",
         "#F0D08A"
+      ],
+      "art": true
+    },
+    {
+      "id": "chinese-wedding",
+      "name": "Chinese Wedding",
+      "description": "Pernikahan Tionghoa: aula merah berukir naga, lampion merah, gerbang bulan 囍, bunga plum dan peony, kipas, serta pelaminan merah-emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#8E1A1F",
+        "#F2D28B"
       ],
       "art": true
     }
