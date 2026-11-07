@@ -8,7 +8,7 @@ on:
       phase:
         description: "prepare = SQL + deploy fungsi; verify = MFA, backup/restore, batas Auth; captcha = uji CAPTCHA; secrets = pasang Server Key Sandbox ke fungsi; midtrans-pay = uji checkout/webhook (CAPTCHA harus mati); midtrans-verify = setelah Anda membayar manual"
         type: choice
-        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs]
+        options: [prepare, verify, captcha, secrets, midtrans-pay, midtrans-verify, fnlogs, replay]
         required: true
       confirm:
         description: "Ketik persis: SAYA-YAKIN-INI-STAGING"
@@ -128,6 +128,11 @@ jobs:
         if: inputs.phase == 'fnlogs'
         working-directory: ops/stack
         run: node fnlogs.mjs
+
+      - name: "[replay] Putar ulang notifikasi Midtrans asli tanpa header autentikasi"
+        if: inputs.phase == 'replay'
+        working-directory: ops/stack
+        run: node replay.mjs
 
       - name: Kumpulkan hasil (tanpa berkas backup)
         if: always()
