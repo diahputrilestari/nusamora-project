@@ -61,8 +61,8 @@ jobs:
           cp -r "$GITHUB_WORKSPACE/supabase/functions" supabase/
           grep -A1 '^\[functions\.' "$GITHUB_WORKSPACE/supabase/config.toml" | grep -v '^--' >> supabase/config.toml
           SALT=$(openssl rand -base64 32)
-          supabase secrets set --project-ref "$PROJECT_REF" ALLOWED_ORIGINS="${{ secrets.STAGING_ALLOWED_ORIGINS }}" RATE_LIMIT_SALT="$SALT"
-          supabase functions deploy --project-ref "$PROJECT_REF" --use-api
+          supabase secrets set --yes --project-ref "$PROJECT_REF" ALLOWED_ORIGINS="${{ secrets.STAGING_ALLOWED_ORIGINS }}" RATE_LIMIT_SALT="$SALT"
+          supabase functions deploy --yes --project-ref "$PROJECT_REF" --use-api
           supabase functions list --project-ref "$PROJECT_REF"
       - name: "[prepare] Catatan langkah manual"
         if: inputs.phase == 'prepare'
