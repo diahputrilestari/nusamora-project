@@ -3,7 +3,12 @@
 import { createHash } from "node:crypto";
 import { check, info, finish, mk, svc, mkUser, login, fn, URL_, ANON, env } from "./lib.mjs";
 const MODE = process.env.MODE || "pay", SK = env("MIDTRANS_SERVER_KEY"), PW = "Uji-Sandi-Panjang#2026";
-if (!/^SB-Mid-server-/.test(SK)) { console.error("Server Key tampak bukan kunci SANDBOX (harus berawalan SB-Mid-server-). Dihentikan demi keamanan."); process.exit(2); }
+// Pengaman: kunci harus diterima oleh API SANDBOX Midtrans (kunci Production ditolak dengan 401). Tidak bergantung pada awalan kunci.
+{ const pr = await fetch("https://api.sandbox.midtrans.com/v2/nm-probe-" + Date.now() + "/status", { headers: { Accept: "application/json", Authorization: "Basic " + Buffer.from(SK + ":").toString("base64") } });
+  const pj = await pr.json().catch(() => ({}));
+  if (String(pj.status_code) === "401" || pr.status === 401) { console.error("Server Key DITOLAK oleh API Sandbox Midtrans (kemungkinan kunci Production atau salah). Dihentikan."); process.exit(2); }
+  if (String(pj.status_code) !== "404") { console.error("Respons tak terduga dari Sandbox Midtrans: " + pr.status + " " + JSON.stringify(pj).slice(0, 120)); process.exit(2); }
+  console.log("Server Key diterima oleh API Sandbox Midtrans (probe: order tidak ada = 404, wajar)."); }
 const sha512 = (s) => createHash("sha512").update(s).digest("hex");
 const sig = (o, s, g) => sha512(o + s + g + SK);
 const hook = async (body) => { const r = await fetch(`${URL_}/functions/v1/midtrans-webhook`, { method: "POST", headers: { "Content-Type": "application/json", apikey: ANON }, body: JSON.stringify(body) }); let j = null; try { j = await r.json(); } catch {} return { status: r.status, body: j }; };

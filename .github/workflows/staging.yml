@@ -103,7 +103,11 @@ jobs:
       - name: "[secrets] Pasang Server Key SANDBOX ke Edge Functions"
         if: inputs.phase == 'secrets'
         run: |
-          case "$MIDTRANS_SERVER_KEY" in SB-Mid-server-*) ;; *) echo "STAGING_MIDTRANS_SERVER_KEY kosong atau BUKAN kunci Sandbox (harus SB-Mid-server-...). Dihentikan."; exit 1;; esac
+          [ -n "$MIDTRANS_SERVER_KEY" ] || { echo "STAGING_MIDTRANS_SERVER_KEY kosong. Dihentikan."; exit 1; }
+          code=$(curl -s -o "$RUNNER_TEMP/mt.json" -w '%{http_code}' -u "$MIDTRANS_SERVER_KEY:" -H 'Accept: application/json' "https://api.sandbox.midtrans.com/v2/nm-probe-$RANDOM/status")
+          sc=$(python3 -c "import json;print(json.load(open('$RUNNER_TEMP/mt.json')).get('status_code',''))" 2>/dev/null || echo "")
+          echo "probe Sandbox: http=$code status_code=$sc"
+          [ "$sc" = "404" ] || { echo "Kunci DITOLAK oleh API Sandbox Midtrans (kemungkinan kunci Production/salah). Dihentikan, tidak ada yang dipasang."; exit 1; }
           supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SERVER_KEY="$MIDTRANS_SERVER_KEY" MIDTRANS_IS_PRODUCTION=false
           echo "Server Key Sandbox terpasang; MIDTRANS_IS_PRODUCTION=false"
       - name: "[midtrans-pay] Uji checkout & webhook (otomatis) lalu cetak tautan bayar"
