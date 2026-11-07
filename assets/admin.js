@@ -292,19 +292,71 @@
     var W = 640, H = 230, L = 46, B = 28, T = 10, R = 10, pw = W - L - R, ph = H - T - B, mb = 1, ml = 1; series.forEach(function (x) { mb = Math.max(mb, Number(x[bk])); ml = Math.max(ml, Number(x[lk])); });
     var o = '<svg class="chart" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Grafik pertumbuhan">', bw = Math.min(40, pw / series.length * .5), pts = [];
     for (var g = 0; g <= 4; g++) { var y = T + ph - ph * g / 4; o += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" stroke="#E5E0EC"/><text x="' + (L - 6) + '" y="' + (y + 4) + '" text-anchor="end">' + (bk === "revenue" ? (mb * g / 4 >= 1e6 ? Math.round(mb * g / 4 / 1e5) / 10 + "jt" : Math.round(mb * g / 4 / 1000) + "rb") : Math.round(mb * g / 4)) + "</text>"; }
-    series.forEach(function (x, i) { var cx = L + pw * (i + .5) / series.length, h = ph * Number(x[bk]) / mb, lb = new Date(x.m + "-01").toLocaleDateString("id-ID", { month: "short", year: "2-digit" }); o += '<rect x="' + (cx - bw / 2) + '" y="' + (T + ph - h) + '" width="' + bw + '" height="' + h + '" rx="5" fill="#9673D0"><title>' + lb + ": " + (bk === "revenue" ? rp(x[bk]) : x[bk]) + ", " + x[lk] + ' pelanggan</title></rect><text x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + lb + "</text>"; pts.push(cx + "," + (T + ph - ph * Number(x[lk]) / ml)); });
+    series.forEach(function (x, i) { var cx = L + pw * (i + .5) / series.length, h = ph * Number(x[bk]) / mb, lb = x.m.length > 7 ? new Date(x.m + "T00:00:00+07:00").toLocaleDateString("id-ID", { day: "numeric", month: "short", timeZone: "Asia/Jakarta" }) : new Date(x.m + "-01").toLocaleDateString("id-ID", { month: "short", year: "2-digit" }), skip = series.length > 12 ? Math.ceil(series.length / 10) : 1; o += '<rect x="' + (cx - bw / 2) + '" y="' + (T + ph - h) + '" width="' + bw + '" height="' + h + '" rx="5" fill="#9673D0"><title>' + lb + ": " + (bk === "revenue" ? rp(x[bk]) : x[bk]) + ", " + x[lk] + ' pelanggan</title></rect>' + (i % skip === 0 ? '<text x="' + cx + '" y="' + (H - 8) + '" text-anchor="middle">' + lb + "</text>" : ""); pts.push(cx + "," + (T + ph - ph * Number(x[lk]) / ml)); });
     return o + (series.length > 1 ? '<polyline points="' + pts.join(" ") + '" fill="none" stroke="#7552A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' : "") + "</svg>";
   }
+  /* ---- Dashboard utama: periode, keuangan, undangan, transaksi, peringatan, aksi cepat ---- */
+  var DP = { k: "6m", f: "", t: "" }, DPERIODS = [["today", "Hari ini"], ["7d", "7 hari"], ["30d", "30 hari"], ["3m", "3 bulan"], ["6m", "6 bulan"], ["custom", "Custom"]];
+  function jk(off) { return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(new Date(Date.now() + (off || 0) * 864e5)); }
+  function jIso(ds) { return new Date(ds + "T00:00:00+07:00").toISOString(); }
+  function addDays(ds, n) { var x = new Date(ds + "T00:00:00Z"); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
+  function dashRange() {
+    var today = jk(0), k = DP.k, f, t = addDays(today, 1);
+    if (k === "today") f = today; else if (k === "7d") f = addDays(today, -6); else if (k === "30d") f = addDays(today, -29);
+    else if (k === "3m" || k === "6m") { var n = k === "3m" ? 2 : 5, y = +today.slice(0, 4), m = +today.slice(5, 7) - n; while (m < 1) { m += 12; y--; } f = y + "-" + String(m).padStart(2, "0") + "-01"; }
+    else { f = DP.f; t = addDays(DP.t, 1); }
+    return { f: f, t: t, to_incl: addDays(t, -1), from: jIso(f), to: jIso(t) };
+  }
+  function rangeErr() { if (DP.k !== "custom") return ""; if (!DP.f || !DP.t) return "Isi tanggal mulai dan tanggal akhir."; if (DP.f > DP.t) return "Tanggal mulai tidak boleh setelah tanggal akhir."; if ((Date.parse(DP.t) - Date.parse(DP.f)) / 864e5 > 399) return "Rentang maksimal 400 hari."; return ""; }
+  function dfmt(ds) { return new Date(ds + "T00:00:00+07:00").toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Jakarta" }); }
+  function nf(n) { return Number(n || 0).toLocaleString("id-ID"); }
+  function kpiCard(l, v, sub, ic, href) { var inner = '<span>' + esc(l) + "</span><b>" + esc(v) + "</b>" + (sub ? "<small>" + esc(sub) + "</small>" : "") + '<i class="ico">' + ico(ic) + "</i>"; return href ? '<a class="card kpi lnk" href="' + href + '">' + inner + "</a>" : '<div class="card kpi">' + inner + "</div>"; }
+  function dashAlerts(a, extra) {
+    var L = [];
+    if (a.failed_7d > 0) L.push({ n: a.failed_7d, t: "pembayaran gagal dalam 7 hari terakhir", to: "#transactions:all", c: "bad" });
+    if (a.anomalies_7d > 0) L.push({ n: a.anomalies_7d, t: "anomali pembayaran (nominal tidak cocok atau order tidak dikenal) dalam 7 hari", to: "#transactions:all", c: "bad" });
+    if (a.pending_24h > 0) L.push({ n: a.pending_24h, t: "pembayaran menunggu lebih dari 24 jam (mungkin tersangkut)", to: "#transactions:pending", c: "warn" });
+    if (a.expiring_7d > 0) L.push({ n: a.expiring_7d, t: "undangan aktif akan berakhir dalam 7 hari", to: "#invitations", c: "warn" });
+    if (a.expired_7d > 0) L.push({ n: a.expired_7d, t: "undangan berakhir dalam 7 hari terakhir", to: "#invitations", c: "" });
+    return L.concat(extra.filter(function (x) { return x.n > 0; }).map(function (x) { return { n: x.n, t: x.t, to: x.to, c: "warn" }; }));
+  }
   function renderDashboard(root) {
-    root.innerHTML = '<div class="kpis">' + [1, 2, 3, 4].map(function () { return '<div class="card"><div class="sk h1" style="width:50%"></div><div class="sk h2" style="margin-top:12px"></div></div>'; }).join("") + "</div>" + skel();
+    var err = rangeErr(), R = err ? null : dashRange();
+    var bar = '<div class="tool dper"><div class="seg" role="group" aria-label="Periode">' + DPERIODS.map(function (p) { return '<button type="button" class="sgb' + (DP.k === p[0] ? " on" : "") + '" data-per="' + p[0] + '" aria-pressed="' + (DP.k === p[0]) + '">' + p[1] + "</button>"; }).join("") + "</div>" +
+      (DP.k === "custom" ? '<label class="fld">Dari<input type="date" id="pf" value="' + esc(DP.f) + '"></label><label class="fld">Sampai<input type="date" id="pt" value="' + esc(DP.t) + '"></label><button class="btn" type="button" id="pa">Terapkan</button>' : "") + "</div>" +
+      (err ? '<div class="alertc bad" role="alert">' + esc(err) + "</div>" : '<p class="fine dnote">Periode: ' + dfmt(R.f) + (R.f === R.to_incl ? "" : " &ndash; " + dfmt(R.to_incl)) + " &middot; zona WIB &middot; tanggal transaksi = tanggal bayar (atau tanggal dibuat bila belum dibayar).</p>");
+    function wire() {
+      $$("[data-per]", root).forEach(function (b) { b.onclick = function () { DP.k = b.dataset.per; if (DP.k === "custom" && !DP.f) { DP.t = jk(0); DP.f = addDays(DP.t, -29); } renderDashboard(root); }; });
+      var pa = $("#pa", root); if (pa) pa.onclick = function () { DP.f = $("#pf", root).value; DP.t = $("#pt", root).value; renderDashboard(root); };
+    }
+    if (err) { root.innerHTML = bar; wire(); return; }
+    root.innerHTML = bar + '<div class="kpis">' + [1, 2, 3, 4].map(function () { return '<div class="card"><div class="sk h1" style="width:50%"></div><div class="sk h2" style="margin-top:12px"></div></div>'; }).join("") + "</div>" + skel(); wire();
     var acts = can("admins", "read") ? sb.from("audit_logs").select("actor_id,action,table_name,created_at").order("created_at", { ascending: false }).limit(8) : Promise.resolve({ data: [] });
     var inv = can("transactions", "read") ? sb.from("invoices").select("number,amount,status,created_at").order("created_at", { ascending: false }).limit(5) : Promise.resolve({ data: [] });
-    Promise.all([sb.rpc("admin_stats", { months: 6 }), acts, inv]).then(function (rs) {
-      if (rs[0].error) throw rs[0].error; var s = rs[0].data || {}, ser = s.series || [];
-      var K = [["Total revenue", rp(s.revenue), "card"], ["Pelanggan", Number(s.customers || 0).toLocaleString("id-ID"), "users"], ["Undangan", Number(s.invitations || 0).toLocaleString("id-ID"), "mail"], [s.pending ? "Transaksi (" + s.pending + " menunggu)" : "Transaksi", Number(s.transactions || 0).toLocaleString("id-ID"), "receipt"]];
+    var token = (renderDashboard.tok = (renderDashboard.tok || 0) + 1);
+    Promise.all([sb.rpc("admin_dashboard", { p_from: R.from, p_to: R.to }), acts, inv, alertsData()]).then(function (rs) {
+      if (token !== renderDashboard.tok) return;
+      if (rs[0].error) throw rs[0].error; var s = rs[0].data || {}, ser = s.series || [], k = s.kpi || {}, iv = s.invitations || {}, cu = s.customers || {};
       var ev = (rs[1].data || []).map(function (x) { return { t: x.created_at, a: adminName(x.actor_id) + ": " + x.action + " " + x.table_name }; }).concat((rs[2].data || []).map(function (x) { return { t: x.created_at, a: "Invoice " + x.number + " " + rp(x.amount) + " (" + x.status + ")" }; })).sort(function (a, b) { return new Date(b.t) - new Date(a.t); }).slice(0, 10);
-      root.innerHTML = '<div class="kpis">' + K.map(function (k) { return '<div class="card kpi"><span>' + k[0] + "</span><b>" + esc(k[1]) + '</b><i class="ico">' + ico(k[2] === "receipt" ? "doc" : k[2]) + "</i></div>"; }).join("") + '</div><div class="two-c"><div class="card"><div class="card-h"><h2>Pertumbuhan 6 bulan</h2></div><div class="legend"><span><i style="background:#9673D0"></i>Revenue</span><span><i style="background:#7552A8"></i>Pelanggan baru</span></div>' + (ser.some(function (x) { return Number(x.revenue) || Number(x.customers); }) ? chart(ser, "revenue", "customers") : empty("Belum ada data", "Grafik terisi setelah ada pelanggan dan transaksi lunas.")) + '</div><div class="card"><div class="card-h"><h2>Aktivitas terbaru</h2></div>' + (ev.length ? '<ul class="act-list">' + ev.map(function (x) { return "<li><i>" + ico("pulse").replace('class="ic"', 'class="ic" style="width:16px;height:16px"') + "</i><div><b>" + esc(x.a) + "</b><small>" + dt(x.t, 1) + "</small></div></li>"; }).join("") + "</ul>" : empty("Belum ada aktivitas", "Aktivitas admin dan transaksi tampil di sini.")) + "</div></div>";
-    }).catch(function (e) { root.innerHTML = errBox(e && e.code === "42883" || e && e.code === "PGRST202" ? "Fungsi admin belum dibuat. Jalankan backend/admin-schema.sql." : "Terjadi kendala saat memuat.", 1); });
+      var tl = can("transactions", "read"), il = can("invitations", "read"), cl = can("customers", "read");
+      var extra = rs[3].filter(function (x) { return /^#(support|affiliate)/.test(x.to) || x.to === "#customers:list" || x.to === "#invitations:flag"; });
+      var AL = dashAlerts(s.alerts || {}, extra);
+      var qa = [];
+      if (can("templates", "write")) qa.push(["#templates:add", "Tambah Template", "plus"]);
+      if (il) qa.push(["#invitations:flag", "Moderasi Undangan", "shield"]);
+      if (tl) qa.push(["#transactions:pending", "Verifikasi Transaksi", "card"]);
+      var money = ["Pendapatan bersih", rp(k.revenue_net), "Kotor " + rp(k.revenue_gross) + " − refund " + rp(k.refund), "card"];
+      root.innerHTML = bar +
+        (qa.length ? '<div class="qa" aria-label="Aksi cepat">' + qa.map(function (q) { return '<a class="btn o" href="' + q[0] + '">' + ico(q[2]) + " " + q[1] + "</a>"; }).join("") + "</div>" : "") +
+        '<div class="card"><div class="card-h"><h2>Perlu perhatian</h2></div>' + (AL.length ? AL.map(function (x) { return '<div class="alertc ' + x.c + '"><b>' + nf(x.n) + "</b> " + esc(x.t) + '<a href="' + x.to + '">Tinjau</a></div>'; }).join("") : '<div class="alertc ok">Tidak ada peringatan operasional saat ini.</div>') + "</div>" +
+        '<h3 class="kh">Keuangan <small>periode terpilih</small></h3><div class="kpis">' + [money, ["Pendapatan kotor", rp(k.revenue_gross), "Semua pembayaran lunas + refund", "card"], ["Refund", rp(k.refund), nf(k.tx_refund) + " transaksi", "doc"], ["Pelanggan baru", nf(cu["new"]), "Total " + nf(cu.total) + " pelanggan", "users"]].map(function (c) { return kpiCard(c[0], c[1], c[2], c[3], null); }).join("") + "</div>" +
+        '<p class="fine dnote">Pendapatan bersih = pembayaran lunas (setelah refund). Transaksi menunggu atau gagal tidak pernah dihitung. Biaya gateway Midtrans tidak tercatat di sistem, jadi belum dikurangkan.</p>' +
+        '<h3 class="kh">Undangan <small>kondisi saat ini &middot; ' + nf(iv.total) + " total, " + nf(iv["new"]) + " baru di periode</small></h3><div class=\"kpis\">" + [["Aktif", iv.aktif, "mail"], ["Draft", iv.draft, "doc"], ["Kedaluwarsa", iv.kedaluwarsa, "bell"], ["Menunggu pembayaran", iv.menunggu_pembayaran, "card"]].map(function (c) { return kpiCard(c[0], nf(c[1]), "", c[2], il ? "#invitations" : null); }).join("") + "</div>" +
+        '<h3 class="kh">Transaksi <small>periode terpilih</small></h3><div class="kpis">' + [["Berhasil", nf(k.tx_success), rp(k.revenue_net), "doc", "#transactions"], ["Pending", nf(k.tx_pending), rp(k.val_pending), "doc", "#transactions:pending"], ["Gagal", nf(k.tx_failed), rp(k.val_failed), "doc", "#transactions"], ["Refund", nf(k.tx_refund), rp(k.refund), "doc", "#transactions"]].map(function (c) { return kpiCard(c[0], c[1], c[2], "doc", tl ? c[4] : null); }).join("") + "</div>" +
+        '<div class="two-c"><div class="card"><div class="card-h"><h2>Pendapatan bersih &amp; pelanggan baru</h2></div><div class="legend"><span><i style="background:#9673D0"></i>Pendapatan bersih</span><span><i style="background:#7552A8"></i>Pelanggan baru</span></div>' + (ser.some(function (x) { return Number(x.revenue) || Number(x.customers); }) ? chart(ser, "revenue", "customers") : empty("Belum ada data di periode ini", "Grafik terisi setelah ada pelanggan baru atau transaksi lunas.")) + '<p class="fine">Sumber data dan periode sama dengan angka di atas.</p></div><div class="card"><div class="card-h"><h2>Aktivitas terbaru</h2></div>' +
+        (ev.length ? '<ul class="act-list">' + ev.map(function (x) { return "<li><i>" + ico("pulse").replace('class="ic"', 'class="ic" style="width:16px;height:16px"') + "</i><div><b>" + esc(x.a) + "</b><span>" + dt(x.t, 1) + "</span></div></li>"; }).join("") + "</ul>" : empty("Belum ada aktivitas", "")) + "</div></div>";
+      wire();
+    }).catch(function (e) { if (token !== renderDashboard.tok) return; root.innerHTML = bar + errBox(e && (e.code === "42883" || e.code === "PGRST202") ? "Fungsi dashboard belum dibuat. Jalankan backend/admin-dashboard.sql di Supabase." : e && /periode_tidak_valid/.test(e.message || "") ? "Periode tidak valid." : "Terjadi kendala saat memuat.", 1); wire(); });
   }
   function bars(rows, lab, val, fmt) { var mx = Math.max.apply(null, rows.map(function (x) { return Number(x[val]); }).concat([1])); return '<ul class="bars">' + rows.map(function (x) { return "<li><span>" + esc(x[lab]) + '</span><div class="tr"><i style="width:' + (Number(x[val]) / mx * 100) + '%"></i></div><b>' + (fmt ? fmt(x[val]) : esc(x[val])) + "</b></li>"; }).join("") + "</ul>"; }
   var RMONTHS = 6;
@@ -356,7 +408,7 @@
     $("#nav").innerHTML = h;
   }
   function route() {
-    var h = (location.hash || "").slice(1).split(":"), ok = allowed(); if (!ok.length) return;
+    var h = (location.hash || "").slice(1).split(":"), ok = allowed(), wantAdd = h[1] === "add"; if (!ok.length) return; if (wantAdd) { h[1] = ""; try { history.replaceState(null, "", "#" + h[0]); } catch (e) {} }
     var m = ok.filter(function (x) { return x.key === h[0]; })[0] || ok[0]; R.m = m.key; R.t = h[1] || (m.tabs ? m.tabs[0].key : ""); closeNav(); closeDrawer(); buildNav();
     var tab = curTab(), view = $("#view");
     $("#crumbs").innerHTML = '<a href="#dashboard">Admin</a><span>/</span>' + (m.tabs ? '<a href="#' + m.key + '">' + esc(m.label) + '</a><span>/</span><span aria-current="page">' + esc(tab.label) + "</span>" : '<span aria-current="page">' + esc(m.label) + "</span>");
@@ -370,6 +422,7 @@
     if (tab.settings) return renderSettings(tab, root);
     if (tab.note) root.insertAdjacentHTML("beforebegin", '<div class="note" style="margin-bottom:14px">' + esc(tab.note) + "</div>");
     renderTable(tab, root); bindTable(tab, root);
+    if (wantAdd) setTimeout(function () { var b = $("[data-add],[data-new]", view); if (b) b.click(); }, 350);
   }
   d.addEventListener("click", function (e) { var t = e.target.closest("[data-tab]"); if (t) location.hash = "#" + R.m + ":" + t.dataset.tab; });
   addEventListener("hashchange", route);
