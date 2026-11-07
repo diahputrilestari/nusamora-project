@@ -8,7 +8,7 @@
   var BASE = (C.SUPABASE_URL || "").replace(/\/$/, ""), KEY = C.SUPABASE_ANON_KEY || "";
   var TZ = { WIB: "+07:00", WITA: "+08:00", WIT: "+09:00" };
   var TRACKS = { "we-are": "/live/audio/we-are.mp3" };
-  var RESERVED = /^(undangan|admin|akun|masuk|daftar|template|buat|editor|pembayaran|live|assets)$/;
+  var RESERVED = /^(undangan|admin|akun|masuk|daftar|template|buat|editor|pembayaran|paket|preview|index|lupa-password|atur-password|live|assets|docs|backend|supabase)$/;
 
   function str(v, n) { v = v == null ? "" : String(v).trim(); return n ? v.slice(0, n) : v; }
   function arr(v) { return Array.isArray(v) ? v : []; }
@@ -34,7 +34,10 @@
 
   /* ---------- normalisasi content -> view model ---------- */
   function normalize(raw, meta) {
+    /* Kunci editor paket Essential: texts (opening, quote, quoteSource, closing), design2d.theme, sections (gallery, map), gift.address.
+       Kunci lama (welcome, quote, closing, theme, giftAddress) tetap dibaca untuk undangan yang sudah ada. */
     var c = raw || {}, names = c.names || {}, cp = c.couple || {}, ph = c.photos || {}, ev = c.event || {}, ft = c.features || {};
+    var tx = c.texts || {}, dz = c.design2d || {}, sc = c.sections || {}, gf = c.gift || {};
     var cat = meta.category || "wedding", isCouple = cat === "wedding" || cat === "engagement";
     var bride = { nick: str(names.a, 80), full: str((cp.bride || {}).full, 120) || str(names.a, 80), parents: str((cp.bride || {}).parents, 200), ig: ig((cp.bride || {}).ig), photo: okUrl(ph.bride), sex: "f" };
     var groom = { nick: str(names.b, 80), full: str((cp.groom || {}).full, 120) || str(names.b, 80), parents: str((cp.groom || {}).parents, 200), ig: ig((cp.groom || {}).ig), photo: okUrl(ph.groom), sex: "m" };
@@ -55,19 +58,21 @@
     var accounts = [acct(c.gift)].concat(arr(c.accounts).map(acct)).filter(function (a) { return a.number; });
 
     var story = arr(c.story).map(function (s) { s = s || {}; return { date: str(s.date, 40), title: str(s.title, 80), text: str(s.text, 600), photo: okUrl(s.photo) }; }).filter(function (s) { return s.title || s.text; });
-    var gallery = arr(ph.gallery).map(okUrl).filter(Boolean);
+    var gallery = sc.gallery === false ? [] : arr(ph.gallery).map(okUrl).filter(Boolean);
+    if (sc.map === false) events.forEach(function (e) { e.maps = ""; });
+    var giftAddress = str(gf.address, 300) || str(c.giftAddress, 300), theme = str(dz.theme) || str(c.theme);
     var music = c.music || {};
     var target = events.length ? events[0].at : (baseDate ? when(baseDate, "", "WIB") : null);
 
     return {
       slug: meta.slug || "", category: cat, isCouple: isCouple, title: str(meta.title),
       pair: pair, people: people, displayNames: pair.length ? pair.join(" & ") : str(meta.title),
-      theme: /^[a-z0-9-]{1,40}$/.test(str(c.theme)) ? str(c.theme) : "",
-      welcome: str(c.welcome, 1000), quote: { text: str((c.quote || {}).text, 400), source: str((c.quote || {}).source, 80) },
+      theme: /^[a-z0-9-]{1,40}$/.test(theme) ? theme : "",
+      welcome: str(c.welcome, 1000) || str(tx.opening, 1000), quote: { text: str(tx.quote, 500) || str((c.quote || {}).text, 400), source: str(tx.quoteSource, 80) || str((c.quote || {}).source, 80) },
       cover: okUrl(ph.cover), gallery: gallery, events: events, target: target, story: story, accounts: accounts,
-      giftAddress: str(c.giftAddress, 300), closing: str(c.closing, 600),
+      giftAddress: giftAddress, closing: str(tx.closing, 600) || str(c.closing, 600),
       music: { on: music.enabled !== false, src: TRACKS[music.track] || TRACKS["we-are"] },
-      features: { countdown: ft.countdown !== false, rsvp: ft.rsvp !== false, wishes: ft.guestbook !== false, gift: !!ft.gift && (accounts.length > 0 || !!str(c.giftAddress)), story: ft.story !== false && story.length > 0 },
+      features: { countdown: ft.countdown !== false, rsvp: ft.rsvp !== false, wishes: ft.guestbook !== false, gift: !!ft.gift && (accounts.length > 0 || !!giftAddress), story: ft.story !== false && story.length > 0 },
       mode: meta.mode || "live"
     };
   }

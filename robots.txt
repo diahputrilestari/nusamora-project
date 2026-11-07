@@ -6,6 +6,8 @@ Disallow: /akun
 Disallow: /template
 Disallow: /buat
 Disallow: /editor
+Disallow: /paket
+Disallow: /preview
 Disallow: /pembayaran
 Disallow: /masuk
 Disallow: /daftar

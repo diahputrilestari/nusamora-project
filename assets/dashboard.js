@@ -102,7 +102,7 @@
     if (sub) { var tot = new Date(sub.expires_at) - new Date(sub.started_at), rem = new Date(sub.expires_at) - new Date(); left = Math.max(0, Math.ceil(rem / 864e5)); pct = tot > 0 ? Math.max(0, Math.min(100, rem / tot * 100)) : 0; }
     var h = '<section class="card welcome"><span class="tag">Dashboard Pelanggan</span><h1>Selamat datang, <em>' + esc(name().split(" ")[0]) + '</em></h1><p>' +
       (S.inv.length ? "Kelola undangan, pantau tamu, dan siapkan hari istimewa Anda dari satu tempat." : "Mulai dengan memilih template, lalu rancang undangan digital interaktif pertama Anda.") + '</p>' +
-      '<div class="qa"><button class="btn" type="button" data-act="create">' + ico("plus") + ' Buat Undangan</button><a class="btn o" href="/template">' + ico("layout") + ' Lihat Template</a><a class="btn o" href="#undangan">' + ico("mail") + " Kelola Undangan</a></div></section>";
+      '<div class="qa"><button class="btn" type="button" data-act="create">' + ico("plus") + ' Buat Undangan</button><a class="btn o" href="/paket">' + ico("layout") + ' Lihat Template</a><a class="btn o" href="#undangan">' + ico("mail") + " Kelola Undangan</a></div></section>";
     h += S.warn ? '<div class="note" role="status">Sebagian data belum bisa dimuat. Muat ulang halaman, atau coba lagi nanti.</div>' : "";
     h += '<div class="grid dash-g"><div class="stack">';
     h += '<div class="grid g3"><div class="card stat hov"><span class="ico">' + ico("mail") + "</span><div><b>" + f.length + "</b><span>Undangan Dibuat</span></div></div>" +
@@ -182,10 +182,10 @@
   d.addEventListener("click", function (e) {
     var c = e.target.closest("[data-copy]"); if (c) return copyText(c.dataset.copy);
     var x = e.target.closest("[data-act]"); if (!x) return;
-    if (x.dataset.act === "create") location.href = "/template";
+    if (x.dataset.act === "create") location.href = "/paket";
     if (x.dataset.act === "manage") location.href = "/editor?id=" + encodeURIComponent(x.closest("[data-id]") ? x.closest("[data-id]").dataset.id : "");
   });
-  $("#top-create").addEventListener("click", function () { location.href = "/template"; });
+  $("#top-create").addEventListener("click", function () { location.href = "/paket"; });
   d.addEventListener("click", function (e) { if (e.target.closest("#logout")) { sb.auth.signOut().then(function () { location.replace("/masuk"); }); } });
 
   /* ---------- profil ---------- */

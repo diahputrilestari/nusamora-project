@@ -1,14 +1,16 @@
--- NusaMora: template Essential 2D (RSVP, ucapan tamu, moderasi, validasi foto tambahan).
--- Jalankan SETELAH payment-schema.sql. Aman dijalankan ulang (idempoten).
+-- NusaMora: undangan 2D universal (engine /undangan): RSVP, ucapan tamu, moderasi, kunci konten tambahan, validasi foto tambahan.
+-- Jalankan PALING AKHIR: setelah package-schema.sql dan asset-schema.sql (file ini menimpa pkg_keys dan save_invitation dari keduanya).
+-- Jika package-schema.sql atau asset-schema.sql dijalankan ulang, jalankan file ini sekali lagi sesudahnya. Aman dijalankan ulang (idempoten).
 -- Tamu (anon) TIDAK menulis tabel langsung: semua lewat RPC yang memeriksa undangan aktif dan fitur yang dinyalakan pemilik.
 
------------------------------------------------------------------------------ 1. Template Essential terdaftar
-insert into public.templates (slug, name, category_id, description, thumbnail_url, preview_url, min_plan, status, sort)
-select 'nusa-essential', 'Nusa Essential',
-       (select id from public.event_categories where slug = 'wedding'),
-       'Undangan 2D elegan: cover beranimasi, hitung mundur, love story, galeri, RSVP, hadiah digital, dan ucapan tamu. Empat pilihan warna.',
-       '/assets/img/nusa-essential.webp', '/undangan?demo=nusa-essential', 'essential', 'published', 0
-where not exists (select 1 from public.templates where slug = 'nusa-essential');
+----------------------------------------------------------------------------- 1. Kunci konten paket Essential untuk engine 2D universal
+-- Sama dengan versi asset-schema.sql, ditambah couple, events, story, accounts (dibaca engine; juga lolos filter get_public_invitation).
+create or replace function public.pkg_keys(p text) returns text[] language sql immutable as $$
+  select array['names','welcome','event','photos','music','features','gift','avatars'] || case p
+    when 'essential' then array['design2d','texts','sections','couple','events','story','accounts']
+    when 'signature' then array['scene','camera','anim','cinematic']
+    when 'luxe' then array['scene','venue','live'] else array[]::text[] end
+$$;
 
 ----------------------------------------------------------------------------- 2. Tabel RSVP & ucapan
 create table if not exists public.rsvps (
@@ -128,17 +130,19 @@ begin
   return true;
 end $$;
 
------------------------------------------------------------------------------ 7. save_invitation: validasi juga foto mempelai & love story
--- Sama persis dengan versi di invitation-schema.sql, ditambah pemeriksaan photos.groom, photos.bride, story[].photo.
+----------------------------------------------------------------------------- 7. save_invitation: versi asset-schema.sql + validasi foto mempelai & love story
 create or replace function public.save_invitation(p_id uuid, p_title text, p_event_date date, p_content jsonb) returns timestamptz
 language plpgsql security definer set search_path = public as $$
-declare uid uuid := auth.uid(); r public.invitations; u text; pref text; g jsonb; s jsonb;
+declare uid uuid := auth.uid(); r public.invitations; u text; pref text; g jsonb; caps jsonb; iss text; sd text; v text; ok boolean; s jsonb;
 begin
   if uid is null then raise exception 'unauthorized' using errcode = '28000'; end if;
   select * into r from public.invitations where id = p_id and user_id = uid for update;
   if not found then raise exception 'tidak_ditemukan'; end if;
   if r.status not in ('draft','aktif') or r.moderation = 'takedown' then raise exception 'tidak_dapat_diubah'; end if;
   if jsonb_typeof(p_content) <> 'object' or length(p_content::text) > 60000 then raise exception 'konten_tidak_valid'; end if;
+  select capabilities into caps from public.templates where slug = r.template_id;
+  iss := public.content_issue(r.package_type, coalesce(caps, '{}'::jsonb), p_content);
+  if iss is not null then raise exception '%', iss; end if;
   pref := '%/storage/v1/object/public/invitation-media/' || uid::text || '/%';
   foreach u in array array[coalesce(p_content #>> '{photos,cover}', ''), coalesce(p_content #>> '{photos,groom}', ''), coalesce(p_content #>> '{photos,bride}', '')] loop
     if u <> '' and u not like pref then raise exception 'foto_tidak_valid'; end if;
@@ -150,12 +154,24 @@ begin
       if u not like pref then raise exception 'foto_tidak_valid'; end if;
     end loop;
   end if;
-  g := p_content #> '{story}';
-  if g is not null and g <> 'null'::jsonb then
-    if jsonb_typeof(g) <> 'array' or jsonb_array_length(g) > 12 then raise exception 'konten_tidak_valid'; end if;
-    for s in select jsonb_array_elements(g) loop
+  foreach sd in array array['events','story','accounts'] loop
+    g := p_content -> sd;
+    if g is not null and g <> 'null'::jsonb and (jsonb_typeof(g) <> 'array' or jsonb_array_length(g) > 12) then raise exception 'konten_tidak_valid'; end if;
+  end loop;
+  if jsonb_typeof(p_content -> 'story') = 'array' then
+    for s in select jsonb_array_elements(p_content -> 'story') loop
       u := coalesce(s ->> 'photo', '');
       if u <> '' and u not like pref then raise exception 'foto_tidak_valid'; end if;
+    end loop;
+  end if;
+  if p_content ? 'avatars' then
+    if jsonb_typeof(p_content->'avatars') <> 'object' then raise exception 'avatar_tidak_valid'; end if;
+    foreach sd in array array['groom','bride'] loop
+      v := coalesce(p_content #>> array['avatars', sd], '');
+      if v <> '' and v is distinct from coalesce(r.content #>> array['avatars', sd], '') then
+        select exists (select 1 from jsonb_array_elements(public.template_avatar_options(r.template_id, r.theme_key)) o where o->>'slot' = v and o->>'side' = sd) into ok;
+        if not ok then raise exception 'avatar_tidak_valid'; end if;
+      end if;
     end loop;
   end if;
   update public.invitations
