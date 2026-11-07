@@ -4,7 +4,7 @@ name: supabase-stack
 # (lihat docs/security/STAGING-RUNBOOK.md). Tidak ada secret: semua kunci berasal dari stack lokal sekali pakai.
 on:
   push:
-    branches: [security/p0, "security/p0-*"]
+    branches: [security/p0, "security/p0-*", "feature/cari-teman-*"]
     paths: ["ops/**", "backend/**", "supabase/**", "assets/**", "*.html", ".htaccess", ".github/workflows/supabase-stack.yml"]
   workflow_dispatch:
 jobs:
@@ -38,7 +38,7 @@ jobs:
             'auth.hook.password_verification_attempt:uri="pg-functions://postgres/public/hook_password_verification_attempt"' \
             "auth.email:enable_confirmations=false"
           echo "--- config relevan"; grep -n -A6 -E '^\[auth\.(mfa\.totp|rate_limit|hook\.password_verification_attempt)\]' supabase/config.toml | head -40
-          supabase start -x studio,imgproxy,logflare,vector,postgres-meta,supavisor,realtime 2>&1 | tail -15
+          supabase start -x studio,imgproxy,logflare,vector,postgres-meta,supavisor 2>&1 | tail -15
           supabase status -o env > "$RUNNER_TEMP/stack.env"
           sed -n 's/^\(API_URL\|ANON_KEY\|SERVICE_ROLE_KEY\|DB_URL\)=/\1=/p' "$RUNNER_TEMP/stack.env" | sed 's/=.*/=<disembunyikan>/'
       - name: Terapkan SQL skema (urutan README) - uji pertama pada Supabase nyata
@@ -55,6 +55,39 @@ jobs:
           . "$RUNNER_TEMP/stack.env"
           for i in $(seq 1 60); do c=$(curl -s -o /dev/null -w '%{http_code}' -X OPTIONS -H 'Origin: http://localhost' "$API_URL/functions/v1/admin-password"); [ "$c" = "204" ] && break; sleep 2; done
           echo "admin-password OPTIONS -> $c"; tail -5 "$RUNNER_TEMP/fn.log"; test "$c" = "204"
+      - name: "Diagnosis Realtime (publikasi & kebijakan)"
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -Atc "select 'publikasi: '||pubname||' '||schemaname||'.'||tablename from pg_publication_tables where tablename like 'dating%'"
+          psql "$DB_URL" -Atc "select 'policy: '||policyname||' '||cmd from pg_policies where tablename='dating_messages'"
+          docker ps --format '{{.Names}}' | grep -i realtime || echo "kontainer realtime tidak terlihat"
+      - name: "Uji DB Cari Teman Kondangan (RLS, usia, consent, match, chat, block, report)"
+        id: datingdb
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/dating-db.test.sql 2>&1 | tee "$RUNNER_TEMP/dating-db.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji Cari Teman Kondangan di stack nyata (API+JWT, balapan paralel, Realtime)"
+        id: dating
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node dating.mjs 2>&1 | tee "$RUNNER_TEMP/dating.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji UI Cari Teman Kondangan (Chromium: profil, jelajah, match, chat realtime, XSS, CSP, 3 viewport)"
+        id: datingui
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          npm install --prefix ops --no-save --no-audit --no-fund playwright >/dev/null
+          npx --prefix ops playwright install --with-deps chromium >/dev/null
+          cd ops/stack
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node dating-ui.mjs 2>&1 | tee "$RUNNER_TEMP/dating-ui.log"; exit ${PIPESTATUS[0]}
+      - name: "Log kontainer Realtime (diagnosis, tanpa rahasia)"
+        if: always()
+        continue-on-error: true
+        run: docker logs supabase_realtime_sbproj 2>&1 | grep -v -i "jwt\|secret\|key" | tail -40 | cut -c1-240
       - name: "Uji MFA (GoTrue/PostgREST/Edge nyata)"
         id: mfa
         continue-on-error: true
@@ -92,7 +125,7 @@ jobs:
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha fn; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha fn dating-db dating dating-ui; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
           cd ops/stack && ls dr-work 2>/dev/null | head -0
       - if: always()
         uses: actions/upload-artifact@v4
@@ -100,5 +133,5 @@ jobs:
       - name: Ringkasan
         if: always()
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }}"
-          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success
+          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }}"
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success
