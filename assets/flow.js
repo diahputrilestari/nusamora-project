@@ -510,7 +510,7 @@
     $("#lpn").innerHTML = pkg === "luxe" ? "Klik elemen di preview untuk mengeditnya. Preview venue memakai tampilan ringkas; bagian yang belum diisi memakai contoh." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Klik teks di preview untuk mengetik langsung, atau klik bagian lain untuk membuka pengaturannya. Bagian yang belum diisi memakai contoh.";
     addEventListener("resize", function () { lp(); });
     progress(); lpDraw();
-    (function () { var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
+    (function () { var hm = (location.hash || "").match(/^#s-(\w+)/); if (hm && secIds.indexOf(hm[1]) > -1) { setOpen(hm[1]); return; } var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
     if (restored) { save(true); toast("Perubahan terakhir yang belum tersimpan sudah dipulihkan dari perangkat ini."); }
     gallery(); setSv("ok", "Tersimpan");
     // draft baru belum punya nilai bawaan paket di database: simpan sekali agar validasi publikasi server melihatnya
@@ -569,15 +569,36 @@
     if (pkg === "luxe") c.live.greeting = "Selamat datang di hari bahagia kami!";
     return c;
   }
+  /* ---- Preview Luxe: pengalaman tamu Live Guest yang sebenarnya (bukan ringkasan konfigurasi) ---- */
+  function liveUrl(x) { return x.tpl && /^\/live(\/|$)/.test(x.tpl.demo || "") ? x.tpl.demo : ""; }
+  function luxeStage(x, host) {
+    var url = liveUrl(x), cur = "d", SZ = { d: [1280, 720], t: [820, 1100], m: [390, 844] };
+    if (!url) { host.innerHTML = '<div class="lxn"><b>Demo Live Guest belum tersedia untuk template ini</b><p>Ringkasan pengaturan tidak ditampilkan sebagai pengganti, karena bukan pengalaman tamu yang sebenarnya. Pilih template lain atau hubungi kami.</p></div>'; return; }
+    host.innerHTML = '<div class="lxp" id="lxp" style="background-image:url(' + esc(x.tpl.img || "") + ')"><div class="lxp-c"><b>Pengalaman tamu Live Guest</b><span>Masuk ke virtual venue, pilih avatar, bergerak, dan coba fitur interaktif seperti tamu Anda nanti.</span><button type="button" class="btn" id="lx-go">Mulai preview</button></div></div><div class="dvw" id="dvw" hidden><div class="dvf" id="dvf"></div></div>';
+    function size() { var w = $("#dvw", host), f = $("#dvf", host); if (!w || w.hidden) return; var sz = SZ[cur], z = Math.min(1, w.clientWidth / sz[0]); f.style.width = sz[0] + "px"; f.style.height = sz[1] + "px"; f.style.zoom = z > 0 ? z : 1; w.style.height = Math.round(sz[1] * (z > 0 ? z : 1)) + "px"; }
+    host._lx = function (c) { if (c) cur = c; size(); };
+    $("#lx-go", host).addEventListener("click", function () { $("#lxp", host).hidden = true; var w = $("#dvw", host); w.hidden = false; $("#dvf", host).innerHTML = '<iframe title="Preview Live Guest" src="' + esc(url) + '" allow="fullscreen; autoplay" referrerpolicy="same-origin"></iframe>'; size(); });
+  }
+  function luxeInfo(x, mode) {
+    var c = x.c, SEC = { "Nama acara": "info", "Tanggal acara": "waktu", "Jam mulai": "waktu", "Lokasi": "waktu", "Foto sampul": "foto", "Foto galeri": "foto", "Scene venue": "venue", "Area venue": "venue", "Avatar tamu": "avatar", "Avatar mempelai pria": "mempelai", "Avatar mempelai wanita": "mempelai" };
+    var ck = baseChecks(c, x.date).concat(extraChecks("luxe", c)); if (c.features.gift) ck.push(["Rekening hadiah", !!(c.gift.bank && c.gift.number && c.gift.holder)]); SEC["Rekening hadiah"] = "interaktif";
+    var n = ck.filter(function (v) { return v[1]; }).length, ed = mode === "demo" ? "" : "/editor?id=" + encodeURIComponent(x.inv.id) + "#s-";
+    var feats = [["RSVP", c.features.rsvp], ["Buku ucapan", c.features.guestbook], ["Live chat", c.features.livechat], ["Photo booth", c.features.photobooth], ["Galeri foto", c.features.gallery], ["Video ucapan", c.features.video], ["Mini games", c.features.games], ["Hadiah digital", c.features.gift]];
+    return '<div class="pvinfo">' + (mode === "demo" ? "" : '<section class="card"><h3>Kelengkapan undangan <small>' + n + " dari " + ck.length + '</small></h3><ul class="chk2">' + ck.map(function (v) { return '<li class="' + (v[1] ? "y" : "n") + '">' + (v[1] ? "" : '<a href="' + ed + SEC[v[0]] + '">') + esc(v[0]) + (v[1] ? "" : " &mdash; belum lengkap</a>") + "</li>"; }).join("") + "</ul></section>") +
+      '<section class="card"><h3>Fitur Live Guest yang Anda aktifkan</h3><ul class="chk2">' + feats.map(function (f) { return '<li class="' + (f[1] ? "y" : "o") + '">' + esc(f[0]) + " &middot; " + (f[1] ? "aktif" : "nonaktif") + "</li>"; }).join("") + '</ul></section>' +
+      '<section class="card full"><h3>Yang perlu Anda ketahui</h3><p class="sub">Preview di atas adalah pengalaman Live Guest asli dari template ini, dengan data contoh. Pengaturan Anda (nama, tanggal, lokasi, avatar, dekorasi, dan fitur di atas) belum diterapkan di demo ini.</p></section></div>';
+  }
   function pagePreview() {
     var q = new URLSearchParams(location.search), demo = q.get("demo"), id = q.get("id");
     function shell(x, mode) {
       var head = mode === "demo" ? '<div class="hd"><h1>Contoh template ' + esc(x.tpl.name) + "</h1><p>Contoh tampilan dengan data contoh. Data Anda belum dipakai.</p></div>" : '<div class="hd"><h1>Preview undangan</h1><p>Periksa tampilan undangan ' + esc(PK[x.pkg].kind) + " Anda. Pembayaran dilakukan setelah Anda puas dengan hasilnya.</p></div>";
       var act = mode === "demo" ? '<a class="btn o" href="/paket">Lihat paket</a><a class="btn" href="/buat?paket=' + x.pkg + "&kategori=" + x.cat + "&template=" + encodeURIComponent(x.tpl.slug) + '">Gunakan template ini</a>' :
         '<a class="btn o" href="/editor?id=' + encodeURIComponent(x.inv.id) + '">Kembali ke editor</a>' + (x.inv.status === "aktif" ? '<a class="btn" href="/akun#undangan">Ke dashboard</a>' : x.inv.status === "menunggu_pembayaran" ? '<button class="btn" type="button" id="pay-b">Lanjutkan pembayaran</button>' : '<button class="btn" type="button" id="pub-b">Publikasikan</button>');
-      view.innerHTML = '<div class="fw">' + (mode === "demo" ? '<div class="pkbar"><span class="pkchip"><i>' + PK[x.pkg].icon + "</i>Paket " + PK[x.pkg].name + " &middot; " + PK[x.pkg].kind + "</span></div>" : steps(5, x.pkg)) + head + '<div class="pvbar"><div class="seg" role="radiogroup" aria-label="Ukuran layar"><label class="sgi"><input type="radio" name="dv" value="d" checked><span>Desktop</span></label><label class="sgi"><input type="radio" name="dv" value="m"><span>Ponsel</span></label></div><div class="acts pvact">' + act + '</div></div><div class="pvwrap"><div class="stage pk-' + x.pkg + '" id="stage"></div></div></div>';
-      var host = $("#stage"); renderStage(x, host);
-      $$("input[name=dv]").forEach(function (i) { i.addEventListener("change", function () { $(".pvwrap").classList.toggle("mob", i.value === "m" && i.checked); }); });
+      view.innerHTML = '<div class="fw">' + (mode === "demo" ? '<div class="pkbar"><span class="pkchip"><i>' + PK[x.pkg].icon + "</i>Paket " + PK[x.pkg].name + " &middot; " + PK[x.pkg].kind + "</span></div>" : steps(5, x.pkg)) + head + '<div class="pvbar"><div class="seg" role="radiogroup" aria-label="Ukuran layar"><label class="sgi"><input type="radio" name="dv" value="d" checked><span>Desktop</span></label><label class="sgi"><input type="radio" name="dv" value="t"><span>Tablet</span></label><label class="sgi"><input type="radio" name="dv" value="m"><span>Ponsel</span></label></div><button type="button" class="btn o sm" id="fs-b">Layar penuh</button>' + (x.pkg === "luxe" && liveUrl(x) ? '<a class="btn o sm" id="demo-b" target="_blank" rel="noopener" href="' + esc(liveUrl(x)) + '">Coba Demo</a>' : "") + '<div class="acts pvact">' + act + '</div></div><div class="pvwrap"><div class="stage pk-' + x.pkg + '" id="stage"></div></div>' + (x.pkg === "luxe" ? luxeInfo(x, mode) : "") + '</div>';
+      var host = $("#stage"); if (x.pkg === "luxe") luxeStage(x, host); else renderStage(x, host);
+      $$("input[name=dv]").forEach(function (i) { i.addEventListener("change", function () { if (!i.checked) return; var w = $(".pvwrap"); w.classList.toggle("mob", i.value === "m"); w.classList.toggle("tab", i.value === "t"); if (host._lx) host._lx(i.value); }); });
+      $("#fs-b").addEventListener("click", function () { var w = $(".pvwrap"); if (d.fullscreenElement) d.exitFullscreen(); else if (w.requestFullscreen) w.requestFullscreen(); else toast("Browser ini tidak mendukung layar penuh.", "bad"); });
+      addEventListener("resize", function () { if (host._lx) host._lx(); });
       var pb = $("#pub-b"); if (pb) pb.addEventListener("click", function () { openCheckout(x); });
       var pyb = $("#pay-b"); if (pyb) pyb.addEventListener("click", function () { goPayNow(x.inv); });
       if (mode !== "demo" && q.get("publish") === "1" && x.inv.status === "draft") openCheckout(x);
