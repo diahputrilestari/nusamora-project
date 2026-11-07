@@ -188,7 +188,8 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
 values ('theme-assets', 'theme-assets', true, 52428800, array['image/png','image/jpeg','image/webp','image/gif','image/svg+xml','application/json','model/gltf-binary','model/gltf+json','audio/mpeg','audio/ogg','audio/wav','audio/x-wav','image/vnd.radiance','application/octet-stream'])
 on conflict (id) do update set file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
 drop policy if exists "theme-assets baca" on storage.objects;
-create policy "theme-assets baca" on storage.objects for select using (bucket_id = 'theme-assets');
+-- TIDAK untuk publik: URL objek bucket publik dilayani tanpa kebijakan SELECT, sedangkan SELECT publik membuka list() (enumerasi). Lihat content-protection.sql.
+create policy "theme-assets baca" on storage.objects for select to authenticated using (bucket_id = 'theme-assets' and (public.has_perm('templates.read') or public.has_perm('templates.write')));
 drop policy if exists "theme-assets tulis" on storage.objects;
 create policy "theme-assets tulis" on storage.objects for insert to authenticated with check (bucket_id = 'theme-assets' and public.has_perm('templates.write') and name ~ '^(incoming|generated)/');
 drop policy if exists "theme-assets hapus" on storage.objects;
@@ -390,7 +391,7 @@ language sql stable security definer set search_path = public as $$
        th as (select th.* from public.themes th join t on true join public.template_themes tt on tt.template_id = t.id and tt.theme_id = th.id and tt.enabled
               where th.slug = p_theme and th.status = 'published'),
        pick as (
-         select ta.*, a.file_url, a.file_type, a.width, a.height, a.name as aname, a.attrs as aattrs from t
+         select ta.*, a.file_url, a.file_path as afile_path, a.file_type, a.width, a.height, a.name as aname, a.attrs as aattrs from t
          join public.template_assets ta on ta.template_id = t.id
          join public.assets a on a.id = ta.asset_id and a.deleted_at is null and a.status = 'active'
          where (ta.theme_id is null and not exists (select 1 from th join public.template_assets x on x.template_id = t.id and x.theme_id = th.id and x.slot_key = ta.slot_key
@@ -399,7 +400,7 @@ language sql stable security definer set search_path = public as $$
   select case when (select count(*) from t) = 0 then null else jsonb_build_object('template', (select slug from t), 'package', (select package_type from t),
       'theme', (select slug from th), 'layout', coalesce((select tt.layout from th join public.template_themes tt on tt.theme_id = th.id and tt.template_id = (select id from t)), '{}'::jsonb) || '{}'::jsonb,
       'base_layout', (select layout from t),
-      'assets', coalesce((select jsonb_agg(jsonb_build_object('slot', slot_key, 'section', section, 'position', position, 'config', config, 'url', file_url, 'type', file_type, 'width', width, 'height', height, 'name', aname, 'attrs', aattrs) order by position, slot_key) from pick), '[]'::jsonb)) end;
+      'assets', coalesce((select jsonb_agg(jsonb_build_object('slot', slot_key, 'section', section, 'position', position, 'config', config, 'url', case when afile_path like 'premium/%' then null else file_url end, 'asset_id', case when afile_path like 'premium/%' then asset_id end, 'premium', (afile_path like 'premium/%'), 'type', file_type, 'width', width, 'height', height, 'name', aname, 'attrs', aattrs) order by position, slot_key) from pick), '[]'::jsonb)) end;
 $$;
 
 revoke execute on function public.admin_update_asset(uuid,jsonb), public.admin_delete_asset(uuid,boolean), public.admin_restore_asset(uuid), public.admin_assets_usage(), public.admin_save_template_mapping(uuid,uuid,jsonb,jsonb) from public, anon;

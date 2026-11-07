@@ -1,5 +1,13 @@
 # Alamat bersih tanpa .html (mis. /live/jawa-tengah) di Apache/Hostinger
 RewriteEngine On
+# ---- PERLINDUNGAN SERVER: repo ini dideploy apa adanya ke web root, jadi folder internal TIDAK boleh bisa diunduh.
+# (skema SQL, tes, dokumen keamanan, sumber builder, kode Edge Function, aplikasi Next.js, metadata git/CI).
+RewriteRule ^(backend|ops|docs|builder|source|supabase|next|\.git|\.github)(/|$) - [F,L,NC]
+RewriteRule ^(README\.md|vercel\.json|package(-lock)?\.json|.*\.(sql|md|py|mjs|ts|toml|ya?ml|lock|env|log|bak|orig|swp|map))$ - [F,L,NC]
+# robots.txt dan sitemap.xml tetap publik (bukan pola di atas). Direktori tanpa index.html tidak boleh didaftar (mis. /assets/).
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html !-f
+RewriteRule ^ - [F,L]
 
 # Hapus .html dari URL yang diketik
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]

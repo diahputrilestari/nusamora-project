@@ -319,7 +319,8 @@ grant execute on function public.has_perm(text) to anon, authenticated;
 ----------------------------------------------------------------------------- 7. Storage (thumbnail, logo, aset)
 insert into storage.buckets (id, name, public) values ('site-assets', 'site-assets', true) on conflict (id) do nothing;
 drop policy if exists "site-assets baca" on storage.objects;
-create policy "site-assets baca" on storage.objects for select using (bucket_id = 'site-assets');
+-- TIDAK untuk publik (mencegah list()/enumerasi; URL objek publik tetap dilayani). Lihat content-protection.sql.
+create policy "site-assets baca" on storage.objects for select to authenticated using (bucket_id = 'site-assets' and (public.has_perm('templates.read') or public.has_perm('templates.write') or public.has_perm('content.write')));
 drop policy if exists "site-assets tulis" on storage.objects;
 create policy "site-assets tulis" on storage.objects for insert to authenticated with check (bucket_id = 'site-assets' and (public.has_perm('templates.write') or public.has_perm('content.write') or public.has_perm('live.write') or public.has_perm('settings.write')));
 drop policy if exists "site-assets ubah" on storage.objects;

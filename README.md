@@ -123,3 +123,5 @@ Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `
 
 ## Keamanan P0 (branch `security/p0`)
 Urutan SQL setelah `asset-schema.sql`: `backend/security-schema.sql` lalu `backend/security-mfa.sql` (jalankan ulang `security-mfa.sql` bila `admin-schema.sql` dijalankan ulang, karena `has_perm()` ditimpa). Edge Function baru/berubah: `admin-password`, `midtrans-*`, `asset-*` (secret baru: `RATE_LIMIT_SALT`). Dokumen: `docs/security/` (AUDIT-KEAMANAN, BACKUP_POLICY, DISASTER_RECOVERY, SECURITY-HEADERS, RATE-LIMITING, MFA-ADMIN). Skrip & uji: `ops/backup`, `ops/security`, `ops/tests`.
+
+**Perlindungan konten & aset:** lihat `docs/security/CONTENT-PROTECTION.md` (direktori internal diblokir, bucket tidak bisa didaftar, aset berbayar via signed URL; klik kanan/Inspect hanya penghalang UX).
