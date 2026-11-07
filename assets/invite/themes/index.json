@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "default": "marun-songket",
+  "aliases": {
+    "marun": "marun-songket",
+    "sage": "sage-garden",
+    "navy": "biru-malam",
+    "blush": "blush-rose",
+    "batak": "batak-ulos",
+    "nusa-essential": "marun-songket",
+    "korean": "korean-royal",
+    "jawa": "javanese-wedding",
+    "javanese": "javanese-wedding",
+    "chinese": "chinese-wedding",
+    "tionghoa": "chinese-wedding",
+    "pink-castle": "istana-pink",
+    "dinosaurus": "dino-adventure",
+    "dino": "dino-adventure",
+    "rock": "metal-rock",
+    "kpop": "kpop-party",
+    "k-pop": "kpop-party"
+  },
+  "themes": [
+    {
+      "id": "marun-songket",
+      "name": "Marun Songket",
+      "description": "Marun dan emas dengan pola anyaman songket, sulur bunga, dan pintu cover yang terbelah.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A0D14",
+        "#C9A35B"
+      ],
+      "art": false
+    },
+    {
+      "id": "sage-garden",
+      "name": "Sage Garden",
+      "description": "Hijau sage yang tenang dengan daun berguguran, garis tipis, dan cover yang memudar lembut.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "birthday",
+        "aqiqah"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2B3A30",
+        "#B7975A"
+      ],
+      "art": false
+    },
+    {
+      "id": "biru-malam",
+      "name": "Biru Malam",
+      "description": "Navy dan emas seperti langit malam, dengan titik cahaya yang jatuh pelan dan cover yang terangkat.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "graduation",
+        "corporate"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#101A31",
+        "#CFAE6B"
+      ],
+      "art": false
+    },
+    {
+      "id": "blush-rose",
+      "name": "Blush Rose",
+      "description": "Merah muda lembut dengan pola kawung, hati dan kelopak mawar yang melayang.",
+      "categories": [
+        "wedding",
+        "engagement",
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5A2B34",
+        "#C08A70"
+      ],
+      "art": false
+    },
+    {
+      "id": "batak-ulos",
+      "name": "Batak Ulos",
+      "description": "Adat Batak: rumah bolon, ulos, gorga, lentera, dan ilustrasi pengantin berbusana adat.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5A0A0F",
+        "#D4A243"
+      ],
+      "art": true
+    },
+    {
+      "id": "korean-royal",
+      "name": "Korean Royal Wedding",
+      "description": "Istana hanok di bawah bunga sakura: lentera kertas, gerbang bunga, jembatan merah, kantong bokjumeoni, dan sentuhan aksara Hangul.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3B2C57",
+        "#F4C6D6"
+      ],
+      "art": true
+    },
+    {
+      "id": "javanese-wedding",
+      "name": "Javanese Wedding",
+      "description": "Pawiwahan adat Jawa: pendopo joglo berukir emas, gunungan, pelaminan, lentera, payung songsong, batik kawung, dan sentuhan aksara Jawa.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3D2416",
+        "#F0D08A"
+      ],
+      "art": true
+    },
+    {
+      "id": "chinese-wedding",
+      "name": "Chinese Wedding",
+      "description": "Pernikahan Tionghoa: aula merah berukir naga, lampion merah, gerbang bulan 囍, bunga plum dan peony, kipas, serta pelaminan merah-emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#8E1A1F",
+        "#F2D28B"
+      ],
+      "art": true
+    },
+    {
+      "id": "istana-pink",
+      "name": "Istana Pink",
+      "description": "Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B04593",
+        "#F9A8D4"
+      ],
+      "art": true
+    },
+    {
+      "id": "dino-adventure",
+      "name": "Dino Adventure",
+      "description": "Pesta ulang tahun petualangan di lembah dinosaurus: gunung berapi, obor, telur dino, fosil, gua, balon jejak kaki, dan para dino lucu.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3A6136",
+        "#FFD15C"
+      ],
+      "art": true
+    },
+    {
+      "id": "metal-rock",
+      "name": "Metal Rock Party",
+      "description": "Pesta ulang tahun bergaya konser metal rock: panggung neon merah, gitar listrik, drum, ampli, tengkorak bersayap, mahkota krom, dan percikan petir.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#0D0609",
+        "#E3243A"
+      ],
+      "art": true
+    },
+    {
+      "id": "kpop-party",
+      "name": "K-Pop Party",
+      "description": "Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2B1A57",
+        "#9446D6"
+      ],
+      "art": true
+    }
+  ]
+}

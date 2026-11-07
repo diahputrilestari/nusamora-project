@@ -1,0 +1,18 @@
+/* Dino Adventure: ukuran ilustrasi per slot */
+.th-dino-adventure .ulos-dec { width: min(230px, 66vw); }
+.th-dino-adventure .st-kf { width: min(170px, 52vw); margin-top: -6px; }
+.th-dino-adventure .gf-amp { width: min(190px, 56vw); }
+.th-dino-adventure .ws-bk { width: min(190px, 56vw); }
+.th-dino-adventure .ev-lt { width: 22px; }
+.th-dino-adventure .rs-lt { width: 46px; top: -26px; animation-name: bobDino; }
+.th-dino-adventure .gable .art { height: 30px; }
+.th-dino-adventure .end-art { width: min(360px, 88%); margin-bottom: 26px; }
+.th-dino-adventure .end-art .cp .art { height: clamp(70px, 22vw, 104px); }
+.th-dino-adventure .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-dino-adventure .st, .th-dino-adventure .hero-nm, .th-dino-adventure .cv-nm, .th-dino-adventure .end-nm, .th-dino-adventure .side-nm { letter-spacing: .01em; }
+.th-dino-adventure .ev h3 { font-size: clamp(28px, 7.5vw, 34px); }
+@keyframes bobDino { from { translate: 0 -4px; rotate: -3deg; } to { translate: 0 4px; rotate: 3deg; } }
+/* plakat kayu di tengah backdrop jadi bingkai teks cover */
+.th-dino-adventure .gate::after { background: radial-gradient(64% 50% at 50% 46%, rgba(30, 40, 16, .5), rgba(30, 40, 16, .14) 72%), linear-gradient(180deg, rgba(30, 40, 16, .06), rgba(30, 40, 16, .55)); }
+/* Beranda: eyebrow tetap terbaca di atas panggung batu yang terang */
+.th-dino-adventure .hero-in .eb { color: #FFE08A; text-shadow: 0 1px 6px rgba(20, 30, 10, .9), 0 0 2px rgba(20, 30, 10, .8); }

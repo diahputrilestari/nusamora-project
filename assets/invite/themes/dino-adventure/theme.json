@@ -1,0 +1,135 @@
+{
+  "id": "dino-adventure",
+  "name": "Dino Adventure",
+  "version": 1,
+  "description": "Pesta ulang tahun petualangan di lembah dinosaurus: gunung berapi, obor, telur dino, fosil, gua, balon jejak kaki, dan para dino lucu.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Arka",
+    "full": "Arkana Bima Pratama",
+    "parents": "Putra kecil Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#24402A",
+    "deep2": "#3A6136",
+    "paper": "#FFF9EC",
+    "ink": "#3A2A18",
+    "muted": "#7A6448",
+    "accent": "#C2611F",
+    "accent2": "#FFD15C",
+    "soft": "#F5E8C9",
+    "petal": "#8BC34A"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Fredoka",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "leaf",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Dino Birthday Adventure",
+    "guestSalute": "Para penjelajah cilik",
+    "profileEyebrow": "Penjelajah yang berulang tahun",
+    "profileTitle": "Birthday Explorer",
+    "countdownEyebrow": "Petualangan dimulai dalam",
+    "countdownTitle": "Dino Party!",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Ekspedisi Pesta",
+    "storyEyebrow": "Jejak petualangan",
+    "storyTitle": "Cerita Kecilku",
+    "galleryTitle": "Galeri Petualangan",
+    "rsvpLead": "Siap ikut berpetualang? Kabari kami ya!",
+    "giftEyebrow": "Harta karun",
+    "giftTitle": "Kado Spesial",
+    "giftLead": "Kehadiranmu sudah jadi kado terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Ucapan Ulang Tahun",
+    "closingEyebrow": "Sampai jumpa di lembah dino!",
+    "closingText": "Terima kasih sudah ikut merayakan hari istimewa ini. Kami tunggu para penjelajah di pesta!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/obor.webp",
+        "w": 54
+      },
+      {
+        "src": "art/sarang-telur.webp",
+        "w": 140
+      },
+      {
+        "src": "art/obor.webp",
+        "w": 54
+      }
+    ],
+    "heading": "art/jejak.webp",
+    "introTop": "art/fosil.webp",
+    "figureBride": "art/trex.webp",
+    "figureGroom": "art/trex.webp",
+    "countdownRow": [
+      {
+        "src": "art/batu-jejak.webp",
+        "w": 70
+      },
+      {
+        "src": "art/gunung-berapi.webp",
+        "w": 160
+      },
+      {
+        "src": "art/batu-jejak.webp",
+        "w": 70
+      }
+    ],
+    "eventBadge": "art/lentera.webp",
+    "storyTop": "art/brontosaurus.webp",
+    "rsvpHang": "art/balon.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/triceratops.webp",
+    "closingScene": "art/gua.webp",
+    "closingFigures": [
+      "art/trex.webp",
+      "art/stegosaurus.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

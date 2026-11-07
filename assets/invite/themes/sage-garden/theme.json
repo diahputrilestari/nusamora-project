@@ -1,0 +1,54 @@
+{
+  "id": "sage-garden",
+  "name": "Sage Garden",
+  "version": 1,
+  "description": "Hijau sage yang tenang dengan daun berguguran, garis tipis, dan cover yang memudar lembut.",
+  "categories": [
+    "wedding",
+    "engagement",
+    "birthday",
+    "aqiqah"
+  ],
+  "colors": {
+    "deep": "#2B3A30",
+    "deep2": "#3E5244",
+    "paper": "#F4F0E6",
+    "ink": "#262C27",
+    "muted": "#5F6A5F",
+    "accent": "#B7975A",
+    "accent2": "#DCC796",
+    "soft": "#E1DACA",
+    "petal": "#C9D3B8"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost"
+  },
+  "ornament": {
+    "pattern": "dots",
+    "border": "line",
+    "corner": "vine",
+    "divider": "simple",
+    "frame": "arch",
+    "petals": [
+      "leaf"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "fade"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

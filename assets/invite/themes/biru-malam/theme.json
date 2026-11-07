@@ -1,0 +1,55 @@
+{
+  "id": "biru-malam",
+  "name": "Biru Malam",
+  "version": 1,
+  "description": "Navy dan emas seperti langit malam, dengan titik cahaya yang jatuh pelan dan cover yang terangkat.",
+  "categories": [
+    "wedding",
+    "engagement",
+    "graduation",
+    "corporate"
+  ],
+  "colors": {
+    "deep": "#101A31",
+    "deep2": "#1E2B50",
+    "paper": "#F5F0E6",
+    "ink": "#1D2233",
+    "muted": "#5B6275",
+    "accent": "#CFAE6B",
+    "accent2": "#EDD8A6",
+    "soft": "#E5DCCA",
+    "petal": "#EDD8A6"
+  },
+  "fonts": {
+    "script": "Pinyon Script",
+    "serif": "Playfair Display",
+    "sans": "Jost"
+  },
+  "ornament": {
+    "pattern": "lattice",
+    "border": "tumpal",
+    "corner": "vine",
+    "divider": "diamond",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "rise"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

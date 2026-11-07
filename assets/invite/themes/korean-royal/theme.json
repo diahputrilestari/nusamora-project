@@ -1,0 +1,98 @@
+{
+  "id": "korean-royal",
+  "name": "Korean Royal Wedding",
+  "version": 1,
+  "description": "Istana hanok di bawah bunga sakura: lentera kertas, gerbang bunga, jembatan merah, kantong bokjumeoni, dan sentuhan aksara Hangul.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#3B2C57",
+    "deep2": "#5C4682",
+    "paper": "#FFF8F9",
+    "ink": "#3B2B40",
+    "muted": "#7A6680",
+    "accent": "#B9668A",
+    "accent2": "#F4C6D6",
+    "soft": "#F7E7EF",
+    "petal": "#F7B3C8"
+  },
+  "fonts": {
+    "script": "Alex Brush",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost",
+    "extra": [
+      {
+        "family": "Nanum Myeongjo",
+        "axes": "wght@400;700"
+      }
+    ]
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "line",
+    "corner": "none",
+    "divider": "simple",
+    "frame": "arch",
+    "petals": [
+      "art/petal-2.webp",
+      "art/petal-3.webp",
+      "bloom"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Royal Wedding of",
+    "coupleEyebrow": "신랑 · 신부",
+    "countdownTitle": "D-Day",
+    "storyEyebrow": "인연 · Perjalanan kami",
+    "closingEyebrow": "감사합니다 · Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/lantern-hanging.webp",
+    "introTop": "art/blossom-vase.webp",
+    "countdownRow": [
+      {
+        "src": "art/lantern-stone.webp",
+        "w": 62
+      },
+      {
+        "src": "art/hydrangea.webp",
+        "w": 140
+      },
+      {
+        "src": "art/lantern-stone.webp",
+        "w": 62
+      }
+    ],
+    "eventBadge": "art/lantern-box.webp",
+    "storyTop": "art/bridge.webp",
+    "rsvpHang": "art/lantern-round.webp",
+    "giftTop": "art/pouch.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/flower-arch.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

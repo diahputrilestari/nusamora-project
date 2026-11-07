@@ -1,0 +1,13 @@
+/* Chinese Wedding: ukuran ilustrasi per slot */
+.th-chinese-wedding .ulos-dec { width: min(220px, 64vw); }
+.th-chinese-wedding .st-kf { width: min(250px, 72vw); margin-top: -6px; }
+.th-chinese-wedding .gf-amp { width: min(170px, 50vw); }
+.th-chinese-wedding .ws-bk { width: min(170px, 50vw); }
+.th-chinese-wedding .ev-lt { width: 22px; }
+.th-chinese-wedding .cv-lt { width: clamp(40px, 10vw, 60px); top: -4px; }
+.th-chinese-wedding .rs-lt { width: 34px; }
+.th-chinese-wedding .end-art { width: min(420px, 94%); margin-bottom: 26px; }
+.th-chinese-wedding .end-art .eg { filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35)); }
+.th-chinese-wedding .jb-row { gap: 2px; }
+/* latar aula merah cukup ramai: lapisan gelap cover sedikit lebih tebal di tengah */
+.th-chinese-wedding .gate::after { background: radial-gradient(70% 55% at 50% 50%, rgba(50, 6, 10, .58), rgba(50, 6, 10, .22) 72%), linear-gradient(180deg, rgba(50, 6, 10, .2), rgba(50, 6, 10, .66)); }
