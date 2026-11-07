@@ -10,7 +10,8 @@ const MODE = process.env.MODE || "pay", SK = env("MIDTRANS_SERVER_KEY"), PW = "U
   if (String(pj.status_code) !== "404") { console.error("Respons tak terduga dari Sandbox Midtrans: " + pr.status + " " + JSON.stringify(pj).slice(0, 120)); process.exit(2); }
   console.log("Server Key diterima oleh API Sandbox Midtrans (probe: order tidak ada = 404, wajar)."); }
 const sha512 = (s) => createHash("sha512").update(s).digest("hex");
-const sig = (o, s, g) => sha512(o + s + g + SK);
+const SIGK = process.env.MIDTRANS_SIGNATURE_KEY || SK;   // kunci untuk menghitung signature uji (Signature Secret Key bila akun memakainya)
+const sig = (o, s, g) => sha512(o + s + g + SIGK);
 const hook = async (body) => { const r = await fetch(`${URL_}/functions/v1/midtrans-webhook`, { method: "POST", headers: { "Content-Type": "application/json", apikey: ANON }, body: JSON.stringify(body) }); let j = null; try { j = await r.json(); } catch {} return { status: r.status, body: j }; };
 const mstatus = async (order) => (await fetch(`https://api.sandbox.midtrans.com/v2/${order}/status`, { headers: { Accept: "application/json", Authorization: "Basic " + Buffer.from(SK + ":").toString("base64") } })).json();
 const EMAIL = (n) => `${n}@uji.nusamora.test`;

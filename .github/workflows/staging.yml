@@ -28,6 +28,7 @@ jobs:
       PROJECT_REF: ${{ secrets.STAGING_PROJECT_REF }}
       ORIGIN: http://localhost
       MIDTRANS_SERVER_KEY: ${{ secrets.STAGING_MIDTRANS_SERVER_KEY }}
+      MIDTRANS_SIGNATURE_KEY: ${{ secrets.STAGING_MIDTRANS_SIGNATURE_KEY }}
     steps:
       - name: Pengaman (hanya staging)
         run: |
@@ -109,6 +110,7 @@ jobs:
           echo "probe Sandbox: http=$code status_code=$sc"
           [ "$sc" = "404" ] || { echo "Kunci DITOLAK oleh API Sandbox Midtrans (kemungkinan kunci Production/salah). Dihentikan, tidak ada yang dipasang."; exit 1; }
           supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SERVER_KEY="$MIDTRANS_SERVER_KEY" MIDTRANS_IS_PRODUCTION=false
+          if [ -n "$MIDTRANS_SIGNATURE_KEY" ]; then supabase secrets set --yes --project-ref "$PROJECT_REF" MIDTRANS_SIGNATURE_KEY="$MIDTRANS_SIGNATURE_KEY"; echo "Signature Secret Key juga dipasang"; fi
           echo "Server Key Sandbox terpasang; MIDTRANS_IS_PRODUCTION=false"
       - name: "[midtrans-pay] Uji checkout & webhook (otomatis) lalu cetak tautan bayar"
         id: mpay
