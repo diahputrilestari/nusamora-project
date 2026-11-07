@@ -1,0 +1,42 @@
+name: content-protection
+on:
+  push:
+    branches: ["feature/proteksi-*"]
+    paths: [".htaccess", "vercel.json", "assets/**", "*.html", "live/**", "source/**", "backend/**", "supabase/**", "ops/tests/**", ".github/workflows/content-protection.yml"]
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Dependensi (Playwright + Chromium + Apache)
+        run: |
+          npm install --prefix ops --no-save --no-audit --no-fund playwright >/dev/null
+          npx --prefix ops playwright install --with-deps chromium >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq apache2 >/dev/null
+          sudo systemctl stop apache2 || true
+      - name: ".htaccess pada Apache asli (file internal 403, halaman publik 200)"
+        id: apache
+        continue-on-error: true
+        run: bash ops/tests/htaccess-check.sh 2>&1 | tee "$RUNNER_TEMP/apache.log"; exit ${PIPESTATUS[0]}
+      - name: "Pengaman klien di Chromium (protect.js: perilaku, cakupan, SEO, aksesibilitas)"
+        id: ui
+        continue-on-error: true
+        run: node ops/tests/protect.ui.test.mjs 2>&1 | tee "$RUNNER_TEMP/protect-ui.log"; exit ${PIPESTATUS[0]}
+      - name: "Edge Function asset-url (signed URL aset berbayar)"
+        id: asseturl
+        continue-on-error: true
+        run: node --experimental-strip-types ops/tests/asset-url.test.mjs 2>&1 | grep -v ExperimentalWarning | tee "$RUNNER_TEMP/asset-url.log"; exit ${PIPESTATUS[0]}
+      - name: "Regresi: rate limit handlers"
+        id: rl
+        continue-on-error: true
+        run: node --experimental-strip-types ops/tests/rate-limit-handlers.test.mjs 2>&1 | grep -v ExperimentalWarning | tail -5; exit ${PIPESTATUS[0]}
+      - name: Ringkasan
+        if: always()
+        run: |
+          echo "apache=${{ steps.apache.outcome }} ui=${{ steps.ui.outcome }} asseturl=${{ steps.asseturl.outcome }} rl=${{ steps.rl.outcome }}"
+          test "${{ steps.apache.outcome }}" = success -a "${{ steps.ui.outcome }}" = success -a "${{ steps.asseturl.outcome }}" = success -a "${{ steps.rl.outcome }}" = success

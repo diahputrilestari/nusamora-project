@@ -4,7 +4,7 @@ name: supabase-stack
 # (lihat docs/security/STAGING-RUNBOOK.md). Tidak ada secret: semua kunci berasal dari stack lokal sekali pakai.
 on:
   push:
-    branches: [security/p0, "security/p0-*"]
+    branches: [security/p0, "security/p0-*", "feature/proteksi-*"]
     paths: ["ops/**", "backend/**", "supabase/**", "assets/**", "*.html", ".htaccess", ".github/workflows/supabase-stack.yml"]
   workflow_dispatch:
 jobs:
@@ -62,6 +62,13 @@ jobs:
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
           SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node mfa.mjs 2>&1 | tee "$RUNNER_TEMP/mfa.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji perlindungan aset (bucket tidak bisa didaftar, aset berbayar privat, signed URL, otorisasi)"
+        id: contentprot
+        continue-on-error: true
+        working-directory: ops/stack
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          SUPABASE_URL=$API_URL SUPABASE_ANON_KEY=$ANON_KEY SUPABASE_SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY node content-protection.mjs 2>&1 | tee "$RUNNER_TEMP/content-protection.log"; exit ${PIPESTATUS[0]}
       - name: "Uji batas Auth & lockout"
         id: authlimits
         continue-on-error: true
@@ -92,7 +99,7 @@ jobs:
         if: always()
         run: |
           mkdir -p out; cp -r ops/stack/stack-results out/ 2>/dev/null || true
-          for f in mfa authlimits dr captcha fn; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
+          for f in mfa authlimits dr captcha fn content-protection; do cp "$RUNNER_TEMP/$f.log" out/ 2>/dev/null || true; done
           cd ops/stack && ls dr-work 2>/dev/null | head -0
       - if: always()
         uses: actions/upload-artifact@v4
@@ -100,5 +107,5 @@ jobs:
       - name: Ringkasan
         if: always()
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }}"
-          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success
+          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} contentprot=${{ steps.contentprot.outcome }}"
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success
