@@ -74,6 +74,8 @@ if (MODE === "pay") {
     const r = await svc.from("security_events").select("kind,at,detail").eq("kind", "webhook_bad_signature").gte("at", since).order("at", { ascending: false }).limit(20);
     if (r.error) info("DIAGNOSTIK: gagal membaca security_events", { error: r.error.message });
     else info("DIAGNOSTIK: webhook ber-signature salah tercatat 6 jam terakhir (>0 = Midtrans MENGIRIM tetapi ditolak 401)", { jumlah: r.data.length, terbaru: r.data.slice(0, 5).map((e) => ({ at: e.at, ...e.detail })) }); }
+  { const t = await svc.from("security_events").select("at,detail").eq("kind", "webhook_trace").gte("at", new Date(Date.now() - 6 * 3600e3).toISOString()).order("at", { ascending: false }).limit(20);
+    info("JEJAK webhook yang diterima fungsi (6 jam terakhir; http = balasan fungsi)", t.error ? { error: t.error.message } : (t.data || []).filter((e) => e.detail?.order === order).map((e) => ({ at: e.at, ...e.detail }))); }
   const viaWebhook = ev0.some((e) => e.source === "webhook" && ["settlement", "capture"].includes(e.transaction_status));
   check("webhook Midtrans -> Edge Function benar-benar diterima (Notification URL dikonfigurasi benar)", viaWebhook, viaWebhook ? "ya" : "TIDAK: periksa Notification URL di dashboard Sandbox");
   const A = await login(email, PW);
