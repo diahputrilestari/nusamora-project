@@ -12,6 +12,7 @@ Tanda ✅ = sudah diuji di CI/stack lokal; ☐ = harus dikerjakan/diuji di Supab
 
 ## C. Edge Functions & secrets
 - Deploy: `admin-password`, `asset-register`, `asset-generate`, dan fungsi existing. Pastikan `verify_jwt=false` untuk `admin-password` sesuai `supabase/config.toml`.
+- Produksi: **SMTP kustom wajib** (SMTP bawaan 2 email/jam menolak pendaftaran/reset sah); Notification URL Midtrans Production → proyek produksi, tidak dicampur dengan Sandbox/staging; `ALLOWED_ORIGINS` berisi domain nyata (bila tidak, halaman finish Midtrans gagal); tinjau/batasi jejak `webhook_trace`; Signature Secret Key Midtrans bila akun memakainya.
 - Secrets: `ALLOWED_ORIGINS` (wajib; kosong → 500), `MIDTRANS_SERVER_KEY`, `MIDTRANS_IS_PRODUCTION`, `RATE_LIMIT_SALT` (acak ≥32 karakter), kunci AI bila dipakai.
 
 ## D. Supabase Auth (dashboard) — lihat RATE-LIMITING.md

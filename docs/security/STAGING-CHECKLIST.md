@@ -44,7 +44,8 @@ Cara mengisi: `gh secret set NAMA --env staging` (nilai dimasukkan interaktif di
 
 ## 6. Midtrans Sandbox (uji pembayaran)
 - Secret GitHub (environment staging): `STAGING_MIDTRANS_SERVER_KEY` = Server Key **Sandbox** (awalan bisa `SB-Mid-server-` atau `Mid-server-`; yang menentukan: diterima API Sandbox). Workflow dan skrip menguji kunci ke API Sandbox Midtrans (kunci Production ditolak 401), tidak bergantung pada awalan.
-- Dashboard Midtrans **Sandbox** → Settings → Configuration → Payment Notification URL: `https://<ref>.supabase.co/functions/v1/midtrans-webhook`.
+- Dashboard Midtrans **Sandbox** → Settings → Configuration → Payment Notification URL: `https://<ref-STAGING>.supabase.co/functions/v1/midtrans-webhook`. **Periksa ref-nya adalah proyek staging, bukan produksi** (kasus nyata: URL menunjuk produksi → webhook "Completed" di Midtrans tetapi tidak pernah sampai ke staging). Buktikan dengan event `webhook` di `payment_events` / `midtrans-verify`.
+- Fase `replay` memutar ulang notifikasi asli tanpa header autentikasi; `fnlogs` butuh token dengan izin `analytics_logs_read` (token `ci-staging` sengaja tidak punya).
 - Urutan fase workflow `staging`: `secrets` → (CAPTCHA harus mati) `midtrans-pay` → bayar manual lewat tautan di log (kartu uji 4811 1111 1111 1114, exp 12/30, CVV 123, OTP 112233) → `midtrans-verify`.
 - Client Key tidak dipakai oleh backend (pembayaran memakai Snap redirect).
 - Opsional: `STAGING_MIDTRANS_SIGNATURE_KEY` = Signature Secret Key Sandbox (Settings → Access Keys). Dipasang sebagai `MIDTRANS_SIGNATURE_KEY` pada fungsi; webhook menerima signature dari Server Key ATAU Signature Secret Key.
