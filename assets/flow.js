@@ -181,7 +181,7 @@
 
   /* ================= 4. ATUR KATEGORI & LINK ================= */
   var SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-  function slugCheckLocal(s) { if (!s) return { s: "idle" }; if (s.length < 3) return { s: "bad", m: "Minimal 3 karakter." }; if (s.length > 40) return { s: "bad", m: "Maksimal 40 karakter." }; if (!/^[a-z0-9-]+$/.test(s)) return { s: "bad", m: "Hanya huruf kecil, angka, dan tanda hubung (-). Tanpa spasi atau simbol lain." }; if (!SLUG_RE.test(s)) return { s: "bad", m: "Tanda hubung tidak boleh di awal, di akhir, atau berurutan." }; return { s: "ok" }; }
+  function slugCheckLocal(s) { if (!s) return { s: "idle" }; if (s.length < 3) return { s: "bad", m: "Minimal 3 karakter." }; if (s.length > 40) return { s: "bad", m: "Maksimal 40 karakter." }; if (!/^[a-z0-9-]+$/.test(s)) { var bad = s.replace(/[a-z0-9-]/g, "").split("").filter(function (c, i, a) { return a.indexOf(c) === i; }).join(" "); return { s: "bad", m: "Karakter tidak diperbolehkan: " + bad + " . Gunakan hanya huruf kecil, angka, dan tanda hubung (-)." }; } if (!SLUG_RE.test(s)) return { s: "bad", m: "Tanda hubung tidak boleh di awal, di akhir, atau berurutan." }; return { s: "ok" }; }
   function pageBuat() {
     var q = new URLSearchParams(location.search), pkg = pkgOk(q.get("paket")), tslug = q.get("template") || "", kat = q.get("kategori") || "";
     if (!pkg) { location.replace("/paket"); return; }
@@ -192,16 +192,35 @@
       var saved = {}; try { saved = JSON.parse(sessionStorage.getItem("nm:buat:" + tslug) || "{}"); } catch (e) { }
       var back = "/template?paket=" + pkg + "&kategori=" + kat;
       view.innerHTML = '<div class="fw">' + steps(3, pkg) + '<div class="fc"><div class="card"><h1 style="font:700 clamp(26px,3.4vw,34px)/1.15 var(--display)">Atur Kategori &amp; Link Undangan</h1><p class="sub" style="margin-top:8px">Tentukan jenis acara dan alamat undangan yang mudah diingat tamu Anda.</p>' +
-        '<form id="fb" novalidate><div class="f"><label for="cat">Kategori acara</label><select id="cat">' + t.cats.map(function (c) { return '<option value="' + c + '"' + (c === kat ? " selected" : "") + ">" + esc(CATN[c] || c) + "</option>"; }).join("") + "</select></div>" +
+        '<form id="fb" novalidate><div class="f"><span class="lb" id="cat-l">Kategori acara</span><div class="catsum" id="catsum"><span class="tag" id="catv">' + esc(CATN[kat] || kat) + '</span>' + (t.cats.length > 1 ? '<button type="button" class="lnk" id="catchg" aria-expanded="false" aria-controls="catsel">Ubah</button>' : '<small class="sub">Sesuai template yang dipilih</small>') + '</div>' +
+          (t.cats.length > 1 ? '<div class="seg catsel" id="catsel" role="radiogroup" aria-labelledby="cat-l" hidden>' + t.cats.map(function (c) { return '<label class="sgi"><input type="radio" name="catr" value="' + c + '"' + (c === kat ? " checked" : "") + "><span>" + esc(CATN[c] || c) + "</span></label>"; }).join("") + "</div>" : "") + "</div>" +
         (TH.length ? '<div class="f"><label for="thm">Tema</label><select id="thm">' + TH.map(function (x) { return '<option value="' + esc(x.slug) + '"' + (x.slug === tema ? " selected" : "") + ">" + esc(x.name) + "</option>"; }).join("") + '</select><small class="sub">Tema menentukan set ilustrasi dan dekorasi undangan.</small></div>' : "") +
         '<div class="f"><div class="hint"><b>Tips:</b> buat link yang singkat dan mudah diingat, misalnya <b>raka-sinta</b> atau <b>ulangtahun-sinta</b>. Link ini dipakai tamu untuk membuka undangan Anda.</div></div>' +
-        '<div class="f"><label for="slug">Link undangan</label><div class="slug" id="sw"><span aria-hidden="true">nusamora.com/</span><input id="slug" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40" aria-describedby="sst" placeholder="nama-acara-anda" value="' + esc(saved.slug || "") + '"></div><div class="st" id="sst" role="status" aria-live="polite"></div><div class="sugg" id="sg"></div></div>' +
+        '<div class="f"><label for="slug">Link undangan</label><div class="slug" id="sw"><span aria-hidden="true">nusamora.com/</span><input id="slug" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="40" aria-describedby="sst" placeholder="nama-acara-anda" value="' + esc(saved.slug || "") + '"></div><div class="st" id="sst" role="status" aria-live="polite"></div><div class="sugg" id="sg"></div>' +
+        '<ul class="rules" id="rules" aria-label="Aturan link"><li data-r="len"><i></i>3 sampai 40 karakter</li><li data-r="chars"><i></i>Hanya huruf kecil, angka, dan tanda hubung (-)</li><li data-r="edge"><i></i>Tidak diawali/diakhiri tanda hubung dan tanpa tanda hubung ganda</li></ul>' +
+        '<div class="urlprev" id="up"><div><small>Link lengkap undangan Anda</small><code id="upc"></code></div><button type="button" class="btn o sm" id="cp" disabled>Salin link</button></div></div>' +
         '<div class="acts"><a class="btn o" href="' + back + '">Kembali</a><button class="btn" type="submit" id="nx" disabled>Selanjutnya</button></div></form></div>' +
         '<aside class="side-c"><div class="card mini"><span class="pkchip"><i>' + PK[pkg].icon + "</i>Paket " + PK[pkg].name + "</span>" + (t.img ? '<img src="' + esc(t.img) + '" alt="">' : "") + "<b>" + esc(t.name) + '</b><span class="sub">' + esc(PK[pkg].kind) + '</span><a href="' + back + '" style="color:var(--deep);font-weight:700;font-size:14px">Ganti template</a></div></aside></div></div>';
-      var inp = $("#slug"), sw = $("#sw"), st = $("#sst"), nx = $("#nx"), tok = 0, timer = null, okSlug = "";
+      var inp = $("#slug"), sw = $("#sw"), st = $("#sst"), nx = $("#nx"), tok = 0, timer = null, okSlug = "", BASE_URL = "https://nusamora.com/", cp = $("#cp"), cpT = null;
+      function fullUrl(v) { return BASE_URL + v; }
+      function drawUrl(v, can) { $("#upc").innerHTML = BASE_URL + (v ? "<b>" + esc(v) + "</b>" : '<b class="ph">nama-acara-anda</b>'); cp.disabled = !can; }
+      function rules(v) {
+        var R = { len: v.length >= 3 && v.length <= 40, chars: v.length > 0 && /^[a-z0-9-]+$/.test(v), edge: v.length > 0 && !/^-|-$|--/.test(v) };
+        $$("#rules li").forEach(function (li) { li.className = !v ? "" : R[li.dataset.r] ? "y" : "n"; });
+      }
+      function copyText(txt) {
+        if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(txt);
+        return new Promise(function (res, rej) { var a = d.createElement("textarea"); a.value = txt; a.setAttribute("readonly", ""); a.style.cssText = "position:fixed;opacity:0"; d.body.appendChild(a); a.select(); try { d.execCommand("copy") ? res() : rej(); } catch (e) { rej(e); } a.remove(); });
+      }
+      cp.addEventListener("click", function () { if (cp.disabled) return; copyText(fullUrl(inp.value)).then(function () { cp.textContent = "Tersalin \u2713"; toast("Link disalin ke papan klip.", ""); clearTimeout(cpT); cpT = setTimeout(function () { cp.textContent = "Salin link"; }, 1800); }, function () { toast("Tidak bisa menyalin otomatis. Salin link secara manual.", "bad"); }); });
+      var chg = $("#catchg"), csel = $("#catsel");
+      if (chg) {
+        chg.addEventListener("click", function () { var open = csel.hidden; csel.hidden = !open; chg.setAttribute("aria-expanded", String(open)); chg.textContent = open ? "Selesai" : "Ubah"; if (open) { var r = $("input[name=catr]:checked", csel); if (r) r.focus(); } });
+        csel.addEventListener("change", function (e) { var r = e.target.closest("input[name=catr]"); if (!r) return; kat = r.value; $("#catv").textContent = CATN[kat] || kat; });
+      }
       function setS(cls, html) { sw.className = "slug" + (cls ? " " + cls : ""); st.className = "st " + (cls || ""); st.innerHTML = html; }
       function check() {
-        var v = inp.value, p = slugCheckLocal(v); okSlug = ""; nx.disabled = true; $("#sg").innerHTML = "";
+        var v = inp.value, p = slugCheckLocal(v); okSlug = ""; nx.disabled = true; $("#sg").innerHTML = ""; rules(v); drawUrl(v, p.s !== "idle" && p.s !== "bad");
         try { sessionStorage.setItem("nm:buat:" + tslug, JSON.stringify({ slug: v })); } catch (e) { }
         if (p.s === "idle") return setS("", ""); if (p.s === "bad") return setS("bad", esc(p.m));
         var my = ++tok; setS("wait", '<i class="spin"></i> Memeriksa ketersediaan...');
@@ -211,7 +230,7 @@
             var x = r.data || {};
             if (x.ok) { okSlug = v; nx.disabled = false; return setS("ok", "&#10003; nusamora.com/" + esc(v) + " tersedia"); }
             var msg = { digunakan: "URL ini sudah digunakan. Coba tambahkan nama lengkap atau tahun.", dicadangkan: "URL ini dicadangkan oleh sistem. Pilih yang lain.", format: "Format URL belum benar.", panjang: "Gunakan 3 sampai 40 karakter." }[x.reason] || "URL tidak dapat dipakai.";
-            setS("bad", esc(msg)); if (x.reason === "digunakan") $("#sg").innerHTML = [v + "-" + new Date().getFullYear(), v + "-undangan", "undangan-" + v].filter(function (s) { return s.length <= 40; }).map(function (s) { return '<button type="button" data-s="' + esc(s) + '">' + esc(s) + "</button>"; }).join("");
+            setS("bad", esc(msg)); cp.disabled = true; if (x.reason === "digunakan") $("#sg").innerHTML = [v + "-" + new Date().getFullYear(), v + "-undangan", "undangan-" + v].filter(function (s) { return s.length <= 40; }).map(function (s) { return '<button type="button" data-s="' + esc(s) + '">' + esc(s) + "</button>"; }).join("");
           }, function () { if (my === tok) setS("bad", "Tidak bisa terhubung. Periksa koneksi internet."); });
         }, 450);
       }
@@ -219,14 +238,14 @@
       $("#sg").addEventListener("click", function (e) { var b = e.target.closest("[data-s]"); if (b) { inp.value = b.dataset.s; check(); inp.focus(); } });
       $("#fb").addEventListener("submit", function (e) {
         e.preventDefault(); if (!okSlug) return; nx.disabled = true; nx.textContent = "Membuat draft...";
-        sb.rpc("create_invitation", { p_template: tslug, p_category: $("#cat").value, p_slug: okSlug }).then(function (r) {
+        sb.rpc("create_invitation", { p_template: tslug, p_category: kat, p_slug: okSlug }).then(function (r) {
           if (r.error) { nx.textContent = "Selanjutnya"; var m = r.error.message; if (m === "slug_digunakan" || m === "slug_dicadangkan") { okSlug = ""; setS("bad", esc(ERR[m])); } else { nx.disabled = false; toast(errText(r.error), "bad"); } return; }
           try { sessionStorage.removeItem("nm:buat:" + tslug); } catch (e2) { }
           var go = function () { location.href = "/editor?id=" + encodeURIComponent(r.data); }, th = $("#thm");
           if (th && th.value) sb.rpc("set_invitation_theme", { p_invitation: r.data, p_theme: th.value }).then(function (x) { if (x.error || !x.data || !x.data.ok) toast("Undangan dibuat, tetapi tema belum bisa dipasang. Pilih ulang nanti.", "bad"); go(); }, go); else go();
         }, function (er) { nx.disabled = false; nx.textContent = "Selanjutnya"; toast(errText(er), "bad"); });
       });
-      if (saved.slug) check(); inp.focus();
+      drawUrl("", false); if (saved.slug) check(); inp.focus();
     });
   }
 
