@@ -95,6 +95,19 @@
     });
   }
 
+  /* Ilustrasi garis per kategori (dipakai bila belum ada thumbnail template). Dekoratif, aria-hidden. */
+  var CATI = {
+    wedding: '<circle cx="24" cy="40" r="13"/><circle cx="40" cy="40" r="13"/><path d="M32 8l5 6-5 6-5-6z"/>',
+    engagement: '<circle cx="32" cy="42" r="15"/><path d="M24 20l4-8h8l4 8-8 9z"/>',
+    birthday: '<rect x="14" y="34" width="36" height="18" rx="3"/><path d="M14 43c6 4 10-4 18 0s12 4 18 0M32 24v10"/><path d="M32 12c3 4 3 7 0 9-3-2-3-5 0-9z"/>',
+    graduation: '<path d="M4 26L32 12l28 14-28 14z"/><path d="M16 33v12c0 5 32 5 32 0V33M56 28v16"/>',
+    aqiqah: '<path d="M42 10a22 22 0 1 0 10 34A18 18 0 0 1 42 10z"/><path d="M50 14l1.6 4 4 1.6-4 1.6L50 25l-1.6-3.8-4-1.6 4-1.6z"/>',
+    seminar: '<rect x="25" y="8" width="14" height="26" rx="7"/><path d="M17 30a15 15 0 0 0 30 0M32 45v10M23 55h18"/>',
+    corporate: '<rect x="16" y="8" width="32" height="46" rx="2"/><path d="M24 18h4M36 18h4M24 28h4M36 28h4M24 38h4M36 38h4M28 54v-8h8v8"/>',
+    other: '<path d="M32 6l6 17 17 6-17 6-6 17-6-17-17-6 17-6z"/>'
+  };
+  function catIll(k) { return '<svg class="cgi-ill" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + (CATI[k] || CATI.other) + "</svg>"; }
+
   /* ================= 2 + 3. KATEGORI lalu TEMPLATE ================= */
   function pageTemplate() {
     var q = new URLSearchParams(location.search), pkg = pkgOk(q.get("paket")), kat = CATN[q.get("kategori")] ? q.get("kategori") : "";
@@ -102,8 +115,13 @@
     loadTemplates(pkg).then(function (T) {
       if (!kat) {
         view.innerHTML = '<div class="fw">' + steps(1, pkg) + '<div class="hd"><h1>Pilih kategori acara</h1><p>Kami hanya menampilkan template ' + esc(PK[pkg].kind) + " yang cocok dengan jenis acara Anda.</p></div>" +
-          '<div class="cg">' + CATS.map(function (c) { var n = T.filter(function (t) { return t.cats.indexOf(c[0]) > -1; }).length; return '<a class="card cgi hov' + (n ? "" : " off") + '" href="' + (n ? "/template?paket=" + pkg + "&kategori=" + c[0] : "#") + '"' + (n ? "" : ' aria-disabled="true" tabindex="-1"') + "><b>" + esc(c[1]) + "</b><span>" + esc(CATD[c[0]]) + "</span><em>" + (n ? n + " template" : "Segera hadir") + "</em></a>"; }).join("") + '</div><div class="acts"><a class="btn o" href="/paket?paket=' + pkg + '">Kembali</a></div></div>';
-        $$(".cgi.off").forEach(function (a) { a.addEventListener("click", function (e) { e.preventDefault(); toast("Template kategori ini sedang disiapkan untuk paket " + PK[pkg].name + ".", ""); }); });
+          '<p class="cgsum">' + (function () { var av = CATS.filter(function (c) { return T.some(function (t) { return t.cats.indexOf(c[0]) > -1; }); }).length; return av + " dari " + CATS.length + " kategori sudah memiliki template untuk paket " + esc(PK[pkg].name) + "."; })() + "</p>" +
+          '<div class="cg">' + CATS.map(function (c) {
+            var L = T.filter(function (t) { return t.cats.indexOf(c[0]) > -1; }), n = L.length, img = n && L[0].img ? '<img src="' + esc(L[0].img) + '" alt="" loading="lazy" decoding="async">' : "";
+            var im = '<div class="cgi-im' + (img ? " ph" : "") + '">' + (img || catIll(c[0])) + "</div>";
+            if (!n) return '<div class="card cgi off" aria-disabled="true">' + im + '<div class="cgi-bd"><b>' + esc(c[1]) + "</b><span>" + esc(CATD[c[0]]) + '</span><em class="soon"><i aria-hidden="true"></i>Coming Soon<span class="sr"> (belum dapat dipilih)</span></em></div></div>';
+            return '<a class="card cgi hov" href="/template?paket=' + pkg + "&kategori=" + c[0] + '">' + im + '<div class="cgi-bd"><b>' + esc(c[1]) + "</b><span>" + esc(CATD[c[0]]) + '</span><em class="cnt">' + n + " template tersedia</em></div></a>";
+          }).join("") + '</div><div class="acts"><a class="btn o" href="/paket?paket=' + pkg + '">Kembali</a></div></div>';
         return;
       }
       var list = T.filter(function (t) { return t.cats.indexOf(kat) > -1; });
