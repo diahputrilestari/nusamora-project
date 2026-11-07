@@ -35,7 +35,9 @@
   function cta() { return '<button class="btn" type="button" data-act="create">' + ico("plus") + " Buat Undangan</button>"; }
 
   /* ---------- state & data ---------- */
-  var S = { user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], loaded: false, warn: false, period: "30", from: "", to: "" };
+  /* Fitur yang belum diluncurkan: ubah ke true saat program dibuka. Menu DAN rute ikut tersembunyi (hash langsung kembali ke Dashboard). */
+  var FEATURES = { affiliate: false, dompet: false };
+  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], loaded: false, warn: false, period: "30", from: "", to: "" };
   function safe(p, fallback) { return p.then(function (r) { if (r.error) { S.warn = S.warn || (r.error.code !== "42P01" && r.error.code !== "PGRST205"); return fallback; } return r.data == null ? fallback : r.data; }, function () { S.warn = true; return fallback; }); }
   function loadAll() {
     var uid = S.user.id;
@@ -47,7 +49,7 @@
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
       safe(sb.from("bonus_history").select("description,amount,created_at").order("created_at", { ascending: false }).limit(200), []),
       safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), [])
-    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.loaded = true; });
+    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.loaded = true; }).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
   }
   function name() { return (S.profile && S.profile.full_name) || (S.user && S.user.email ? S.user.email.split("@")[0] : "Pelanggan"); }
   function range() {
@@ -143,30 +145,110 @@
     return '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(code) + '</b></p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
       '<p class="note" style="margin-top:16px">Pencatatan referral dan besaran komisi belum aktif. Ketentuan program akan diumumkan sebelum dibuka, jadi link ini baru dipakai setelah program berjalan.</p></div><div class="card"><h2 style="margin-bottom:14px">Saldo bonus</h2><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b></div><div class="row-end"><a class="btn o sm" href="#bonus">History Bonus</a><a class="btn o sm" href="#penarikan">History Penarikan</a></div></div></div>';
   };
-  V.bonus = function () {
-    var h = '<div class="pghead"><div><h1>History Bonus</h1><p class="sub">Bonus yang Anda terima</p></div></div><div class="card">';
-    if (!S.bonus.length) return h + empty("gift", "Belum ada bonus", "Bonus dari program affiliate akan tercatat di sini.") + "</div>";
-    return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' + S.bonus.map(function (b) { return "<tr><td>" + dt(b.created_at) + "</td><td>" + esc(b.description) + '</td><td class="num">' + rp(b.amount) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
-  };
-  V.penarikan = function () {
-    var h = '<div class="pghead"><div><h1>History Penarikan</h1><p class="sub">Riwayat penarikan saldo bonus</p></div></div><div class="card">';
-    if (!S.wd.length) return h + empty("wallet", "Belum ada penarikan", "Riwayat penarikan saldo akan tampil di sini setelah program affiliate dibuka.") + "</div>";
+  V.dompet = function () {
+    var tab = S.dtab === "penarikan" ? "penarikan" : "bonus";
+    var h = '<div class="pghead"><div><h1>Dompet Bonus</h1><p class="sub">Riwayat bonus dan penarikan saldo Anda</p></div></div>';
+    h += '<div class="card" style="margin-bottom:16px"><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b><span>saldo bonus</span></div></div>';
+    h += '<div class="card"><div class="tabs" role="tablist" aria-label="Dompet Bonus"><button type="button" role="tab" data-dtab="bonus" aria-selected="' + (tab === "bonus") + '">Riwayat Bonus</button><button type="button" role="tab" data-dtab="penarikan" aria-selected="' + (tab === "penarikan") + '">Riwayat Penarikan</button></div>';
+    if (tab === "bonus") {
+      if (!S.bonus.length) return h + empty("gift", "Belum ada bonus", "Bonus yang Anda terima akan tercatat di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' + S.bonus.map(function (b) { return "<tr><td>" + dt(b.created_at) + "</td><td>" + esc(b.description) + '</td><td class="num">' + rp(b.amount) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+    }
+    if (!S.wd.length) return h + empty("wallet", "Belum ada penarikan", "Riwayat penarikan saldo akan tampil di sini.") + "</div>";
     return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Tujuan</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>' + S.wd.map(function (w) { return "<tr><td>" + dt(w.created_at) + "</td><td>" + esc(w.destination || "-") + '</td><td class="num">' + rp(w.amount) + "</td><td>" + badge(w.status) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
   };
+  /* ---- Langganan: data nyata dari subscriptions + invoices + plans (tanpa tabel baru) ---- */
+  V.langganan = function () {
+    var sub = S.sub, h = '<div class="pghead"><div><h1>Langganan</h1><p class="sub">Paket, masa aktif, dan perpanjangan</p></div></div>';
+    if (!sub) return h + '<div class="card">' + empty("crown", "Belum ada paket aktif", "Pilih paket saat undangan Anda siap dipublikasikan.", '<a class="btn" href="/#harga">Lihat Paket</a>') + "</div>" + subHistory();
+    var left = Math.max(0, Math.ceil((new Date(sub.expires_at) - new Date()) / 864e5)), soon = left <= 14;
+    h += '<div class="grid g2" style="align-items:start"><div class="card"><div class="card-h"><h2>Paket aktif</h2>' + badge("aktif") + '</div><div class="plan-n">' + esc(PLAN[sub.plan] || sub.plan) + '</div>' +
+      '<div class="meta"><div><span>Mulai</span><b>' + dt(sub.started_at, true) + '</b></div><div><span>Berakhir</span><b>' + dt(sub.expires_at, true) + '</b></div><div><span>Sisa masa aktif</span><b>' + left + ' hari</b></div></div>' +
+      (soon ? '<p class="note" style="margin-top:14px">Masa aktif paket Anda tinggal ' + left + ' hari. Perpanjang agar undangan tetap bisa dibuka tamu.</p>' : "") +
+      '<div class="row-end"><a class="btn" href="/#harga">' + ico("crown") + ' Perpanjang / Upgrade</a></div></div>' +
+      '<div class="card"><h2 style="margin-bottom:8px">Saldo</h2><div class="cred"><b>' + Number(S.wallet.credits || 0).toLocaleString("id-ID") + '</b><span>kredit</span></div></div></div>';
+    return h + subHistory();
+  };
+  function subHistory() {
+    if (!S.invoices.length) return "";
+    return '<div class="card" style="margin-top:16px"><div class="card-h"><h2>Riwayat pembayaran</h2><a class="btn o sm" href="#invoice">Semua invoice</a></div><div class="tbl-w"><table><thead><tr><th>No. Invoice</th><th>Tanggal</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>' + S.invoices.slice(0, 5).map(function (i) { return "<tr><td><b>" + esc(i.number) + "</b></td><td>" + dt(i.created_at) + '</td><td class="num">' + rp(i.amount) + "</td><td>" + badge(i.status) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+  }
+  /* ---- Domain: belum ada backend domain. Tidak ada data palsu; status jujur. ---- */
+  V.domain = function () {
+    return '<div class="pghead"><div><h1>Domain</h1><p class="sub">Atur domain khusus untuk undangan Anda</p></div></div><div class="card">' +
+      empty("layout", "Domain khusus belum tersedia", "Saat ini undangan Anda memakai alamat nusamora. Fitur domain khusus akan muncul di sini setelah tersedia untuk paket Anda.") + '</div>';
+  };
+  /* ---- Notifikasi: pengumuman sistem untuk saya (RPC my_notifications) ---- */
+  V.notifikasi = function () {
+    var h = '<div class="pghead"><div><h1>Notifikasi</h1><p class="sub">Informasi terbaru dan pengingat</p></div></div><div class="card" id="nt-box">';
+    if (S.notif === null) { loadNotif(); return h + '<div class="sk h3"></div></div>'; }
+    if (S.notif === false) return h + empty("chat", "Notifikasi belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div>";
+    if (!S.notif.length) return h + empty("chat", "Belum ada notifikasi", "Pengumuman dan pengingat dari NusaMora akan tampil di sini.") + "</div>";
+    return h + "<ul class=\"nt\">" + S.notif.map(function (n) { return '<li' + (n.read ? "" : ' class="unread"') + "><b>" + esc(n.title) + "</b><p>" + esc(n.body) + "</p><small>" + dt(n.created_at, true) + "</small></li>"; }).join("") + "</ul></div>";
+  };
+  function loadNotif() {
+    sb.rpc("my_notifications").then(function (r) { S.notif = r.error ? false : (r.data || []); S.unread = S.notif ? S.notif.filter(function (n) { return !n.read; }).length : 0; if (location.hash === "#notifikasi") route(); });
+  }
+  function markNotifRead() {
+    if (!S.notif || !S.notif.some(function (n) { return !n.read; })) return;
+    var snap = S.notif.map(function (n) { return n.read; });  // tampilkan penanda 'baru' dulu, tandai dibaca di server
+    sb.rpc("mark_notifications_read").then(function (r) { if (r.error) return; S.unread = 0; buildNav("notifikasi"); void snap; });
+  }
+  /* ---- Bantuan & Dukungan: tiket lewat RPC (support_*) ---- */
+  var CAT = { bantuan: "Bantuan umum", pembayaran: "Pembayaran", teknis: "Masalah teknis", komplain: "Komplain", lainnya: "Lainnya" };
+  V.bantuan = function () {
+    var h = '<div class="pghead"><div><h1>Bantuan &amp; Dukungan</h1><p class="sub">Hubungi tim NusaMora</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-tk" novalidate><h2>Buat tiket baru</h2>' +
+      '<label class="fld">Kategori<select id="tk-cat">' + Object.keys(CAT).map(function (k) { return '<option value="' + k + '">' + CAT[k] + "</option>"; }).join("") + '</select></label>' +
+      '<label class="fld">Subjek<input type="text" id="tk-sub" maxlength="120"><span class="err" id="e-tks"></span></label>' +
+      '<label class="fld">Pesan<textarea id="tk-msg" rows="5" maxlength="4000"></textarea><span class="err" id="e-tkm"></span></label>' +
+      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Tiket saya</h2><div id="tk-list">';
+    if (S.tickets === null) { loadTickets(); return h + '<div class="sk h3"></div></div></div></div>'; }
+    if (S.tickets === false) return h + empty("chat", "Tiket belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div></div></div>";
+    if (!S.tickets.length) return h + empty("chat", "Belum ada tiket", "Tiket yang Anda buat akan tampil di sini.") + "</div></div></div>";
+    return h + S.tickets.map(function (t) {
+      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + badge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small><p>" + esc(t.message || "") + "</p>" +
+        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + "</b><p>" + esc(r.body) + "</p></div>"; }).join("") +
+        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><button class="btn sm" type="submit">Balas</button></form>') + "</details>";
+    }).join("") + "</div></div></div>";
+  };
+  function loadTickets() { sb.rpc("support_my_tickets").then(function (r) { S.tickets = r.error ? false : (r.data || []); if (location.hash === "#bantuan") route(); }); }
+  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup." };
+  function errMsg(e) { var m = (e && e.message) || ""; for (var k in ERR) if (m.indexOf(k) >= 0) return ERR[k]; return "Gagal mengirim. Coba lagi."; }
+  function bindSupport() {
+    var f = $("#f-tk"); if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#e-tks").textContent = ""; $("#e-tkm").textContent = "";
+      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true;
+      if (sj.length < 3) { $("#e-tks").textContent = "Isi subjek (minimal 3 karakter)."; ok = false; }
+      if (ms.length < 5) { $("#e-tkm").textContent = "Isi pesan (minimal 5 karakter)."; ok = false; }
+      if (!ok) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
+      sb.rpc("support_create_ticket", { p_subject: sj, p_category: $("#tk-cat").value, p_message: ms }).then(function (r) {
+        bt.disabled = false; bt.textContent = "Kirim tiket"; if (r.error) return toast(errMsg(r.error), "bad");
+        toast("Tiket terkirim.", "ok"); S.tickets = null; route();
+      });
+    });
+    $$(".rf").forEach(function (rf) { rf.addEventListener("submit", function (e) {
+      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(); if (!b) return;
+      sb.rpc("support_reply", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Balasan terkirim.", "ok"); S.tickets = null; route(); });
+    }); });
+  }
   V.profil = function () {
     return '<div class="pghead"><div><h1>Edit Profil</h1><p class="sub">Perbarui data akun Anda</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-prof" novalidate><h2>Data diri</h2><label class="fld">Nama lengkap<input type="text" id="p-name" maxlength="80" value="' + esc(S.profile.full_name || "") + '" autocomplete="name"><span class="err" id="e-name"></span></label><label class="fld">Email<input type="email" value="' + esc(S.user.email) + '" readonly><small>Email tidak dapat diubah di sini.</small></label><label class="fld">Nomor WhatsApp<input type="tel" id="p-wa" value="' + esc(S.profile.whatsapp || "") + '" placeholder="08123456789" autocomplete="tel"><span class="err" id="e-wa"></span></label><div class="row-end"><button class="btn" type="submit" id="p-go">Simpan perubahan</button></div></form>' +
       '<form class="card form" id="f-pw" novalidate><h2>Ganti kata sandi</h2><label class="fld">Kata sandi baru<input type="password" id="w-new" autocomplete="new-password"><small>Minimal 8 karakter, campur huruf dan angka.</small><span class="err" id="e-pw"></span></label><div class="row-end"><button class="btn" type="submit" id="w-go">Perbarui kata sandi</button></div></form></div>';
   };
-  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", invoice: "Invoice", tutorial: "Tutorial", affiliate: "Affiliate", bonus: "History Bonus", penarikan: "History Penarikan", profil: "Edit Profil" };
-  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["invoice", "receipt", "Invoice"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["bonus", "gift", "History Bonus"], ["penarikan", "wallet", "History Penarikan"], ["profil", "user", "Edit Profil"]];
+  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", notifikasi: "Notifikasi", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
+  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["notifikasi", "chat", "Notifikasi"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
+  function visible(k) { return FEATURES[k] !== false; }
   function buildNav(cur) {
-    $("#nav").innerHTML = NAV.map(function (n) { return '<a href="#' + n[0] + '"' + (n[0] === cur ? ' aria-current="page"' : "") + ">" + ico(n[1]) + "<span>" + n[2] + "</span></a>"; }).join("") + '<div class="sep" role="separator"></div><button type="button" class="out" id="logout">' + ico("out") + "<span>Log Out</span></button>";
+    $("#nav").innerHTML = NAV.filter(function (n) { return visible(n[0]); }).map(function (n) {
+      var b = n[0] === "notifikasi" && S.unread > 0 ? '<span class="badge warn" style="margin-left:auto" aria-label="' + S.unread + ' belum dibaca">' + (S.unread > 9 ? "9+" : S.unread) + "</span>" : "";
+      return '<a href="#' + n[0] + '"' + (n[0] === cur ? ' aria-current="page"' : "") + ">" + ico(n[1]) + "<span>" + n[2] + "</span>" + b + "</a>";
+    }).join("") + '<div class="sep" role="separator"></div><button type="button" class="out" id="logout">' + ico("out") + "<span>Log Out</span></button>";
   }
 
   /* ---------- router ---------- */
   var norm = function (s) { return String(s || "").replace(/&amp;/g, "&"); }; void norm;
   function route() {
-    var r = (location.hash || "#dashboard").slice(1); if (!V[r]) r = "dashboard";
+    var r = (location.hash || "#dashboard").slice(1); if (!V[r] || !visible(r)) r = "dashboard";
     buildNav(r); $("#crumb").textContent = TITLES[r]; d.title = TITLES[r] + " | NusaMora"; closeNav();
     var view = $("#view");
     if (!S.loaded) { view.innerHTML = '<div class="grid" style="gap:18px"><div class="card"><div class="sk h2"></div></div>' + skeleton(2) + "</div>"; return; }
@@ -177,6 +259,9 @@
     var a = $("#f-from"), b = $("#f-to"); if (a) a.addEventListener("change", function () { S.from = a.value; route(); }); if (b) b.addEventListener("change", function () { S.to = b.value; route(); });
     var st = $("#f-st"); if (st) st.addEventListener("change", function () { S.q = st.value; route(); $("#f-st").focus(); });
     if (r === "profil") bindProfile();
+    if (r === "bantuan") bindSupport();
+    if (r === "notifikasi") markNotifRead();
+    $$("[data-dtab]").forEach(function (t) { t.addEventListener("click", function () { S.dtab = t.dataset.dtab; route(); }); });
   }
   function copyText(t) { function fb() { var ta = d.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0"; d.body.appendChild(ta); ta.select(); var ok = false; try { ok = d.execCommand("copy"); } catch (e) { } ta.remove(); toast(ok ? "Tersalin." : "Gagal menyalin. Salin manual dari kolom.", ok ? "ok" : "bad"); } try { navigator.clipboard.writeText(t).then(function () { toast("Tersalin.", "ok"); }, fb); } catch (e) { fb(); } }
   d.addEventListener("click", function (e) {
