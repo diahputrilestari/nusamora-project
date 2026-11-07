@@ -1,18 +1,16 @@
 /* Dekorasi bunga/gapura/amplop/kado: murni hiasan, tidak menangkap klik */
 #fitur,#template,#cara-kerja,#harga{position:relative}
 .dc{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none;z-index:0;height:auto;filter:drop-shadow(0 14px 18px rgba(79,35,145,.16))}
-.dc-fitur{right:-6px;top:38px;width:150px}
-.dc-tpl{right:0;top:24px;width:150px}
-.dc-cara{right:0;top:50px;width:120px}
-.dc-harga{right:0;top:60px;width:170px}
-.dc-kado{right:26px;bottom:16px;width:150px;z-index:1}
-.dc-fin-l{left:16px;top:10px;width:130px;transform:scaleX(-1);opacity:.95;z-index:1}
+.dc-fitur{right:-6px;top:38px;width:170px}
+.dc-tpl{right:0;top:24px;width:190px}
+.dc-cara{right:0;top:50px;width:130px}
+.dc-harga{right:0;top:60px;width:200px}
+.dc-kado{right:30px;bottom:18px;width:150px;z-index:1}
 .fin .dc{filter:drop-shadow(0 10px 16px rgba(20,5,50,.35))}
 .sec-h,.fin>*:not(.dc){position:relative;z-index:2}
 html.fx .dc{animation:dcFloat 7s ease-in-out infinite}
-html.fx .dc-tpl{animation-delay:-1.5s}html.fx .dc-cara{animation-delay:-3s}html.fx .dc-harga{animation-delay:-4.5s}html.fx .dc-kado{animation-delay:-2s}
+html.fx .dc-tpl{animation-delay:-1.5s}html.fx .dc-cara{animation-delay:-3s}html.fx .dc-harga{animation-delay:-4.5s}html.fx .dc-kado{right:30px;bottom:18px;width:150px;z-index:1}
 @keyframes dcFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}
-.dc-fin-l{animation-name:none!important}
 @media(max-width:1100px){.dc-fitur,.dc-tpl,.dc-cara,.dc-harga{display:none}}
-@media(max-width:700px){.dc-kado{width:96px;right:10px;bottom:8px}.dc-fin-l{width:84px;left:6px;top:6px}}
+@media(max-width:700px){.dc-kado{right:30px;bottom:18px;width:150px;z-index:1}}
 @media(prefers-reduced-motion:reduce){.dc{animation:none!important}}
