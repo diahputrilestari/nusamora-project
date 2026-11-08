@@ -42,6 +42,8 @@
   /* Tema (set aset) per template; gagal/belum ada tabel -> tanpa tema, alur lama tetap jalan. */
   function loadThemes(slugs) { if (!slugs.length) return Promise.resolve({}); return sb.rpc("get_template_themes", { p_templates: slugs }).then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
   /* Jumlah undangan aktif per template (agregat, tanpa data pribadi). RPC belum ada / gagal -> {} (tidak ada label Populer). */
+  /* Penanda template (unggulan, rekomendasi, bahasa) dari admin. RPC belum ada / gagal -> {} (tanpa penanda). */
+  function loadFlags() { return sb.rpc("template_flags").then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
   function loadPopularity() { return sb.rpc("template_popularity").then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
   var NEW_DAYS = 30, POP_MIN = 3;
   function themePick(t, th) { if (!th || !th.length) return ""; return '<fieldset class="thm"><legend>Pilih tema</legend>' + th.map(function (x, i) { return '<label class="thc"><input type="radio" name="th-' + esc(t.slug) + '" data-th="' + esc(t.slug) + '" value="' + esc(x.slug) + '"' + (i === 0 ? " checked" : "") + "><span>" + esc(x.name) + "</span></label>"; }).join("") + "</fieldset>"; }
@@ -127,9 +129,9 @@
           }).join("") + '</div><div class="acts"><a class="btn o" href="/paket?paket=' + pkg + '">Kembali</a></div></div>';
         return;
       }
-      loadThemes(T.map(function (t) { return t.slug; })).then(function (TH) { return loadPopularity().then(function (POP) { renderList(T, TH, POP); }); });
+      loadThemes(T.map(function (t) { return t.slug; })).then(function (TH) { return loadPopularity().then(function (POP) { return loadFlags().then(function (FL) { renderList(T, TH, POP, FL); }); }); });
     });
-    function renderList(T, TH, POP) {
+    function renderList(T, TH, POP, FL) {
       var F = { kat: kat, tema: q.get("f_tema") || "", budaya: q.get("f_budaya") || "", warna: q.get("f_warna") || "" };
       function uniq(a) { var o = [], seen = {}; a.forEach(function (x) { if (x[0] && !seen[x[0]]) { seen[x[0]] = 1; o.push(x); } }); return o; }
       var OPT = {
@@ -144,6 +146,9 @@
       }
       var top = T.map(function (t) { return [t.slug, Number(POP[t.slug]) || 0]; }).filter(function (x) { return x[1] >= POP_MIN; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 3).map(function (x) { return x[0]; });
       function label(t) {
+        var fl = FL[t.slug] || {};
+        if (fl.featured) return ["feat", "Unggulan"];
+        if (fl.recommended) return ["rec", "Rekomendasi"];
         if (top.indexOf(t.slug) > -1) return ["pop", "Populer"];
         var ms = Date.parse(t.created); if (ms && Date.now() - ms >= 0 && Date.now() - ms <= NEW_DAYS * 864e5) return ["new", "Baru"];
         return null;
@@ -158,13 +163,13 @@
         var L = label(t), th = TH[t.slug] || [], cur = th[0], kk = F.kat || t.cats[0] || kat;
         return '<article class="card tc hov"><div class="im">' + (t.img ? '<img src="' + esc(t.img) + '" alt="Pratinjau template ' + esc(t.name) + '" loading="lazy" decoding="async">' : '<span class="noim" aria-hidden="true">' + PK[pkg].icon + "</span>") +
           '<span class="pkchip sm"><i>' + PK[pkg].icon + "</i>" + PK[pkg].name + "</span>" + (L ? '<span class="tlb ' + L[0] + '">' + L[1] + "</span>" : "") + '</div><div class="bd"><h2>' + esc(t.name) + '</h2>' +
-          '<div class="tags">' + t.cats.map(function (c) { return '<span class="tag">' + esc(CATN[c] || c) + "</span>"; }).join("") + (t.culture ? '<span class="tag cul">' + esc(t.culture) + "</span>" : "") + "</div>" +
+          '<div class="tags">' + t.cats.map(function (c) { return '<span class="tag">' + esc(CATN[c] || c) + "</span>"; }).join("") + (t.culture ? '<span class="tag cul">' + esc(t.culture) + "</span>" : "") + ((FL[t.slug] || {}).languages || []).filter(function () { return ((FL[t.slug] || {}).languages || []).length > 1; }).map(function (l) { return '<span class="tag lang">' + esc(String(l).toUpperCase()) + "</span>"; }).join("") + "</div>" +
           "<p>" + esc(t.desc) + "</p>" + themePick(t, th) + (cur && cur.description ? '<p class="thd" data-thd="' + esc(t.slug) + '"><b>Tema ' + esc(cur.name) + ":</b> " + esc(cur.description) + "</p>" : "") +
           '<div class="two">' + (t.demo ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(t.demo) + '">Coba Demo</a>' : '<span class="btn o off" aria-disabled="true">Demo segera hadir</span>') +
           '<a class="btn" data-use="' + esc(t.slug) + '" href="/buat?paket=' + pkg + "&kategori=" + kk + "&template=" + encodeURIComponent(t.slug) + (cur ? "&tema=" + encodeURIComponent(cur.slug) : "") + '">Gunakan Template</a></div></div></article>';
       }
       function draw() {
-        var list = T.filter(match), any = F.tema || F.budaya || F.warna;
+        var list = T.filter(match).sort(function (a, b) { return (((FL[b.slug] || {}).featured ? 2 : 0) + ((FL[b.slug] || {}).recommended ? 1 : 0)) - (((FL[a.slug] || {}).featured ? 2 : 0) + ((FL[a.slug] || {}).recommended ? 1 : 0)); }), any = F.tema || F.budaya || F.warna;
         try { var u = new URL(location.href); u.searchParams.set("kategori", F.kat || ""); ["tema", "budaya", "warna"].forEach(function (g) { if (F[g]) u.searchParams.set("f_" + g, F[g]); else u.searchParams.delete("f_" + g); }); if (!F.kat) u.searchParams.delete("kategori"); history.replaceState(null, "", u.pathname + u.search); } catch (e) { }
         view.innerHTML = '<div class="fw">' + steps(2, pkg) + '<div class="hd"><h1>Pilih template' + (F.kat ? " " + esc(CATN[F.kat]) : "") + '</h1><p>Template ' + esc(PK[pkg].kind) + ". Coba demo, lalu gunakan yang paling mewakili cerita Anda.</p></div>" +
           '<div class="fltb card">' + ["kat", "tema", "budaya", "warna"].map(chips).join("") + '<div class="fltn" role="status" aria-live="polite">' + list.length + " template" + (any ? ' &middot; <button type="button" class="lnk" id="flt-reset">Reset filter</button>' : "") + "</div></div>" +
