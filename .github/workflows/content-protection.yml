@@ -37,6 +37,8 @@ jobs:
         run: node --experimental-strip-types ops/tests/rate-limit-handlers.test.mjs 2>&1 | grep -v ExperimentalWarning | tail -5; exit ${PIPESTATUS[0]}
       - name: "Uji sinkronisasi admin (Midtrans selalu diverifikasi lewat backend)"
         run: node --experimental-strip-types ops/tests/midtrans-sync-admin.test.mjs 2>&1 | grep -v ExperimentalWarning | tail -6; exit ${PIPESTATUS[0]}
+      - name: "Uji pengirim notifikasi (Resend/WhatsApp, percobaan ulang, callback bertanda tangan)"
+        run: node --experimental-strip-types ops/tests/notify.test.mjs 2>&1 | grep -v ExperimentalWarning | tail -6; exit ${PIPESTATUS[0]}
       - name: "Uji versi aset (Edge Function asset-register)"
         run: node --experimental-strip-types ops/tests/asset-version.test.mjs 2>&1 | grep -v ExperimentalWarning | tail -8; exit ${PIPESTATUS[0]}
       - name: Ringkasan
