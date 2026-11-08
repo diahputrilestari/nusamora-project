@@ -33,4 +33,5 @@ pg_restore --data-only --no-owner --no-privileges -f "$TMP/public.sql" "$D/publi
   echo "commit;"
 } > "$TMP/restore.sql"
 psql "$TARGET" -v ON_ERROR_STOP=1 -q -f "$TMP/restore.sql" >/dev/null
+psql "$TARGET" -qAt -c "insert into public.backup_log (kind, ok, detail) values ('restore', true, 'restore-db.sh')" >/dev/null 2>&1 || true
 echo "OK restore durasi=$(( $(date +%s)-T0 ))s"

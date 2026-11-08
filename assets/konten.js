@@ -8,6 +8,7 @@
   var ROUTES = { artikel: "article", info: "page", bantuan: "faq", tutorial: "tutorial" }, BASEP = { article: "artikel", page: "info", faq: "bantuan", tutorial: "tutorial" };
   var TITLE = { article: "Artikel", faq: "Pusat Bantuan", tutorial: "Tutorial", page: "Informasi" };
   var q = new URLSearchParams(location.search), parts = location.pathname.replace(/^\/+|\/+$/g, "").split("/");
+  var TZ = "Asia/Jakarta";
   var type = q.get("type") || ROUTES[parts[0]] || "article", slug = q.get("slug") || parts[1] || "", lang = q.get("lang") === "en" ? "en" : "id", preview = q.get("preview");
   var origin = location.origin;
   var safeUrl = function (u) { u = String(u || "").trim(); return /^(https:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/.test(u) ? u : ""; };
@@ -46,7 +47,7 @@
     if (o.image) { meta("og:image", o.image, "property"); meta("twitter:image", o.image); }
     if (o.ld) { var s = d.createElement("script"); s.type = "application/ld+json"; s.setAttribute("data-ld", "1"); s.textContent = JSON.stringify(o.ld).replace(/</g, "\\u003c"); d.head.appendChild(s); }
   }
-  var fdate = function (iso) { try { return new Date(iso).toLocaleDateString(lang === "en" ? "en-US" : "id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }); } catch (e) { return ""; } };
+  var fdate = function (iso) { try { return new Date(iso).toLocaleDateString(lang === "en" ? "en-US" : "id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: TZ }); } catch (e) { return ""; } };
   var urlFor = function (t, s, l) { return origin + "/" + BASEP[t] + (s ? "/" + s : "") + (l === "en" ? "?lang=en" : ""); };
 
   function notFound() {
@@ -103,5 +104,10 @@
       Promise.resolve(sb.rpc("public_content_list", { p_type: type, p_lang: lang, p_limit: 100 })).then(function (r) { showList((r && r.data) || []); }, function () { showList([]); });
     }
   }
-  run();
+  var site = window.NM_SITE && window.NM_SITE.ready ? window.NM_SITE.ready : Promise.resolve();
+  site.then(function () {
+    var st = (window.NM_SITE && window.NM_SITE.s) || {};
+    if (st.timezone) TZ = st.timezone;
+    if (!q.get("lang") && !slug && st.default_lang === "en") lang = "en";
+  }, function () {}).then(run, run);
 })();

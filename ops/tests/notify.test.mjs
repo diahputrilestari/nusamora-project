@@ -1,4 +1,5 @@
-import { handleNotifyDispatch, handleNotifyWebhook, verifySvix, toHtml } from "../../supabase/functions/_shared/notify.ts";
+import { handleNotifyDispatch, handleNotifyWebhook, verifySvix, toHtml, sendWebhook, isPrivateIp, webhookHostBlocked } from "../../supabase/functions/_shared/notify.ts";
+import { handleSystemStatus } from "../../supabase/functions/_shared/sysstatus.ts";
 let pass = 0, fail = 0; const ok = (n, c) => { if (c) { pass++; console.log("PASS ", n); } else { fail++; console.log("FAIL ", n); } };
 const NOW = 1_800_000_000_000;
 function mk(over = {}) {
@@ -11,6 +12,8 @@ function mk(over = {}) {
       if (n === "notif_enqueue_due") return { data: { subscription_reminders: 0, announcements: 0 }, error: null };
       if (n === "notif_claim") { st.claims.push(a); const take = st.rows.filter((x) => !a.p_channels || a.p_channels.includes(x.channel)).slice(0, 20); st.rows = st.rows.filter((x) => !take.includes(x)); return { data: take, error: null }; }
       if (n === "notif_result") { st.results.push(a); return { data: a.p_ok ? "sent" : a.p_permanent ? "failed" : "pending", error: null }; }
+      if (n === "webhook_claim") { st.whclaims = (st.whclaims || 0) + 1; const t = (st.wh || []).splice(0, 20); return { data: t, error: null }; }
+      if (n === "webhook_result") { (st.whres = st.whres || []).push(a); return { data: a.p_ok ? "delivered" : a.p_permanent ? "failed" : "pending", error: null }; }
       if (n === "notif_delivery") { st.delivery.push(a); return { data: "ok", error: null }; }
       return { data: { allowed: true }, error: null };
     },
@@ -80,4 +83,33 @@ ok("webhook sah: delivered diteruskan ke notif_delivery", r.status === 200 && st
 ({ d, st } = mk()); r = await wh(d, { type: "email.opened", data: { email_id: "x" } }); ok("tipe lain diabaikan tanpa mengubah status", r.status === 200 && st.delivery.length === 0);
 ({ d, st } = mk()); r = await wh(d, { type: "email.delivered", data: { email_id: "x" } }, { sig: await sign("evt_1", String(NOW / 1000), "{}", "whsec_" + btoa("kunci-lain")) }); ok("tanda tangan dari kunci lain ditolak", r.status === 401);
 ok("verifySvix menolak input kosong", !(await verifySvix("", "", "", "", "", NOW)));
+// ---- webhook keluar
+ok("isPrivateIp: loopback/privat/link-local/CGNAT/mapped", ["127.0.0.1", "10.1.2.3", "172.16.0.1", "172.31.255.1", "192.168.1.1", "169.254.169.254", "100.64.0.1", "0.0.0.0", "::1", "fd00::1", "fe80::1", "::ffff:10.0.0.1"].every(isPrivateIp));
+ok("isPrivateIp: alamat publik lolos", ["8.8.8.8", "172.32.0.1", "1.1.1.1", "2606:4700::1111"].every((x) => !isPrivateIp(x)));
+ok("webhookHostBlocked", ["localhost", "x", "10.0.0.1", "svc.internal", "a.local", "[::1]"].every(webhookHostBlocked) && !webhookHostBlocked("hooks.contoh.co.id"));
+const WR = (over = {}) => ({ id: "d1", endpoint_id: "e1", event: "payment_paid", payload: { order_id: "NM1" }, url: "https://hooks.contoh.co.id/in", secret: "whsec_abc", attempts: 1, created_at: "2026-11-08T00:00:00Z", ...over });
+const hexmac = async (sec, msg) => { const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(sec), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]); return Array.from(new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(msg)))).map((b) => b.toString(16).padStart(2, "0")).join(""); };
+({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34"] }, fetch: () => new Response(null, { status: 204 }) }));
+let w = await sendWebhook(d, WR()); const call1 = st.fetches[0], hdr = call1.i.headers, bd = JSON.parse(call1.i.body);
+ok("webhook sukses 2xx -> ok, tidak mengikuti redirect, badan {id,event,created_at,data}", w.ok && call1.i.redirect === "manual" && bd.id === "d1" && bd.event === "payment_paid" && bd.data.order_id === "NM1");
+ok("tanda tangan = HMAC-SHA256(timestamp.body) dengan secret endpoint", hdr["X-NusaMora-Signature"] === "sha256=" + await hexmac("whsec_abc", hdr["X-NusaMora-Timestamp"] + "." + call1.i.body) && hdr["X-NusaMora-Event"] === "payment_paid" && hdr["X-NusaMora-Delivery"] === "d1" && !call1.i.body.includes("whsec_abc"));
+for (const [code, perm] of [[500, false], [503, false], [429, false], [408, false], [404, true], [410, true], [400, true], [302, true]]) { ({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34"] }, fetch: () => new Response("x", { status: code }) })); w = await sendWebhook(d, WR()); ok(`webhook HTTP ${code}: gagal, permanen=${perm}`, !w.ok && w.permanent === perm && w.http === code); }
+({ d, st } = mk({ d: { resolveHost: async () => ["10.0.0.5"] } })); w = await sendWebhook(d, WR()); ok("DNS ke alamat privat ditolak tanpa mengirim (SSRF)", !w.ok && w.permanent && st.fetches.length === 0);
+({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34", "127.0.0.1"] } })); w = await sendWebhook(d, WR()); ok("salah satu A record privat -> ditolak", !w.ok && st.fetches.length === 0);
+({ d, st } = mk({ d: { resolveHost: async () => { throw new Error("NXDOMAIN"); } } })); w = await sendWebhook(d, WR()); ok("DNS gagal -> sementara", !w.ok && !w.permanent && st.fetches.length === 0);
+for (const u of ["http://hooks.contoh.co.id/in", "https://localhost/in", "https://127.0.0.1/in", "https://hooks.contoh.co.id:8443/in", "https://u:p@hooks.contoh.co.id/in", "https://svc.internal/in"]) { ({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34"] } })); w = await sendWebhook(d, WR({ url: u })); ok("URL tidak diizinkan: " + u, !w.ok && w.permanent && st.fetches.length === 0); }
+({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34"] }, fetch: (u, i) => new Promise((_, rej) => i.signal.addEventListener("abort", () => rej(Object.assign(new Error("x"), { name: "AbortError" })))) }));
+{ const t = Date.now(); const pr = sendWebhook({ ...d, now: undefined }, WR()); w = await pr; ok("timeout 8 detik -> sementara", !w.ok && !w.permanent && w.error.includes("timeout") && Date.now() - t >= 7900); }
+// dispatch memproses webhook walau provider notifikasi belum dikonfigurasi
+({ d, st } = mk({ env: { resendKey: undefined, waToken: undefined }, d: { resolveHost: async () => ["93.184.216.34"] }, fetch: () => new Response("ok", { status: 200 }) })); st.wh = [WR(), WR({ id: "d2", url: "https://hooks.contoh.co.id/other" })];
+r = await call(d, {}, { "x-dispatch-secret": "rahasia-cron" }); j = await r.json();
+ok("run: webhook diproses meski email/WA belum terhubung; hasil dicatat per kiriman", r.status === 200 && j.webhooks.claimed === 2 && j.webhooks.delivered === 2 && st.whres.length === 2 && st.whres.every((x) => x.p_ok === true && x.p_http === 200) && st.fetches.length === 2);
+ok("respons dispatch tidak memuat secret webhook", !JSON.stringify(j).includes("whsec_abc"));
+({ d, st } = mk({ d: { resolveHost: async () => ["93.184.216.34"] }, fetch: () => new Response("err", { status: 500 }) })); st.wh = [WR()]; r = await call(d, {}, { "x-dispatch-secret": "rahasia-cron" }); j = await r.json(); ok("run: webhook 500 dihitung sebagai dicoba ulang", j.webhooks.retry === 1 && j.webhooks.delivered === 0);
+// system-status
+const info = { secrets: { RESEND_API_KEY: true, WA_TOKEN: false }, midtransMode: "sandbox", allowedOrigins: 2 };
+const ss = (d, h = {}) => handleSystemStatus(new Request("https://x/s", { method: "POST", headers: { origin: "https://nusamora.com", ...h }, body: "{}" }), d, info);
+({ d, st } = mk()); r = await ss(d); ok("system-status tanpa login -> 401", r.status === 401);
+({ d, st } = mk({ st: { admin: false } })); r = await ss(d, { authorization: "Bearer tok" }); ok("system-status bukan admin -> 403", r.status === 403);
+({ d, st } = mk()); r = await ss(d, { authorization: "Bearer tok" }); j = await r.json(); ok("system-status admin: hanya true/false, tanpa nilai kunci", r.status === 200 && j.secrets.RESEND_API_KEY === true && j.secrets.WA_TOKEN === false && j.midtrans_mode === "sandbox" && !JSON.stringify(j).includes("re_KEY"));
 console.log(fail ? `GAGAL ${fail}` : `SEMUA LULUS (${pass})`); process.exit(fail ? 1 : 0);

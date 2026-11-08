@@ -8,6 +8,9 @@
 #   BACKUP_PASSPHRASE_FILE  (opsional) berkas passphrase -> arsip dienkripsi AES-256 (.tar.enc)
 #   BACKUP_KEEP             jumlah backup yang disimpan (default 14)
 set -euo pipefail
+# Bila gagal di tengah jalan, catat kegagalan (best-effort) agar terlihat di panel admin.
+log_fail() { psql "${SUPABASE_DB_URL:-}" -qAt -c "insert into public.backup_log (kind, ok, detail) values ('db', false, 'backup-db.sh gagal')" >/dev/null 2>&1 || true; }
+trap log_fail ERR
 : "${SUPABASE_DB_URL:?SUPABASE_DB_URL belum diisi}"
 BASE="${BACKUP_DIR:-./backups}"; KEEP="${BACKUP_KEEP:-14}"; mkdir -p "$BASE"; chmod 700 "$BASE"
 NAME="nusamora-db-$(date -u +%Y%m%dT%H%M%SZ)"; W="$BASE/$NAME"; mkdir "$W"; T0=$(date +%s)
@@ -23,4 +26,7 @@ if [ -n "${BACKUP_PASSPHRASE_FILE:-}" ]; then
 fi
 ( cd "$BASE" && sha256sum "$(basename "$FINAL")" > "$(basename "$FINAL").sha256" )
 ls -1t "$BASE"/nusamora-db-*.tar* 2>/dev/null | grep -v '\.sha256$' | tail -n +$((KEEP+1)) | while read -r f; do rm -f "$f" "$f.sha256"; done
-echo "OK backup=$FINAL ukuran=$(stat -c %s "$FINAL")B durasi=$(( $(date +%s)-T0 ))s"
+SZ=$(stat -c %s "$FINAL")
+# Catat ke Admin > Pengaturan Sistem > Backup & Restore (opsional; gagal mencatat tidak menggagalkan backup, mis. sebelum admin-settings.sql dijalankan).
+psql "$SUPABASE_DB_URL" -qAt -c "insert into public.backup_log (kind, ok, size_bytes, detail) values ('db', true, $SZ, 'backup-db.sh $(basename "$FINAL")')" >/dev/null 2>&1 || true
+echo "OK backup=$FINAL ukuran=${SZ}B durasi=$(( $(date +%s)-T0 ))s"
