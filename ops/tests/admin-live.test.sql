@@ -49,7 +49,7 @@ end $$;
 do $$ declare v jsonb; vid uuid; begin
   perform pg_temp.as_user(current_setting('lv.adm')::uuid);
   v := public.admin_live_venues();
-  if jsonb_array_length(v) < 2 or not exists (select 1 from jsonb_array_elements(v) x where x ->> 'key' = 'romantic-garden' and jsonb_array_length(x -> 'areas') = 10) then raise exception 'venue bawaan hilang'; end if;
+  if jsonb_array_length(v) < 2 or not exists (select 1 from jsonb_array_elements(v) x where x ->> 'key' = 'romantic-garden' and jsonb_array_length(x -> 'areas') = 8) then raise exception 'venue bawaan hilang atau areanya bukan 8 (admin-live-areas.sql)'; end if;
   perform pg_temp.fails($q$select public.admin_live_venue_save('{"key":"lv-x","name":"Uji","areas":[{"id":"a1","name":"Satu","x":99,"z":0}]}'::jsonb)$q$, 'area_tidak_valid');
   perform pg_temp.fails($q$select public.admin_live_venue_save('{"key":"lv-x","name":"Uji","areas":[{"id":"a1","name":"Satu","x":1,"z":0},{"id":"a1","name":"Dua","x":2,"z":0}]}'::jsonb)$q$, 'area_tidak_valid');
   perform pg_temp.fails($q$select public.admin_live_venue_save('{"key":"Bad Key","name":"Uji","areas":[]}'::jsonb)$q$, 'kunci_tidak_valid');
