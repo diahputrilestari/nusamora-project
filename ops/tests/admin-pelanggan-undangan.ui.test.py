@@ -134,7 +134,7 @@ with sync_playwright() as pw:
     chk("filter Pembayaran / Publikasi / Moderasi terpisah", pg.evaluate("[...document.querySelectorAll('.tool .fld')].map(l=>l.firstChild.textContent.trim()).filter(x=>x!=='Cari')") == ["Pembayaran", "Publikasi", "Moderasi", "Paket"])
     pg.select_option("[data-f=pay_status]", "lunas"); pg.wait_for_function("document.querySelectorAll('#tb tr.row').length===1")
     chk("filter status pembayaran bekerja", "Pernikahan" in txt(pg, "#tb"))
-    pg.click("[data-tab=flag]"); pg.wait_for_selector("#tb tr.row")
+    pg.click("[data-tab=flag]"); pg.wait_for_function("document.querySelector('#tb') && document.querySelector('#tb').innerText.includes('Ulang Tahun Raka')")
     chk("tab Perlu moderasi hanya berisi undangan terlapor", pg.locator("#tb tr.row").count() == 1 and "Ulang Tahun Raka" in txt(pg, "#tb"))
     pg.click("#tb tr.row"); pg.wait_for_selector(".scards")
     chk("klik undangan dari antrian membuka detail", pg.evaluate("location.hash") == "#invitations:flag:i2"); ctx.close()

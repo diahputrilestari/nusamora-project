@@ -177,3 +177,4 @@ dialog.fdlg{width:min(480px,calc(100vw - 32px));max-height:calc(100dvh - 32px);o
 .pvinfo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}.pvinfo .full{grid-column:1/-1}.pvinfo h3 small{font:600 13px var(--sans);color:var(--mute,#6b6277);margin-left:8px}
 .chk2{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}.chk2 li{padding-left:26px;position:relative;font:600 14px var(--sans)}.chk2 li:before{position:absolute;left:0;top:0}.chk2 li.y:before{content:"\2713";color:#1f8a5b}.chk2 li.n:before{content:"!";color:#b3261e}.chk2 li.o{color:var(--mute,#6b6277)}.chk2 li.o:before{content:"\2013"}.chk2 a{color:#b3261e}
 @media(max-width:760px){.pvinfo{grid-template-columns:1fr}}
+.tlb.feat{background:linear-gradient(135deg,#7552A8,#9673D0);color:#fff}.tlb.rec{background:#fff;color:#7552A8;border:1px solid #9673D0}.tag.lang{background:#f1ecfa;color:#5d3f8f}
