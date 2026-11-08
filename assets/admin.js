@@ -184,7 +184,7 @@
     var btns = "";
     (tab.actions || []).forEach(function (a, i) { if (a.show && !a.show(row)) return; if (a.perm && !can(a.perm, "write")) return; btns += '<button class="btn' + (a.o ? " o" : "") + " " + (a.cls || "") + '" type="button" data-ai="' + i + '">' + esc(a.l) + "</button>"; });
     if (canW && tab.fields && !tab.noEdit && !tab.noEditRow) btns += '<button class="btn o" type="button" data-edit>Edit</button>';
-    if (canW && tab.table && !tab.noDelete) btns += '<button class="btn o bad" type="button" data-del>Hapus</button>';
+    if (can(mod.perm, "delete") && tab.table && !tab.noDelete) btns += '<button class="btn o bad" type="button" data-del>Hapus</button>';
     $("#dr-t").textContent = tab.title ? tab.title(row) : "Detail";
     var b = $("#dr-b"); b.innerHTML = '<div class="kv">' + kv + '</div><div class="btns">' + btns + '</div><div id="dr-x1"></div>';
     var close = function (rl) { closeDrawer(); if (rl) reload(); };
@@ -790,7 +790,7 @@
     var n = (A.user.email || "Admin"); $("#chip-i").textContent = n.charAt(0).toUpperCase(); $("#chip-n").textContent = ROLE[A.role] || A.role;
     $("#pm-p").innerHTML = '<p><b>' + esc(A.user.email) + "</b><br>" + esc(ROLE[A.role] || A.role) + '</p><a href="/admin-keamanan">' + ico("user") + ' Keamanan akun</a><a href="/akun">' + ico("user") + ' Dashboard pelanggan</a><button class="mi" type="button" id="lo">' + ico("out") + " Keluar</button>";
     pop($("#pm"), $("#pm-p")); pop($("#bell"), $("#bell-p"));
-    $("#lo").onclick = function () { sb.auth.signOut().then(function () { location.replace("/masuk"); }); };
+    $("#lo").onclick = function () { var go = function () { sb.auth.signOut().then(function () { location.replace("/masuk"); }); }; Promise.resolve(sb.rpc("admin_session_end")).then(go, go); };
     alertsData().then(function (a) { var on = a.filter(function (x) { return x.n > 0; }), tot = on.reduce(function (t, x) { return t + x.n; }, 0); var b = $("#bell-n"); b.hidden = !tot; b.textContent = tot > 99 ? "99+" : tot; $("#bell-p").innerHTML = "<h3>Notifikasi</h3>" + (on.length ? on.map(function (x) { return '<a href="' + x.to + '"><b>' + x.n + "</b> " + esc(x.t) + "</a>"; }).join("") : "<p>Tidak ada notifikasi baru.</p>"); });
   }
   function denied(t, p) { $("#nav").innerHTML = ""; $("#view").innerHTML = '<div class="card">' + empty(t, p, '<a class="btn" href="/akun">Ke dashboard pelanggan</a>') + "</div>"; $("#chip-n").textContent = "-"; }
@@ -804,8 +804,9 @@
         if (!x.data) return denied("Akses ditolak", "Akun ini bukan admin. Hubungi super admin untuk mendapatkan akses.");
         if (x.data.mfa && x.data.mfa.needed) { location.replace("/admin-keamanan?next=" + encodeURIComponent("/admin")); return; } /* MFA/password admin belum terpenuhi: ditegakkan di database, halaman ini hanya mengarahkan */
         A.role = x.data.role; (x.data.perms || []).forEach(function (p) { A.perms[p] = 1; });
+        var lab = sb.rpc("admin_role_labels").then(function (l) { if (l && l.data) Object.keys(l.data).forEach(function (k) { ROLE[k] = l.data[k]; }); }, function () { /* belum ada admin-roles.sql: label bawaan */ });
         var pre = can("admins", "read") ? sb.rpc("admin_list_admins").then(function (a) { (a.data || []).forEach(function (u) { adminMap[u.user_id] = u.email; }); }) : Promise.resolve();
-        return pre.then(function () { shell(); route(); });
+        return Promise.all([pre, lab]).then(function () { shell(); route(); });
       });
     }, function () { denied("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang."); });
     sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT") location.replace("/masuk"); });
