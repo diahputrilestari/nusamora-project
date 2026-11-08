@@ -36,9 +36,24 @@
 
   /* ---------- state & data ---------- */
   /* Fitur yang belum diluncurkan: ubah ke true saat program dibuka. Menu DAN rute ikut tersembunyi (hash langsung kembali ke Dashboard). */
-  var FEATURES = { affiliate: false, dompet: false };
-  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], loaded: false, warn: false, period: "30", from: "", to: "" };
+  var FEATURES = { affiliate: false, dompet: false }; /* diatur dinamis dari aff_me() setelah data termuat */
+  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], aff: null, loaded: false, warn: false, period: "30", from: "", to: "" };
   function safe(p, fallback) { return p.then(function (r) { if (r.error) { S.warn = S.warn || (r.error.code !== "42P01" && r.error.code !== "PGRST205"); return fallback; } return r.data == null ? fallback : r.data; }, function () { S.warn = true; return fallback; }); }
+
+  /* ---------- Affiliate: data nyata dari aff_me(). Bila fungsi belum ada di database, menu tetap tersembunyi. ---------- */
+  var AERR = { program_belum_dibuka: "Program affiliate belum dibuka.", akun_tidak_aktif: "Akun Anda tidak aktif.", bank_tidak_valid: "Nama bank 2 sampai 40 karakter.", nomor_rekening_tidak_valid: "Nomor rekening harus 6 sampai 24 angka.", nama_rekening_tidak_valid: "Nama pemilik rekening 2 sampai 60 karakter.",
+    ada_penarikan_berjalan: "Masih ada penarikan yang diproses. Tunggu sampai selesai.", bukan_affiliate: "Anda belum terdaftar sebagai affiliate.", affiliate_tidak_aktif: "Akun affiliate Anda belum aktif.", rekening_belum_diisi: "Isi rekening bank terlebih dahulu.", rekening_belum_terverifikasi: "Rekening belum diverifikasi admin.", di_bawah_minimum: "Jumlah di bawah minimum penarikan.", saldo_tidak_cukup: "Saldo tidak cukup." };
+  function aErr(e) { var m = String(e && (e.message || e) || ""), k = Object.keys(AERR).filter(function (x) { return m.indexOf(x) > -1; })[0]; return k ? AERR[k] : "Gagal. Coba lagi."; }
+  function loadAff() { return sb.rpc("aff_me").then(function (r) { return r.error ? null : r.data; }, function () { return null; }); }
+  function applyAff() { var a = S.aff; FEATURES.affiliate = !!a; FEATURES.dompet = !!a && ((a.config && a.config.enabled) || !!a.affiliate || S.bonus.length > 0 || S.wd.length > 0); }
+  function takeRef() { try { return JSON.parse(localStorage.getItem("nm_ref") || "null"); } catch (e) { return null; } }
+  function clearRef() { try { localStorage.removeItem("nm_ref"); } catch (e) { } }
+  function attachRef() {
+    var r = takeRef(); if (!r || !r.code || !S.aff) return Promise.resolve();
+    if (Date.now() - (r.t || 0) > 180 * 864e5) { clearRef(); return Promise.resolve(); }
+    if (!(S.aff.config && S.aff.config.enabled)) return Promise.resolve();
+    return sb.rpc("aff_attach_referral", { p_code: r.code, p_click: r.click || null }).then(function () { clearRef(); }, function () { clearRef(); });
+  }
   function loadAll() {
     var uid = S.user.id;
     return Promise.all([
@@ -48,8 +63,9 @@
       safe(sb.from("wallets").select("credits,bonus_balance").eq("user_id", uid).maybeSingle(), { credits: 0, bonus_balance: 0 }),
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
       safe(sb.from("bonus_history").select("description,amount,created_at").order("created_at", { ascending: false }).limit(200), []),
-      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), [])
-    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.loaded = true; }).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
+      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), []),
+      loadAff()
+    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.aff = r[7]; S.loaded = true; applyAff(); }).then(attachRef).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
   }
   function name() { return (S.profile && S.profile.full_name) || (S.user && S.user.email ? S.user.email.split("@")[0] : "Pelanggan"); }
   function range() {
@@ -141,10 +157,37 @@
     return '<div class="pghead"><div><h1>Tutorial</h1><p class="sub">Panduan singkat memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card faq">' + T.map(function (t) { return "<details><summary>" + esc(t[0]) + ico("plus") + "</summary><p>" + esc(t[1]) + "</p></details>"; }).join("") + '</div><div class="card"><h2 style="margin-bottom:14px">Alur singkat</h2><ol class="steps"><li><div><b>Pilih template</b><p class="sub">Coba demo, pilih yang cocok.</p></div></li><li><div><b>Isi data acara</b><p class="sub">Detail, galeri, musik, tamu.</p></div></li><li><div><b>Bayar dan bagikan</b><p class="sub">Kirim link pribadi ke tamu.</p></div></li></ol></div></div>';
   };
   V.affiliate = function () {
-    var code = S.user.id.replace(/-/g, "").slice(0, 8).toUpperCase(), link = SITE + "/daftar?ref=" + code;
-    return '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(code) + '</b></p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
-      '<p class="note" style="margin-top:16px">Pencatatan referral dan besaran komisi belum aktif. Ketentuan program akan diumumkan sebelum dibuka, jadi link ini baru dipakai setelah program berjalan.</p></div><div class="card"><h2 style="margin-bottom:14px">Saldo bonus</h2><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b></div><div class="row-end"><a class="btn o sm" href="#bonus">History Bonus</a><a class="btn o sm" href="#penarikan">History Penarikan</a></div></div></div>';
+    var A = S.aff || {}, c = A.config || {}, af = A.affiliate, h = '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora dan dapatkan komisi</p></div></div>';
+    if (!af && !c.enabled) return h + '<div class="card">' + empty("share", "Segera hadir", "Program affiliate NusaMora belum dibuka. Kami akan mengumumkan ketentuan dan besaran komisinya sebelum program dimulai.") + "</div>";
+    if (!af) return h + '<div class="card"><h2 style="margin-bottom:8px">Gabung program affiliate</h2><ul class="sub" style="margin:0 0 14px 18px"><li>Komisi <b>' + esc(c.commission_label) + "</b> dari pembayaran pertama setiap pelanggan yang mendaftar lewat link Anda.</li><li>Link berlaku " + esc(c.attribution_days) + " hari sejak diklik.</li><li>Komisi ditahan " + esc(c.hold_days) + " hari sebelum masuk saldo, dan bisa dibatalkan bila pembayaran direfund.</li><li>Penarikan minimal " + rp(c.min_withdrawal) + (c.require_bank_verified ? ", dan rekening harus terverifikasi admin" : "") + ".</li></ul><button class=\"btn\" type=\"button\" id=\"af-reg\">Daftar sebagai affiliate</button></div>";
+    var link = SITE + "/daftar?ref=" + af.code, st = A.stats || {};
+    if (af.status === "pending") return h + '<div class="card">' + empty("share", "Menunggu persetujuan", "Pendaftaran Anda sedang ditinjau admin. Kode Anda: " + af.code + ". Link baru bisa dipakai setelah disetujui.") + "</div>";
+    if (af.status === "suspended") return h + '<div class="card">' + empty("share", "Akun affiliate ditangguhkan", af.status_reason ? "Alasan: " + af.status_reason : "Hubungi dukungan untuk informasi lebih lanjut.") + "</div>";
+    h += c.enabled ? "" : '<p class="note" style="margin-bottom:16px">Program sedang ditutup sementara. Klik dan pendaftar baru tidak dihitung, tetapi saldo dan penarikan Anda tetap berjalan.</p>';
+    h += '<div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(af.code) + '</b> · Komisi ' + esc(af.rate ? (af.rate.type === "percent" ? af.rate.value + "%" : rp(af.rate.value)) : c.commission_label) + '</p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
+      '<p class="sub" style="margin-top:12px">Komisi masuk saldo setelah masa tahan ' + esc(c.hold_days) + " hari dan lolos pemeriksaan. Pembayaran pertama saja yang dihitung.</p></div>" +
+      '<div class="card"><h2 style="margin-bottom:14px">Ringkasan</h2><div class="cred"><b>' + rp(A.balance) + '</b><span>saldo bisa ditarik</span></div><dl class="sub" style="margin:14px 0 0;display:grid;grid-template-columns:1fr auto;gap:4px 12px"><dt>Klik</dt><dd style="margin:0">' + (st.clicks || 0) + "</dd><dt>Pendaftar</dt><dd style=\"margin:0\">" + (st.signups || 0) + "</dd><dt>Pelanggan berbayar</dt><dd style=\"margin:0\">" + (st.paid || 0) + "</dd><dt>Komisi ditahan</dt><dd style=\"margin:0\">" + rp(st.commission_pending || 0) + "</dd><dt>Komisi disetujui</dt><dd style=\"margin:0\">" + rp(st.commission_approved || 0) + "</dd></dl></div></div>";
+    var bs = { none: "Belum diisi", pending: "Menunggu verifikasi admin", verified: "Terverifikasi", rejected: "Ditolak" }[af.bank_status] || af.bank_status;
+    h += '<div class="grid g2" style="align-items:start;margin-top:16px"><form class="card form" id="af-bank" novalidate><h2>Rekening penarikan</h2><p class="sub">Status: <b>' + esc(bs) + "</b>" + (af.bank_account_mask ? " · " + esc(af.bank_name) + " " + esc(af.bank_account_mask) + " a.n. " + esc(af.bank_account_name) : "") + "</p>" + (af.bank_note ? '<p class="note">Alasan penolakan: ' + esc(af.bank_note) + "</p>" : "") +
+      '<label class="fld">Nama bank<input type="text" id="b-bank" maxlength="40" placeholder="BCA"></label><label class="fld">Nomor rekening<input type="text" id="b-no" inputmode="numeric" maxlength="24" autocomplete="off"></label><label class="fld">Nama pemilik rekening<input type="text" id="b-name" maxlength="60" placeholder="Sesuai buku tabungan"></label><span class="err" id="b-err"></span><div class="row-end"><button class="btn" type="submit" id="b-go"' + (A.pending_withdrawal ? " disabled" : "") + ">" + (af.bank_account_mask ? "Ganti rekening" : "Simpan rekening") + "</button></div>" + (af.bank_account_mask ? '<small class="sub">Mengganti rekening mengulang verifikasi.</small>' : "") + "</form>" +
+      '<form class="card form" id="af-wd" novalidate><h2>Tarik saldo</h2><p class="sub">Saldo ' + rp(A.balance) + " · minimal " + rp(c.min_withdrawal) + ". Pembayaran ditransfer manual oleh admin ke rekening Anda.</p>" + (A.pending_withdrawal ? '<p class="note">Anda masih punya penarikan yang sedang diproses.</p>' : "") + '<label class="fld">Jumlah (Rp)<input type="text" id="w-amt" inputmode="numeric" autocomplete="off"></label><span class="err" id="w-err"></span><div class="row-end"><button class="btn" type="submit" id="w-go2"' + (A.pending_withdrawal ? " disabled" : "") + ">Ajukan penarikan</button></div></form></div>";
+    var rc = A.recent || [], CSL = { none: "-", pending: "Ditahan", approved: "Disetujui", rejected: "Ditolak", reversed: "Dibatalkan" };
+    h += '<div class="card" style="margin-top:16px"><h2 style="margin-bottom:12px">Referral terbaru</h2>' + (rc.length ? '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Pelanggan</th><th>Status</th><th>Komisi</th><th class="num">Jumlah</th></tr></thead><tbody>' + rc.map(function (x) { return "<tr><td>" + dt(x.at) + "</td><td>" + esc(x.who) + "</td><td>" + (x.status === "berbayar" ? "Sudah membayar" : x.status === "batal" ? "Batal" : "Baru mendaftar") + "</td><td>" + esc(CSL[x.commission_status] || "-") + (x.commission_status === "pending" && x.available_at ? " (cair " + dt(x.available_at) + ")" : "") + '</td><td class="num">' + (x.status === "berbayar" ? rp(x.commission) : "-") + "</td></tr>"; }).join("") + "</tbody></table></div>" : empty("users", "Belum ada referral", "Bagikan link Anda untuk mulai mendapat komisi.")) + "</div>";
+    return h;
   };
+  function bindAff() {
+    var rg = $("#af-reg"); if (rg) rg.addEventListener("click", function () { rg.disabled = true; sb.rpc("aff_register").then(function (r) { if (r.error) { rg.disabled = false; return toast(aErr(r.error), "bad"); } toast("Pendaftaran terkirim.", "ok"); return loadAff().then(function (a) { S.aff = a; applyAff(); route(); }); }); });
+    var bf = $("#af-bank"); if (bf) bf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#b-err").textContent = ""; var bt = $("#b-go"); bt.disabled = true;
+      sb.rpc("aff_save_bank", { p_bank: $("#b-bank").value, p_no: $("#b-no").value, p_name: $("#b-name").value }).then(function (r) { if (r.error) { bt.disabled = false; $("#b-err").textContent = aErr(r.error); return; } toast("Rekening disimpan, menunggu verifikasi admin.", "ok"); return loadAff().then(function (a) { S.aff = a; route(); }); });
+    });
+    var wf = $("#af-wd"); if (wf) wf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#w-err").textContent = ""; var n = parseInt(String($("#w-amt").value).replace(/\D/g, ""), 10);
+      if (!n) { $("#w-err").textContent = "Isi jumlah penarikan."; return; }
+      var bt = $("#w-go2"); bt.disabled = true;
+      sb.rpc("aff_request_withdrawal", { p_amount: n }).then(function (r) { if (r.error) { bt.disabled = false; $("#w-err").textContent = aErr(r.error); return; } toast("Penarikan diajukan.", "ok"); S.loaded = false; route(); loadAll().then(function () { route(); }); });
+    });
+  }
   V.dompet = function () {
     var tab = S.dtab === "penarikan" ? "penarikan" : "bonus";
     var h = '<div class="pghead"><div><h1>Dompet Bonus</h1><p class="sub">Riwayat bonus dan penarikan saldo Anda</p></div></div>';
@@ -390,6 +433,7 @@
     var a = $("#f-from"), b = $("#f-to"); if (a) a.addEventListener("change", function () { S.from = a.value; route(); }); if (b) b.addEventListener("change", function () { S.to = b.value; route(); });
     var st = $("#f-st"); if (st) st.addEventListener("change", function () { S.q = st.value; route(); $("#f-st").focus(); });
     if (r === "profil") bindProfile();
+    if (r === "affiliate") bindAff();
     if (r === "bantuan") bindSupport();
     if (r === "notifikasi") markNotifRead();
     if (["statistik", "rsvp", "bukutamu", "live"].indexOf(r) >= 0) bindGuests(r);
