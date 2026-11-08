@@ -117,6 +117,12 @@ jobs:
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
           psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/admin-transactions.test.sql 2>&1 | tee "$RUNNER_TEMP/admin-transactions.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji DB customer support (SLA, percakapan, catatan internal, penugasan, lampiran aman, hak akses)"
+        id: admsup
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/support-tickets.test.sql 2>&1 | tee "$RUNNER_TEMP/support-tickets.log"; exit ${PIPESTATUS[0]}
       - name: "Uji UI Cari Teman Kondangan (Chromium: profil, jelajah, match, chat realtime, XSS, CSP, 3 viewport)"
         id: datingui
         continue-on-error: true
@@ -182,5 +188,5 @@ jobs:
       - name: Ringkasan
         if: always()
         run: |
-          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }} contentprot=${{ steps.contentprot.outcome }} custfeat=${{ steps.custfeat.outcome }} guestdb=${{ steps.guestdb.outcome }} tplmeta=${{ steps.tplmeta.outcome }} admdash=${{ steps.admdash.outcome }} admcust=${{ steps.admcust.outcome }} admtpl=${{ steps.admtpl.outcome }} admtx=${{ steps.admtx.outcome }}"
-          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success -a "${{ steps.guestdb.outcome }}" = success -a "${{ steps.tplmeta.outcome }}" = success -a "${{ steps.admdash.outcome }}" = success -a "${{ steps.admcust.outcome }}" = success -a "${{ steps.admtpl.outcome }}" = success -a "${{ steps.admtx.outcome }}" = success
+          echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }} contentprot=${{ steps.contentprot.outcome }} custfeat=${{ steps.custfeat.outcome }} guestdb=${{ steps.guestdb.outcome }} tplmeta=${{ steps.tplmeta.outcome }} admdash=${{ steps.admdash.outcome }} admcust=${{ steps.admcust.outcome }} admtpl=${{ steps.admtpl.outcome }} admtx=${{ steps.admtx.outcome }} admsup=${{ steps.admsup.outcome }}"
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success -a "${{ steps.guestdb.outcome }}" = success -a "${{ steps.tplmeta.outcome }}" = success -a "${{ steps.admdash.outcome }}" = success -a "${{ steps.admcust.outcome }}" = success -a "${{ steps.admtpl.outcome }}" = success -a "${{ steps.admtx.outcome }}" = success -a "${{ steps.admsup.outcome }}" = success

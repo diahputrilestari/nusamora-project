@@ -288,39 +288,78 @@
   });
   /* ---- Bantuan & Dukungan: tiket lewat RPC (support_*) ---- */
   var CAT = { bantuan: "Bantuan umum", pembayaran: "Pembayaran", teknis: "Masalah teknis", komplain: "Komplain", lainnya: "Lainnya" };
+  var TST = { open: ["Dibuka", "warn"], diproses: ["Sedang diproses", "warn"], menunggu_pelanggan: ["Menunggu balasan Anda", "bad"], selesai: ["Selesai", "ok"], ditutup: ["Ditutup", ""] };
+  var FTYPE = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }, FMAX = 3 * 1024 * 1024;
+  function tbadge(s) { var x = TST[s] || [s, ""]; return '<span class="badge ' + x[1] + '">' + esc(x[0]) + "</span>"; }
+  function fileLinks(fs) { return fs && fs.length ? '<div class="tkf">' + fs.map(function (f) { return '<button type="button" class="lnk" data-file="' + esc(f.path) + '">Lihat ' + esc(f.name) + "</button>"; }).join(" ") + "</div>" : ""; }
   V.bantuan = function () {
     var h = '<div class="pghead"><div><h1>Bantuan &amp; Dukungan</h1><p class="sub">Hubungi tim NusaMora</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-tk" novalidate><h2>Buat tiket baru</h2>' +
       '<label class="fld">Kategori<select id="tk-cat">' + Object.keys(CAT).map(function (k) { return '<option value="' + k + '">' + CAT[k] + "</option>"; }).join("") + '</select></label>' +
       '<label class="fld">Subjek<input type="text" id="tk-sub" maxlength="120"><span class="err" id="e-tks"></span></label>' +
       '<label class="fld">Pesan<textarea id="tk-msg" rows="5" maxlength="4000"></textarea><span class="err" id="e-tkm"></span></label>' +
-      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Tiket saya</h2><div id="tk-list">';
+      '<label class="fld">Screenshot (opsional)<input type="file" id="tk-file" accept="image/png,image/jpeg,image/webp" multiple><small>Maksimal 3 gambar (PNG, JPG, WebP), 3 MB per gambar.</small><span class="err" id="e-tkf"></span></label>' +
+      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Riwayat tiket saya</h2><div id="tk-list">';
     if (S.tickets === null) { loadTickets(); return h + '<div class="sk h3"></div></div></div></div>'; }
     if (S.tickets === false) return h + empty("chat", "Tiket belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div></div></div>";
     if (!S.tickets.length) return h + empty("chat", "Belum ada tiket", "Tiket yang Anda buat akan tampil di sini.") + "</div></div></div>";
     return h + S.tickets.map(function (t) {
-      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + badge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small><p>" + esc(t.message || "") + "</p>" +
-        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + "</b><p>" + esc(r.body) + "</p></div>"; }).join("") +
-        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><button class="btn sm" type="submit">Balas</button></form>') + "</details>";
+      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + tbadge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small>" +
+        (t.status === "menunggu_pelanggan" ? '<p class="tkw">Tim kami menunggu balasan Anda.</p>' : "") + "<p>" + esc(t.message || "") + "</p>" + fileLinks(t.files) +
+        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + " <small>" + dt(r.created_at, true) + "</small></b><p>" + esc(r.body) + "</p>" + fileLinks(r.files) + "</div>"; }).join("") +
+        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><div class="rfc"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><input type="file" accept="image/png,image/jpeg,image/webp" multiple aria-label="Screenshot"></div><button class="btn sm" type="submit">Balas</button></form>' +
+          '<button type="button" class="btn o sm" data-close="' + esc(t.id) + '">Tutup tiket</button>') + "</details>";
     }).join("") + "</div></div></div>";
   };
   function loadTickets() { sb.rpc("support_my_tickets").then(function (r) { S.tickets = r.error ? false : (r.data || []); if (location.hash === "#bantuan") route(); }); }
-  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup." };
+  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup.", lampiran_terlalu_banyak: "Terlalu banyak lampiran.", lampiran_terlalu_besar: "Gambar maksimal 3 MB.", lampiran_tidak_valid: "Lampiran harus PNG, JPG, atau WebP." };
   function errMsg(e) { var m = (e && e.message) || ""; for (var k in ERR) if (m.indexOf(k) >= 0) return ERR[k]; return "Gagal mengirim. Coba lagi."; }
+  function pickFiles(inp, errEl) {
+    var fs = inp && inp.files ? Array.prototype.slice.call(inp.files) : [], msg = "";
+    if (fs.length > 3) msg = "Maksimal 3 gambar."; else fs.forEach(function (f) { if (!FTYPE[f.type]) msg = "Hanya PNG, JPG, atau WebP."; else if (f.size > FMAX) msg = "Setiap gambar maksimal 3 MB."; });
+    if (errEl) errEl.textContent = msg; return msg ? null : fs;
+  }
+  function uploadFiles(tid, rid, fs) {
+    var uid = S.user.id, bad = 0, chain = Promise.resolve();
+    fs.forEach(function (f) {
+      chain = chain.then(function () {
+        var path = uid + "/" + tid + "/" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + "." + FTYPE[f.type];
+        return sb.storage.from("ticket-files").upload(path, f, { contentType: f.type, upsert: false }).then(function (u) {
+          if (u.error) { bad++; return; }
+          return sb.rpc("support_add_attachment", { p_ticket: tid, p_reply: rid, p_path: path, p_name: f.name, p_mime: f.type, p_size: f.size }).then(function (r) { if (r.error) bad++; });
+        });
+      });
+    });
+    return chain.then(function () { return bad; }, function () { return bad + 1; });
+  }
   function bindSupport() {
     var f = $("#f-tk"); if (f) f.addEventListener("submit", function (e) {
       e.preventDefault(); $("#e-tks").textContent = ""; $("#e-tkm").textContent = "";
-      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true;
+      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true, fs = pickFiles($("#tk-file"), $("#e-tkf"));
       if (sj.length < 3) { $("#e-tks").textContent = "Isi subjek (minimal 3 karakter)."; ok = false; }
       if (ms.length < 5) { $("#e-tkm").textContent = "Isi pesan (minimal 5 karakter)."; ok = false; }
-      if (!ok) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
+      if (!ok || fs === null) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
       sb.rpc("support_create_ticket", { p_subject: sj, p_category: $("#tk-cat").value, p_message: ms }).then(function (r) {
-        bt.disabled = false; bt.textContent = "Kirim tiket"; if (r.error) return toast(errMsg(r.error), "bad");
-        toast("Tiket terkirim.", "ok"); S.tickets = null; route();
+        if (r.error) { bt.disabled = false; bt.textContent = "Kirim tiket"; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(r.data, null, fs) : Promise.resolve(0)).then(function (bad) {
+          bt.disabled = false; bt.textContent = "Kirim tiket"; toast(bad ? "Tiket terkirim, tetapi " + bad + " lampiran gagal diunggah." : "Tiket terkirim.", bad ? "bad" : "ok"); S.tickets = null; route();
+        });
       });
     });
     $$(".rf").forEach(function (rf) { rf.addEventListener("submit", function (e) {
-      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(); if (!b) return;
-      sb.rpc("support_reply", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Balasan terkirim.", "ok"); S.tickets = null; route(); });
+      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(), fs = pickFiles(rf.querySelector("input[type=file]"), null); if (!b) return;
+      if (fs === null) return toast("Lampiran harus PNG, JPG, atau WebP (maks. 3 gambar, 3 MB).", "bad");
+      var btn = rf.querySelector("button"); btn.disabled = true;
+      sb.rpc("support_reply_v2", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) {
+        if (r.error) { btn.disabled = false; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(rf.dataset.tk, r.data, fs) : Promise.resolve(0)).then(function (bad) { toast(bad ? "Balasan terkirim, tetapi " + bad + " lampiran gagal." : "Balasan terkirim.", bad ? "bad" : "ok"); S.tickets = null; route(); });
+      });
+    }); });
+    $$("[data-close]").forEach(function (bt) { bt.addEventListener("click", function () {
+      if (!bt.dataset.sure) { bt.dataset.sure = "1"; bt.textContent = "Yakin? Klik lagi untuk menutup"; return; }
+      sb.rpc("support_close", { p_ticket: bt.dataset.close }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Tiket ditutup.", "ok"); S.tickets = null; route(); });
+    }); });
+    $$("[data-file]").forEach(function (bt) { bt.addEventListener("click", function () {
+      sb.storage.from("ticket-files").createSignedUrl(bt.dataset.file, 120).then(function (r) { if (r.error || !r.data) return toast("Gambar tidak bisa dibuka.", "bad"); window.open(r.data.signedUrl, "_blank", "noopener"); });
     }); });
   }
   V.profil = function () {

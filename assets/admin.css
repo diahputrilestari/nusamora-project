@@ -105,3 +105,5 @@ dialog.studio{max-width:min(1100px,calc(100vw - 20px))}.st-tabs{margin:12px 0}.s
 .rdl li.ok>i{color:#1f8a4c}.rdl li.no>i{color:#c0392b}.rdl li.opt>i{color:var(--mute)}.rdl li small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
 .badge.mut{background:var(--line);color:var(--mute)}
 fieldset.chk{border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px 18px}fieldset.chk legend{font-size:13px;font-weight:600;padding:0 6px}fieldset.chk label{display:flex;gap:6px;align-items:center;font-size:14px}fieldset.chk small{flex-basis:100%}
+.rp.internal{background:#fff7dd;border:1px dashed #d8b94a}
+.rp{margin:10px 0;padding:12px 14px;border-radius:12px;background:var(--bg2,#f3f0f8)}.rp.staff{background:#e9e1f7}.rp small{font-weight:400;opacity:.7;margin-left:6px}.rp p{margin:6px 0 0}
