@@ -5,6 +5,7 @@ export interface Deps {
   env: Env;
   fetch: typeof fetch;
   getUser(token: string): Promise<{ id: string } | null>;
+  canSyncAll?(token: string): Promise<boolean>;   // admin dengan izin transactions.write (dicek lewat has_perm dengan JWT admin)
   ownsOrder(token: string, orderId: string): Promise<{ status: string } | null>;   // dibaca dengan JWT pelanggan (RLS)
   rpc(name: string, args: Record<string, unknown>): Promise<{ data: any; error: { message: string } | null }>;
 }
@@ -126,9 +127,11 @@ export async function handleSync(req: Request, d: Deps): Promise<Response> {
   { const w = await rateCheck(d, "sync-user", user.id, 30, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   let b: any; try { b = await req.json(); } catch { return json(req, d.env, 400, { error: "permintaan_tidak_valid" }); }
   if (typeof b.order_id !== "string" || !ORDER.test(b.order_id)) return json(req, d.env, 400, { error: "permintaan_tidak_valid" });
+  const asAdmin = b.admin === true;
+  if (asAdmin && !(d.canSyncAll && await d.canSyncAll(token))) return json(req, d.env, 403, { error: "forbidden" });
   const own = await d.ownsOrder(token, b.order_id);
   if (!own) return json(req, d.env, 404, { error: "tidak_ditemukan" });
-  if (own.status !== "pending") return json(req, d.env, 200, { ok: true, status: own.status });
+  if (!asAdmin && own.status !== "pending") return json(req, d.env, 200, { ok: true, status: own.status });   // admin boleh memeriksa ulang status akhir (mis. refund)
   try {
     const st = await midtransStatus(b.order_id, d);
     if (!st.ok) return json(req, d.env, 200, { ok: true, status: "pending", verified: false });     // belum ada transaksi di Midtrans
