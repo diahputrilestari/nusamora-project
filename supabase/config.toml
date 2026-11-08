@@ -22,3 +22,6 @@ verify_jwt = false
 
 [functions.notify-webhook]
 verify_jwt = false
+
+[functions.system-status]
+verify_jwt = false

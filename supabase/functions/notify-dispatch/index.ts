@@ -10,6 +10,11 @@ function makeDeps(): NotifyDeps {
     async getUser(token) { const { data, error } = await admin.auth.getUser(token); return error || !data.user ? null : { id: data.user.id }; },
     async rpc(name, args) { const r = await admin.rpc(name, args); return { data: r.data, error: r.error ? { message: r.error.message } : null }; },
     fetch: (u, i) => fetch(u, i),
+    async resolveHost(host) {
+      const out: string[] = [];
+      for (const type of ["A", "AAAA"] as const) { try { out.push(...(await Deno.resolveDns(host, type))); } catch { /* tipe tidak ada */ } }
+      return out;
+    },
   };
 }
 Deno.serve((req) => handleNotifyDispatch(req, makeDeps()));

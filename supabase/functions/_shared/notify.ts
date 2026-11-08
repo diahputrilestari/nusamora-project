@@ -10,6 +10,8 @@ export interface NotifyDeps {
   getUser(token: string): Promise<{ id: string } | null>;
   rpc(name: string, args: Record<string, unknown>): Promise<{ data: any; error: { message: string } | null }>;
   fetch(url: string, init: RequestInit): Promise<Response>;
+  /** Opsional: menerjemahkan nama host ke alamat IP (dipakai menolak webhook ke jaringan privat). */
+  resolveHost?(host: string): Promise<string[]>;
   now?: () => number;
 }
 type Row = { id: string; channel: "email" | "whatsapp"; to_address: string | null; subject: string | null; body: string };
@@ -55,7 +57,7 @@ export async function sendWhatsApp(d: NotifyDeps, r: Row): Promise<SendResult> {
   return { ok: false, error: reason.slice(0, 300), http: res.status, permanent: /nomor|number|target|invalid number|not valid|tidak valid/i.test(reason) && !/token/i.test(reason) };
 }
 
-async function authorize(req: Request, d: NotifyDeps, perm: string): Promise<{ actor: string } | Response> {
+export async function authorize(req: Request, d: NotifyDeps, perm: string): Promise<{ actor: string } | Response> {
   const sec = req.headers.get("x-dispatch-secret") || "";
   if (sec) return d.env.dispatchSecret && safeEq(sec, d.env.dispatchSecret) ? { actor: "scheduler" } : R(req, d, 401, { error: "rahasia_salah" });
   const m = /^Bearer\s+(.+)$/i.exec(req.headers.get("authorization") || ""); const token = m ? m[1]! : "";
@@ -64,6 +66,59 @@ async function authorize(req: Request, d: NotifyDeps, perm: string): Promise<{ a
   if (ok.error || ok.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak berhak mengelola notifikasi." });
   { const w = await rateCheck(d, "notify-dispatch-user", u.id, 12, 60); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   return { actor: u.id };
+}
+
+
+// ---- Webhook keluar. "delivered" = penerima menjawab 2xx. Tanda tangan: HMAC-SHA256 atas `${timestamp}.${body}`.
+type WhRow = { id: string; endpoint_id: string; event: string; payload: unknown; url: string; secret: string; attempts: number; created_at: string };
+export function isPrivateIp(ip: string): boolean {
+  const x = ip.trim().toLowerCase();
+  const m4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(x);
+  if (m4) { const [a, b] = [Number(m4[1]), Number(m4[2])]; return a === 0 || a === 10 || a === 127 || a >= 224 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127) || (a === 192 && b === 0); }
+  if (x.includes(":")) { const mapped = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/.exec(x); if (mapped) return isPrivateIp(mapped[1]!); return x === "::" || x === "::1" || /^f[cd]/.test(x) || /^fe[89ab]/.test(x); }
+  return true; // bukan IP yang dikenal: anggap tidak aman
+}
+export function webhookHostBlocked(host: string): boolean {
+  const h = host.toLowerCase();
+  return !h.includes(".") || h === "localhost" || /^[0-9.]+$/.test(h) || h.includes(":") || h.includes("[") || /\.(local|localhost|internal|lan|home|test|invalid|example|onion)$/.test(h);
+}
+async function hmacHex(secret: string, msg: string): Promise<string> {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return Array.from(new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msg)))).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+export async function sendWebhook(d: NotifyDeps, r: WhRow): Promise<{ ok: boolean; http: number; error: string; permanent: boolean; ms: number }> {
+  const t0 = (d.now ?? Date.now)(); const bad = (error: string, permanent: boolean, http = 0) => ({ ok: false, http, error, permanent, ms: (d.now ?? Date.now)() - t0 });
+  let u: URL; try { u = new URL(r.url); } catch { return bad("URL tidak valid", true); }
+  if (u.protocol !== "https:" || (u.port && u.port !== "443") || u.username || u.password || webhookHostBlocked(u.hostname)) return bad("URL tujuan tidak diizinkan", true);
+  if (d.resolveHost) {
+    let ips: string[]; try { ips = await d.resolveHost(u.hostname); } catch { return bad("DNS tujuan tidak ditemukan", false); }
+    if (!ips.length) return bad("DNS tujuan tidak ditemukan", false);
+    if (ips.some(isPrivateIp)) return bad("Tujuan mengarah ke alamat jaringan privat", true);
+  }
+  const body = JSON.stringify({ id: r.id, event: r.event, created_at: r.created_at, data: r.payload });
+  const ts = String(Math.floor((d.now ?? Date.now)() / 1000)); const sig = await hmacHex(r.secret, `${ts}.${body}`);
+  const ac = new AbortController(); const to = setTimeout(() => ac.abort(), 8000);
+  try {
+    const res = await d.fetch(u.toString(), { method: "POST", redirect: "manual", signal: ac.signal, body,
+      headers: { "Content-Type": "application/json", "User-Agent": "NusaMora-Webhook/1", "X-NusaMora-Event": r.event, "X-NusaMora-Delivery": r.id, "X-NusaMora-Timestamp": ts, "X-NusaMora-Signature": "sha256=" + sig } });
+    const ms = (d.now ?? Date.now)() - t0;
+    if (res.status >= 200 && res.status < 300) return { ok: true, http: res.status, error: "", permanent: false, ms };
+    if (res.status >= 300 && res.status < 400) return bad("Penerima mengalihkan (redirect) dan tidak diikuti", true, res.status);
+    return bad(`Penerima menjawab HTTP ${res.status}`, res.status >= 400 && res.status < 500 && res.status !== 408 && res.status !== 429, res.status);
+  } catch (e) { return bad("Jaringan: " + String((e as Error)?.name === "AbortError" ? "timeout 8 detik" : (e as Error)?.message || e).slice(0, 150), false); }
+  finally { clearTimeout(to); }
+}
+async function runWebhooks(d: NotifyDeps, out: Record<string, unknown>, t0: number): Promise<void> {
+  const w = { claimed: 0, delivered: 0, retry: 0, failed: 0 }; out.webhooks = w;
+  for (let round = 0; round < 5 && (d.now ?? Date.now)() - t0 < 20000; round++) {
+    const c = await d.rpc("webhook_claim", { p_limit: 20 }); if (c.error) { out.webhook_error = c.error.message; return; }
+    const rows: WhRow[] = c.data || []; if (!rows.length) return; w.claimed += rows.length;
+    for (let i = 0; i < rows.length; i += 5) await Promise.all(rows.slice(i, i + 5).map(async (r) => {
+      const res = await sendWebhook(d, r);
+      const st = await d.rpc("webhook_result", { p_id: r.id, p_ok: res.ok, p_http: res.http || null, p_error: res.ok ? null : res.error, p_ms: res.ms, p_permanent: res.permanent });
+      if (res.ok) w.delivered++; else if (st.data === "failed") w.failed++; else w.retry++;
+    }));
+  }
 }
 
 export async function handleNotifyDispatch(req: Request, d: NotifyDeps): Promise<Response> {
@@ -82,8 +137,8 @@ export async function handleNotifyDispatch(req: Request, d: NotifyDeps): Promise
   const due = await d.rpc("notif_enqueue_due", {});
   const out = { claimed: 0, sent: 0, retry: 0, failed: 0, skipped_channels: [] as string[], due: due.error ? null : due.data };
   if (!emailReady) out.skipped_channels.push("email"); if (!waReady) out.skipped_channels.push("whatsapp");
-  if (!channels.length) return R(req, d, 200, out);
   const t0 = (d.now ?? Date.now)();
+  if (!channels.length) { await runWebhooks(d, out, t0); return R(req, d, 200, out); }
   for (let round = 0; round < 5 && (d.now ?? Date.now)() - t0 < 20000; round++) {
     const c = await d.rpc("notif_claim", { p_limit: 20, p_channels: channels });
     if (c.error) return R(req, d, 500, { error: "gagal_ambil_antrean", message: c.error.message, ...out });
@@ -99,6 +154,7 @@ export async function handleNotifyDispatch(req: Request, d: NotifyDeps): Promise
       }));
     }
   }
+  await runWebhooks(d, out, t0);
   if (a.actor !== "scheduler") await logSecurityEvent(d, "notify_dispatch_manual", a.actor, { claimed: out.claimed, sent: out.sent });
   return R(req, d, 200, out);
 }
