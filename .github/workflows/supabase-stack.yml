@@ -176,7 +176,8 @@ jobs:
         continue-on-error: true
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
-          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/admin-live.test.sql 2>&1 | tee "$RUNNER_TEMP/admin-live.log"; exit ${PIPESTATUS[0]}
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/admin-live.test.sql 2>&1 | tee "$RUNNER_TEMP/admin-live.log"; test ${PIPESTATUS[0]} -eq 0
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/live-sync.test.sql 2>&1 | tee "$RUNNER_TEMP/live-sync.log"; exit ${PIPESTATUS[0]}
       - name: "Uji UI Cari Teman Kondangan (Chromium: profil, jelajah, match, chat realtime, XSS, CSP, 3 viewport)"
         id: datingui
         continue-on-error: true
