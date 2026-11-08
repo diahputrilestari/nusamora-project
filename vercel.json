@@ -25,6 +25,8 @@
     }
   ],
   "rewrites": [
+    { "source": "/(artikel|bantuan|tutorial)", "destination": "/konten.html" },
+    { "source": "/(artikel|info)/:slug", "destination": "/konten.html" },
     {
       "source": "/(backend|ops|docs|builder|source|supabase|next|\\.github)/:path*",
       "destination": "/404"

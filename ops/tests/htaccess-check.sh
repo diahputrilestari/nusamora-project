@@ -35,7 +35,7 @@ echo "== harus DIBLOKIR (403)"
 for p in /backend/asset-schema.sql /backend/ /ops/stack/lib.mjs /ops/tests/htaccess-check.sh /docs/security/SECURITY.md /source/build.py /builder/build_landing.py \
   /supabase/functions/asset-url/index.ts /supabase/config.toml /next/ /.git/config /.git/HEAD /.github/workflows/supabase-stack.yml /README.md /vercel.json /BACKEND/asset-schema.sql /Docs/security/SECURITY.md /assets/ /assets/img/; do expect 403 "$p"; done
 echo "== harus TETAP TERBUKA"
-for p in / /masuk /daftar /akun /live/ /live/jawa-tengah /assets/landing.css /assets/landing.js /assets/protect.js /assets/favicon.svg /assets/img/romantic-garden-s1.webp /robots.txt /sitemap.xml; do expect 200 "$p"; done
+for p in / /masuk /daftar /akun /live/ /live/jawa-tengah /assets/landing.css /assets/landing.js /assets/protect.js /assets/favicon.svg /assets/img/romantic-garden-s1.webp /robots.txt /sitemap.xml /artikel /artikel/contoh-slug /info/tentang-kami /bantuan /tutorial; do expect 200 "$p"; done
 echo "== URL bersih & header"
 got=$(st "$B/masuk.html"); [ "$got" = 301 ] && echo "PASS /masuk.html -> 301 (URL bersih)" || { echo "FAIL /masuk.html -> $got"; fail=$((fail+1)); }
 h=$(curl -sI "$B/"); for k in "x-content-type-options: nosniff" "content-security-policy-report-only" "referrer-policy"; do echo "$h" | grep -qi "$k" && echo "PASS header $k" || { echo "FAIL header $k"; fail=$((fail+1)); }; done
