@@ -132,6 +132,18 @@
         hud: { bg: "rgba(" + rgb(g("deep")) + ",.6)", acc: g("hud"), on: g("ink") }, scr: { wine: g("accent"), veil: rgb(g("ivory")) } };
     }
 
+    /* ---------- Dekor tema (gambar transparan per slot) ---------- */
+    var DC_SLOT = [["table", "Meja + kursi"], ["lamp", "Lampu taman + panji"], ["rope", "Tali pembatas"], ["sign", "Papan petunjuk"], ["planter", "Pot bunga"], ["bush", "Semak bunga"], ["arch", "Gerbang"], ["fountain", "Air mancur"],
+      ["banner", "Panji"], ["speakers", "Speaker"], ["balloons", "Balon"], ["gifts", "Kado"], ["easel", "Papan lukisan"], ["photobooth", "Photo booth"], ["stall_drinks", "Kios minuman"], ["stall_snacks", "Kios camilan"], ["stall_candy", "Kios permen kapas"], ["claw", "Mesin capit"]];
+    function decorHtml(v, dis) {
+      var dc = (v && v.decor) || {};
+      return '<div class="full"><h3 class="lg-sec">Dekor tema (gambar transparan per objek)</h3><p class="sub">Isi URL gambar PNG/WebP transparan (https:// atau /, maks. 4 MB, harus mengizinkan CORS; Asset Library sudah memenuhi). Slot kosong memakai dekor bawaan. Posisi objek diatur template. Pastikan gambar berlisensi milik penyelenggara.</p></div>' +
+        DC_SLOT.map(function (s) { return '<label class="fld"><span>' + s[1] + '</span><input name="d_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc((dc[s[0]] && dc[s[0]].url) || "") + '"' + dis + "></label>"; }).join("");
+    }
+    function decorCollect(f) {
+      var o = {}, n = 0; DC_SLOT.forEach(function (s) { var u = f["d_" + s[0]].value.trim(); if (u) { o[s[0]] = { url: u }; n++; } }); return n ? o : null;
+    }
+
     /* ---------- Venue builder ---------- */
     function renderVenues(root) {
       root.innerHTML = skel();
@@ -149,6 +161,7 @@
       dl.innerHTML = '<div class="dlg-h"><h2 id="lg-ven-t">' + esc(v ? v.name : "Venue baru") + "</h2>" + xBtn + '</div><form class="lg-f" id="vf" novalidate><label class="fld"><span>Nama</span><input name="name" maxlength="60" value="' + esc(v ? v.name : "") + '"' + dis + '></label><label class="fld"><span>Kunci (unik)</span><input name="key" maxlength="39" value="' + esc(v ? v.key : "") + '"' + dis + '></label><label class="fld"><span>Template</span><input name="template" maxlength="40" value="' + esc(v && v.template || "") + '"' + dis + '></label>' +
         '<label class="fld"><span>Kapasitas tamu online</span><input type="number" name="max" min="1" max="5000" value="' + esc(v ? v.max_guests : 300) + '"' + dis + '></label><label class="fld full"><span>URL background (https:// atau /)</span><input name="bg" maxlength="500" value="' + esc(v && v.background_url || "") + '"' + dis + '></label><label class="fld"><span>Urutan</span><input type="number" name="sort" value="' + esc(v ? v.sort : 0) + '"' + dis + '></label><label class="fld"><span><input type="checkbox" name="active"' + (!v || v.active ? " checked" : "") + dis + '> Aktif</span></label>' +
         themeHtml(v, dis) +
+        decorHtml(v, dis) +
         '<div class="full"><h3 class="lg-sec">Area</h3><div class="tbl-w"><table class="lg-ar"><thead><tr><th>ID</th><th>Nama</th><th>X</th><th>Z</th><th>Ikon</th><th>Aktif</th><th></th></tr></thead><tbody id="vf-ar"></tbody></table></div>' + (W ? '<button class="btn o" type="button" id="vf-add" style="margin-top:8px">Tambah area</button>' : "") + '<p class="sub">Koordinat x dan z antara -40 dan 40. Catatan: pada tampilan Live Guest saat ini, yang diterapkan dari sini hanya nama, ikon, dan aktif/nonaktif area; letak objek pada pemandangan masih ditetapkan oleh halaman.</p><svg class="lg-map" id="vf-map" viewBox="-40 -40 80 80" role="img" aria-label="Pratinjau posisi area"></svg></div>' +
         '<div class="full lg-e" role="alert"></div>' + (W ? '<div class="full lg-btns"><button class="btn" type="submit">Simpan venue</button>' + (v && canD() ? '<button class="btn o bad" type="button" id="vf-del">Hapus</button>' : "") + "</div>" : "") + "</form>";
       function draw() {
@@ -166,7 +179,7 @@
       $("#vf").addEventListener("submit", function (e) {
         e.preventDefault(); if (!W) return; var f = e.target.elements, er = e.target.querySelector(".lg-e"); er.textContent = "";
         if (areas.some(function (a) { return a.x === "" || a.z === "" || isNaN(Number(a.x)) || isNaN(Number(a.z)); })) { er.textContent = "Koordinat x dan z semua area harus berupa angka."; return; }
-        var p = { id: v ? v.id : null, key: f.key.value.trim(), name: f.name.value.trim(), template: f.template.value.trim() || null, background_url: f.bg.value.trim() || null, max_guests: Number(f.max.value), sort: Number(f.sort.value) || 0, active: f.active.checked, event_type: f.ev.value || null, bg_pos: f.pos.value.trim() || null, nm_theme: themeCollect(f, f.name.value.trim()), areas: areas.map(function (a) { return { id: String(a.id).trim(), name: String(a.name).trim(), x: Number(a.x), z: Number(a.z), icon: String(a.icon || "").trim(), enabled: a.enabled !== false }; }) };
+        var p = { id: v ? v.id : null, key: f.key.value.trim(), name: f.name.value.trim(), template: f.template.value.trim() || null, background_url: f.bg.value.trim() || null, max_guests: Number(f.max.value), sort: Number(f.sort.value) || 0, active: f.active.checked, event_type: f.ev.value || null, bg_pos: f.pos.value.trim() || null, nm_theme: themeCollect(f, f.name.value.trim()), decor: decorCollect(f), areas: areas.map(function (a) { return { id: String(a.id).trim(), name: String(a.name).trim(), x: Number(a.x), z: Number(a.z), icon: String(a.icon || "").trim(), enabled: a.enabled !== false }; }) };
         jak(function () { return sb.rpc("admin_live_venue_save", { p: p }); }).then(function () { toast("Venue disimpan."); dl.close(); reload(); }, function (x) { er.textContent = errText(x); });
       });
       dl.showModal();

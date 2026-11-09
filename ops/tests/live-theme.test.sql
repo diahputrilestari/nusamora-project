@@ -71,6 +71,14 @@ begin
   if (public.live_theme(current_setting('lt.tok')) ->> 'event') <> 'wedding' then raise exception 'event cadangan dari undangan'; end if;
   perform pg_temp.root(); update public.invitations set event_type = 'lainnya' where id = i1; perform pg_temp.as_anon();
   if (public.live_theme(current_setting('lt.tok')) -> 'event') <> 'null'::jsonb then raise exception 'event tak dikenal = null'; end if;
+  -- dekor: simpan oleh admin lalu muncul di live_theme; url buruk ditolak; kunci tidak dikirim = dipertahankan
+  perform pg_temp.root(); update public.live_venues set nm_theme = th, event_type = 'birthday' where id = vid; perform pg_temp.as_user(adm);
+  perform public.admin_live_venue_save(jsonb_build_object('id', vid, 'key', 'lt-uji', 'name', 'LT Uji 2', 'areas', ar, 'max_guests', 50, 'active', true, 'decor', '{"table":{"url":"https://x.test/t.webp"}}'::jsonb));
+  perform pg_temp.fails(format('select public.admin_live_venue_save(%L::jsonb)', jsonb_build_object('key', 'lt-x5', 'name', 'LT X', 'areas', ar, 'decor', '{"table":{"url":"http://x.test/t.webp"}}'::jsonb)), 'dekor_tidak_valid');
+  perform public.admin_live_venue_save(jsonb_build_object('id', vid, 'key', 'lt-uji', 'name', 'LT Uji 3', 'areas', ar, 'max_guests', 50, 'active', true));
+  perform pg_temp.as_anon();
+  if (public.live_theme(current_setting('lt.tok')) -> 'decor' -> 'table' ->> 'url') <> 'https://x.test/t.webp' then raise exception 'decor harus muncul di live_theme dan dipertahankan'; end if;
+  perform pg_temp.root(); update public.live_venues set nm_theme = null where id = vid; perform pg_temp.as_anon();
   -- venue tanpa tema -> null
   perform pg_temp.root(); update public.live_venues set nm_theme = null where id = vid; perform pg_temp.as_anon();
   if public.live_theme(current_setting('lt.tok')) is not null then raise exception 'tanpa tema = null'; end if;

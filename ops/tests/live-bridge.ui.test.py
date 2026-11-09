@@ -137,6 +137,11 @@ with sync_playwright() as pw:
     chk("lukisan venue diunduh & dipasang sebagai blob same-origin (aman untuk panorama 3D); nama tuan rumah dari undangan", "blob:" in cs[2] and cs[3] == "Alya", cs)
     pg.click("#n1"); pg.fill("#nm", "Budi Uji"); pg.click("#go"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.wait_for_timeout(1200)
     chk("tema tetap setelah masuk venue; tanpa galat halaman", pg.evaluate("document.documentElement.dataset.nmTheme") == "v-midnight-party" and not errs, errs); ctx.close()
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = dict(TH, decor={"table": {"url": "https://cdn.test/dec/table.webp"}, "lamp": {"url": "https://cdn.test/dec/lamp.png", "w": 1.2}, "sign": {"url": "https://cdn.test/dec/rusak.png"}})
+    got = []
+    pg.route("https://cdn.test/dec/*", lambda r: (got.append(r.request.url.split("/")[-1]), r.fulfill(status=404, body="x") if "rusak" in r.request.url else r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1))[1])
+    pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.click("#n1"); pg.fill("#nm", "Budi Uji"); pg.click("#go"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.wait_for_timeout(2500)
+    chk("dekor tema: gambar tiap slot diminta; slot gagal tidak merusak halaman", sorted(got) == ["lamp.png", "rusak.png", "table.webp"] and not errs, (got, errs)); ctx.close()
     TH2 = dict(TH, painting="http://insecure.test/x.png", theme=dict(TH["theme"], ui=dict(TH["theme"]["ui"], accent="url(x)")))
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH2; pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_timeout(1500)
     chk("tema tidak aman diabaikan (aksen url() -> bawaan; http ditolak)", "insecure.test" not in pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bgurl')") and "url" not in pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--nm-accent')"), errs); ctx.close()
