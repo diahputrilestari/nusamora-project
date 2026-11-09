@@ -6,7 +6,7 @@
   if (!q || !/^[0-9a-f]{32}$/.test(q)) return;
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
-  var CFG = null, joined = false, hb = null, poll = null, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
 
@@ -56,11 +56,56 @@
     rpc("live_join", { p_token: TOKEN }).then(function (r) {
       if (!r || !r.ok) { block(MSG[r && r.reason] || "Tidak bisa masuk ke ruangan."); return; }
       joined = true; setOnline(r.online); stripDemo(); hideMenu(); buildBars(); buildGames();
-      hb = setInterval(function () { rpc("live_heartbeat", { p_token: TOKEN }).then(function (n) { if (n === -1) { clearInterval(hb); clearInterval(poll); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); } else if (typeof n === "number") setOnline(n); }, function () { }); }, 30000);
+      hb = setInterval(function () { rpc("live_heartbeat", { p_token: TOKEN }).then(function (n) { if (n === -1) { clearInterval(hb); clearInterval(poll); stopSync(); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); } else if (typeof n === "number") setOnline(n); }, function () { }); }, 30000);
       poll = setInterval(pollChat, 3000); pollChat();
+      sy = setInterval(syncTick, 1500); syncTick(); raf = requestAnimationFrame(stepPeers);
     }, function () { toast("Tidak dapat terhubung ke server. Mode demo tetap berjalan.", true); });
   }
   function setOnline(n) { var e = $("#cnt"); if (e && typeof n === "number") e.textContent = n; }
+
+  /* Tamu lain di scene: kirim posisi sendiri, terima tamu aktif lain, tampilkan sebagai karakter. */
+  function stopSync() { clearInterval(sy); try { cancelAnimationFrame(raf); } catch (e) { } Object.keys(peers).forEach(dropPeer); }
+  function dropPeer(id) {
+    var e = peers[id]; if (!e) return; delete peers[id];
+    try { if (e.el) e.el.remove(); } catch (x) { }
+    try { if (typeof sc !== "undefined" && e.g) sc.remove(e.g); } catch (x) { }
+    try { var k = ents.indexOf(e); if (k >= 0) ents.splice(k, 1); } catch (x) { }
+  }
+  var syncTick = safe(function () {
+    if (syncBusy || typeof P === "undefined" || !P || !P.g || typeof ent !== "function") return;
+    syncBusy = true;
+    var pos = P.g.position, args = { p_token: TOKEN, p_x: Math.round(pos.x * 100) / 100, p_z: Math.round(pos.z * 100) / 100, p_av: { g: S.g, i: S.i } };
+    if (!isFinite(args.p_x) || !isFinite(args.p_z)) { args.p_x = null; args.p_z = null; }
+    rpc("live_sync", args).then(function (r) {
+      syncBusy = false; if (!r) return;
+      if (r.online === -1) { clearInterval(hb); clearInterval(poll); stopSync(); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); return; }
+      setOnline(r.online); applyPeers(r.peers || []);
+    }, function () { syncBusy = false; });
+  });
+  var applyPeers = safe(function (L) {
+    var live = {};
+    L.forEach(function (p) {
+      if (!p || !p.id || typeof p.x !== "number" || typeof p.z !== "number") return;
+      live[p.id] = 1; var e = peers[p.id];
+      if (!e) {
+        var g = p.av && AV[p.av.g] && AV[p.av.g][p.av.i] ? p.av : { g: S.g, i: 0 };
+        if (!AV[g.g] || !AV[g.g][g.i]) return;
+        e = ent(String(p.name || "Tamu").slice(0, 40), AV[g.g][g.i], p.x, p.z); peers[p.id] = e;
+      }
+      e.nbx = p.x; e.nbz = p.z;
+    });
+    Object.keys(peers).forEach(function (id) { if (!live[id]) dropPeer(id); });
+  });
+  var stepPeers = safe(function (t) {
+    var dt = lastT ? Math.min(0.1, (t - lastT) / 1000) : 0.016; lastT = t;
+    Object.keys(peers).forEach(function (id) {
+      var e = peers[id], dx = e.nbx - e.g.position.x, dz = e.nbz - e.g.position.z, dist = Math.sqrt(dx * dx + dz * dz);
+      if (!isFinite(dist)) return;
+      if (dist > 12) { e.g.position.x = e.nbx; e.g.position.z = e.nbz; e.mv = 0; return; }
+      if (dist > 0.15 && typeof move === "function") move(e, dx / dist, dz / dist, Math.min(dist, 3.2 * dt)); else e.mv = 0;
+    });
+    raf = requestAnimationFrame(stepPeers);
+  });
   var stripDemo = safe(function () {
     if (typeof bots !== "undefined") {
       bots.forEach(function (b) { try { if (b.el) b.el.remove(); if (typeof sc !== "undefined" && b.g) sc.remove(b.g); } catch (e) { } });

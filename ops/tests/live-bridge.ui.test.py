@@ -43,6 +43,7 @@ def newpage(b, cfg=None, join=None, hb=None, chat=None, token=TOK, listing=None)
         elif name == "live_chat_list": out = state["chat"]
         elif name == "live_game_submit": out = {"ok": True, "score": 50, "best": 100}
         elif name == "live_leaderboard": out = [{"name": "Budi", "score": 100}]
+        elif name == "live_sync": out = state.get("sync")
         elif name == "live_leave": out = True
         r.fulfill(status=200, content_type="application/json", body=json.dumps(out), headers={"access-control-allow-origin": "*"})
     pg.route("**/rest/v1/rpc/**", rpc)
@@ -109,6 +110,20 @@ with sync_playwright() as pw:
     chk("dibisukan: pesan galat & teks dikembalikan ke kolom", "dibisukan" in pg.inner_text("#nmb-toast") and pg.input_value("#ci") == "halo"); ctx.close()
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG, hb=-1); pg.clock.install(); enter(pg); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.clock.run_for(1500); pg.clock.run_for(31000)
     chk("heartbeat -1 (dikeluarkan): layar blokir", pg.locator("#nmb-block").count() == 1 and "keluar" in pg.inner_text("#nmb-block")); ctx.close()
+    # 5b. tamu lain di scene
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); pg.clock.install(); enter(pg); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.clock.run_for(1500)
+    n0 = pg.evaluate("ents.length"); l0 = pg.locator("#lbls > *").count()
+    chk("sinkron: posisi & avatar sendiri dikirim", len(cn(calls, "live_sync")) >= 1 and set(cn(calls, "live_sync")[0].keys()) == {"p_token", "p_x", "p_z", "p_av"} and cn(calls, "live_sync")[0]["p_av"].get("g") in ("L", "P"), cn(calls, "live_sync")[:1])
+    st["sync"] = {"online": 5, "peers": [{"id": "aaa", "name": "Sari", "x": 2, "z": 3, "av": {"g": "P", "i": 2}}, {"id": "bbb", "name": "<img src=x onerror=window.__x=1>", "x": -2, "z": 4, "av": {"g": "X", "i": 99}}]}
+    pg.clock.run_for(1600)
+    chk("tamu lain muncul sebagai entitas + label; jumlah online dari server", pg.evaluate("ents.length") == n0 + 2 and pg.locator("#lbls > *").count() == l0 + 2 and pg.inner_text("#cnt") == "5", (pg.evaluate("ents.length"), n0))
+    chk("nama tamu lain aman dari XSS", pg.evaluate("window.__x") is None and "Sari" in pg.inner_text("#lbls"))
+    pg.clock.run_for(1600)
+    chk("peer yang sama tidak digandakan", pg.evaluate("ents.length") == n0 + 2)
+    st["sync"] = {"online": 4, "peers": [{"id": "aaa", "name": "Sari", "x": 2.5, "z": 3, "av": {"g": "P", "i": 2}}]}; pg.clock.run_for(1600)
+    chk("peer yang hilang dibuang dari scene", pg.evaluate("ents.length") == n0 + 1 and pg.locator("#lbls > *").count() == l0 + 1 and pg.inner_text("#cnt") == "4")
+    st["sync"] = {"online": -1, "peers": []}; pg.clock.run_for(1600)
+    chk("sync -1: layar blokir & semua peer dibuang", pg.locator("#nmb-block").count() == 1 and pg.evaluate("ents.length") == n0); ctx.close()
     # 6. halaman Jawa Tengah
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); pg.clock.install(); enter(pg, "/live/jawa-tengah"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.clock.run_for(1500)
     chk("halaman jawa-tengah: jembatan juga aktif", len(cn(calls, "live_join")) == 1 and pg.evaluate("bots.length") == 0); ctx.close()
