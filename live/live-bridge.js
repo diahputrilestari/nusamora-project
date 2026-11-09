@@ -88,12 +88,12 @@
 
   /* Dekor tema: gambar transparan per slot menggantikan dekor bawaan scene. Posisi slot ditentukan di sini (template), admin hanya memilih gambar. */
   var DECOR = {
-    arch: [10, [[0, -19]]], fountain: [6, [[0, -12]]], speakers: [3.4, [[-8.5, -24], [8.5, -24]]], banner: [2.4, [[-7, -15], [7, -15]]],
-    balloons: [2.6, [[-5.5, -21], [5.5, -21], [-15, 0], [15, 0]]], gifts: [2.4, [[-3.2, -21.5], [3.4, -21.5]]],
-    photobooth: [4.4, [[-13, -9]]], easel: [2.2, [[-4.8, -10]]], lamp: [1.3, [[-4.3, -6], [4.3, -6], [-4.3, 1.5], [4.3, 1.5], [-4.3, 7], [4.3, 7]]],
-    rope: [3, [[-2.4, -3], [2.4, -3], [-2.4, 4.5], [2.4, 4.5]]], sign: [1.5, [[-3.6, 8]]], planter: [1.3, [[3.4, 8.6], [-9, 9.5]]],
-    stall_drinks: [4.2, [[-8.8, -10.5]]], stall_snacks: [4.4, [[8.8, -10.5]]], stall_candy: [3.2, [[16, -6]]], claw: [2.8, [[13.2, -9]]],
-    bush: [3, [[-16, 9], [16, 9], [8.5, 10.4]]], table: [4.6, [[-11.5, -3], [-5.2, -3], [5.2, -3], [11.5, -3], [-9, 3.2], [9, 3.2]]]
+    arch: [10, [[0, -19.5]]], fountain: [5.4, [[0, -12.5]]], speakers: [3.2, [[-9, -24.5], [9, -24.5]]], banner: [2.2, [[-10.5, -16], [10.5, -16]]],
+    balloons: [2.4, [[-5.8, -21.5], [5.8, -21.5]]], gifts: [2.2, [[-3.4, -22], [3.6, -22]]],
+    photobooth: [4.2, [[-17, -10]]], easel: [2.1, [[-17.5, 1.5]]], lamp: [1.2, [[-4.6, -7], [4.6, -7], [-4.6, 5], [4.6, 5]]],
+    rope: [4.6, [[0, -5.5]]], sign: [1.4, [[-5.6, 9]]], planter: [1.2, [[5.6, 9.6], [-9, 10.5]]],
+    stall_drinks: [4, [[-11.8, -10.5]]], stall_snacks: [4.2, [[11.8, -10.5]]], stall_candy: [3.1, [[17.5, -3]]], claw: [2.6, [[17, -10]]],
+    bush: [3, [[-16.5, 9], [16.5, 9]]], table: [3.9, [[-9.2, -3], [9.2, -3], [-11.5, 4.2], [11.5, 4.2]]]
   }, DECOR_HIDE = { meja: ["table"], kuliner: ["stall_drinks", "stall_snacks", "stall_candy", "claw"],
     deco: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"],
     furn: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"] }, decorPending = null;
