@@ -69,13 +69,19 @@
     if (!t || !t.theme || typeof NM === "undefined") return;
     var id = String(t.id || "").replace(/[^\w-]/g, "").slice(0, 40); if (!id) return;
     var pt = t.painting ? String(t.painting) : null; if (pt && pt.charAt(0) === "/") pt = location.origin + pt; if (pt && !/^https:\/\//.test(pt)) pt = null;
-    NM.registerEnv(id, { name: t.name || id, painting: pt, pos: t.pos || "center 38%" });
+    /* Lukisan dipakai juga sebagai panorama 3D (canvas -> WebGL). Gambar lintas-origin menodai canvas dan scene jadi hitam, jadi lukisan diunduh dulu
+       (butuh header CORS) dan dipasang sebagai blob same-origin. Gagal unduh = lukisan bawaan tetap dipakai. */
+    NM.registerEnv(id, { name: t.name || id, painting: null, pos: t.pos || "center 38%" });
     var ev = t.event && NM.events[t.event] ? t.event : null;
     var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
     if (!NM.registerTheme(id, cfg)) return;
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
+    if (pt) fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+      if (!/^image\/(png|jpeg|webp)$/.test(bl.type) || bl.size > 12582912) return;
+      document.documentElement.style.setProperty("--bgurl", 'url("' + URL.createObjectURL(bl) + '")');
+    }, function () { });
   });
 
   /* Tamu lain di scene: kirim posisi sendiri, terima tamu aktif lain, tampilkan sebagai karakter. */

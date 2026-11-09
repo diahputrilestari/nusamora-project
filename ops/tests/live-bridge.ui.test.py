@@ -16,6 +16,8 @@ def chk(n, c, d=""):
     if c: ok_n += 1; print("PASS", n)
     else: bad_n += 1; print("FAIL", n, d)
 TOK = "a" * 32
+import base64
+PNG1 = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==")
 THREE = r"""(function(){var f=function(){};var P=new Proxy(f,{get:function(t,k){if(k===Symbol.toPrimitive)return function(){return 0};if(k==='then')return undefined;if(k==='valueOf')return function(){return 0};if(k==='toString')return function(){return '0'};return P},apply:function(){return P},construct:function(){return P},set:function(){return true}});window.THREE=P})();"""
 CONFIGJS = "window.NM_CONFIG={SUPABASE_URL:'https://stub.supabase.co',SUPABASE_ANON_KEY:'anon-stub',SITE_URL:'http://x'};"
 BASE_CFG = {"enabled": True, "features": {"music": True, "qris": True, "gallery": True, "guestbook": False},
@@ -128,10 +130,11 @@ with sync_playwright() as pw:
     # 5c. tema venue dari database
     TH = {"id": "v-midnight-party", "name": "Midnight Party", "event": "birthday", "host": "Alya", "painting": "https://cdn.test/venue.png", "pos": "center 30%",
           "theme": {"name": "Midnight Party", "orn": "sparkle", "ui": {"ivory": "#F7F1FF", "white": "#FFFFFF", "soft": "#EDE2FF", "soft2": "#D9C6F5", "accent": "#6D3FC0", "deep": "#3A2160", "ink": "#2A1B3D", "mute": "#7F6A9E", "line": "#E1D4F5"}, "hud": {"bg": "rgba(42,27,61,.6)", "acc": "#F7A8D4", "on": "#2A1B3D"}}}
-    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH; pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_function("document.documentElement.dataset.nmTheme==='v-midnight-party'", timeout=8000)
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH; pg.route("https://cdn.test/venue.png", lambda r: r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1)); pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_function("document.documentElement.dataset.nmTheme==='v-midnight-party'", timeout=8000)
     cs = pg.evaluate("[document.documentElement.dataset.nmEvent, getComputedStyle(document.documentElement).getPropertyValue('--nm-accent').trim(), getComputedStyle(document.documentElement).getPropertyValue('--bgurl').trim(), NMID.host, NMID.event]")
     chk("tema venue diterapkan: tema, jenis acara, warna aksen", cs[0] == "birthday" and cs[1].lower() == "#6d3fc0" and cs[4] == "birthday", cs)
-    chk("lukisan venue (https) dipasang & nama tuan rumah dari undangan", "cdn.test/venue.png" in cs[2] and cs[3] == "Alya", cs)
+    pg.wait_for_function("getComputedStyle(document.documentElement).getPropertyValue('--bgurl').includes('blob:')", timeout=8000); cs[2] = pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bgurl')")
+    chk("lukisan venue diunduh & dipasang sebagai blob same-origin (aman untuk panorama 3D); nama tuan rumah dari undangan", "blob:" in cs[2] and cs[3] == "Alya", cs)
     pg.click("#n1"); pg.fill("#nm", "Budi Uji"); pg.click("#go"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.wait_for_timeout(1200)
     chk("tema tetap setelah masuk venue; tanpa galat halaman", pg.evaluate("document.documentElement.dataset.nmTheme") == "v-midnight-party" and not errs, errs); ctx.close()
     TH2 = dict(TH, painting="http://insecure.test/x.png", theme=dict(TH["theme"], ui=dict(TH["theme"]["ui"], accent="url(x)")))
