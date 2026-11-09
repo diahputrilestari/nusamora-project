@@ -102,6 +102,36 @@
       }, function (e) { toast(errText(e), "bad"); });
     }
 
+    /* ---------- Tema venue (palet, jenis acara, lukisan) ---------- */
+    var TH_COL = [["ivory", "Latar halaman"], ["white", "Kartu"], ["soft", "Lembut 1"], ["soft2", "Lembut 2"], ["accent", "Aksen"], ["deep", "Judul / tua"], ["ink", "Teks"], ["mute", "Teks pudar"], ["line", "Garis"]],
+      TH_DEF = { ivory: "#F7F1FF", white: "#FFFFFF", soft: "#EDE2FF", soft2: "#D9C6F5", accent: "#6D3FC0", deep: "#3A2160", ink: "#2A1B3D", mute: "#7F6A9E", line: "#E1D4F5" },
+      TH_FONT = { "Fredoka": 'Fredoka,"Cormorant Garamond",sans-serif', "Playfair Display": '"Playfair Display",Georgia,serif', "Cinzel": 'Cinzel,"Times New Roman",serif', "Cormorant Garamond": '"Cormorant Garamond",Georgia,serif' },
+      TH_ORN = ["sparkle", "confetti", "sprig", "blossom", "diamond", "mandala", "leaf", "line", "rings"], TH_MOTIF = ["sparkle", "confetti", "garden", "sakura", "gold", "royal", "boho", "minimal", "rings"],
+      TH_EV = [["", "Ikuti undangan"], ["birthday", "Ulang tahun"], ["sweet17", "Sweet Seventeen"], ["wedding", "Pernikahan"], ["engagement", "Pertunangan"], ["corporate", "Acara perusahaan"]];
+    function opt(list, cur) { return list.map(function (o) { var k = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(k) + '"' + (k === cur ? " selected" : "") + ">" + esc(l) + "</option>"; }).join(""); }
+    function themeHtml(v, dis) {
+      var t = v && v.nm_theme, u = (t && t.ui) || TH_DEF, fam = "Fredoka";
+      if (t && t.ui && t.ui.serif) Object.keys(TH_FONT).forEach(function (k) { if (TH_FONT[k] === t.ui.serif) fam = k; });
+      return '<div class="full"><h3 class="lg-sec">Tema tampilan (template universal)</h3><p class="sub">Warna dan jenis acara dipasang ke halaman Live Guest lewat mesin tema. Gambar lukisan venue (rasio 1672x941, PNG/JPG/WebP) diisi pada URL background di atas; boleh berasal dari Asset Library. Hanya font Fredoka, Playfair Display, Cinzel, dan Cormorant Garamond yang dimuat halaman.</p></div>' +
+        '<label class="fld full"><span><input type="checkbox" name="th_on"' + (t ? " checked" : "") + dis + '> Pakai tema warna untuk venue ini</span></label>' +
+        '<label class="fld"><span>Jenis acara</span><select name="ev"' + dis + ">" + opt(TH_EV, (v && v.event_type) || "") + '</select></label>' +
+        '<label class="fld"><span>Posisi lukisan (CSS, mis. center 38%)</span><input name="pos" maxlength="30" value="' + esc((v && v.bg_pos) || "center 38%") + '"' + dis + "></label>" +
+        TH_COL.map(function (c) { return '<label class="fld"><span>' + c[1] + '</span><input type="color" name="c_' + c[0] + '" value="' + esc(u[c[0]] && /^#[0-9a-f]{6}$/i.test(u[c[0]]) ? u[c[0]] : TH_DEF[c[0]]) + '"' + dis + "></label>"; }).join("") +
+        '<label class="fld"><span>Warna panel (HUD)</span><input type="color" name="c_hud" value="' + esc(t && t.hud && /^#[0-9a-f]{6}$/i.test(t.hud.acc) ? t.hud.acc : "#F7A8D4") + '"' + dis + "></label>" +
+        '<label class="fld"><span>Font</span><select name="font"' + dis + ">" + opt(Object.keys(TH_FONT), fam) + '</select></label>' +
+        '<label class="fld"><span>Ornamen judul</span><select name="orn"' + dis + ">" + opt(TH_ORN, (t && t.orn) || "sparkle") + '</select></label>' +
+        '<label class="fld"><span>Motif monogram</span><select name="motif"' + dis + ">" + opt(TH_MOTIF, (t && t.mono && t.mono.motif) || "sparkle") + '</select></label>' +
+        '<label class="fld"><span><input type="checkbox" name="dark"' + (t && t.dark ? " checked" : "") + dis + '> Tema gelap</span></label>';
+    }
+    function themeCollect(f, name) {
+      if (!f.th_on.checked) return null;
+      var g = function (k) { return f["c_" + k].value; }, rgb = function (h) { var n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(","); }, fam = TH_FONT[f.font.value] || TH_FONT.Fredoka;
+      return { name: String(name).slice(0, 40), orn: f.orn.value, dark: f.dark.checked,
+        ui: { ivory: g("ivory"), white: g("white"), soft: g("soft"), soft2: g("soft2"), accent: g("accent"), deep: g("deep"), ink: g("ink"), mute: g("mute"), line: g("line"), serif: fam, sans: "Inter,system-ui,sans-serif", rad: 24, btnr: 999, btnt: "none", btnls: ".02em" },
+        mono: { font: fam, it: 0, paper: g("ivory"), ink: g("deep"), accent: g("accent"), gold: g("hud"), leaf: g("soft2"), hbg: "rgba(" + rgb(g("ivory")) + ",.94)", hline: g("line"), motif: f.motif.value },
+        hud: { bg: "rgba(" + rgb(g("deep")) + ",.6)", acc: g("hud"), on: g("ink") }, scr: { wine: g("accent"), veil: rgb(g("ivory")) } };
+    }
+
     /* ---------- Venue builder ---------- */
     function renderVenues(root) {
       root.innerHTML = skel();
@@ -118,6 +148,7 @@
       var W = canW(), dl = dialog("lg-ven"), areas = v ? JSON.parse(JSON.stringify(v.areas || [])) : [], dis = W ? "" : " disabled";
       dl.innerHTML = '<div class="dlg-h"><h2 id="lg-ven-t">' + esc(v ? v.name : "Venue baru") + "</h2>" + xBtn + '</div><form class="lg-f" id="vf" novalidate><label class="fld"><span>Nama</span><input name="name" maxlength="60" value="' + esc(v ? v.name : "") + '"' + dis + '></label><label class="fld"><span>Kunci (unik)</span><input name="key" maxlength="39" value="' + esc(v ? v.key : "") + '"' + dis + '></label><label class="fld"><span>Template</span><input name="template" maxlength="40" value="' + esc(v && v.template || "") + '"' + dis + '></label>' +
         '<label class="fld"><span>Kapasitas tamu online</span><input type="number" name="max" min="1" max="5000" value="' + esc(v ? v.max_guests : 300) + '"' + dis + '></label><label class="fld full"><span>URL background (https:// atau /)</span><input name="bg" maxlength="500" value="' + esc(v && v.background_url || "") + '"' + dis + '></label><label class="fld"><span>Urutan</span><input type="number" name="sort" value="' + esc(v ? v.sort : 0) + '"' + dis + '></label><label class="fld"><span><input type="checkbox" name="active"' + (!v || v.active ? " checked" : "") + dis + '> Aktif</span></label>' +
+        themeHtml(v, dis) +
         '<div class="full"><h3 class="lg-sec">Area</h3><div class="tbl-w"><table class="lg-ar"><thead><tr><th>ID</th><th>Nama</th><th>X</th><th>Z</th><th>Ikon</th><th>Aktif</th><th></th></tr></thead><tbody id="vf-ar"></tbody></table></div>' + (W ? '<button class="btn o" type="button" id="vf-add" style="margin-top:8px">Tambah area</button>' : "") + '<p class="sub">Koordinat x dan z antara -40 dan 40. Catatan: pada tampilan Live Guest saat ini, yang diterapkan dari sini hanya nama, ikon, dan aktif/nonaktif area; letak objek pada pemandangan masih ditetapkan oleh halaman.</p><svg class="lg-map" id="vf-map" viewBox="-40 -40 80 80" role="img" aria-label="Pratinjau posisi area"></svg></div>' +
         '<div class="full lg-e" role="alert"></div>' + (W ? '<div class="full lg-btns"><button class="btn" type="submit">Simpan venue</button>' + (v && canD() ? '<button class="btn o bad" type="button" id="vf-del">Hapus</button>' : "") + "</div>" : "") + "</form>";
       function draw() {
@@ -135,7 +166,7 @@
       $("#vf").addEventListener("submit", function (e) {
         e.preventDefault(); if (!W) return; var f = e.target.elements, er = e.target.querySelector(".lg-e"); er.textContent = "";
         if (areas.some(function (a) { return a.x === "" || a.z === "" || isNaN(Number(a.x)) || isNaN(Number(a.z)); })) { er.textContent = "Koordinat x dan z semua area harus berupa angka."; return; }
-        var p = { id: v ? v.id : null, key: f.key.value.trim(), name: f.name.value.trim(), template: f.template.value.trim() || null, background_url: f.bg.value.trim() || null, max_guests: Number(f.max.value), sort: Number(f.sort.value) || 0, active: f.active.checked, areas: areas.map(function (a) { return { id: String(a.id).trim(), name: String(a.name).trim(), x: Number(a.x), z: Number(a.z), icon: String(a.icon || "").trim(), enabled: a.enabled !== false }; }) };
+        var p = { id: v ? v.id : null, key: f.key.value.trim(), name: f.name.value.trim(), template: f.template.value.trim() || null, background_url: f.bg.value.trim() || null, max_guests: Number(f.max.value), sort: Number(f.sort.value) || 0, active: f.active.checked, event_type: f.ev.value || null, bg_pos: f.pos.value.trim() || null, nm_theme: themeCollect(f, f.name.value.trim()), areas: areas.map(function (a) { return { id: String(a.id).trim(), name: String(a.name).trim(), x: Number(a.x), z: Number(a.z), icon: String(a.icon || "").trim(), enabled: a.enabled !== false }; }) };
         jak(function () { return sb.rpc("admin_live_venue_save", { p: p }); }).then(function () { toast("Venue disimpan."); dl.close(); reload(); }, function (x) { er.textContent = errText(x); });
       });
       dl.showModal();

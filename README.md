@@ -52,6 +52,8 @@ Tulis data lewat RPC `slug_available`, `create_invitation`, `save_invitation`; f
 
 Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu template universal per paket (Essential 2D, Signature 3D Cinematic, Luxe 3D Live Guest); **tema = set aset** yang menimpa aset umum template pada slot yang sama.
 
+**Tema Live Guest (Luxe):** satu halaman live universal, tema = data venue. Admin > Live Guest > Venue Builder > bagian *Tema tampilan*: jenis acara, palet warna, font, ornamen, posisi lukisan; gambar lukisan venue (rasio 1672x941) diisi di URL background (bisa dari Asset Library). `live_theme()` mengirim tema ke tamu, `live/live-bridge.js` mendaftarkannya ke mesin tema halaman. Contoh tema `midnight-party` (nonaktif) tersedia lewat `backend/admin-live-theme.sql`. Aset gambar/karakter yang diunggah wajib berlisensi milik penyelenggara.
+
 **Setup (sekali):**
 1. SQL Editor: jalankan `backend/asset-schema.sql` **paling akhir** (setelah `package-schema.sql`). Aman dijalankan ulang; membuat kategori aset per paket, `assets`, `themes`, `template_themes`, `template_assets`, bucket storage `theme-assets`, dan fungsi `admin_*`.
 2. Deploy Edge Function pendaftaran aset: `supabase functions deploy asset-register --no-verify-jwt` (memakai `SUPABASE_SERVICE_ROLE_KEY` bawaan Supabase; tidak ada secret baru).
