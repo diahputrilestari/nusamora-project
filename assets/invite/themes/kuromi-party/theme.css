@@ -15,3 +15,5 @@
 .th-kuromi-party .cv-nm, .th-kuromi-party .hero-nm, .th-kuromi-party .end-nm { text-shadow: 0 2px 0 rgba(42, 23, 54, .45), 0 0 18px rgba(255, 159, 208, .55); }
 /* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
 .th-kuromi-party .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(42, 23, 54, .62), rgba(42, 23, 54, .3) 62%, rgba(42, 23, 54, .08) 84%), linear-gradient(180deg, rgba(42, 23, 54, .06), rgba(42, 23, 54, .55)); }
+/* Beranda: eyebrow tetap terbaca di atas panggung ungu */
+.th-kuromi-party .hero-in .eb { color: #FFE3F2; text-shadow: 0 1px 8px rgba(42, 23, 54, .9); }
