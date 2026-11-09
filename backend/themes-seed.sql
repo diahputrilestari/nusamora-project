@@ -15,7 +15,8 @@ with t(slug, name, cats, description, sort) as (values
   ('istana-pink',   'Istana Pink',           '{birthday}'::text[],                              'Pesta ulang tahun di istana merah muda: gerbang kastil, balon hati, air mancur, kereta permen, kado berpita, dan bendera segitiga.', 40),
   ('dino-adventure', 'Dino Adventure',       '{birthday}'::text[],                              'Pesta ulang tahun petualangan di lembah dinosaurus: gunung berapi, obor, telur dino, fosil, gua, balon jejak kaki, dan para dino lucu.', 41),
   ('metal-rock',    'Metal Rock Party',      '{birthday}'::text[],                              'Pesta ulang tahun bergaya konser metal rock: panggung neon merah, gitar listrik, drum, ampli, tengkorak bersayap, mahkota krom, dan percikan petir.', 42),
-  ('kpop-party',    'K-Pop Party',           '{birthday}'::text[],                              'Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.', 43)
+  ('kpop-party',    'K-Pop Party',           '{birthday}'::text[],                              'Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.', 43),
+  ('aqiqah-istana-pink', 'Aqiqah Istana Pink', '{aqiqah}'::text[],                              'Tasyakuran aqiqah bernuansa istana merah muda: lentera emas, Al-Qur''an di atas rehal, bulan sabit, gazebo bertirai, teddy dan kelinci, serta ilustrasi bayi berhijab bermahkota.', 50)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

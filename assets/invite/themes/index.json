@@ -18,7 +18,9 @@
     "dino": "dino-adventure",
     "rock": "metal-rock",
     "kpop": "kpop-party",
-    "k-pop": "kpop-party"
+    "k-pop": "kpop-party",
+    "aqiqah": "aqiqah-istana-pink",
+    "aqiqah-pink": "aqiqah-istana-pink"
   },
   "themes": [
     {
@@ -199,6 +201,20 @@
       "swatch": [
         "#2B1A57",
         "#9446D6"
+      ],
+      "art": true
+    },
+    {
+      "id": "aqiqah-istana-pink",
+      "name": "Aqiqah Istana Pink",
+      "description": "Tasyakuran aqiqah bernuansa istana merah muda: lentera emas, Al-Qur'an di atas rehal, bulan sabit, gazebo bertirai, teddy dan kelinci, serta ilustrasi bayi berhijab bermahkota.",
+      "categories": [
+        "aqiqah"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A2766",
+        "#F9A8D4"
       ],
       "art": true
     }

@@ -124,7 +124,7 @@
     return rpc("submit_wish", { p_slug: vm.slug, p_name: d.name, p_message: d.message, p_attendance: d.attendance || null });
   }
   function wishes(vm, before) {
-    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
+    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
     return rpc("list_wishes", { p_slug: vm.slug, p_before: before || null, p_limit: 20 });
   }
 
@@ -139,9 +139,15 @@
     { id: "k2", name: "Kirana (teman TK)", message: "Happy birthday! Sampai ketemu di pesta ya!", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
     { id: "k3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
+  var DEMO_WISHES_AQ = [
+    { id: "q1", name: "Ustadzah Halimah", message: "Barakallahu lakum. Semoga menjadi anak yang salihah, penyejuk mata, dan berbakti kepada orang tua.", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
+    { id: "q2", name: "Tante Mira & Om Bayu", message: "Selamat atas kelahiran si kecil! Semoga sehat selalu dan tumbuh penuh kasih sayang.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
+    { id: "q3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang, insyaAllah segera berkunjung.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
+  ];
   /* demo per kategori acara: tema ulang tahun memakai data contoh ulang tahun */
   /* o = theme.json "demo" (opsional): { name, full, parents, age } untuk menyesuaikan data contoh */
   function demoFor(theme, cat, o) {
+    if (cat === "aqiqah") return demoAqiqah(theme, o);
     if (cat !== "birthday") return demoData(theme);
     o = o || {}; var nm = str(o.name, 30) || "Alesha", age = str(o.age, 10) || "5";
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
@@ -166,6 +172,31 @@
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
     return { vm: normalize(content, { slug: "demo", title: "Ulang Tahun " + nm, category: "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
+  }
+  function demoAqiqah(theme, o) {
+    o = o || {}; var nm = str(o.name, 30) || "Aisyah";
+    var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
+    var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
+    var content = {
+      theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
+      names: { a: nm },
+      couple: { bride: { full: str(o.full, 80) || "Aisyah Humaira Putri", parents: str(o.parents, 120) || "Putri pertama Bapak Dimas Pratama & Ibu Rania Larasati" } },
+      welcome: "Assalamu'alaikum warahmatullahi wabarakatuh. Dengan memohon rahmat dan ridha Allah SWT, kami bermaksud menyelenggarakan tasyakuran aqiqah putri kami. Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa.",
+      quote: { text: "Setiap anak tergadaikan dengan aqiqahnya, disembelihkan untuknya pada hari ketujuh, dicukur rambutnya, dan diberi nama.", source: "HR. Abu Dawud" },
+      photos: { cover: u("nm-baby-cover", 900, 1200), bride: u("nm-baby", 600, 800), gallery: ["b1", "b2", "b3", "b4", "b5", "b6"].map(function (s, i) { return u("nm-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
+      event: { name: "Tasyakuran Aqiqah", start: "10:00", end: "13:00", tz: "WIB", venue: "Kediaman Bapak Dimas Pratama", address: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      story: [
+        { date: "Juni 2026", title: "Kabar Bahagia", text: "Kami mendapat kabar bahwa keluarga kecil kami akan bertambah. Alhamdulillah.", photo: "" },
+        { date: "Februari 2027", title: "Hari Kelahiran", text: nm + " lahir dengan sehat, membawa tangis haru dan syukur yang tak terhingga.", photo: u("nm-baby-s2", 700, 500) },
+        { date: "Hari ke-7", title: "Nama yang Indah", text: "Kami memberinya nama " + nm + ", dengan doa semoga tumbuh menjadi anak salihah.", photo: "" }
+      ],
+      gift: { bank: "BSI", number: "7123456789", holder: "Rania Larasati" },
+      giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+      closing: "Atas kehadiran dan doa restu Bapak/Ibu/Saudara/i, kami ucapkan terima kasih. Wassalamu'alaikum warahmatullahi wabarakatuh.",
+      music: { enabled: true, track: "we-are" },
+      features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
+    };
+    return { vm: normalize(content, { slug: "demo", title: "Aqiqah " + nm, category: "aqiqah", event_date: iso, mode: "demo" }), template: theme || "" };
   }
   function demoData(theme) {
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
