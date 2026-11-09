@@ -43,6 +43,7 @@ def newpage(b, cfg=None, join=None, hb=None, chat=None, token=TOK, listing=None)
         elif name == "live_chat_list": out = state["chat"]
         elif name == "live_game_submit": out = {"ok": True, "score": 50, "best": 100}
         elif name == "live_leaderboard": out = [{"name": "Budi", "score": 100}]
+        elif name == "live_theme": out = state.get("theme")
         elif name == "live_sync": out = state.get("sync")
         elif name == "live_leave": out = True
         r.fulfill(status=200, content_type="application/json", body=json.dumps(out), headers={"access-control-allow-origin": "*"})
@@ -124,6 +125,20 @@ with sync_playwright() as pw:
     chk("peer yang hilang dibuang dari scene", pg.evaluate("ents.length") == n0 + 1 and pg.locator("#lbls > *").count() == l0 + 1 and pg.inner_text("#cnt") == "4")
     st["sync"] = {"online": -1, "peers": []}; pg.clock.run_for(1600)
     chk("sync -1: layar blokir & semua peer dibuang", pg.locator("#nmb-block").count() == 1 and pg.evaluate("ents.length") == n0); ctx.close()
+    # 5c. tema venue dari database
+    TH = {"id": "v-midnight-party", "name": "Midnight Party", "event": "birthday", "host": "Alya", "painting": "https://cdn.test/venue.png", "pos": "center 30%",
+          "theme": {"name": "Midnight Party", "orn": "sparkle", "ui": {"ivory": "#F7F1FF", "white": "#FFFFFF", "soft": "#EDE2FF", "soft2": "#D9C6F5", "accent": "#6D3FC0", "deep": "#3A2160", "ink": "#2A1B3D", "mute": "#7F6A9E", "line": "#E1D4F5"}, "hud": {"bg": "rgba(42,27,61,.6)", "acc": "#F7A8D4", "on": "#2A1B3D"}}}
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH; pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_function("document.documentElement.dataset.nmTheme==='v-midnight-party'", timeout=8000)
+    cs = pg.evaluate("[document.documentElement.dataset.nmEvent, getComputedStyle(document.documentElement).getPropertyValue('--nm-accent').trim(), getComputedStyle(document.documentElement).getPropertyValue('--bgurl').trim(), NMID.host, NMID.event]")
+    chk("tema venue diterapkan: tema, jenis acara, warna aksen", cs[0] == "birthday" and cs[1].lower() == "#6d3fc0" and cs[4] == "birthday", cs)
+    chk("lukisan venue (https) dipasang & nama tuan rumah dari undangan", "cdn.test/venue.png" in cs[2] and cs[3] == "Alya", cs)
+    pg.click("#n1"); pg.fill("#nm", "Budi Uji"); pg.click("#go"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.wait_for_timeout(1200)
+    chk("tema tetap setelah masuk venue; tanpa galat halaman", pg.evaluate("document.documentElement.dataset.nmTheme") == "v-midnight-party" and not errs, errs); ctx.close()
+    TH2 = dict(TH, painting="http://insecure.test/x.png", theme=dict(TH["theme"], ui=dict(TH["theme"]["ui"], accent="url(x)")))
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH2; pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_timeout(1500)
+    chk("tema tidak aman diabaikan (aksen url() -> bawaan; http ditolak)", "insecure.test" not in pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--bgurl')") and "url" not in pg.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--nm-accent')"), errs); ctx.close()
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); pg.goto(BASE + "/live/?t=" + TOK); pg.wait_for_selector("#n1"); pg.wait_for_timeout(1000)
+    chk("tanpa tema di venue: tema bawaan tetap", pg.evaluate("document.documentElement.dataset.nmTheme||''") != "v-midnight-party" and len(cn(calls, "live_theme")) == 1); ctx.close()
     # 6. halaman Jawa Tengah
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); pg.clock.install(); enter(pg, "/live/jawa-tengah"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.clock.run_for(1500)
     chk("halaman jawa-tengah: jembatan juga aktif", len(cn(calls, "live_join")) == 1 and pg.evaluate("bots.length") == 0); ctx.close()

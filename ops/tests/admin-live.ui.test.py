@@ -107,6 +107,12 @@ with sync_playwright() as pw:
     pg.fill("#vf-ar tr:nth-child(3) [data-f=x]", "3"); pg.click("#vf button[type=submit]"); pg.wait_for_function("window.__calls.some(c=>c[0]==='admin_live_venue_save')")
     p = calls(pg, "admin_live_venue_save")[0]["p"]
     chk("simpan venue: area terkirim sebagai angka", p["key"] == "romantic-garden" and len(p["areas"]) == 3 and p["areas"][0]["x"] == 12.5 and p["areas"][1]["enabled"] is False and p["max_guests"] == 300, p)
+    chk("simpan venue tanpa tema: nm_theme null", p["nm_theme"] is None and p["event_type"] is None, p)
+    pg.locator("[data-v=v1]").click(); pg.wait_for_selector("#vf-ar tr"); chk("editor venue: bagian tema tampil", pg.locator("#vf [name=th_on]").count() == 1 and pg.locator("#vf [type=color]").count() == 10)
+    pg.check("#vf [name=th_on]"); pg.select_option("#vf [name=ev]", "birthday"); pg.fill("#vf [name=pos]", "center 30%"); pg.evaluate("document.querySelector('#vf [name=c_accent]').value='#112233'"); pg.select_option("#vf [name=font]", "Cinzel"); pg.check("#vf [name=dark]")
+    pg.click("#vf button[type=submit]"); pg.wait_for_function("window.__calls.filter(c=>c[0]==='admin_live_venue_save').length===2")
+    p2 = calls(pg, "admin_live_venue_save")[1]["p"]; t = p2["nm_theme"]
+    chk("simpan venue bertema: event, posisi, palet, font, gelap", p2["event_type"] == "birthday" and p2["bg_pos"] == "center 30%" and t["ui"]["accent"] == "#112233" and "Cinzel" in t["ui"]["serif"] and t["dark"] is True and t["hud"]["bg"].startswith("rgba(") and t["name"] == "Romantic Garden", p2)
     pg.locator("[data-v=v1]").click(); pg.wait_for_selector("#vf-ar tr"); pg.click("#vf-del"); confirm(pg); pg.wait_for_function("window.__calls.some(c=>c[0]==='admin_live_venue_delete')")
     pg.wait_for_function("!document.querySelector('#lg-ven[open]')")
     # interaksi

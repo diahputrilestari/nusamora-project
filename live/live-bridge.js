@@ -6,7 +6,7 @@
   if (!q || !/^[0-9a-f]{32}$/.test(q)) return;
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
-  var CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var THEME = null, CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
 
@@ -62,6 +62,21 @@
     }, function () { toast("Tidak dapat terhubung ke server. Mode demo tetap berjalan.", true); });
   }
   function setOnline(n) { var e = $("#cnt"); if (e && typeof n === "number") e.textContent = n; }
+
+
+  /* Tema venue dari database -> mesin tema halaman (NM). Template tetap satu; tema = data (palet, jenis acara, lukisan venue). */
+  var applyTheme = safe(function (t) {
+    if (!t || !t.theme || typeof NM === "undefined") return;
+    var id = String(t.id || "").replace(/[^\w-]/g, "").slice(0, 40); if (!id) return;
+    var pt = t.painting ? String(t.painting) : null; if (pt && pt.charAt(0) === "/") pt = location.origin + pt; if (pt && !/^https:\/\//.test(pt)) pt = null;
+    NM.registerEnv(id, { name: t.name || id, painting: pt, pos: t.pos || "center 38%" });
+    var ev = t.event && NM.events[t.event] ? t.event : null;
+    var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
+    if (!NM.registerTheme(id, cfg)) return;
+    var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
+    INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
+    if (typeof applyIdentity === "function") applyIdentity();
+  });
 
   /* Tamu lain di scene: kirim posisi sendiri, terima tamu aktif lain, tampilkan sebagai karakter. */
   function stopSync() { clearInterval(sy); try { cancelAnimationFrame(raf); } catch (e) { } Object.keys(peers).forEach(dropPeer); }
@@ -203,9 +218,10 @@
     if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; block(MSG.token_tidak_valid); return; }
     if (!c.enabled) { block(MSG.dimatikan); return; }
     applyConfig(c);
+    rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {
-        clearInterval(iv); join();
+        clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { }
         var sb = $("#sb"), ci = $("#ci"); if (sb) sb.onclick = sendChat; if (ci) ci.onkeydown = function (e) { if (e.key === "Enter") sendChat(); };
       }
     }, 400);
