@@ -1,0 +1,129 @@
+{
+  "id": "kuromi-party",
+  "name": "Kuromi Party",
+  "version": 1,
+  "description": "Pesta ulang tahun ungu-pink bergaya Kuromi: panggung tirai ungu di taman kastil, air mancur, balon hati, photo booth, mesin capit, dan untaian lampu bintang.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Kayla",
+    "full": "Kayla Azzahra Putri",
+    "parents": "Putri kecil Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "7"
+  },
+  "colors": {
+    "deep": "#2A1736",
+    "deep2": "#4B2A63",
+    "paper": "#FBF6FF",
+    "soft": "#F1E6FB",
+    "ink": "#2B1B36",
+    "muted": "#776488",
+    "accent": "#A845C2",
+    "accent2": "#FF9FD0",
+    "petal": "#E7A6F2",
+    "heading": "#3B2047"
+  },
+  "fonts": {
+    "script": "Mochiy Pop One",
+    "serif": "Baloo 2",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "dot"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Kuromi Birthday Party",
+    "guestSalute": "Teman & keluarga tersayang",
+    "profileEyebrow": "Bintang pesta hari ini",
+    "profileTitle": "Birthday Star",
+    "countdownEyebrow": "Pesta dimulai dalam",
+    "countdownTitle": "Party Countdown",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta Ulang Tahun",
+    "storyEyebrow": "Momen tumbuh kembang",
+    "storyTitle": "Cerita Kecilku",
+    "galleryEyebrow": "Senyum dan tawa",
+    "galleryTitle": "Photo Booth",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Kamu Ikut, kan?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa datang ke pesta!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado Spesial",
+    "giftLead": "Kehadiranmu sudah jadi kado terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Pesan Manis",
+    "closingEyebrow": "Sampai jumpa di pesta!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa ini. Kami tunggu kehadiranmu di pesta!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/balon.webp",
+    "coverGround": [
+      {
+        "src": "art/tiang-lampu.webp",
+        "w": 54
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 108
+      },
+      {
+        "src": "art/tiang-lampu.webp",
+        "w": 54
+      }
+    ],
+    "heading": "art/untai-bintang.webp",
+    "introTop": "art/easel.webp",
+    "countdownRow": [
+      {
+        "src": "art/spanduk-kuromi.webp",
+        "w": 50
+      },
+      {
+        "src": "art/speaker.webp",
+        "w": 118
+      },
+      {
+        "src": "art/spanduk-hati.webp",
+        "w": 50
+      }
+    ],
+    "eventBadge": "art/kado.webp",
+    "storyTop": "art/photo-booth.webp",
+    "rsvpHang": "art/balon.webp",
+    "giftTop": "art/gerobak-gulali.webp",
+    "wishesTop": "art/mesin-capit.webp",
+    "closingScene": "art/gapura.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

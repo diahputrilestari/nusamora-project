@@ -20,7 +20,8 @@
     "kpop": "kpop-party",
     "k-pop": "kpop-party",
     "aqiqah": "aqiqah-istana-pink",
-    "aqiqah-pink": "aqiqah-istana-pink"
+    "aqiqah-pink": "aqiqah-istana-pink",
+    "kuromi": "kuromi-party"
   },
   "themes": [
     {
@@ -201,6 +202,20 @@
       "swatch": [
         "#2B1A57",
         "#9446D6"
+      ],
+      "art": true
+    },
+    {
+      "id": "kuromi-party",
+      "name": "Kuromi Party",
+      "description": "Pesta ulang tahun ungu-pink bergaya Kuromi: panggung tirai ungu di taman kastil, air mancur, balon hati, photo booth, mesin capit, dan untaian lampu bintang.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2A1736",
+        "#FF9FD0"
       ],
       "art": true
     },
