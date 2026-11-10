@@ -120,6 +120,9 @@
         L[1].forEach(function (p) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.04 })); sp.center.set(0.5, 0); sp.scale.set(w, h, 1); sp.position.set(p[0], 0, p[1]); sp.name = "nm-decor-" + r.k; grp.add(sp); });
       });
       Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
+      /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
+      var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"] };
+      try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
       sc.add(grp);
     });
   });
