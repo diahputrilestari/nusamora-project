@@ -13,5 +13,9 @@ do $$ declare ok1 boolean; begin
   if not exists (select 1 from information_schema.columns where table_name = 'live_venues' and column_name = 'decor') then raise exception 'kolom decor tidak ada'; end if;
   if pg_get_functiondef('public.live_theme(text)'::regprocedure) not like '%''decor'', v.decor%' then raise exception 'live_theme harus mengirim decor'; end if;
   if pg_get_functiondef('public.admin_live_venue_save(jsonb)'::regprocedure) not like '%live_decor_ok%' then raise exception 'simpan venue harus memeriksa decor'; end if;
+  -- admin-live-theme-areas.sql: resepsi & video mati di midnight-party saja, area lain tetap
+  if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'midnight-party' and e ->> 'id' in ('resepsi', 'video') and (e ->> 'enabled')::boolean) <> 0 then raise exception 'resepsi/video harus nonaktif di midnight-party'; end if;
+  if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'midnight-party' and (e ->> 'enabled')::boolean) <> 6 then raise exception 'enam area lain harus tetap aktif'; end if;
+  if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'romantic-garden' and e ->> 'id' in ('resepsi', 'video') and (e ->> 'enabled')::boolean) <> 2 then raise exception 'venue lain tidak boleh berubah'; end if;
   raise notice 'OK live_decor (validator)';
 end $$;
