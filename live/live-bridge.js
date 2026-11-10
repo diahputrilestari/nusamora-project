@@ -90,10 +90,10 @@
   var DECOR = {
     arch: [8.5, [[0, -37.4]]], fountain: [5.4, [[8.4, -15.5]]], speakers: [3.2, [[-9, -24.5], [9, -24.5]]], banner: [2.2, [[-10.5, -16], [10.5, -16]]],
     balloons: [2.4, [[-5.8, -21.5], [5.8, -21.5]]], gifts: [2.2, [[-3.4, -22], [3.6, -22]]],
-    photobooth: [4.2, [[-17, -10]]], easel: [2.1, [[-17.5, 1.5]]], lamp: [1.2, [[-4.6, -7], [4.6, -7], [-4.6, 5], [4.6, 5]]],
-    rope: [3.4, [[-14.8, -6], [14.8, -6], [-13.2, 0.5], [13.2, 0.5]]], sign: [1.4, [[-5.6, 9]]], planter: [1.2, [[5.6, 9.6], [-9, 10.5]]],
-    stall_drinks: [4, [[-11.8, -10.5]]], stall_snacks: [4.2, [[11.8, -10.5]]], stall_candy: [3.1, [[17.5, -3]]], claw: [2.6, [[17, -10]]],
-    bush: [3, [[-16.5, 9], [16.5, 9]]], table: [3.9, [[-9.2, -3], [9.2, -3], [-11.5, 4.2], [11.5, 4.2]]]
+    photobooth: [4.2, [[-12.2, -8.3]]], easel: [2.1, [[-17.5, 1.5]]], lamp: [1.2, [[-4.6, -7], [4.6, -7], [-4.6, 5], [4.6, 5]]],
+    rope: [3.4, [[-16.4, -6], [16.4, -6], [-13.2, 0.5], [13.2, 0.5]]], sign: [1.4, [[-5.6, 9]]], planter: [1.2, [[5.6, 9.6], [-9, 10.5]]],
+    stall_drinks: [3.6, [[-9.4, -11.5]]], stall_snacks: [3.8, [[7.4, -11.5]]], stall_candy: [3.1, [[-5.6, -10.6]]], claw: [2.8, [[12.2, -8.3]]],
+    bush: [3, [[-16.5, 9], [16.5, 9]]], table: [3.9, [[-9.2, -3], [9.2, -3], [11.5, 4.2]]]
   }, DECOR_HIDE = { pelaminan: ["arch"], meja: ["table"], kuliner: ["stall_drinks", "stall_snacks", "stall_candy", "claw"],
     deco: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"],
     furn: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"] }, decorPending = null;
