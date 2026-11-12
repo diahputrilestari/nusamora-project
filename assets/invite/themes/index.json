@@ -32,7 +32,10 @@
     "pangeran": "little-prince",
     "chef": "little-chef",
     "koki": "little-chef",
-    "masak": "little-chef"
+    "masak": "little-chef",
+    "doctor": "little-doctor",
+    "dokter": "little-doctor",
+    "medis": "little-doctor"
   },
   "themes": [
     {
@@ -311,6 +314,20 @@
       "swatch": [
         "#7A1420",
         "#F2B84B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-doctor",
+      "name": "Little Doctor",
+      "description": "Pesta ulang tahun dokter cilik: panggung klinik biru muda dengan sofa emas, kue detak jantung, balon palang merah, serta karakter chibi dokter dan perawat berjas putih.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#123C78",
+        "#D32F3A"
       ],
       "art": true
     }
