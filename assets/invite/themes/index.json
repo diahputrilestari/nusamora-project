@@ -78,7 +78,13 @@
     "pembalap": "little-racing",
     "f1": "little-racing",
     "sirkuit": "little-racing",
-    "juara": "little-racing"
+    "juara": "little-racing",
+    "polisi": "little-police",
+    "police": "little-police",
+    "patroli": "little-police",
+    "polisi-patroli": "little-police",
+    "polantas": "little-police",
+    "satpam": "little-police"
   },
   "themes": [
     {
@@ -510,6 +516,20 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#B3121F",
+        "#F5C842"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-police",
+      "name": "Little Police Patrol",
+      "description": "Pesta ulang tahun polisi patroli: panggung podium berlampu biru-emas dengan markas polisi dan helikopter, mobil patroli, menara jaga, serta karakter chibi polisi, polisi lalu lintas, dan pilot berseragam biru tua kotak-kotak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B2A6B",
         "#F5C842"
       ],
       "art": true

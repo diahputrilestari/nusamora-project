@@ -33,7 +33,8 @@ with t(slug, name, cats, description, sort) as (values
   ('little-candy', 'Little Candyland', '{birthday}'::text[],                                  'Pesta ulang tahun negeri permen: panggung merah muda dengan gapura permen, lolipop raksasa, bukit gula-gula, pelangi dan istana kue, serta karakter chibi bergaun krim-sprinkle.', 57),
   ('little-strawberry', 'Little Strawberry Garden', '{birthday}'::text[],                                  'Pesta ulang tahun kebun strawberry ceria: panggung merah muda berpagar putih, taplak gingham, rumah strawberry, bunga dan keranjang buah, serta karakter chibi bergaun gingham-renda.', 58),
   ('little-pearl', 'Little Ocean Pearl', '{birthday}'::text[],                                  'Pesta ulang tahun mutiara lautan: panggung marmer dengan gapura kerang dan lumba-lumba, karang warna-warni, istana bawah laut, serta karakter chibi pangeran, putri duyung, pelaut, dan peri berbusana biru-ungu mutiara.', 59),
-  ('little-racing', 'Little Racing Champion', '{birthday}'::text[],                                  'Pesta ulang tahun racing champion: panggung podium berlampu dengan gapura bendera finish, sirkuit balap, tenda pit stop, trofi emas, serta karakter chibi pembalap, mekanik, dan kru berseragam merah-hitam kotak-kotak.', 60)
+,
+  ('little-police', 'Little Police Patrol', '{birthday}'::text[],                                  'Pesta ulang tahun polisi patroli: panggung podium berlampu biru-emas dengan markas polisi dan helikopter, mobil patroli, menara jaga, serta karakter chibi polisi, polisi lalu lintas, dan pilot berseragam biru tua kotak-kotak.', 61)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

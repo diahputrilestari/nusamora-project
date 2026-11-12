@@ -1,0 +1,139 @@
+{
+  "id": "little-police",
+  "name": "Little Police Patrol",
+  "version": 1,
+  "description": "Pesta ulang tahun polisi patroli: panggung podium berlampu biru-emas dengan markas polisi dan helikopter, mobil patroli, menara jaga, serta karakter chibi polisi, polisi lalu lintas, dan pilot berseragam biru tua kotak-kotak.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Polisi Kecil",
+    "full": "Arkana Satria Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#1B2A6B",
+    "deep2": "#2F4AA8",
+    "paper": "#F8FAFF",
+    "soft": "#E6ECFA",
+    "ink": "#1A2038",
+    "muted": "#5E688A",
+    "accent": "#D9A400",
+    "accent2": "#F5C842",
+    "petal": "#BFD0FF",
+    "heading": "#1B2A6B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Police Patrol Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si polisi cilik kami",
+    "profileTitle": "Si Polisi Kecil",
+    "countdownEyebrow": "Patroli dimulai dalam",
+    "countdownTitle": "Menuju Hari Patroli",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Markas Polisi",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Polisi",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Patroli",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Siap Bertugas, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta polisi patroli si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Lencana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Markas",
+    "closingEyebrow": "Sampai jumpa di markas polisi!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta polisi patroli!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/po-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/po-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/bendera.webp",
+    "figureBride": "art/po-2.webp",
+    "figureGroom": "art/po-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/po-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/po-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/po-1.webp",
+      "art/po-2.webp",
+      "art/po-5.webp",
+      "art/po-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
