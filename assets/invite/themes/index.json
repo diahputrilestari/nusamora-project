@@ -46,7 +46,12 @@
     "pink-princess": "little-barbie",
     "arab": "little-arab",
     "arabian": "little-arab",
-    "timur-tengah": "little-arab"
+    "timur-tengah": "little-arab",
+    "ice": "little-ice",
+    "es": "little-ice",
+    "frozen": "little-ice",
+    "putri-es": "little-ice",
+    "snow": "little-ice"
   },
   "themes": [
     {
@@ -395,6 +400,20 @@
       "swatch": [
         "#4A1A66",
         "#FFD27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-ice",
+      "name": "Little Ice Princess",
+      "description": "Pesta ulang tahun putri es: aula salju berhias aurora, istana es, kristal biru, kereta camilan dan gapura bersalju, serta karakter chibi pangeran & putri berbusana biru-perak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3F8F",
+        "#BFE0FF"
       ],
       "art": true
     }
