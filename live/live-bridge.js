@@ -75,7 +75,7 @@
     var ev = t.event && NM.events[t.event] ? t.event : null;
     var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
     if (!NM.registerTheme(id, cfg)) return;
-    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tryDecor();
+    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; tryDecor();
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
@@ -108,7 +108,16 @@
       });
     });
   }
+  /* lantai & karpet venue ikut palet tema: lantai = ui.soft (dikali tekstur marmer), karpet = mono.accent */
+  var tintPending = null, tintScene = function (th) {
+    var fl = null, cp = null;
+    sc.children.forEach(function (o) { var g = o.geometry; if (!g || !o.material) return; if (g.type === "CircleGeometry" && o.material.map) fl = o; else if (g.type === "PlaneGeometry" && g.parameters && g.parameters.width === 3.4 && g.parameters.height === 44) cp = o; });
+    var ok = function (c) { return typeof c === "string" && /^#[0-9a-fA-F]{6}$/.test(c); };
+    if (fl && th.ui && ok(th.ui.soft)) fl.material.color.set(th.ui.soft);
+    if (cp && th.mono && ok(th.mono.accent)) cp.material.color.set(th.mono.accent);
+  };
   var tryDecor = safe(function () {
+    if (tintPending && typeof P !== "undefined" && P && typeof THREE !== "undefined" && typeof sc !== "undefined" && sc.getObjectByName("meja")) { var tp = tintPending; tintPending = null; try { tintScene(tp); } catch (e) { } }
     var dc = decorPending; if (!dc || typeof P === "undefined" || !P || typeof THREE === "undefined" || typeof sc === "undefined" || !sc.getObjectByName("meja")) return;
     decorPending = null;
     var slots = Object.keys(dc).filter(function (k) { return DECOR[k] && dc[k] && typeof dc[k].url === "string"; });
@@ -270,7 +279,7 @@
     rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {
-        clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
+        clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
         var sb = $("#sb"), ci = $("#ci"); if (sb) sb.onclick = sendChat; if (ci) ci.onkeydown = function (e) { if (e.key === "Enter") sendChat(); };
       }
     }, 400);

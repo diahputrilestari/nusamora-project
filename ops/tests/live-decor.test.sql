@@ -17,5 +17,7 @@ do $$ declare ok1 boolean; begin
   if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'midnight-party' and e ->> 'id' in ('resepsi', 'video') and (e ->> 'enabled')::boolean) <> 0 then raise exception 'resepsi/video harus nonaktif di midnight-party'; end if;
   if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'midnight-party' and (e ->> 'enabled')::boolean) <> 6 then raise exception 'enam area lain harus tetap aktif'; end if;
   if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'romantic-garden' and e ->> 'id' in ('resepsi', 'video') and (e ->> 'enabled')::boolean) <> 2 then raise exception 'venue lain tidak boleh berubah'; end if;
+  -- admin-live-theme-viking.sql: venue contoh valid, nonaktif, semua area tetap aktif
+  if not exists (select 1 from public.live_venues where key = 'viking-feast' and event_type = 'birthday' and not active and public.live_theme_ok(nm_theme)) then raise exception 'venue viking-feast tidak ada / tema tidak valid'; end if;
   raise notice 'OK live_decor (validator)';
 end $$;
