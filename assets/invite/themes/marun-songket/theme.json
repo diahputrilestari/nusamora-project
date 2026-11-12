@@ -1,0 +1,53 @@
+{
+  "id": "marun-songket",
+  "name": "Marun Songket",
+  "version": 1,
+  "description": "Marun dan emas dengan pola anyaman songket, sulur bunga, dan pintu cover yang terbelah.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#4A0D14",
+    "deep2": "#6E1823",
+    "paper": "#F7EEDC",
+    "ink": "#3A2420",
+    "muted": "#7A5F55",
+    "accent": "#C9A35B",
+    "accent2": "#E8CF93",
+    "soft": "#EBD9BB",
+    "petal": "#EDB9A6"
+  },
+  "fonts": {
+    "script": "Pinyon Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Jost"
+  },
+  "ornament": {
+    "pattern": "lattice",
+    "border": "tumpal",
+    "corner": "vine",
+    "divider": "diamond",
+    "frame": "arch",
+    "petals": [
+      "bloom",
+      "leaf"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

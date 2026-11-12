@@ -1,0 +1,14 @@
+/* Istana Pink: ukuran ilustrasi per slot */
+.th-istana-pink .ulos-dec { width: min(220px, 64vw); }
+.th-istana-pink .st-kf { width: min(250px, 72vw); margin-top: -6px; }
+.th-istana-pink .gf-amp { width: min(170px, 50vw); }
+.th-istana-pink .ws-bk { width: min(200px, 58vw); }
+.th-istana-pink .ev-lt { width: 24px; }
+.th-istana-pink .rs-lt { width: 46px; top: -26px; animation-name: bob2; }
+.th-istana-pink .end-art { width: min(400px, 92%); margin-bottom: 26px; }
+.th-istana-pink .end-art .eg { filter: drop-shadow(0 18px 30px rgba(80, 10, 60, .3)); }
+.th-istana-pink .jb-row { gap: 4px; }
+.th-istana-pink .dv .orn { max-width: 220px; margin: 0 auto; }
+@keyframes bob2 { from { translate: 0 -4px; rotate: -3deg; } to { translate: 0 4px; rotate: 3deg; } }
+/* plakat kosong di tengah backdrop jadi bingkai alami untuk teks cover */
+.th-istana-pink .gate::after { background: radial-gradient(64% 50% at 50% 46%, rgba(110, 20, 80, .5), rgba(110, 20, 80, .14) 72%), linear-gradient(180deg, rgba(110, 20, 80, .08), rgba(110, 20, 80, .55)); }
