@@ -1,0 +1,134 @@
+{
+  "id": "little-circus",
+  "name": "Little Circus",
+  "version": 1,
+  "description": "Pesta ulang tahun sirkus mungil: panggung tenda belang merah-putih dengan tirai dan lampu bohlam, komidi putar, gerobak popcorn, loket tiket, photo booth, serta karakter chibi badut, pesulap, dan pemain drum.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Bintang",
+    "full": "Bintang Ramadhan Putra",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "6"
+  },
+  "colors": {
+    "deep": "#1B2250",
+    "deep2": "#2E3C86",
+    "paper": "#FFF8EE",
+    "soft": "#FDE9D9",
+    "ink": "#2B2238",
+    "muted": "#7C6A74",
+    "accent": "#D12A36",
+    "accent2": "#F2B93B",
+    "petal": "#F6C453",
+    "heading": "#1B2250"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Circus Party",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Bintang pertunjukan hari ini",
+    "profileTitle": "Si Bintang Sirkus",
+    "countdownEyebrow": "Tirai dibuka dalam",
+    "countdownTitle": "Menuju Pertunjukan",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta Sirkus",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Bintang",
+    "galleryEyebrow": "Momen seru",
+    "galleryTitle": "Photo Booth",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Beli Tiketmu, Yuk!",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa menonton pertunjukan di pesta ulang tahun ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Kejutan",
+    "giftLead": "Kehadiranmu sudah jadi kejutan terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Papan Ucapan",
+    "closingEyebrow": "Sampai jumpa di pertunjukan!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa ini. Kami tunggu kehadiranmu di pesta sirkus!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/badut-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/komidi-putar.webp",
+        "w": 100
+      },
+      {
+        "src": "art/badut-2.webp",
+        "w": 62
+      }
+    ],
+    "introTop": "art/papan-arah.webp",
+    "figureBride": "art/badut-4.webp",
+    "figureGroom": "art/badut-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/badut-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/badut-6.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/loket-tiket.webp",
+    "storyTop": "art/tenda.webp",
+    "giftTop": "art/photo-booth.webp",
+    "wishesTop": "art/gerobak-popcorn.webp",
+    "closingScene": "art/komidi-putar.webp",
+    "closingFigures": [
+      "art/badut-1.webp",
+      "art/badut-4.webp",
+      "art/badut-5.webp",
+      "art/badut-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

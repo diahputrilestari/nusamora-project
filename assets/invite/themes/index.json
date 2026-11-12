@@ -25,7 +25,9 @@
     "viking": "viking-party",
     "samurai": "samurai-sakura",
     "jepang": "samurai-sakura",
-    "sakura": "samurai-sakura"
+    "sakura": "samurai-sakura",
+    "circus": "little-circus",
+    "sirkus": "little-circus"
   },
   "themes": [
     {
@@ -262,6 +264,20 @@
       "swatch": [
         "#1B2142",
         "#C62F3C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-circus",
+      "name": "Little Circus",
+      "description": "Pesta ulang tahun sirkus mungil: panggung tenda belang merah-putih dengan tirai dan lampu bohlam, komidi putar, gerobak popcorn, loket tiket, photo booth, serta karakter chibi badut, pesulap, dan pemain drum.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B2250",
+        "#D12A36"
       ],
       "art": true
     }
