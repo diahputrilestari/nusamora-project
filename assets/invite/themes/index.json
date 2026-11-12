@@ -60,7 +60,11 @@
     "candy": "little-candy",
     "candyland": "little-candy",
     "permen": "little-candy",
-    "gula-gula": "little-candy"
+    "gula-gula": "little-candy",
+    "strawberry": "little-strawberry",
+    "stroberi": "little-strawberry",
+    "kebun-strawberry": "little-strawberry",
+    "gingham": "little-strawberry"
   },
   "themes": [
     {
@@ -451,6 +455,20 @@
       "swatch": [
         "#B03073",
         "#FFC1DD"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-strawberry",
+      "name": "Little Strawberry Garden",
+      "description": "Pesta ulang tahun kebun strawberry ceria: panggung merah muda berpagar putih, taplak gingham, rumah strawberry, bunga dan keranjang buah, serta karakter chibi bergaun gingham-renda.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B3203E",
+        "#FFC9D0"
       ],
       "art": true
     }
