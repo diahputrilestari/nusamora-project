@@ -31,22 +31,9 @@
           "value": "public, max-age=300, must-revalidate"
         }
       ]
-    },
-    {
-      "source": "/assets-signature/(.*).glb",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
     }
   ],
   "rewrites": [
-    {
-      "source": "/assets-signature/invite/index",
-      "destination": "/assets-signature/invite/index.html"
-    },
     {
       "source": "/(artikel|bantuan|tutorial)",
       "destination": "/konten.html"
