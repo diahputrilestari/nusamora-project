@@ -15,3 +15,5 @@
 .th-viking-party .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(40, 16, 8, .66), rgba(40, 16, 8, .32) 62%, rgba(40, 16, 8, .08) 84%), linear-gradient(180deg, rgba(40, 16, 8, .08), rgba(40, 16, 8, .58)); }
 .th-viking-party .cv-dt { color: #FFE2A6; font-weight: 600; }
 .th-viking-party .cv-eb { color: #FFD98F; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-viking-party .hero-in .eb { color: #FFE2A6; text-shadow: 0 1px 8px rgba(40, 16, 8, .9); }
