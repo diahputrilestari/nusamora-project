@@ -64,7 +64,13 @@
     "strawberry": "little-strawberry",
     "stroberi": "little-strawberry",
     "kebun-strawberry": "little-strawberry",
-    "gingham": "little-strawberry"
+    "gingham": "little-strawberry",
+    "pearl": "little-pearl",
+    "mutiara": "little-pearl",
+    "laut": "little-pearl",
+    "lautan": "little-pearl",
+    "ocean": "little-pearl",
+    "mermaid": "little-pearl"
   },
   "themes": [
     {
@@ -469,6 +475,20 @@
       "swatch": [
         "#B3203E",
         "#FFC9D0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pearl",
+      "name": "Little Ocean Pearl",
+      "description": "Pesta ulang tahun mutiara lautan: panggung marmer dengan gapura kerang dan lumba-lumba, karang warna-warni, istana bawah laut, serta karakter chibi pangeran, putri duyung, pelaut, dan peri berbusana biru-ungu mutiara.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#35418F",
+        "#CFE0FF"
       ],
       "art": true
     }
