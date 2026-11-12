@@ -35,7 +35,10 @@
     "masak": "little-chef",
     "doctor": "little-doctor",
     "dokter": "little-doctor",
-    "medis": "little-doctor"
+    "medis": "little-doctor",
+    "princess": "little-princess",
+    "putri": "little-princess",
+    "cinderella": "little-princess"
   },
   "themes": [
     {
@@ -328,6 +331,20 @@
       "swatch": [
         "#123C78",
         "#D32F3A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-princess",
+      "name": "Little Princess",
+      "description": "Pesta ulang tahun putri kecil bergaya dongeng sepatu kaca: aula istana putih-biru dengan lampu kristal, karpet biru, bunga hydrangea, lentera emas, serta karakter chibi pangeran dan putri bergaun biru muda.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#26378A",
+        "#F2CE7A"
       ],
       "art": true
     }
