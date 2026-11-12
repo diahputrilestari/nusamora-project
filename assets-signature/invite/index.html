@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><title>Undangan 3D Signature</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#120d0a;color:#e8d3a1;font:15px system-ui,sans-serif;display:grid;place-items:center}</style>
+<p>Memuat undangan 3D…</p>
+<script>
+// /assets-signature/invite/index?demo=1&theme=<id> → memilih build tema (satu folder per tema)
+var THEMES = { 'minang-royal': 1, 'keraton-jawa': 1 }
+var q = new URLSearchParams(location.search)
+var t = q.get('theme')
+if (!THEMES[t]) t = 'minang-royal'
+location.replace('./' + t + '/' + (location.search || '') + location.hash)
+</script>
+<noscript><p><a href="minang-royal/">Tema Minangkabau</a> · <a href="keraton-jawa/">Tema Keraton Jawa</a></p></noscript>
+</html>
