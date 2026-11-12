@@ -1,0 +1,134 @@
+{
+  "id": "viking-party",
+  "name": "Viking Party",
+  "version": 1,
+  "description": "Pesta ulang tahun petualangan Viking: panggung kayu bertanduk dengan kapal naga dan air terjun, kapal layar bergaris, kedai makanan, tenda berbulu, perisai, kapak, dan lentera hangat.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Raka",
+    "full": "Raka Putra Wiratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "8"
+  },
+  "colors": {
+    "deep": "#34170F",
+    "deep2": "#5E2C1A",
+    "paper": "#FFF8EC",
+    "soft": "#F8E9D2",
+    "ink": "#3A2218",
+    "muted": "#86695A",
+    "accent": "#A9232F",
+    "accent2": "#E2AD4B",
+    "petal": "#E8B26A",
+    "heading": "#4A1C14"
+  },
+  "fonts": {
+    "script": "Oswald",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Viking Birthday Party",
+    "guestSalute": "Kawan seperjalanan tersayang",
+    "profileEyebrow": "Pahlawan pesta hari ini",
+    "profileTitle": "Si Penakluk Cilik",
+    "countdownEyebrow": "Kapal berlayar dalam",
+    "countdownTitle": "Menuju Pesta",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta Para Viking",
+    "storyEyebrow": "Petualangan tumbuh kembang",
+    "storyTitle": "Kisah Sang Pemberani",
+    "galleryEyebrow": "Kenangan perjalanan",
+    "galleryTitle": "Galeri Petualangan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Berlayar, Kan?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa bergabung di pesta para Viking!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Peti Harta Karun",
+    "giftLead": "Kehadiranmu sudah jadi harta terbaik. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Para Pemberani",
+    "closingEyebrow": "Sampai jumpa di pesta!",
+    "closingText": "Terima kasih sudah menjadi bagian dari petualangan hari istimewa ini. Kami tunggu kehadiranmu di pesta!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/viking-3.webp",
+        "w": 66
+      },
+      {
+        "src": "art/peti-harta.webp",
+        "w": 112
+      },
+      {
+        "src": "art/viking-6.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/easel.webp",
+    "figureBride": "art/viking-4.webp",
+    "figureGroom": "art/viking-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/viking-5.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/viking-2.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/gerobak-makanan.webp",
+    "storyTop": "art/tenda.webp",
+    "giftTop": "art/peti-harta.webp",
+    "wishesTop": "art/mimbar-buku.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/viking-1.webp",
+      "art/viking-4.webp",
+      "art/viking-5.webp",
+      "art/viking-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

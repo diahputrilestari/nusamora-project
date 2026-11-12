@@ -17,7 +17,8 @@ with t(slug, name, cats, description, sort) as (values
   ('metal-rock',    'Metal Rock Party',      '{birthday}'::text[],                              'Pesta ulang tahun bergaya konser metal rock: panggung neon merah, gitar listrik, drum, ampli, tengkorak bersayap, mahkota krom, dan percikan petir.', 42),
   ('kpop-party',    'K-Pop Party',           '{birthday}'::text[],                              'Pesta ulang tahun ala konser K-Pop: panggung neon ungu di bawah sakura, lightstick, bola disko, photo booth, dan karakter chibi idola berbusana ungu.', 43),
   ('kuromi-party',  'Kuromi Party',          '{birthday}'::text[],                              'Pesta ulang tahun ungu-pink bergaya Kuromi: panggung tirai ungu di taman kastil, air mancur, balon hati, photo booth, mesin capit, dan untaian lampu bintang.', 44),
-  ('aqiqah-istana-pink', 'Aqiqah Istana Pink', '{aqiqah}'::text[],                              'Tasyakuran aqiqah bernuansa istana merah muda: lentera emas, Al-Qur''an di atas rehal, bulan sabit, gazebo bertirai, teddy dan kelinci, serta ilustrasi bayi berhijab bermahkota.', 50)
+  ('aqiqah-istana-pink', 'Aqiqah Istana Pink', '{aqiqah}'::text[],                              'Tasyakuran aqiqah bernuansa istana merah muda: lentera emas, Al-Qur''an di atas rehal, bulan sabit, gazebo bertirai, teddy dan kelinci, serta ilustrasi bayi berhijab bermahkota.', 50),
+  ('viking-party',  'Viking Party',          '{birthday}'::text[],                              'Pesta ulang tahun petualangan Viking: panggung kayu bertanduk dengan kapal naga dan air terjun, kapal layar bergaris, kedai makanan, tenda berbulu, perisai, kapak, dan lentera hangat.', 45)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

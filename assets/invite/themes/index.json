@@ -21,7 +21,8 @@
     "k-pop": "kpop-party",
     "aqiqah": "aqiqah-istana-pink",
     "aqiqah-pink": "aqiqah-istana-pink",
-    "kuromi": "kuromi-party"
+    "kuromi": "kuromi-party",
+    "viking": "viking-party"
   },
   "themes": [
     {
@@ -230,6 +231,20 @@
       "swatch": [
         "#7A2766",
         "#F9A8D4"
+      ],
+      "art": true
+    },
+    {
+      "id": "viking-party",
+      "name": "Viking Party",
+      "description": "Pesta ulang tahun petualangan Viking: panggung kayu bertanduk dengan kapal naga dan air terjun, kapal layar bergaris, kedai makanan, tenda berbulu, perisai, kapak, dan lentera hangat.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#34170F",
+        "#E2AD4B"
       ],
       "art": true
     }
