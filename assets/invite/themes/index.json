@@ -70,7 +70,15 @@
     "laut": "little-pearl",
     "lautan": "little-pearl",
     "ocean": "little-pearl",
-    "mermaid": "little-pearl"
+    "mermaid": "little-pearl",
+    "racing": "little-racing",
+    "balap": "little-racing",
+    "balapan": "little-racing",
+    "racing-champion": "little-racing",
+    "pembalap": "little-racing",
+    "f1": "little-racing",
+    "sirkuit": "little-racing",
+    "juara": "little-racing"
   },
   "themes": [
     {
@@ -489,6 +497,20 @@
       "swatch": [
         "#35418F",
         "#CFE0FF"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-racing",
+      "name": "Little Racing Champion",
+      "description": "Pesta ulang tahun racing champion: panggung podium berlampu dengan gapura bendera finish, sirkuit balap, tenda pit stop, trofi emas, serta karakter chibi pembalap, mekanik, dan kru berseragam merah-hitam kotak-kotak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B3121F",
+        "#F5C842"
       ],
       "art": true
     }
