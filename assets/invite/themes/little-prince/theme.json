@@ -1,0 +1,136 @@
+{
+  "id": "little-prince",
+  "name": "Little Prince",
+  "version": 1,
+  "description": "Pesta ulang tahun pangeran kecil: panggung istana putih di bawah langit malam berbintang dengan bulan purnama, mahkota emas, balon udara, teleskop, rak buku, air mancur, dan karakter chibi pangeran serta putri berjubah biru-emas.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Pangeran Arka",
+    "full": "Arka Pradipta Wijaya",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#161B4D",
+    "deep2": "#2B3688",
+    "paper": "#FBF8F0",
+    "soft": "#F1ECDC",
+    "ink": "#1F2350",
+    "muted": "#6F7090",
+    "accent": "#A87A14",
+    "accent2": "#F2C14E",
+    "petal": "#F6D77A",
+    "heading": "#161B4D"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Prince Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Pangeran kecil kami",
+    "profileTitle": "Sang Pangeran",
+    "countdownEyebrow": "Pesta istana dimulai dalam",
+    "countdownTitle": "Menuju Pesta Istana",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Pangeran",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kerajaan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Istana, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta istana pangeran kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Kerajaan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Para Sahabat",
+    "closingEyebrow": "Sampai jumpa di istana!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang pangeran kecil. Kami tunggu kehadiranmu di pesta istana!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "coverHang": "art/balon-udara.webp",
+    "coverGround": [
+      {
+        "src": "art/royal-7.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 104
+      },
+      {
+        "src": "art/royal-6.webp",
+        "w": 62
+      }
+    ],
+    "introTop": "art/teleskop.webp",
+    "figureBride": "art/royal-4.webp",
+    "figureGroom": "art/royal-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/royal-5.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/royal-2.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/gerobak-permen.webp",
+    "storyTop": "art/tenda.webp",
+    "rsvpHang": "art/balon-udara.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/rak-buku.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/royal-1.webp",
+      "art/royal-4.webp",
+      "art/royal-5.webp",
+      "art/royal-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

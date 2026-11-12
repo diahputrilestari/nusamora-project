@@ -27,7 +27,9 @@
     "jepang": "samurai-sakura",
     "sakura": "samurai-sakura",
     "circus": "little-circus",
-    "sirkus": "little-circus"
+    "sirkus": "little-circus",
+    "prince": "little-prince",
+    "pangeran": "little-prince"
   },
   "themes": [
     {
@@ -278,6 +280,20 @@
       "swatch": [
         "#1B2250",
         "#D12A36"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-prince",
+      "name": "Little Prince",
+      "description": "Pesta ulang tahun pangeran kecil: panggung istana putih di bawah langit malam berbintang dengan bulan purnama, mahkota emas, balon udara, teleskop, rak buku, air mancur, dan karakter chibi pangeran serta putri berjubah biru-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#161B4D",
+        "#F2C14E"
       ],
       "art": true
     }
