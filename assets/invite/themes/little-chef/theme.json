@@ -1,0 +1,134 @@
+{
+  "id": "little-chef",
+  "name": "Little Chef",
+  "version": 1,
+  "description": "Pesta ulang tahun koki cilik: panggung dapur ceria dengan gapura topi koki dan tirai merah-putih, kedai roti, oven pizza, papan menu, meja kotak-kotak, serta karakter chibi koki dan pastry chef berseragam merah.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Koki Cilik Raka",
+    "full": "Raka Aditya Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#7A1420",
+    "deep2": "#A61E2C",
+    "paper": "#FFF8EE",
+    "soft": "#F8E8D2",
+    "ink": "#3A1A16",
+    "muted": "#7C5A52",
+    "accent": "#B31B28",
+    "accent2": "#F2B84B",
+    "petal": "#F5C45A",
+    "heading": "#7A1420"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Chef Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Koki cilik kami",
+    "profileTitle": "Sang Koki Cilik",
+    "countdownEyebrow": "Dapur ceria dibuka dalam",
+    "countdownTitle": "Menuju Pesta Dapur",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Dapur",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Resep Tumbuh Kembang",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Dapur",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Masak Bareng, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta koki cilik ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Manis",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Resep Doa",
+    "closingEyebrow": "Sampai jumpa di dapur!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang koki cilik. Kami tunggu kehadiranmu di pesta dapur!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/chef-5.webp",
+        "w": 60
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 104
+      },
+      {
+        "src": "art/chef-6.webp",
+        "w": 60
+      }
+    ],
+    "introTop": "art/papan-menu.webp",
+    "figureBride": "art/chef-2.webp",
+    "figureGroom": "art/chef-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/chef-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/chef-7.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/oven-pizza.webp",
+    "storyTop": "art/tenda.webp",
+    "giftTop": "art/gerobak-roti.webp",
+    "wishesTop": "art/rak-dapur.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/chef-1.webp",
+      "art/chef-2.webp",
+      "art/chef-4.webp",
+      "art/chef-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

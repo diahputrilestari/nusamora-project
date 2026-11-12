@@ -29,7 +29,10 @@
     "circus": "little-circus",
     "sirkus": "little-circus",
     "prince": "little-prince",
-    "pangeran": "little-prince"
+    "pangeran": "little-prince",
+    "chef": "little-chef",
+    "koki": "little-chef",
+    "masak": "little-chef"
   },
   "themes": [
     {
@@ -294,6 +297,20 @@
       "swatch": [
         "#161B4D",
         "#F2C14E"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-chef",
+      "name": "Little Chef",
+      "description": "Pesta ulang tahun koki cilik: panggung dapur ceria dengan gapura topi koki dan tirai merah-putih, kedai roti, oven pizza, papan menu, meja kotak-kotak, serta karakter chibi koki dan pastry chef berseragam merah.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1420",
+        "#F2B84B"
       ],
       "art": true
     }
