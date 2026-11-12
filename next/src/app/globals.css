@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+/* Token desain NusaMora (sama dengan situs lama) */
+@theme {
+  --color-primary: #9673d0;
+  --color-deep: #7552a8;
+  --color-royal: #4a356b;
+  --color-soft-lilac: #d9c9f5;
+  --color-pale: #eee9fa;
+  --color-lavender-white: #faf8ff;
+  --color-midnight: #302442;
+  --color-muted-purple: #746782;
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-label: var(--font-dmsans), system-ui, sans-serif;
+  --radius-card: 1.25rem;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-lavender-white); color: var(--color-midnight); font-family: var(--font-sans); }
+h1, h2, h3 { font-family: var(--font-display); }
+:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

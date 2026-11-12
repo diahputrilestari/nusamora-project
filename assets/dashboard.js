@@ -35,8 +35,25 @@
   function cta() { return '<button class="btn" type="button" data-act="create">' + ico("plus") + " Buat Undangan</button>"; }
 
   /* ---------- state & data ---------- */
-  var S = { user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], loaded: false, warn: false, period: "30", from: "", to: "" };
+  /* Fitur yang belum diluncurkan: ubah ke true saat program dibuka. Menu DAN rute ikut tersembunyi (hash langsung kembali ke Dashboard). */
+  var FEATURES = { affiliate: false, dompet: false }; /* diatur dinamis dari aff_me() setelah data termuat */
+  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], aff: null, loaded: false, warn: false, period: "30", from: "", to: "" };
   function safe(p, fallback) { return p.then(function (r) { if (r.error) { S.warn = S.warn || (r.error.code !== "42P01" && r.error.code !== "PGRST205"); return fallback; } return r.data == null ? fallback : r.data; }, function () { S.warn = true; return fallback; }); }
+
+  /* ---------- Affiliate: data nyata dari aff_me(). Bila fungsi belum ada di database, menu tetap tersembunyi. ---------- */
+  var AERR = { program_belum_dibuka: "Program affiliate belum dibuka.", akun_tidak_aktif: "Akun Anda tidak aktif.", bank_tidak_valid: "Nama bank 2 sampai 40 karakter.", nomor_rekening_tidak_valid: "Nomor rekening harus 6 sampai 24 angka.", nama_rekening_tidak_valid: "Nama pemilik rekening 2 sampai 60 karakter.",
+    ada_penarikan_berjalan: "Masih ada penarikan yang diproses. Tunggu sampai selesai.", bukan_affiliate: "Anda belum terdaftar sebagai affiliate.", affiliate_tidak_aktif: "Akun affiliate Anda belum aktif.", rekening_belum_diisi: "Isi rekening bank terlebih dahulu.", rekening_belum_terverifikasi: "Rekening belum diverifikasi admin.", di_bawah_minimum: "Jumlah di bawah minimum penarikan.", saldo_tidak_cukup: "Saldo tidak cukup." };
+  function aErr(e) { var m = String(e && (e.message || e) || ""), k = Object.keys(AERR).filter(function (x) { return m.indexOf(x) > -1; })[0]; return k ? AERR[k] : "Gagal. Coba lagi."; }
+  function loadAff() { return sb.rpc("aff_me").then(function (r) { return r.error ? null : r.data; }, function () { return null; }); }
+  function applyAff() { var a = S.aff; FEATURES.affiliate = !!a; FEATURES.dompet = !!a && ((a.config && a.config.enabled) || !!a.affiliate || S.bonus.length > 0 || S.wd.length > 0); }
+  function takeRef() { try { return JSON.parse(localStorage.getItem("nm_ref") || "null"); } catch (e) { return null; } }
+  function clearRef() { try { localStorage.removeItem("nm_ref"); } catch (e) { } }
+  function attachRef() {
+    var r = takeRef(); if (!r || !r.code || !S.aff) return Promise.resolve();
+    if (Date.now() - (r.t || 0) > 180 * 864e5) { clearRef(); return Promise.resolve(); }
+    if (!(S.aff.config && S.aff.config.enabled)) return Promise.resolve();
+    return sb.rpc("aff_attach_referral", { p_code: r.code, p_click: r.click || null }).then(function () { clearRef(); }, function () { clearRef(); });
+  }
   function loadAll() {
     var uid = S.user.id;
     return Promise.all([
@@ -46,8 +63,9 @@
       safe(sb.from("wallets").select("credits,bonus_balance").eq("user_id", uid).maybeSingle(), { credits: 0, bonus_balance: 0 }),
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
       safe(sb.from("bonus_history").select("description,amount,created_at").order("created_at", { ascending: false }).limit(200), []),
-      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), [])
-    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.loaded = true; });
+      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), []),
+      loadAff()
+    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.aff = r[7]; S.loaded = true; applyAff(); }).then(attachRef).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
   }
   function name() { return (S.profile && S.profile.full_name) || (S.user && S.user.email ? S.user.email.split("@")[0] : "Pelanggan"); }
   function range() {
@@ -139,34 +157,272 @@
     return '<div class="pghead"><div><h1>Tutorial</h1><p class="sub">Panduan singkat memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card faq">' + T.map(function (t) { return "<details><summary>" + esc(t[0]) + ico("plus") + "</summary><p>" + esc(t[1]) + "</p></details>"; }).join("") + '</div><div class="card"><h2 style="margin-bottom:14px">Alur singkat</h2><ol class="steps"><li><div><b>Pilih template</b><p class="sub">Coba demo, pilih yang cocok.</p></div></li><li><div><b>Isi data acara</b><p class="sub">Detail, galeri, musik, tamu.</p></div></li><li><div><b>Bayar dan bagikan</b><p class="sub">Kirim link pribadi ke tamu.</p></div></li></ol></div></div>';
   };
   V.affiliate = function () {
-    var code = S.user.id.replace(/-/g, "").slice(0, 8).toUpperCase(), link = SITE + "/daftar?ref=" + code;
-    return '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(code) + '</b></p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
-      '<p class="note" style="margin-top:16px">Pencatatan referral dan besaran komisi belum aktif. Ketentuan program akan diumumkan sebelum dibuka, jadi link ini baru dipakai setelah program berjalan.</p></div><div class="card"><h2 style="margin-bottom:14px">Saldo bonus</h2><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b></div><div class="row-end"><a class="btn o sm" href="#bonus">History Bonus</a><a class="btn o sm" href="#penarikan">History Penarikan</a></div></div></div>';
+    var A = S.aff || {}, c = A.config || {}, af = A.affiliate, h = '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora dan dapatkan komisi</p></div></div>';
+    if (!af && !c.enabled) return h + '<div class="card">' + empty("share", "Segera hadir", "Program affiliate NusaMora belum dibuka. Kami akan mengumumkan ketentuan dan besaran komisinya sebelum program dimulai.") + "</div>";
+    if (!af) return h + '<div class="card"><h2 style="margin-bottom:8px">Gabung program affiliate</h2><ul class="sub" style="margin:0 0 14px 18px"><li>Komisi <b>' + esc(c.commission_label) + "</b> dari pembayaran pertama setiap pelanggan yang mendaftar lewat link Anda.</li><li>Link berlaku " + esc(c.attribution_days) + " hari sejak diklik.</li><li>Komisi ditahan " + esc(c.hold_days) + " hari sebelum masuk saldo, dan bisa dibatalkan bila pembayaran direfund.</li><li>Penarikan minimal " + rp(c.min_withdrawal) + (c.require_bank_verified ? ", dan rekening harus terverifikasi admin" : "") + ".</li></ul><button class=\"btn\" type=\"button\" id=\"af-reg\">Daftar sebagai affiliate</button></div>";
+    var link = SITE + "/daftar?ref=" + af.code, st = A.stats || {};
+    if (af.status === "pending") return h + '<div class="card">' + empty("share", "Menunggu persetujuan", "Pendaftaran Anda sedang ditinjau admin. Kode Anda: " + af.code + ". Link baru bisa dipakai setelah disetujui.") + "</div>";
+    if (af.status === "suspended") return h + '<div class="card">' + empty("share", "Akun affiliate ditangguhkan", af.status_reason ? "Alasan: " + af.status_reason : "Hubungi dukungan untuk informasi lebih lanjut.") + "</div>";
+    h += c.enabled ? "" : '<p class="note" style="margin-bottom:16px">Program sedang ditutup sementara. Klik dan pendaftar baru tidak dihitung, tetapi saldo dan penarikan Anda tetap berjalan.</p>';
+    h += '<div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(af.code) + '</b> · Komisi ' + esc(af.rate ? (af.rate.type === "percent" ? af.rate.value + "%" : rp(af.rate.value)) : c.commission_label) + '</p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
+      '<p class="sub" style="margin-top:12px">Komisi masuk saldo setelah masa tahan ' + esc(c.hold_days) + " hari dan lolos pemeriksaan. Pembayaran pertama saja yang dihitung.</p></div>" +
+      '<div class="card"><h2 style="margin-bottom:14px">Ringkasan</h2><div class="cred"><b>' + rp(A.balance) + '</b><span>saldo bisa ditarik</span></div><dl class="sub" style="margin:14px 0 0;display:grid;grid-template-columns:1fr auto;gap:4px 12px"><dt>Klik</dt><dd style="margin:0">' + (st.clicks || 0) + "</dd><dt>Pendaftar</dt><dd style=\"margin:0\">" + (st.signups || 0) + "</dd><dt>Pelanggan berbayar</dt><dd style=\"margin:0\">" + (st.paid || 0) + "</dd><dt>Komisi ditahan</dt><dd style=\"margin:0\">" + rp(st.commission_pending || 0) + "</dd><dt>Komisi disetujui</dt><dd style=\"margin:0\">" + rp(st.commission_approved || 0) + "</dd></dl></div></div>";
+    var bs = { none: "Belum diisi", pending: "Menunggu verifikasi admin", verified: "Terverifikasi", rejected: "Ditolak" }[af.bank_status] || af.bank_status;
+    h += '<div class="grid g2" style="align-items:start;margin-top:16px"><form class="card form" id="af-bank" novalidate><h2>Rekening penarikan</h2><p class="sub">Status: <b>' + esc(bs) + "</b>" + (af.bank_account_mask ? " · " + esc(af.bank_name) + " " + esc(af.bank_account_mask) + " a.n. " + esc(af.bank_account_name) : "") + "</p>" + (af.bank_note ? '<p class="note">Alasan penolakan: ' + esc(af.bank_note) + "</p>" : "") +
+      '<label class="fld">Nama bank<input type="text" id="b-bank" maxlength="40" placeholder="BCA"></label><label class="fld">Nomor rekening<input type="text" id="b-no" inputmode="numeric" maxlength="24" autocomplete="off"></label><label class="fld">Nama pemilik rekening<input type="text" id="b-name" maxlength="60" placeholder="Sesuai buku tabungan"></label><span class="err" id="b-err"></span><div class="row-end"><button class="btn" type="submit" id="b-go"' + (A.pending_withdrawal ? " disabled" : "") + ">" + (af.bank_account_mask ? "Ganti rekening" : "Simpan rekening") + "</button></div>" + (af.bank_account_mask ? '<small class="sub">Mengganti rekening mengulang verifikasi.</small>' : "") + "</form>" +
+      '<form class="card form" id="af-wd" novalidate><h2>Tarik saldo</h2><p class="sub">Saldo ' + rp(A.balance) + " · minimal " + rp(c.min_withdrawal) + ". Pembayaran ditransfer manual oleh admin ke rekening Anda.</p>" + (A.pending_withdrawal ? '<p class="note">Anda masih punya penarikan yang sedang diproses.</p>' : "") + '<label class="fld">Jumlah (Rp)<input type="text" id="w-amt" inputmode="numeric" autocomplete="off"></label><span class="err" id="w-err"></span><div class="row-end"><button class="btn" type="submit" id="w-go2"' + (A.pending_withdrawal ? " disabled" : "") + ">Ajukan penarikan</button></div></form></div>";
+    var rc = A.recent || [], CSL = { none: "-", pending: "Ditahan", approved: "Disetujui", rejected: "Ditolak", reversed: "Dibatalkan" };
+    h += '<div class="card" style="margin-top:16px"><h2 style="margin-bottom:12px">Referral terbaru</h2>' + (rc.length ? '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Pelanggan</th><th>Status</th><th>Komisi</th><th class="num">Jumlah</th></tr></thead><tbody>' + rc.map(function (x) { return "<tr><td>" + dt(x.at) + "</td><td>" + esc(x.who) + "</td><td>" + (x.status === "berbayar" ? "Sudah membayar" : x.status === "batal" ? "Batal" : "Baru mendaftar") + "</td><td>" + esc(CSL[x.commission_status] || "-") + (x.commission_status === "pending" && x.available_at ? " (cair " + dt(x.available_at) + ")" : "") + '</td><td class="num">' + (x.status === "berbayar" ? rp(x.commission) : "-") + "</td></tr>"; }).join("") + "</tbody></table></div>" : empty("users", "Belum ada referral", "Bagikan link Anda untuk mulai mendapat komisi.")) + "</div>";
+    return h;
   };
-  V.bonus = function () {
-    var h = '<div class="pghead"><div><h1>History Bonus</h1><p class="sub">Bonus yang Anda terima</p></div></div><div class="card">';
-    if (!S.bonus.length) return h + empty("gift", "Belum ada bonus", "Bonus dari program affiliate akan tercatat di sini.") + "</div>";
-    return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' + S.bonus.map(function (b) { return "<tr><td>" + dt(b.created_at) + "</td><td>" + esc(b.description) + '</td><td class="num">' + rp(b.amount) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
-  };
-  V.penarikan = function () {
-    var h = '<div class="pghead"><div><h1>History Penarikan</h1><p class="sub">Riwayat penarikan saldo bonus</p></div></div><div class="card">';
-    if (!S.wd.length) return h + empty("wallet", "Belum ada penarikan", "Riwayat penarikan saldo akan tampil di sini setelah program affiliate dibuka.") + "</div>";
+  function bindAff() {
+    var rg = $("#af-reg"); if (rg) rg.addEventListener("click", function () { rg.disabled = true; sb.rpc("aff_register").then(function (r) { if (r.error) { rg.disabled = false; return toast(aErr(r.error), "bad"); } toast("Pendaftaran terkirim.", "ok"); return loadAff().then(function (a) { S.aff = a; applyAff(); route(); }); }); });
+    var bf = $("#af-bank"); if (bf) bf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#b-err").textContent = ""; var bt = $("#b-go"); bt.disabled = true;
+      sb.rpc("aff_save_bank", { p_bank: $("#b-bank").value, p_no: $("#b-no").value, p_name: $("#b-name").value }).then(function (r) { if (r.error) { bt.disabled = false; $("#b-err").textContent = aErr(r.error); return; } toast("Rekening disimpan, menunggu verifikasi admin.", "ok"); return loadAff().then(function (a) { S.aff = a; route(); }); });
+    });
+    var wf = $("#af-wd"); if (wf) wf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#w-err").textContent = ""; var n = parseInt(String($("#w-amt").value).replace(/\D/g, ""), 10);
+      if (!n) { $("#w-err").textContent = "Isi jumlah penarikan."; return; }
+      var bt = $("#w-go2"); bt.disabled = true;
+      sb.rpc("aff_request_withdrawal", { p_amount: n }).then(function (r) { if (r.error) { bt.disabled = false; $("#w-err").textContent = aErr(r.error); return; } toast("Penarikan diajukan.", "ok"); S.loaded = false; route(); loadAll().then(function () { route(); }); });
+    });
+  }
+  V.dompet = function () {
+    var tab = S.dtab === "penarikan" ? "penarikan" : "bonus";
+    var h = '<div class="pghead"><div><h1>Dompet Bonus</h1><p class="sub">Riwayat bonus dan penarikan saldo Anda</p></div></div>';
+    h += '<div class="card" style="margin-bottom:16px"><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b><span>saldo bonus</span></div></div>';
+    h += '<div class="card"><div class="tabs" role="tablist" aria-label="Dompet Bonus"><button type="button" role="tab" data-dtab="bonus" aria-selected="' + (tab === "bonus") + '">Riwayat Bonus</button><button type="button" role="tab" data-dtab="penarikan" aria-selected="' + (tab === "penarikan") + '">Riwayat Penarikan</button></div>';
+    if (tab === "bonus") {
+      if (!S.bonus.length) return h + empty("gift", "Belum ada bonus", "Bonus yang Anda terima akan tercatat di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="num">Jumlah</th></tr></thead><tbody>' + S.bonus.map(function (b) { return "<tr><td>" + dt(b.created_at) + "</td><td>" + esc(b.description) + '</td><td class="num">' + rp(b.amount) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+    }
+    if (!S.wd.length) return h + empty("wallet", "Belum ada penarikan", "Riwayat penarikan saldo akan tampil di sini.") + "</div>";
     return h + '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Tujuan</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>' + S.wd.map(function (w) { return "<tr><td>" + dt(w.created_at) + "</td><td>" + esc(w.destination || "-") + '</td><td class="num">' + rp(w.amount) + "</td><td>" + badge(w.status) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
   };
+  /* ---- Langganan: data nyata dari subscriptions + invoices + plans (tanpa tabel baru) ---- */
+  V.langganan = function () {
+    var sub = S.sub, h = '<div class="pghead"><div><h1>Langganan</h1><p class="sub">Paket, masa aktif, dan perpanjangan</p></div></div>';
+    if (!sub) return h + '<div class="card">' + empty("crown", "Belum ada paket aktif", "Pilih paket saat undangan Anda siap dipublikasikan.", '<a class="btn" href="/#harga">Lihat Paket</a>') + "</div>" + subHistory();
+    var left = Math.max(0, Math.ceil((new Date(sub.expires_at) - new Date()) / 864e5)), soon = left <= 14;
+    h += '<div class="grid g2" style="align-items:start"><div class="card"><div class="card-h"><h2>Paket aktif</h2>' + badge("aktif") + '</div><div class="plan-n">' + esc(PLAN[sub.plan] || sub.plan) + '</div>' +
+      '<div class="meta"><div><span>Mulai</span><b>' + dt(sub.started_at, true) + '</b></div><div><span>Berakhir</span><b>' + dt(sub.expires_at, true) + '</b></div><div><span>Sisa masa aktif</span><b>' + left + ' hari</b></div></div>' +
+      (soon ? '<p class="note" style="margin-top:14px">Masa aktif paket Anda tinggal ' + left + ' hari. Perpanjang agar undangan tetap bisa dibuka tamu.</p>' : "") +
+      '<div class="row-end"><a class="btn" href="/#harga">' + ico("crown") + ' Perpanjang / Upgrade</a></div></div>' +
+      '<div class="card"><h2 style="margin-bottom:8px">Saldo</h2><div class="cred"><b>' + Number(S.wallet.credits || 0).toLocaleString("id-ID") + '</b><span>kredit</span></div></div></div>';
+    return h + subHistory();
+  };
+  function subHistory() {
+    if (!S.invoices.length) return "";
+    return '<div class="card" style="margin-top:16px"><div class="card-h"><h2>Riwayat pembayaran</h2><a class="btn o sm" href="#invoice">Semua invoice</a></div><div class="tbl-w"><table><thead><tr><th>No. Invoice</th><th>Tanggal</th><th class="num">Jumlah</th><th>Status</th></tr></thead><tbody>' + S.invoices.slice(0, 5).map(function (i) { return "<tr><td><b>" + esc(i.number) + "</b></td><td>" + dt(i.created_at) + '</td><td class="num">' + rp(i.amount) + "</td><td>" + badge(i.status) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+  }
+  /* ---- Domain: belum ada backend domain. Tidak ada data palsu; status jujur. ---- */
+  V.domain = function () {
+    return '<div class="pghead"><div><h1>Domain</h1><p class="sub">Atur domain khusus untuk undangan Anda</p></div></div><div class="card">' +
+      empty("layout", "Domain khusus belum tersedia", "Saat ini undangan Anda memakai alamat nusamora. Fitur domain khusus akan muncul di sini setelah tersedia untuk paket Anda.") + '</div>';
+  };
+  /* ---- Notifikasi: pengumuman sistem untuk saya (RPC my_notifications) ---- */
+  V.notifikasi = function () {
+    var h = '<div class="pghead"><div><h1>Notifikasi</h1><p class="sub">Informasi terbaru dan pengingat</p></div></div><div class="card" id="nt-box">';
+    if (S.notif === null) { loadNotif(); return h + '<div class="sk h3"></div></div>'; }
+    if (S.notif === false) return h + empty("chat", "Notifikasi belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div>";
+    if (!S.notif.length) return h + empty("chat", "Belum ada notifikasi", "Pengumuman dan pengingat dari NusaMora akan tampil di sini.") + "</div>";
+    return h + "<ul class=\"nt\">" + S.notif.map(function (n) { return '<li' + (n.read ? "" : ' class="unread"') + "><b>" + esc(n.title) + "</b><p>" + esc(n.body) + "</p><small>" + dt(n.created_at, true) + "</small></li>"; }).join("") + "</ul></div>";
+  };
+  function loadNotif() {
+    sb.rpc("my_notifications").then(function (r) { S.notif = r.error ? false : (r.data || []); S.unread = S.notif ? S.notif.filter(function (n) { return !n.read; }).length : 0; if (location.hash === "#notifikasi") route(); });
+  }
+  function markNotifRead() {
+    if (!S.notif || !S.notif.some(function (n) { return !n.read; })) return;
+    var snap = S.notif.map(function (n) { return n.read; });  // tampilkan penanda 'baru' dulu, tandai dibaca di server
+    sb.rpc("mark_notifications_read").then(function (r) { if (r.error) return; S.unread = 0; buildNav("notifikasi"); void snap; });
+  }
+
+  /* ===== Data tamu per undangan: Statistik Tamu, RSVP, Buku Tamu, Live Guest (backend/guest-schema.sql) ===== */
+  var G = { inv: "", kind: "", data: null, err: false, filter: "semua" };
+  var GM = { nama_tidak_valid: "Isi nama tamu (maksimal 100 karakter).", telepon_tidak_valid: "Nomor telepon belum benar.", batas_tamu_tercapai: "Batas 1.000 tamu per undangan tercapai.", terlalu_banyak_permintaan: "Terlalu banyak permintaan. Coba lagi nanti.", tidak_ditemukan: "Data tidak ditemukan." };
+  function gErr(e) { var m = (e && e.message) || ""; for (var k in GM) if (m.indexOf(k) >= 0) return GM[k]; return "Gagal. Coba lagi."; }
+  function gPick(kind) {
+    if (!S.inv.length) return { html: empty("mail", "Belum ada undangan", "Buat undangan terlebih dulu untuk mengelola tamu.", cta()) };
+    if (!G.inv || !S.inv.some(function (i) { return i.id === G.inv; })) G.inv = S.inv[0].id;
+    if (G.kind !== kind) { G.kind = kind; G.data = null; G.err = false; G.filter = "semua"; }
+    return { sel: '<label class="fld" style="max-width:360px;margin-bottom:14px">Undangan<select id="g-inv">' + S.inv.map(function (i) { return '<option value="' + esc(i.id) + '"' + (i.id === G.inv ? " selected" : "") + ">" + esc(i.title) + "</option>"; }).join("") + "</select></label>" };
+  }
+  function gLoad(kind) {
+    var id = G.inv, q;
+    if (kind === "statistik") q = Promise.all([sb.rpc("guest_stats", { p_inv: id }), sb.from("invitation_guests").select("id,name,phone,token,sent_at,opened_at,open_count,invitation_rsvps(status,pax)").eq("invitation_id", id).order("created_at", { ascending: true }).limit(1000)]).then(function (r) { return r[0].error || r[1].error ? false : { stats: r[0].data, guests: r[1].data || [] }; });
+    else if (kind === "rsvp") q = sb.from("invitation_rsvps").select("status,pax,message,updated_at,invitation_guests(name)").eq("invitation_id", id).order("updated_at", { ascending: false }).limit(1000).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    else if (kind === "bukutamu") q = sb.from("guestbook_entries").select("id,name,message,visible,created_at").eq("invitation_id", id).order("created_at", { ascending: false }).limit(500).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    else q = sb.from("live_guest_events").select("id,guest_name,action,detail,created_at").eq("invitation_id", id).order("created_at", { ascending: false }).limit(300).then(function (r) { return r.error ? false : { rows: r.data || [] }; });
+    q.then(function (d) { if (G.inv !== id || G.kind !== kind) return; if (d === false) G.err = true; else G.data = d; if (curRoute() === kind) route(); }, function () { G.err = true; if (curRoute() === kind) route(); });
+  }
+  function curRoute() { return (location.hash || "#dashboard").slice(1); }
+  function gHead(t, sub) { return '<div class="pghead"><div><h1>' + t + '</h1><p class="sub">' + sub + "</p></div></div>"; }
+  function gBody(kind, title, sub, render) {
+    var p = gPick(kind), h = gHead(title, sub); if (!p.sel) return h + '<div class="card">' + p.html + "</div>";
+    h += p.sel;
+    if (G.err) return h + '<div class="card">' + empty("chat", "Data belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div>";
+    if (!G.data) { gLoad(kind); return h + '<div class="card"><div class="sk h3"></div></div>'; }
+    return h + render(G.data);
+  }
+  function waLink(g, link) { var ph = (g.phone || "").replace(/^\+/, "").replace(/^0/, "62"); return "https://wa.me/" + ph + "?text=" + encodeURIComponent("Halo " + g.name + ", kami mengundang Anda: " + link); }
+  function guestLink(g) { var u = (S.inv.filter(function (i) { return i.id === G.inv; })[0] || {}).public_url; if (!u) return ""; return u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + g.token; }
+  var RS = { hadir: ["Hadir", "ok"], tidak_hadir: ["Tidak hadir", "bad"], ragu: ["Ragu-ragu", "warn"] };
+  V.statistik = function () {
+    return gBody("statistik", "Statistik Tamu", "Undangan terkirim, dibuka, dan konfirmasi kehadiran", function (d) {
+      var s = d.stats || {}, K = [["Tamu", s.total], ["Terkirim", s.terkirim], ["Dibuka", s.dibuka], ["Sudah RSVP", s.rsvp], ["Hadir", s.hadir], ["Tidak hadir", s.tidak_hadir], ["Ragu-ragu", s.ragu], ["Total orang hadir", s.pax_hadir]];
+      var h = '<div class="grid g4" style="margin-bottom:16px">' + K.map(function (k) { return '<div class="card stat"><div><b>' + Number(k[1] || 0).toLocaleString("id-ID") + "</b><span>" + k[0] + "</span></div></div>"; }).join("") + "</div>";
+      h += '<form class="card form" id="f-gadd" novalidate style="margin-bottom:16px"><h2>Tambah tamu</h2><div class="grid g2"><label class="fld">Nama<input type="text" id="ga-name" maxlength="100"><span class="err" id="e-ga"></span></label><label class="fld">WhatsApp (opsional)<input type="tel" id="ga-ph" placeholder="0812..."></label></div><div class="row-end"><button class="btn" type="submit" id="ga-go">Tambah</button></div></form>';
+      h += '<div class="card"><div class="card-h"><h2>Daftar tamu</h2></div>';
+      if (!d.guests.length) return h + empty("users", "Belum ada tamu", "Tambahkan tamu untuk membuat tautan undangan pribadi dan memantau statusnya.") + "</div>";
+      h += '<p class="sub" style="margin-bottom:10px">Tautan pribadi tamu mulai berfungsi penuh setelah halaman undangan mendukung RSVP.</p><div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th>RSVP</th><th>Aksi</th></tr></thead><tbody>' + d.guests.map(function (g) {
+        var r = g.invitation_rsvps && (Array.isArray(g.invitation_rsvps) ? g.invitation_rsvps[0] : g.invitation_rsvps), l = guestLink(g);
+        return "<tr><td><b>" + esc(g.name) + "</b>" + (g.phone ? "<br><small>" + esc(g.phone) + "</small>" : "") + "</td><td>" + (g.opened_at ? '<span class="badge ok">Dibuka ' + g.open_count + "x</span>" : g.sent_at ? '<span class="badge">Terkirim</span>' : '<span class="badge warn">Belum dikirim</span>') + "</td><td>" + (r ? '<span class="badge ' + RS[r.status][1] + '">' + RS[r.status][0] + (r.status === "hadir" ? " (" + r.pax + ")" : "") + "</span>" : "-") + '</td><td class="acts">' +
+          (l ? '<button class="btn o sm" type="button" data-copy="' + esc(l) + '">Salin tautan</button>' : "") + (l && g.phone ? '<a class="btn o sm" target="_blank" rel="noopener" href="' + esc(waLink(g, l)) + '">WhatsApp</a>' : "") +
+          '<button class="btn o sm" type="button" data-g="sent" data-id="' + esc(g.id) + '" data-v="' + (g.sent_at ? "0" : "1") + '">' + (g.sent_at ? "Batal terkirim" : "Tandai terkirim") + '</button><button class="btn o sm" type="button" data-g="gdel" data-id="' + esc(g.id) + '">Hapus</button></td></tr>';
+      }).join("") + "</tbody></table></div></div>";
+      return h;
+    });
+  };
+  V.rsvp = function () {
+    return gBody("rsvp", "RSVP", "Konfirmasi kehadiran tamu", function (d) {
+      var rows = d.rows.filter(function (r) { return G.filter === "semua" || r.status === G.filter; });
+      var h = '<div class="card"><div class="card-h"><h2>Konfirmasi (' + d.rows.length + ')</h2><div class="acts"><select id="g-flt" aria-label="Filter status"><option value="semua">Semua status</option>' + Object.keys(RS).map(function (k) { return '<option value="' + k + '"' + (G.filter === k ? " selected" : "") + ">" + RS[k][0] + "</option>"; }).join("") + '</select><button class="btn o sm" type="button" data-g="csv">Unduh CSV</button></div></div>';
+      if (!rows.length) return h + empty("mail", "Belum ada RSVP", "Konfirmasi dari tamu akan tampil di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th class="num">Jumlah</th><th>Pesan</th><th>Diperbarui</th></tr></thead><tbody>' + rows.map(function (r) { var g = r.invitation_guests || {}; return "<tr><td><b>" + esc(g.name || "-") + '</b></td><td><span class="badge ' + RS[r.status][1] + '">' + RS[r.status][0] + '</span></td><td class="num">' + r.pax + "</td><td>" + esc(r.message || "-") + "</td><td>" + dt(r.updated_at) + "</td></tr>"; }).join("") + "</tbody></table></div></div>";
+    });
+  };
+  V.bukutamu = function () {
+    return gBody("bukutamu", "Buku Tamu", "Ucapan dan doa dari tamu", function (d) {
+      var h = '<div class="card"><div class="card-h"><h2>Ucapan (' + d.rows.length + ")</h2></div>";
+      if (!d.rows.length) return h + empty("book", "Belum ada ucapan", "Ucapan dan doa dari tamu akan tampil di sini.") + "</div>";
+      return h + '<ul class="nt">' + d.rows.map(function (w) { return "<li" + (w.visible ? "" : ' class="muted"') + "><b>" + esc(w.name) + "</b>" + (w.visible ? "" : ' <span class="badge warn">Disembunyikan</span>') + "<p>" + esc(w.message) + "</p><small>" + dt(w.created_at, true) + '</small><div class="acts"><button class="btn o sm" type="button" data-g="wvis" data-id="' + esc(w.id) + '" data-v="' + (w.visible ? "0" : "1") + '">' + (w.visible ? "Sembunyikan" : "Tampilkan") + '</button><button class="btn o sm" type="button" data-g="wdel" data-id="' + esc(w.id) + '">Hapus</button></div></li>'; }).join("") + "</ul></div>";
+    });
+  };
+  var LA = { masuk: "Masuk venue", sapa: "Menyapa", reaksi: "Reaksi", keluar: "Keluar" };
+  V.live = function () {
+    return gBody("live", "Live Guest", "Aktivitas dan interaksi tamu di venue", function (d) {
+      var h = '<div class="card"><div class="card-h"><h2>Aktivitas terbaru</h2></div>';
+      if (!d.rows.length) return h + empty("star", "Belum ada aktivitas", "Tamu yang masuk, menyapa, dan bereaksi di Live Guest akan tampil di sini.") + "</div>";
+      return h + '<div class="tbl-w"><table><thead><tr><th>Waktu</th><th>Tamu</th><th>Aktivitas</th><th>Detail</th><th></th></tr></thead><tbody>' + d.rows.map(function (e) { return "<tr><td>" + dt(e.created_at) + "</td><td><b>" + esc(e.guest_name) + "</b></td><td>" + esc(LA[e.action] || e.action) + "</td><td>" + esc(e.detail || "-") + '</td><td><button class="btn o sm" type="button" data-g="edel" data-id="' + esc(e.id) + '">Hapus</button></td></tr>'; }).join("") + "</tbody></table></div></div>";
+    });
+  };
+  function csvCell(v) { v = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
+  function bindGuests(r) {
+    var sel = $("#g-inv"); if (sel) sel.addEventListener("change", function () { G.inv = sel.value; G.data = null; G.err = false; route(); });
+    var fl = $("#g-flt"); if (fl) fl.addEventListener("change", function () { G.filter = fl.value; route(); });
+    var f = $("#f-gadd"); if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); var n = $("#ga-name").value.trim(); $("#e-ga").textContent = ""; if (!n) { $("#e-ga").textContent = "Isi nama tamu."; return; }
+      var bt = $("#ga-go"); bt.disabled = true; sb.rpc("guest_add", { p_inv: G.inv, p_name: n, p_phone: $("#ga-ph").value.trim() || null }).then(function (x) { bt.disabled = false; if (x.error) return toast(gErr(x.error), "bad"); toast("Tamu ditambahkan.", "ok"); G.data = null; route(); });
+    });
+  }
+  d.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-g]"); if (!b) return; var a = b.dataset.g, id = b.dataset.id, call;
+    if (a === "csv") {
+      var rows = (G.data && G.data.rows || []).map(function (r) { return [(r.invitation_guests || {}).name, r.status, r.pax, r.message, r.updated_at].map(csvCell).join(","); });
+      var blob = new Blob(["﻿Nama,Status,Jumlah,Pesan,Diperbarui\n" + rows.join("\n")], { type: "text/csv;charset=utf-8" }), l = d.createElement("a"); l.href = URL.createObjectURL(blob); l.download = "rsvp.csv"; l.click(); setTimeout(function () { URL.revokeObjectURL(l.href); }, 1000); return;
+    }
+    if (a === "sent") call = sb.rpc("guest_mark_sent", { p_guest: id, p_sent: b.dataset.v === "1" });
+    else if (a === "gdel") { if (!confirm("Hapus tamu ini beserta RSVP-nya?")) return; call = sb.rpc("guest_delete", { p_guest: id }); }
+    else if (a === "wvis") call = sb.rpc("wish_set_visible", { p_id: id, p_visible: b.dataset.v === "1" });
+    else if (a === "wdel") { if (!confirm("Hapus ucapan ini?")) return; call = sb.rpc("wish_delete", { p_id: id }); }
+    else if (a === "edel") call = sb.rpc("live_event_delete", { p_id: id });
+    if (call) call.then(function (x) { if (x.error) return toast(gErr(x.error), "bad"); G.data = null; route(); });
+  });
+  /* ---- Bantuan & Dukungan: tiket lewat RPC (support_*) ---- */
+  var CAT = { bantuan: "Bantuan umum", pembayaran: "Pembayaran", teknis: "Masalah teknis", komplain: "Komplain", lainnya: "Lainnya" };
+  var TST = { open: ["Dibuka", "warn"], diproses: ["Sedang diproses", "warn"], menunggu_pelanggan: ["Menunggu balasan Anda", "bad"], selesai: ["Selesai", "ok"], ditutup: ["Ditutup", ""] };
+  var FTYPE = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }, FMAX = 3 * 1024 * 1024;
+  function tbadge(s) { var x = TST[s] || [s, ""]; return '<span class="badge ' + x[1] + '">' + esc(x[0]) + "</span>"; }
+  function fileLinks(fs) { return fs && fs.length ? '<div class="tkf">' + fs.map(function (f) { return '<button type="button" class="lnk" data-file="' + esc(f.path) + '">Lihat ' + esc(f.name) + "</button>"; }).join(" ") + "</div>" : ""; }
+  V.bantuan = function () {
+    var h = '<div class="pghead"><div><h1>Bantuan &amp; Dukungan</h1><p class="sub">Hubungi tim NusaMora</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-tk" novalidate><h2>Buat tiket baru</h2>' +
+      '<label class="fld">Kategori<select id="tk-cat">' + Object.keys(CAT).map(function (k) { return '<option value="' + k + '">' + CAT[k] + "</option>"; }).join("") + '</select></label>' +
+      '<label class="fld">Subjek<input type="text" id="tk-sub" maxlength="120"><span class="err" id="e-tks"></span></label>' +
+      '<label class="fld">Pesan<textarea id="tk-msg" rows="5" maxlength="4000"></textarea><span class="err" id="e-tkm"></span></label>' +
+      '<label class="fld">Screenshot (opsional)<input type="file" id="tk-file" accept="image/png,image/jpeg,image/webp" multiple><small>Maksimal 3 gambar (PNG, JPG, WebP), 3 MB per gambar.</small><span class="err" id="e-tkf"></span></label>' +
+      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Riwayat tiket saya</h2><div id="tk-list">';
+    if (S.tickets === null) { loadTickets(); return h + '<div class="sk h3"></div></div></div></div>'; }
+    if (S.tickets === false) return h + empty("chat", "Tiket belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div></div></div>";
+    if (!S.tickets.length) return h + empty("chat", "Belum ada tiket", "Tiket yang Anda buat akan tampil di sini.") + "</div></div></div>";
+    return h + S.tickets.map(function (t) {
+      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + tbadge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small>" +
+        (t.status === "menunggu_pelanggan" ? '<p class="tkw">Tim kami menunggu balasan Anda.</p>' : "") + "<p>" + esc(t.message || "") + "</p>" + fileLinks(t.files) +
+        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + " <small>" + dt(r.created_at, true) + "</small></b><p>" + esc(r.body) + "</p>" + fileLinks(r.files) + "</div>"; }).join("") +
+        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><div class="rfc"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><input type="file" accept="image/png,image/jpeg,image/webp" multiple aria-label="Screenshot"></div><button class="btn sm" type="submit">Balas</button></form>' +
+          '<button type="button" class="btn o sm" data-close="' + esc(t.id) + '">Tutup tiket</button>') + "</details>";
+    }).join("") + "</div></div></div>";
+  };
+  function loadTickets() { sb.rpc("support_my_tickets").then(function (r) { S.tickets = r.error ? false : (r.data || []); if (location.hash === "#bantuan") route(); }); }
+  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup.", lampiran_terlalu_banyak: "Terlalu banyak lampiran.", lampiran_terlalu_besar: "Gambar maksimal 3 MB.", lampiran_tidak_valid: "Lampiran harus PNG, JPG, atau WebP." };
+  function errMsg(e) { var m = (e && e.message) || ""; for (var k in ERR) if (m.indexOf(k) >= 0) return ERR[k]; return "Gagal mengirim. Coba lagi."; }
+  function pickFiles(inp, errEl) {
+    var fs = inp && inp.files ? Array.prototype.slice.call(inp.files) : [], msg = "";
+    if (fs.length > 3) msg = "Maksimal 3 gambar."; else fs.forEach(function (f) { if (!FTYPE[f.type]) msg = "Hanya PNG, JPG, atau WebP."; else if (f.size > FMAX) msg = "Setiap gambar maksimal 3 MB."; });
+    if (errEl) errEl.textContent = msg; return msg ? null : fs;
+  }
+  function uploadFiles(tid, rid, fs) {
+    var uid = S.user.id, bad = 0, chain = Promise.resolve();
+    fs.forEach(function (f) {
+      chain = chain.then(function () {
+        var path = uid + "/" + tid + "/" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + "." + FTYPE[f.type];
+        return sb.storage.from("ticket-files").upload(path, f, { contentType: f.type, upsert: false }).then(function (u) {
+          if (u.error) { bad++; return; }
+          return sb.rpc("support_add_attachment", { p_ticket: tid, p_reply: rid, p_path: path, p_name: f.name, p_mime: f.type, p_size: f.size }).then(function (r) { if (r.error) bad++; });
+        });
+      });
+    });
+    return chain.then(function () { return bad; }, function () { return bad + 1; });
+  }
+  function bindSupport() {
+    var f = $("#f-tk"); if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#e-tks").textContent = ""; $("#e-tkm").textContent = "";
+      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true, fs = pickFiles($("#tk-file"), $("#e-tkf"));
+      if (sj.length < 3) { $("#e-tks").textContent = "Isi subjek (minimal 3 karakter)."; ok = false; }
+      if (ms.length < 5) { $("#e-tkm").textContent = "Isi pesan (minimal 5 karakter)."; ok = false; }
+      if (!ok || fs === null) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
+      sb.rpc("support_create_ticket", { p_subject: sj, p_category: $("#tk-cat").value, p_message: ms }).then(function (r) {
+        if (r.error) { bt.disabled = false; bt.textContent = "Kirim tiket"; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(r.data, null, fs) : Promise.resolve(0)).then(function (bad) {
+          bt.disabled = false; bt.textContent = "Kirim tiket"; toast(bad ? "Tiket terkirim, tetapi " + bad + " lampiran gagal diunggah." : "Tiket terkirim.", bad ? "bad" : "ok"); S.tickets = null; route();
+        });
+      });
+    });
+    $$(".rf").forEach(function (rf) { rf.addEventListener("submit", function (e) {
+      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(), fs = pickFiles(rf.querySelector("input[type=file]"), null); if (!b) return;
+      if (fs === null) return toast("Lampiran harus PNG, JPG, atau WebP (maks. 3 gambar, 3 MB).", "bad");
+      var btn = rf.querySelector("button"); btn.disabled = true;
+      sb.rpc("support_reply_v2", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) {
+        if (r.error) { btn.disabled = false; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(rf.dataset.tk, r.data, fs) : Promise.resolve(0)).then(function (bad) { toast(bad ? "Balasan terkirim, tetapi " + bad + " lampiran gagal." : "Balasan terkirim.", bad ? "bad" : "ok"); S.tickets = null; route(); });
+      });
+    }); });
+    $$("[data-close]").forEach(function (bt) { bt.addEventListener("click", function () {
+      if (!bt.dataset.sure) { bt.dataset.sure = "1"; bt.textContent = "Yakin? Klik lagi untuk menutup"; return; }
+      sb.rpc("support_close", { p_ticket: bt.dataset.close }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Tiket ditutup.", "ok"); S.tickets = null; route(); });
+    }); });
+    $$("[data-file]").forEach(function (bt) { bt.addEventListener("click", function () {
+      sb.storage.from("ticket-files").createSignedUrl(bt.dataset.file, 120).then(function (r) { if (r.error || !r.data) return toast("Gambar tidak bisa dibuka.", "bad"); window.open(r.data.signedUrl, "_blank", "noopener"); });
+    }); });
+  }
   V.profil = function () {
     return '<div class="pghead"><div><h1>Edit Profil</h1><p class="sub">Perbarui data akun Anda</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-prof" novalidate><h2>Data diri</h2><label class="fld">Nama lengkap<input type="text" id="p-name" maxlength="80" value="' + esc(S.profile.full_name || "") + '" autocomplete="name"><span class="err" id="e-name"></span></label><label class="fld">Email<input type="email" value="' + esc(S.user.email) + '" readonly><small>Email tidak dapat diubah di sini.</small></label><label class="fld">Nomor WhatsApp<input type="tel" id="p-wa" value="' + esc(S.profile.whatsapp || "") + '" placeholder="08123456789" autocomplete="tel"><span class="err" id="e-wa"></span></label><div class="row-end"><button class="btn" type="submit" id="p-go">Simpan perubahan</button></div></form>' +
       '<form class="card form" id="f-pw" novalidate><h2>Ganti kata sandi</h2><label class="fld">Kata sandi baru<input type="password" id="w-new" autocomplete="new-password"><small>Minimal 8 karakter, campur huruf dan angka.</small><span class="err" id="e-pw"></span></label><div class="row-end"><button class="btn" type="submit" id="w-go">Perbarui kata sandi</button></div></form></div>';
   };
-  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", invoice: "Invoice", tutorial: "Tutorial", affiliate: "Affiliate", bonus: "History Bonus", penarikan: "History Penarikan", profil: "Edit Profil" };
-  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["invoice", "receipt", "Invoice"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["bonus", "gift", "History Bonus"], ["penarikan", "wallet", "History Penarikan"], ["profil", "user", "Edit Profil"]];
+  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", statistik: "Statistik Tamu", rsvp: "RSVP", bukutamu: "Buku Tamu", live: "Live Guest", notifikasi: "Notifikasi", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
+  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["statistik", "users", "Statistik Tamu"], ["rsvp", "mail", "RSVP"], ["bukutamu", "book", "Buku Tamu"], ["live", "star", "Live Guest"], ["notifikasi", "chat", "Notifikasi"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
+  function visible(k) { return FEATURES[k] !== false; }
   function buildNav(cur) {
-    $("#nav").innerHTML = NAV.map(function (n) { return '<a href="#' + n[0] + '"' + (n[0] === cur ? ' aria-current="page"' : "") + ">" + ico(n[1]) + "<span>" + n[2] + "</span></a>"; }).join("") + '<div class="sep" role="separator"></div><button type="button" class="out" id="logout">' + ico("out") + "<span>Log Out</span></button>";
+    $("#nav").innerHTML = NAV.filter(function (n) { return visible(n[0]); }).map(function (n) {
+      var b = n[0] === "notifikasi" && S.unread > 0 ? '<span class="badge warn" style="margin-left:auto" aria-label="' + S.unread + ' belum dibaca">' + (S.unread > 9 ? "9+" : S.unread) + "</span>" : "";
+      return '<a href="#' + n[0] + '"' + (n[0] === cur ? ' aria-current="page"' : "") + ">" + ico(n[1]) + "<span>" + n[2] + "</span>" + b + "</a>";
+    }).join("") + '<div class="sep" role="separator"></div><button type="button" class="out" id="logout">' + ico("out") + "<span>Log Out</span></button>";
   }
 
   /* ---------- router ---------- */
   var norm = function (s) { return String(s || "").replace(/&amp;/g, "&"); }; void norm;
   function route() {
-    var r = (location.hash || "#dashboard").slice(1); if (!V[r]) r = "dashboard";
+    var r = (location.hash || "#dashboard").slice(1); if (!V[r] || !visible(r)) r = "dashboard";
     buildNav(r); $("#crumb").textContent = TITLES[r]; d.title = TITLES[r] + " | NusaMora"; closeNav();
     var view = $("#view");
     if (!S.loaded) { view.innerHTML = '<div class="grid" style="gap:18px"><div class="card"><div class="sk h2"></div></div>' + skeleton(2) + "</div>"; return; }
@@ -177,6 +433,11 @@
     var a = $("#f-from"), b = $("#f-to"); if (a) a.addEventListener("change", function () { S.from = a.value; route(); }); if (b) b.addEventListener("change", function () { S.to = b.value; route(); });
     var st = $("#f-st"); if (st) st.addEventListener("change", function () { S.q = st.value; route(); $("#f-st").focus(); });
     if (r === "profil") bindProfile();
+    if (r === "affiliate") bindAff();
+    if (r === "bantuan") bindSupport();
+    if (r === "notifikasi") markNotifRead();
+    if (["statistik", "rsvp", "bukutamu", "live"].indexOf(r) >= 0) bindGuests(r);
+    $$("[data-dtab]").forEach(function (t) { t.addEventListener("click", function () { S.dtab = t.dataset.dtab; route(); }); });
   }
   function copyText(t) { function fb() { var ta = d.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;opacity:0"; d.body.appendChild(ta); ta.select(); var ok = false; try { ok = d.execCommand("copy"); } catch (e) { } ta.remove(); toast(ok ? "Tersalin." : "Gagal menyalin. Salin manual dari kolom.", ok ? "ok" : "bad"); } try { navigator.clipboard.writeText(t).then(function () { toast("Tersalin.", "ok"); }, fb); } catch (e) { fb(); } }
   d.addEventListener("click", function (e) {

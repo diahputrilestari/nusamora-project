@@ -1,3 +1,4 @@
+import { rateCheck, tooMany } from "./ratelimit.ts";
 // Validasi & pendaftaran asset (runtime-agnostic; dipakai Edge Function asset-register dan tes Node).
 // File diperiksa dari ISINYA (magic bytes, struktur), bukan hanya ekstensi/MIME dari browser.
 import { cors } from "./handlers.ts";
@@ -99,31 +100,41 @@ export function validateAsset(bytes: Uint8Array, ext: string): AssetMeta {
 // ---------------------------------------------------------------- handler
 export interface AssetDeps {
   env: { allowedOrigins: string[]; publicBase: string };
-  getUser(token: string): Promise<{ id: string } | null>;
+  getUser(token: string): Promise<{ id: string; aal?: string | null } | null>;
   download(path: string): Promise<Uint8Array | null>;
   remove(path: string): Promise<void>;
   rpc(name: string, args: Record<string, unknown>): Promise<{ data: any; error: { message: string } | null }>;
 }
 const R = (req: Request, d: AssetDeps, s: number, b: unknown) => new Response(JSON.stringify(b), { status: s, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", ...cors(req, d.env as any) } });
 const PATH = /^(incoming|generated)\/[A-Za-z0-9._\/-]{3,200}$/;
-const CLEAN_ON_FAIL = new Set(["isi_tidak_sesuai", "svg_tidak_aman", "referensi_luar", "dimensi_tidak_valid", "ukuran_melebihi_batas", "format_tidak_didukung", "mime_tidak_sesuai", "ukuran_tidak_cocok", "duplikat", "kategori_tidak_valid", "paket_tidak_kompatibel", "paket_tidak_valid", "attrs_tidak_valid"]);
-const MSG: Record<string, string> = { duplikat: "File yang sama sudah ada di Asset Library. Gunakan aset yang sudah ada.", format_tidak_didukung: "Format file tidak diizinkan untuk kategori ini.", kategori_tidak_valid: "Kategori tidak valid.", paket_tidak_kompatibel: "Format file tidak kompatibel dengan salah satu paket yang dipilih.", ukuran_melebihi_batas: "Ukuran file melebihi batas kategori.", file_tidak_ditemukan: "File belum selesai diunggah. Coba lagi.", mime_tidak_sesuai: "Jenis file tidak sesuai dengan ekstensinya.", path_tidak_valid: "Lokasi file tidak valid.", attrs_tidak_valid: "Isian khusus tidak valid." };
+const CLEAN_ON_FAIL = new Set(["tipe_berbeda", "sama_dengan_versi_sekarang", "versi_sudah_ada", "isi_tidak_sesuai", "svg_tidak_aman", "referensi_luar", "dimensi_tidak_valid", "ukuran_melebihi_batas", "format_tidak_didukung", "mime_tidak_sesuai", "ukuran_tidak_cocok", "duplikat", "kategori_tidak_valid", "paket_tidak_kompatibel", "paket_tidak_valid", "attrs_tidak_valid"]);
+const MSG: Record<string, string> = { tipe_berbeda: "Versi baru harus berformat sama dengan aset (agar penempatan di template tetap cocok).", sama_dengan_versi_sekarang: "File ini sama persis dengan versi yang sedang dipakai.", versi_sudah_ada: "File ini pernah menjadi versi aset ini. Pulihkan dari riwayat versi.", duplikat: "File yang sama sudah ada di Asset Library. Gunakan aset yang sudah ada.", format_tidak_didukung: "Format file tidak diizinkan untuk kategori ini.", kategori_tidak_valid: "Kategori tidak valid.", paket_tidak_kompatibel: "Format file tidak kompatibel dengan salah satu paket yang dipilih.", ukuran_melebihi_batas: "Ukuran file melebihi batas kategori.", file_tidak_ditemukan: "File belum selesai diunggah. Coba lagi.", mime_tidak_sesuai: "Jenis file tidak sesuai dengan ekstensinya.", path_tidak_valid: "Lokasi file tidak valid.", attrs_tidak_valid: "Isian khusus tidak valid." };
 
 export async function handleAssetRegister(req: Request, d: AssetDeps): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req, d.env as any) });
   if (req.method !== "POST") return R(req, d, 405, { error: "metode_tidak_didukung" });
   const m = /^Bearer\s+(.+)$/i.exec(req.headers.get("authorization") || ""); const token = m ? m[1] : "";
   const u = token ? await d.getUser(token) : null; if (!u) return R(req, d, 401, { error: "perlu_login", message: "Silakan masuk terlebih dahulu." });
+  { const w = await rateCheck(d, "asset-register-user", u.id, 60, 600); if (w) return tooMany(req, d.env.allowedOrigins, w); }
   let b: any; try { b = await req.json(); } catch { return R(req, d, 400, { error: "permintaan_tidak_valid" }); }
   const path = String(b?.path || ""); if (!PATH.test(path) || path.includes("..")) return R(req, d, 400, { error: "path_tidak_valid", message: MSG.path_tidak_valid });
   const ext = (path.split(".").pop() || "").toLowerCase(); if (!V[ext]) return R(req, d, 400, { error: "format_tidak_didukung", message: MSG.format_tidak_didukung });
   // izin dicek dulu (tanpa membaca file) agar pengguna tanpa izin tidak bisa memicu pengunduhan
-  const perm = await d.rpc("has_perm_user", { uid: u.id, p: "templates.write" }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
+  const perm = await d.rpc("has_perm_session", { uid: u.id, p: "templates.write", aal: u.aal ?? null }); if (perm.error || perm.data !== true) return R(req, d, 403, { error: "forbidden", message: "Anda tidak punya izin mengelola asset." });
   const bytes = await d.download(path); if (!bytes) return R(req, d, 404, { error: "file_tidak_ditemukan", message: MSG.file_tidak_ditemukan });
   const v = validateAsset(bytes, ext);
   if (!v.ok) { await d.remove(path); return R(req, d, 422, { error: v.error, message: v.message }); }
   const sum = await sha256hex(bytes), thumb = ["png", "jpg", "jpeg", "webp", "gif", "svg"].includes(ext) ? d.env.publicBase + path : "";
   const meta = { file_type: ext, mime: v.mime, size: bytes.length, width: v.width ?? null, height: v.height ?? null, is_transparent: !!v.transparent, checksum: sum, thumbnail_url: thumb, public_base: d.env.publicBase, attrs: b.attrs && typeof b.attrs === "object" && !Array.isArray(b.attrs) ? b.attrs : (b.attrs == null ? {} : "__invalid") };
+  if (b.replace_asset != null) {   // ganti file aset yang sudah ada (versi baru); penempatan di template tidak berubah
+    const rid = String(b.replace_asset);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rid)) { await d.remove(path); return R(req, d, 400, { error: "permintaan_tidak_valid" }); }
+    const rv = await d.rpc("admin_register_asset_version", { p_user: u.id, p_asset: rid, p_path: path, p_note: b.note ? String(b.note).slice(0, 300) : null, p_meta: meta });
+    if (rv.error) { await d.remove(path); return R(req, d, /forbidden/.test(rv.error.message) ? 403 : 500, { error: /forbidden/.test(rv.error.message) ? "forbidden" : "server", message: "Gagal menyimpan versi baru." }); }
+    const y = rv.data || {};
+    if (!y.ok) { if (CLEAN_ON_FAIL.has(y.error)) await d.remove(path); return R(req, d, y.error === "duplikat" ? 409 : 422, { error: y.error, id: y.id, name: y.name, version: y.version, expected: y.expected, message: MSG[y.error] || "Versi baru tidak dapat disimpan." }); }
+    return R(req, d, 200, { ok: true, asset: y.asset, version: y.version, dimensi_berubah: y.dimensi_berubah });
+  }
   const r = await d.rpc("admin_register_asset", { p_user: u.id, p_path: path, p_name: String(b.name || "").slice(0, 120), p_description: b.description ? String(b.description).slice(0, 500) : null, p_category: b.category_id, p_packages: Array.isArray(b.package_types) ? b.package_types : [], p_theme: b.theme_key || null, p_tags: Array.isArray(b.tags) ? b.tags.map(String).slice(0, 20) : [], p_meta: meta });
   if (r.error) return R(req, d, /forbidden/.test(r.error.message) ? 403 : 500, { error: /forbidden/.test(r.error.message) ? "forbidden" : "server", message: "Gagal mendaftarkan asset." });
   const x = r.data || {};

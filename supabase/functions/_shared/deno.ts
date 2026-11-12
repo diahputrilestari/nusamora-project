@@ -14,6 +14,11 @@ export function makeDeps(): Deps {
     },
     fetch: (i, o) => fetch(i, o),
     async getUser(token) { const { data, error } = await admin.auth.getUser(token); return error || !data.user ? null : { id: data.user.id }; },
+    async canSyncAll(token) {
+      const c = createClient(url, anon, { global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false, autoRefreshToken: false } });
+      const { data } = await c.rpc("has_perm", { p: "transactions.write" });
+      return data === true;
+    },
     async ownsOrder(token, orderId) {
       const c = createClient(url, anon, { global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false, autoRefreshToken: false } });
       const { data } = await c.from("payments").select("status").eq("order_id", orderId).maybeSingle();

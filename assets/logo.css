@@ -1,0 +1,4 @@
+/* logo gambar di semua halaman selain beranda */
+.brand{display:inline-flex;align-items:center;line-height:0;text-decoration:none}
+.brand img{height:44px;width:auto;display:block}
+@media(max-width:640px){.brand img{height:38px}}

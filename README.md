@@ -52,6 +52,8 @@ Tulis data lewat RPC `slug_available`, `create_invitation`, `save_invitation`; f
 
 Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu template universal per paket (Essential 2D, Signature 3D Cinematic, Luxe 3D Live Guest); **tema = set aset** yang menimpa aset umum template pada slot yang sama.
 
+**Tema Live Guest (Luxe):** satu halaman live universal, tema = data venue. Admin > Live Guest > Venue Builder > bagian *Tema tampilan*: jenis acara, palet warna, font, ornamen, posisi lukisan; gambar lukisan venue (rasio 1672x941) diisi di URL background (bisa dari Asset Library). `live_theme()` mengirim tema ke tamu, `live/live-bridge.js` mendaftarkannya ke mesin tema halaman. Contoh tema `midnight-party` (nonaktif) tersedia lewat `backend/admin-live-theme.sql`. Aset gambar/karakter yang diunggah wajib berlisensi milik penyelenggara.
+
 **Setup (sekali):**
 1. SQL Editor: jalankan `backend/asset-schema.sql` **paling akhir** (setelah `package-schema.sql`). Aman dijalankan ulang; membuat kategori aset per paket, `assets`, `themes`, `template_themes`, `template_assets`, bucket storage `theme-assets`, dan fungsi `admin_*`.
 2. Deploy Edge Function pendaftaran aset: `supabase functions deploy asset-register --no-verify-jwt` (memakai `SUPABASE_SERVICE_ROLE_KEY` bawaan Supabase; tidak ada secret baru).
@@ -114,8 +116,8 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 3. Secret (Server Key TIDAK boleh ada di kode/GitHub):
    `supabase secrets set MIDTRANS_SERVER_KEY=SB-Mid-server-xxxx MIDTRANS_IS_PRODUCTION=false ALLOWED_ORIGINS=https://dodgerblue-cod-965274.hostingersite.com,https://nusamora.com`
 4. `supabase functions deploy midtrans-checkout midtrans-sync midtrans-webhook --no-verify-jwt`
-5. Dashboard Midtrans (Sandbox) → Settings → Configuration → Payment Notification URL:
-   `https://ixzmogwaaajkyltcnwaf.supabase.co/functions/v1/midtrans-webhook`
+5. Dashboard Midtrans → Settings → Configuration → Payment Notification URL, **sesuai lingkungan** (Sandbox dan Production terpisah; jangan mengarahkan Sandbox uji ke proyek produksi). Produksi:
+   `https://ixzmogwaaajkyltcnwaf.supabase.co/functions/v1/midtrans-webhook`. Staging: URL proyek staging. Catatan: status "Completed" di Notification history hanya berarti URL membalas 2xx — pastikan event `webhook` benar-benar tercatat di `payment_events`.
 6. (Opsional) jadwalkan `select public.expire_invitations();` tiap hari (pg_cron) untuk menonaktifkan undangan yang masa aktifnya habis.
 
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
@@ -130,3 +132,8 @@ Semua undangan paket Essential yang templatenya bertanda `capabilities.engine = 
 - URL: `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik, `?demo=1&theme=<id>` = demo tema.
 
 **Setup:** setelah `asset-schema.sql`, jalankan `backend/essential-schema.sql` (RSVP, ucapan, kunci konten engine, validasi foto; menimpa `pkg_keys` dan `save_invitation`) lalu `backend/themes-seed.sql` (tema sebagai template Essential). Jika `package-schema.sql` atau `asset-schema.sql` dijalankan ulang, jalankan ulang kedua file ini. Routing slug sudah diatur di `vercel.json` dan `.htaccess`.
+
+## Keamanan P0 (branch `security/p0`)
+Urutan SQL setelah `asset-schema.sql`: `backend/security-schema.sql` lalu `backend/security-mfa.sql` (jalankan ulang `security-mfa.sql` bila `admin-schema.sql` dijalankan ulang, karena `has_perm()` ditimpa). Edge Function baru/berubah: `admin-password`, `midtrans-*`, `asset-*` (secret baru: `RATE_LIMIT_SALT`). Dokumen: `docs/security/` (AUDIT-KEAMANAN, BACKUP_POLICY, DISASTER_RECOVERY, SECURITY-HEADERS, RATE-LIMITING, MFA-ADMIN). Skrip & uji: `ops/backup`, `ops/security`, `ops/tests`.
+
+**Perlindungan konten & aset:** lihat `docs/security/CONTENT-PROTECTION.md` (direktori internal diblokir, bucket tidak bisa didaftar, aset berbayar via signed URL; klik kanan/Inspect hanya penghalang UX).

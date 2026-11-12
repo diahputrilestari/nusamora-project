@@ -1,0 +1,140 @@
+/* NusaMora landing: lapisan animasi & interaksi tambahan.
+   Aman bila gagal dimuat: semua aturan bergantung pada class html.fx yang dipasang landing-fx.js,
+   dan hanya aktif bila pengguna tidak meminta gerak dikurangi. */
+@media (prefers-reduced-motion:no-preference){
+
+/* progres scroll */
+.fx-prog{position:fixed;left:0;top:0;height:3px;width:100%;z-index:90;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--accent),var(--accent2),#c9a6f5);pointer-events:none}
+
+/* header: menyusut + bayangan saat di-scroll */
+html.fx header.top .bar{transition:padding .3s ease}
+html.fx header.top.scrolled::before{box-shadow:0 10px 30px -18px rgba(79,35,145,.45)}
+html.fx header.top.scrolled .brand{font-size:26px}
+html.fx .brand{transition:font-size .3s ease}
+
+/* hero: masuk bertahap */
+html.fx .hero-txt .pill,html.fx .hero-txt .lead,html.fx .hero-txt .cta,html.fx .hero-txt .trust{opacity:0;transform:translateY(18px);animation:fxUp .8s cubic-bezier(.2,.7,.2,1) forwards}
+html.fx .hero-txt .pill{animation-delay:.05s}
+html.fx .hero-txt .lead{animation-delay:.45s}
+html.fx .hero-txt .cta{animation-delay:.6s}
+html.fx .hero-txt .trust{animation-delay:.75s}
+html.fx h1 .w{display:inline-block;opacity:0;transform:translateY(.5em) rotate(2deg);animation:fxUp .8s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(.15s + var(--i)*.07s)}
+html.fx h1 em .w{animation-delay:calc(.3s + var(--i)*.09s)}
+html.fx h1 em{background:none;-webkit-background-clip:border-box;background-clip:border-box}
+html.fx h1 em .w{background:linear-gradient(95deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em;padding-right:.04em}
+@keyframes fxUp{to{opacity:1;transform:none}}
+
+/* hero: perangkat melayang + tilt mengikuti pointer */
+html.fx .devs{perspective:1100px}
+html.fx .laptop,html.fx .phone{transition:transform .25s ease-out;will-change:transform}
+html.fx .laptop{transform:rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg)) translateY(var(--fl,0px))}
+html.fx .phone{transform:translate3d(var(--px,0px),calc(var(--py,0px) + var(--fl2,0px)),30px)}
+html.fx .devs.float .laptop{animation:fxFloat 7s ease-in-out infinite}
+html.fx .devs.float .phone{animation:fxFloat2 6s ease-in-out infinite .6s}
+@keyframes fxFloat{50%{translate:0 -9px}}
+@keyframes fxFloat2{50%{translate:0 10px}}
+
+/* orb cahaya di latar hero */
+html.fx .hero::after{content:"";position:absolute;z-index:-1;width:360px;height:360px;right:6%;top:6%;border-radius:50%;background:radial-gradient(circle,rgba(154,111,219,.28),transparent 70%);filter:blur(8px);animation:fxOrb 14s ease-in-out infinite;pointer-events:none}
+@keyframes fxOrb{50%{transform:translate(-50px,40px) scale(1.15)}}
+
+/* kelopak jatuh */
+.fx-petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.fx-petals i{position:absolute;top:-24px;left:var(--x);width:var(--s);height:calc(var(--s)*1.3);border-radius:70% 0 70% 0;background:linear-gradient(135deg,#e9dcfb,#b890ec);opacity:.0;animation:fxFall var(--d) linear var(--dl) infinite}
+@keyframes fxFall{0%{opacity:0;transform:translate3d(0,0,0) rotate(0)}10%{opacity:.7}90%{opacity:.5}100%{opacity:0;transform:translate3d(var(--dx),calc(100vh + 40px),0) rotate(540deg)}}
+.fx-petals.in-fin{position:absolute}
+.fin .t,.fin p,.fin .cta{position:relative;z-index:1}
+.fin .fx-petals i{background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(214,190,250,.8));animation-name:fxFallBox}
+@keyframes fxFallBox{0%{opacity:0;transform:translate3d(0,0,0) rotate(0)}15%{opacity:.8}85%{opacity:.6}100%{opacity:0;transform:translate3d(var(--dx),420px,0) rotate(540deg)}}
+
+/* reveal: lebih hidup + stagger */
+html.fx .rv.pre{opacity:0;transform:translateY(34px) scale(.985)}
+html.fx .rv{transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .8s ease;transition-delay:calc(var(--i,0)*90ms)}
+html.fx .tgrid .tcard.rv.pre:nth-child(odd){transform:translateX(-30px)}
+html.fx .tgrid .tcard.rv.pre:nth-child(even){transform:translateX(30px)}
+html.fx .sec-h.rv.pre .t{letter-spacing:.04em}
+html.fx .sec-h .t{transition:letter-spacing 1s ease}
+
+/* kartu: tilt 3D + kilau */
+html.fx .tilt{transform-style:preserve-3d;transition:transform .2s ease-out,box-shadow .25s,border-color .25s,opacity .3s}
+html.fx .tilt.tilting{transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg)) translateY(-5px);transition:transform .08s linear,box-shadow .25s}
+html.fx .tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),transparent 60%);mix-blend-mode:soft-light}
+html.fx .tilt.tilting::after{opacity:1}
+html.fx .feat,html.fx .step,html.fx .plan,html.fx .tcard{position:relative}
+
+/* ikon: berdenyut saat kartu disorot */
+html.fx .feat:hover .fi,html.fx .help:hover .fi{animation:fxPop .6s ease}
+@keyframes fxPop{40%{transform:scale(1.18) rotate(-6deg)}}
+html.fx .trustband li:hover .ic{animation:fxPop .6s ease}
+html.fx .mini li:hover .ic{animation:fxPop .6s ease}
+
+/* langkah: nomor + garis penghubung */
+html.fx .steps{position:relative}
+html.fx .num{transition:transform .5s cubic-bezier(.2,.9,.3,1.4),box-shadow .4s}
+html.fx .step.rv.pre .num{transform:scale(0)}
+html.fx .step:hover .num{box-shadow:0 0 0 8px var(--soft)}
+@media(min-width:821px){
+ html.fx .steps::before{content:"";position:absolute;left:12%;right:12%;top:46px;height:2px;background:repeating-linear-gradient(90deg,var(--soft2) 0 8px,transparent 8px 16px);transform-origin:left;transform:scaleX(0);transition:transform 1.4s ease .3s;z-index:0}
+ html.fx .steps.on::before{transform:scaleX(1)}
+}
+
+/* harga: sorotan + denyut paket populer */
+html.fx .plan.hot{animation:fxGlow 3.4s ease-in-out infinite}
+@keyframes fxGlow{50%{box-shadow:0 30px 64px -22px rgba(106,52,182,.65)}}
+html.fx .badge{animation:fxBob 2.6s ease-in-out infinite}
+@keyframes fxBob{50%{transform:translateY(-3px)}}
+html.fx .pf li{transition:background .2s,padding .2s}
+html.fx .pf li:hover{background:var(--soft);padding-inline:8px;border-radius:8px}
+
+/* tombol: kilau menyapu + ripple */
+html.fx .btn{position:relative;overflow:hidden}
+html.fx .btn:not(.o)::before{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .7s ease;pointer-events:none}
+html.fx .btn:not(.o):hover::before{left:140%}
+html.fx .btn.lg:not(.inv){animation:fxPulse 3s ease-in-out 2s infinite}
+@keyframes fxPulse{50%{box-shadow:0 0 0 9px rgba(140,90,214,.16)}}
+.fx-rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:fxRip .6s ease-out forwards;pointer-events:none}
+@keyframes fxRip{to{transform:scale(1);opacity:0}}
+html.fx .btn.mag{transition:transform .2s ease-out,background .2s,box-shadow .2s}
+
+/* chip acara */
+html.fx .ev{transition:background .2s,border-color .2s,transform .2s}
+html.fx .ev:active{transform:scale(.94)}
+html.fx .ev[aria-pressed=true] .ic{animation:fxPop .5s ease}
+
+/* kartu template: kemunculan lembut saat filter */
+html.fx .tcard{transition:transform .35s cubic-bezier(.2,.7,.2,1),opacity .35s,filter .35s,box-shadow .25s}
+html.fx .tcard.dim{filter:grayscale(.6) blur(.4px)}
+html.fx .tv img{transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .25s}
+html.fx .tcard:hover .tv img{transform:scale(1.05)}
+html.fx .tv{overflow:hidden}
+
+/* FAQ: buka-tutup halus */
+html.fx .q summary{transition:color .2s}
+html.fx .q summary:hover{color:var(--accent)}
+html.fx .q .pl{transition:transform .35s cubic-bezier(.2,.9,.3,1.3)}
+
+/* tombol Buat Undangan (mobile bar) */
+html.fx .mbar{transition:transform .35s ease,opacity .35s}
+
+/* kembali ke atas */
+.fx-top{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:84px;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:var(--accent);display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 26px -12px var(--glow);opacity:0;transform:translateY(16px) scale(.8);pointer-events:none;transition:opacity .3s,transform .3s cubic-bezier(.2,.9,.3,1.3),background .2s;z-index:60}
+.fx-top.show{opacity:1;transform:none;pointer-events:auto}
+.fx-top:hover{background:var(--soft);transform:translateY(-3px)}
+.fx-top svg{width:20px;height:20px}
+@media(min-width:821px){.fx-top{bottom:28px}}
+
+/* konfeti hati saat klik CTA utama */
+.fx-heart{position:fixed;z-index:120;pointer-events:none;width:14px;height:14px;color:var(--accent2);animation:fxHeart 1s ease-out forwards}
+@keyframes fxHeart{0%{opacity:1;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--hx),var(--hy)) scale(1.2) rotate(var(--hr))}}
+
+}
+
+/* hover/pointer halus hanya untuk perangkat dengan mouse */
+@media (hover:none){html.fx .tilt::after{display:none}}
+
+/* logo gambar */
+.brand{display:inline-flex;align-items:center;line-height:0}
+.brand img{height:52px;width:auto;display:block;transition:height .3s ease}
+header.top.scrolled .brand img{height:42px}
+.foot .brand img{height:64px}
+@media(max-width:640px){.brand img{height:44px}header.top.scrolled .brand img{height:38px}.foot .brand img{height:56px}}
