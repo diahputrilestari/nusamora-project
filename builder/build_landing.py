@@ -170,7 +170,7 @@ def templates():
  <div class="sec-h rv"><p class="tagp">Template</p><h2 id="h-tpl" class="t">Template Undangan Digital yang Tidak Biasa</h2><p class="sub">Coba demo-nya langsung, lalu pilih yang paling mewakili cerita Anda. Semua template bisa dipakai di semua paket.</p></div>
  <div class="countrow"><p class="count" id="tcount" aria-live="polite">2 template tersedia</p><button class="reset" type="button" id="treset" hidden>Tampilkan semua</button></div>
  <p class="tnote" id="tnote" hidden></p>
- <div class="tgrid" id="tgrid">{cards}</div></section>'''
+ <div class="tgrid" id="tgrid">{cards}</div><div class="tcta" style="display:flex;justify-content:center;margin-top:28px"><a class="btn o" href="/template">Lihat Katalog</a></div></section>'''
 
 def steps():
     S = [("Pilih template", "Coba demo, lalu pilih template yang sesuai dengan acara dan suasana yang Anda mau."),
