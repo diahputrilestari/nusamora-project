@@ -43,7 +43,10 @@
     "angsa": "little-swan",
     "pink-luxe": "little-barbie",
     "barbie": "little-barbie",
-    "pink-princess": "little-barbie"
+    "pink-princess": "little-barbie",
+    "arab": "little-arab",
+    "arabian": "little-arab",
+    "timur-tengah": "little-arab"
   },
   "themes": [
     {
@@ -378,6 +381,20 @@
       "swatch": [
         "#B0185A",
         "#FFD87A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-arab",
+      "name": "Little Princess Arabian Night",
+      "description": "Pesta ulang tahun putri malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta karakter chibi pangeran dan putri berbusana ungu-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A1A66",
+        "#FFD27A"
       ],
       "art": true
     }
