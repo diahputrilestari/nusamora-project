@@ -1,0 +1,139 @@
+{
+  "id": "little-forest",
+  "name": "Little Magic Forest",
+  "version": 1,
+  "description": "Pesta ulang tahun hutan ajaib: panggung kayu di bawah pohon rindang berhias lentera, jamur, air terjun dan rumah pohon, serta karakter chibi peri, pemanah, dan anak rubah berbusana hijau-krem.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Aira",
+    "full": "Aira Kirana Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#2F5A2A",
+    "deep2": "#4E7F3A",
+    "paper": "#FFFBEF",
+    "soft": "#F3EBD2",
+    "ink": "#3A2A14",
+    "muted": "#7A6A48",
+    "accent": "#A8601A",
+    "accent2": "#F2C46A",
+    "petal": "#F6E2A8",
+    "heading": "#2F5A2A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "leaf",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Magic Forest Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Peri kecil kami",
+    "profileTitle": "Si Kecil Kami",
+    "countdownEyebrow": "Petualangan dimulai dalam",
+    "countdownTitle": "Menuju Hari Istimewa",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Hutan Ajaib",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Kecil",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Hutan Ajaib",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Hutan Ajaib, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta hutan ajaib si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Hutan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Hutan",
+    "closingEyebrow": "Sampai jumpa di hutan ajaib!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta hutan ajaib!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/fo-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/fo-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rak-camilan.webp",
+    "figureBride": "art/fo-6.webp",
+    "figureGroom": "art/fo-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/fo-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/fo-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/fo-1.webp",
+      "art/fo-2.webp",
+      "art/fo-5.webp",
+      "art/fo-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

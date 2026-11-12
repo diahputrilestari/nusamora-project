@@ -51,7 +51,12 @@
     "es": "little-ice",
     "frozen": "little-ice",
     "putri-es": "little-ice",
-    "snow": "little-ice"
+    "snow": "little-ice",
+    "forest": "little-forest",
+    "hutan": "little-forest",
+    "hutan-ajaib": "little-forest",
+    "magic-forest": "little-forest",
+    "peri": "little-forest"
   },
   "themes": [
     {
@@ -414,6 +419,20 @@
       "swatch": [
         "#1F3F8F",
         "#BFE0FF"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-forest",
+      "name": "Little Magic Forest",
+      "description": "Pesta ulang tahun hutan ajaib: panggung kayu di bawah pohon rindang berhias lentera, jamur, air terjun dan rumah pohon, serta karakter chibi peri, pemanah, dan anak rubah berbusana hijau-krem.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2F5A2A",
+        "#F2C46A"
       ],
       "art": true
     }

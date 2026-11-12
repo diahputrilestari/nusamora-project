@@ -1,0 +1,21 @@
+/* Little Magic Forest: ukuran ilustrasi & sentuhan hijau-emas */
+.th-little-forest .ulos-dec { width: min(150px, 46vw); }
+.th-little-forest .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-forest .gf-amp { width: min(160px, 48vw); }
+.th-little-forest .ws-bk { width: min(150px, 46vw); }
+.th-little-forest .ev-lt { width: 30px; }
+.th-little-forest .rs-lt { width: 54px; top: -30px; }
+.th-little-forest .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-forest .gable .art { height: 26px; }
+.th-little-forest .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-forest .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-forest .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-forest .end-art .eg { filter: drop-shadow(0 18px 28px rgba(30, 50, 20, .4)); }
+.th-little-forest .deep .eb { color: #FFF1C8; }
+.th-little-forest .cv-nm, .th-little-forest .hero-nm, .th-little-forest .end-nm { text-shadow: 0 2px 0 rgba(30, 50, 20, .5), 0 0 18px rgba(255, 214, 120, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-forest .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(30, 50, 20, .58), rgba(30, 50, 20, .3) 62%, rgba(30, 50, 20, .06) 84%), linear-gradient(180deg, rgba(30, 50, 20, .06), rgba(30, 50, 20, .5)); }
+.th-little-forest .cv-dt { color: #FFF6DA; font-weight: 600; }
+.th-little-forest .cv-eb { color: #FFF1C8; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-forest .hero-in .eb { color: #FFF6DA; text-shadow: 0 1px 8px rgba(30, 50, 20, .9); }
