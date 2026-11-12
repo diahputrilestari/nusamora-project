@@ -77,6 +77,11 @@
       "small": "art/backdrop-sm.webp",
       "width": 1672
     },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
     "coverGround": [
       {
         "src": "art/putri-5.webp",

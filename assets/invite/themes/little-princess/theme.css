@@ -17,3 +17,5 @@
 .th-little-princess .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(24, 34, 96, .7), rgba(24, 34, 96, .36) 62%, rgba(24, 34, 96, .08) 84%), linear-gradient(180deg, rgba(24, 34, 96, .08), rgba(24, 34, 96, .58)); }
 .th-little-princess .cv-dt { color: #FFF0C8; font-weight: 600; }
 .th-little-princess .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-princess .hero-in .eb { color: #FFF0C8; text-shadow: 0 1px 8px rgba(24, 34, 96, .9); }
