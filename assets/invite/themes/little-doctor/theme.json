@@ -75,7 +75,12 @@
     "backdrop": {
       "src": "art/backdrop.webp",
       "small": "art/backdrop-sm.webp",
-      "width": 1670
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
     },
     "coverGround": [
       {

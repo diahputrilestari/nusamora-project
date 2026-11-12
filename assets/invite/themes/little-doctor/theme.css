@@ -17,6 +17,5 @@
 .th-little-doctor .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(10, 36, 84, .7), rgba(10, 36, 84, .36) 62%, rgba(10, 36, 84, .08) 84%), linear-gradient(180deg, rgba(10, 36, 84, .08), rgba(10, 36, 84, .58)); }
 .th-little-doctor .cv-dt { color: #FFF0C8; font-weight: 600; }
 .th-little-doctor .cv-eb { color: #FFE2A0; }
-/* judul "Little Doctor" sudah tercetak di backdrop: redam di belakang foto & nama agar tidak bertabrakan */
-.th-little-doctor .gate.l::after { background: radial-gradient(110% 38% at 100% 21%, rgba(10, 36, 84, .94), rgba(10, 36, 84, .8) 55%, rgba(10, 36, 84, 0) 100%), radial-gradient(56% 44% at 100% 48%, rgba(10, 36, 84, .7), rgba(10, 36, 84, .34) 62%, rgba(10, 36, 84, .1) 84%), linear-gradient(180deg, rgba(10, 36, 84, .1), rgba(10, 36, 84, .6)); }
-.th-little-doctor .gate.r::after { background: radial-gradient(110% 38% at 0% 21%, rgba(10, 36, 84, .94), rgba(10, 36, 84, .8) 55%, rgba(10, 36, 84, 0) 100%), radial-gradient(56% 44% at 0% 48%, rgba(10, 36, 84, .7), rgba(10, 36, 84, .34) 62%, rgba(10, 36, 84, .1) 84%), linear-gradient(180deg, rgba(10, 36, 84, .1), rgba(10, 36, 84, .6)); }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-doctor .hero-in .eb { color: #FFF0C8; text-shadow: 0 1px 8px rgba(10, 36, 84, .9); }
