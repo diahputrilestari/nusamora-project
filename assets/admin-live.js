@@ -141,10 +141,10 @@
         DC_SLOT.map(function (s) { return '<label class="fld"><span>' + s[1] + '</span><input name="d_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc((dc[s[0]] && dc[s[0]].url) || "") + '"' + dis + "></label>"; }).join("");
     }
     /* Avatar tamu bertema (gambar karakter): slot av_l1..5 (laki-laki) & av_p1..5 (perempuan), URL + nama; disimpan di kolom decor yang sama. */
-    var AV_SLOT = []; [["l", "Laki-laki"], ["p", "Perempuan"]].forEach(function (g) { for (var i = 1; i <= 5; i++) AV_SLOT.push(["av_" + g[0] + i, g[1] + " " + i]); });
+    var AV_SLOT = []; [["l", "Laki-laki"], ["p", "Perempuan"]].forEach(function (g) { for (var i = 1; i <= 5; i++) AV_SLOT.push(["av_" + g[0] + i, g[1] + " " + i]); }); AV_SLOT.push(["av_host", "yang berulang tahun (panggung)"]);
     function avatarHtml(v, dis) {
       var dc = (v && v.decor) || {};
-      return '<div class="full"><h3 class="lg-sec">Avatar tamu bertema (opsional)</h3><p class="sub">Gambar karakter PNG/WebP transparan, berdiri penuh (https:// atau /, maks. 4 MB, CORS). Bila minimal satu diisi, pilihan avatar tamu memakai gambar ini, bukan avatar bawaan. Isi 1-5 per jenis kelamin.</p></div>' +
+      return '<div class="full"><h3 class="lg-sec">Avatar tamu bertema (opsional)</h3><p class="sub">Gambar karakter PNG/WebP transparan, berdiri penuh (https:// atau /, maks. 4 MB, CORS). Bila minimal satu diisi, pilihan avatar tamu memakai gambar ini, bukan avatar bawaan. Isi 1-5 per jenis kelamin. Avatar \"yang berulang tahun\" menggantikan tokoh di panggung.</p></div>' +
         AV_SLOT.map(function (s) { var d = dc[s[0]] || {}; return '<label class="fld"><span>Avatar ' + s[1] + '</span><input name="av_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc(d.url || "") + '"' + dis + '><input name="avn_' + s[0] + '" maxlength="24" placeholder="Nama pilihan" value="' + esc(d.name || "") + '"' + dis + "></label>"; }).join("");
     }
     function decorCollect(f) {

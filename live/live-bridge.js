@@ -120,7 +120,7 @@
   /* indeks di luar jumlah avatar tema (bot bawaan memakai i%4) dipetakan melingkar, bukan undefined */
   var wrapAv = function (arr) { return new Proxy(arr, { get: function (t, p) { if (typeof p === "string" && /^\d+$/.test(p) && t.length && !(p in t)) return t[+p % t.length]; return Reflect.get(t, p); } }); };
   var applyAvatars = safe(function (dc) {
-    var ks = Object.keys(dc || {}).filter(function (k) { return /^av_[lp][1-5]$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
+    var ks = Object.keys(dc || {}).filter(function (k) { return /^av_([lp][1-5]|host)$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
     if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
     Promise.all(ks.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
       var ok = res.filter(Boolean); if (!ok.length) return;
@@ -137,14 +137,25 @@
           g.add(spr(chibiC(a), w, h, 0, 0, 0)); g.userData.legs = []; return g;
         };
       }
-      var grp = { L: [], P: [] }, nm = { L: [], P: [] };
+      var grp = { L: [], P: [] }, nm = { L: [], P: [] }, host = null;
       ok.forEach(function (r) {
+        if (r.k === "av_host") { var hw = Math.min(320, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
         var g = r.k.charAt(3) === "l" ? "L" : "P", c = document.createElement("canvas"), w = Math.min(320, r.cv.width); c.width = w; c.height = Math.max(1, Math.round(w * r.cv.height / r.cv.width));
         c.getContext("2d").drawImage(r.cv, 0, 0, c.width, c.height);
         grp[g].push({ img: c.toDataURL("image/webp", 0.9), id: "tv" + r.k, ar: r.cv.width / r.cv.height, tv: 1 });
         nm[g].push(String(dc[r.k].name || "Karakter " + grp[g].length).slice(0, 24));
       });
       ["L", "P"].forEach(function (g) { if (grp[g].length) { AV[g] = wrapAv(grp[g]); if (typeof NA !== "undefined") NA[g] = nm[g]; grp[g].forEach(function (a) { try { chibiC(a); } catch (e) { } }); } });
+      if (host) {
+        var setHost = function () {
+          try {
+            if (typeof coupleEnts !== "function") return; var e = coupleEnts().filter(function (x) { return x.g.visible; })[0]; if (!e || e.g.userData.nmHost) return;
+            e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1;
+          } catch (x) { }
+        };
+        if (!window.__nmHostWrap && typeof nmStage === "function") { window.__nmHostWrap = 1; var ns = nmStage; nmStage = function () { ns.apply(this, arguments); setHost(); }; }
+        setHost(); var hi = setInterval(setHost, 700); setTimeout(function () { clearInterval(hi); }, 20000);
+      }
       if (typeof P === "undefined" || !P) { if (!AV[S.g] || !AV[S.g][S.i]) S.i = 0; try { rAv(); } catch (e) { } }
     });
   });
