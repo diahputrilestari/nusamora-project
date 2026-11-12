@@ -40,7 +40,10 @@
     "putri": "little-princess",
     "cinderella": "little-princess",
     "swan": "little-swan",
-    "angsa": "little-swan"
+    "angsa": "little-swan",
+    "pink-luxe": "little-barbie",
+    "barbie": "little-barbie",
+    "pink-princess": "little-barbie"
   },
   "themes": [
     {
@@ -361,6 +364,20 @@
       "swatch": [
         "#5E2F7A",
         "#F6B7D2"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-barbie",
+      "name": "Little Princess Pink Luxe",
+      "description": "Pesta ulang tahun putri pink mewah: panggung istana merah muda dengan menara puri, lampu kristal, vas emas berisi mawar, karpet glamor, serta karakter chibi pangeran dan putri bergaun pink berkilau.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B0185A",
+        "#FFD87A"
       ],
       "art": true
     }
