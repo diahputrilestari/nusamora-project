@@ -1,0 +1,139 @@
+{
+  "id": "little-candy",
+  "name": "Little Candyland",
+  "version": 1,
+  "description": "Pesta ulang tahun negeri permen: panggung merah muda dengan gapura permen, lolipop raksasa, bukit gula-gula, pelangi dan istana kue, serta karakter chibi bergaun krim-sprinkle.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Cinta",
+    "full": "Cinta Permata Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#B03073",
+    "deep2": "#D8579A",
+    "paper": "#FFF8FB",
+    "soft": "#FCE9F2",
+    "ink": "#4A2040",
+    "muted": "#8E5C7E",
+    "accent": "#C0286E",
+    "accent2": "#FFC76B",
+    "petal": "#FFC1DD",
+    "heading": "#A82B6A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Candyland Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si manis kami",
+    "profileTitle": "Si Manis Kami",
+    "countdownEyebrow": "Pesta permen dimulai dalam",
+    "countdownTitle": "Menuju Hari Manis",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Negeri Permen",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Manis",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Candyland",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Candyland, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta permen si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Manis",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Candyland",
+    "closingEyebrow": "Sampai jumpa di Candyland!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari manis si kecil. Kami tunggu kehadiranmu di pesta Candyland!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/cd-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/cd-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rak-camilan.webp",
+    "figureBride": "art/cd-6.webp",
+    "figureGroom": "art/cd-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/cd-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/cd-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/cd-1.webp",
+      "art/cd-2.webp",
+      "art/cd-5.webp",
+      "art/cd-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

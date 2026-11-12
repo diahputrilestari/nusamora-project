@@ -56,7 +56,11 @@
     "hutan": "little-forest",
     "hutan-ajaib": "little-forest",
     "magic-forest": "little-forest",
-    "peri": "little-forest"
+    "peri": "little-forest",
+    "candy": "little-candy",
+    "candyland": "little-candy",
+    "permen": "little-candy",
+    "gula-gula": "little-candy"
   },
   "themes": [
     {
@@ -433,6 +437,20 @@
       "swatch": [
         "#2F5A2A",
         "#F2C46A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-candy",
+      "name": "Little Candyland",
+      "description": "Pesta ulang tahun negeri permen: panggung merah muda dengan gapura permen, lolipop raksasa, bukit gula-gula, pelangi dan istana kue, serta karakter chibi bergaun krim-sprinkle.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B03073",
+        "#FFC1DD"
       ],
       "art": true
     }
