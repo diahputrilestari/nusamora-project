@@ -69,13 +69,114 @@
     if (!t || !t.theme || typeof NM === "undefined") return;
     var id = String(t.id || "").replace(/[^\w-]/g, "").slice(0, 40); if (!id) return;
     var pt = t.painting ? String(t.painting) : null; if (pt && pt.charAt(0) === "/") pt = location.origin + pt; if (pt && !/^https:\/\//.test(pt)) pt = null;
-    NM.registerEnv(id, { name: t.name || id, painting: pt, pos: t.pos || "center 38%" });
+    /* Lukisan dipakai juga sebagai panorama 3D (canvas -> WebGL). Gambar lintas-origin menodai canvas dan scene jadi hitam, jadi lukisan diunduh dulu
+       (butuh header CORS) dan dipasang sebagai blob same-origin. Gagal unduh = lukisan bawaan tetap dipakai. */
+    NM.registerEnv(id, { name: t.name || id, painting: null, pos: t.pos || "center 38%" });
     var ev = t.event && NM.events[t.event] ? t.event : null;
     var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
     if (!NM.registerTheme(id, cfg)) return;
+    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; applyAvatars(decorPending); tryDecor();
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
+    if (pt) fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+      if (!/^image\/(png|jpeg|webp)$/.test(bl.type) || bl.size > 12582912) return;
+      document.documentElement.style.setProperty("--bgurl", 'url("' + URL.createObjectURL(bl) + '")');
+    }, function () { });
+  });
+
+
+  /* Dekor tema: gambar transparan per slot menggantikan dekor bawaan scene. Posisi slot ditentukan di sini (template), admin hanya memilih gambar. */
+  var DECOR = {
+    arch: [8.5, [[0, -37.4]]], fountain: [5.4, [[8.4, -15.5]]], speakers: [3.2, [[-9, -24.5], [9, -24.5]]], banner: [2.2, [[-10.5, -16], [10.5, -16]]],
+    balloons: [2.4, [[-5.8, -21.5], [5.8, -21.5]]], gifts: [2.2, [[-3.4, -22], [3.6, -22]]],
+    photobooth: [4.2, [[-12.2, -8.3]]], easel: [2.1, [[-17.5, 1.5]]], lamp: [1.2, [[-4.6, -7], [4.6, -7], [-4.6, 5], [4.6, 5]]],
+    rope: [3.4, [[-16.4, -6], [16.4, -6], [-13.2, 0.5], [13.2, 0.5]]], sign: [1.4, [[-5.6, 9]]], planter: [1.2, [[5.6, 9.6], [-9, 10.5]]],
+    stall_drinks: [3.6, [[-9.4, -11.5]]], stall_snacks: [3.8, [[7.4, -11.5]]], stall_candy: [3.1, [[-5.6, -10.6]]], claw: [2.8, [[12.2, -8.3]]],
+    bush: [3, [[-16.5, 9], [16.5, 9]]], table: [3.9, [[-9.2, -3], [9.2, -3], [11.5, 4.2]]]
+  }, DECOR_HIDE = { pelaminan: ["arch"], meja: ["table"], kuliner: ["stall_drinks", "stall_snacks", "stall_candy", "claw"],
+    deco: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"],
+    furn: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"] }, decorPending = null;
+  function loadDecor(url) {
+    return fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+      if (!/^image\/(png|webp)$/.test(bl.type) || bl.size > 4194304) return Promise.reject(new Error("tipe"));
+      return new Promise(function (ok, no) {
+        var u = URL.createObjectURL(bl), im = new Image(); im.onload = function () {
+          var k = Math.min(1, 1024 / Math.max(im.width, im.height)), c = d.createElement("canvas"); c.width = Math.max(1, Math.round(im.width * k)); c.height = Math.max(1, Math.round(im.height * k));
+          c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c);
+        }; im.onerror = function () { URL.revokeObjectURL(u); no(new Error("gambar")); }; im.src = u;
+      });
+    });
+  }
+  /* lantai & karpet venue ikut palet tema: lantai = ui.soft (dikali tekstur marmer), karpet = mono.accent */
+  var tintPending = null, tintScene = function (th) {
+    var fl = null, cp = null;
+    sc.children.forEach(function (o) { var g = o.geometry; if (!g || !o.material) return; if (g.type === "CircleGeometry" && o.material.map) fl = o; else if (g.type === "PlaneGeometry" && g.parameters && g.parameters.width === 3.4 && g.parameters.height === 44) cp = o; });
+    var ok = function (c) { return typeof c === "string" && /^#[0-9a-fA-F]{6}$/.test(c); };
+    if (fl && th.ui && ok(th.ui.soft)) fl.material.color.set(th.ui.soft);
+    if (cp && th.mono && ok(th.mono.accent)) cp.material.color.set(th.mono.accent);
+  };
+  /* avatar tamu bertema: slot decor av_l1..5 (laki-laki) & av_p1..5 (perempuan) menggantikan pilihan avatar bawaan; nama pilihan dari dc[slot].name */
+  /* indeks di luar jumlah avatar tema (bot bawaan memakai i%4) dipetakan melingkar, bukan undefined */
+  var wrapAv = function (arr) { return new Proxy(arr, { get: function (t, p) { if (typeof p === "string" && /^\d+$/.test(p) && t.length && !(p in t)) return t[+p % t.length]; return Reflect.get(t, p); } }); };
+  var applyAvatars = safe(function (dc) {
+    var ks = Object.keys(dc || {}).filter(function (k) { return /^av_([lp][1-5]|host)$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
+    if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
+    Promise.all(ks.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
+      var ok = res.filter(Boolean); if (!ok.length) return;
+      if (!window.__nmAvWrap) {
+        window.__nmAvWrap = 1;
+        var c1 = chibiC, m1 = mk;
+        chibiC = function (a) {
+          if (!a || !a.tv) return c1(a); var k = "i" + a.id; if (TC[k]) return TC[k];
+          var c = cvs(320, Math.round(320 / a.ar), function () { }), im = new Image(); im.onload = function () { c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); if (c.t) c.t.needsUpdate = true; }; im.src = a.img; return (TC[k] = c);
+        };
+        mk = function (a) {
+          if (!a || !a.tv) return m1(a);
+          var g = new THREE.Group(), w = 2.1, h = w / a.ar; if (h > 2.7) { h = 2.7; w = h * a.ar; }
+          g.add(spr(chibiC(a), w, h, 0, 0, 0)); g.userData.legs = []; return g;
+        };
+      }
+      var grp = { L: [], P: [] }, nm = { L: [], P: [] }, host = null;
+      ok.forEach(function (r) {
+        if (r.k === "av_host") { var hw = Math.min(320, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
+        var g = r.k.charAt(3) === "l" ? "L" : "P", c = document.createElement("canvas"), w = Math.min(320, r.cv.width); c.width = w; c.height = Math.max(1, Math.round(w * r.cv.height / r.cv.width));
+        c.getContext("2d").drawImage(r.cv, 0, 0, c.width, c.height);
+        grp[g].push({ img: c.toDataURL("image/webp", 0.9), id: "tv" + r.k, ar: r.cv.width / r.cv.height, tv: 1 });
+        nm[g].push(String(dc[r.k].name || "Karakter " + grp[g].length).slice(0, 24));
+      });
+      ["L", "P"].forEach(function (g) { if (grp[g].length) { AV[g] = wrapAv(grp[g]); if (typeof NA !== "undefined") NA[g] = nm[g]; grp[g].forEach(function (a) { try { chibiC(a); } catch (e) { } }); } });
+      if (host) {
+        var setHost = function () {
+          try {
+            if (typeof coupleEnts !== "function") return; var e = coupleEnts().filter(function (x) { return x.g.visible; })[0]; if (!e || e.g.userData.nmHost) return;
+            e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1;
+          } catch (x) { }
+        };
+        if (!window.__nmHostWrap && typeof nmStage === "function") { window.__nmHostWrap = 1; var ns = nmStage; nmStage = function () { ns.apply(this, arguments); setHost(); }; }
+        setHost(); var hi = setInterval(setHost, 700); setTimeout(function () { clearInterval(hi); }, 20000);
+      }
+      if (typeof P === "undefined" || !P) { if (!AV[S.g] || !AV[S.g][S.i]) S.i = 0; try { rAv(); } catch (e) { } }
+    });
+  });
+  var tryDecor = safe(function () {
+    if (tintPending && typeof P !== "undefined" && P && typeof THREE !== "undefined" && typeof sc !== "undefined" && sc.getObjectByName("meja")) { var tp = tintPending; tintPending = null; try { tintScene(tp); } catch (e) { } }
+    var dc = decorPending; if (!dc || typeof P === "undefined" || !P || typeof THREE === "undefined" || typeof sc === "undefined" || !sc.getObjectByName("meja")) return;
+    decorPending = null;
+    var slots = Object.keys(dc).filter(function (k) { return DECOR[k] && dc[k] && typeof dc[k].url === "string"; });
+    Promise.all(slots.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
+      var ok = res.filter(Boolean); if (!ok.length) return;
+      var have = {}, grp = new THREE.Group(); grp.name = "nm-decor"; ok.forEach(function (r) { have[r.k] = 1; });
+      ok.forEach(function (r) {
+        var L = DECOR[r.k], w = Number(dc[r.k].w) > 0 ? Number(dc[r.k].w) : L[0], h = w * r.cv.height / r.cv.width, tex = new THREE.CanvasTexture(r.cv);
+        var pos = typeof dc[r.k].x === "number" && typeof dc[r.k].z === "number" ? (dc[r.k].mirror ? [[dc[r.k].x, dc[r.k].z], [-dc[r.k].x, dc[r.k].z]] : [[dc[r.k].x, dc[r.k].z]]) : L[1]; pos.forEach(function (p) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.04 })); sp.center.set(0.5, 0); sp.scale.set(w, h, 1); sp.position.set(p[0], 0, p[1]); sp.name = "nm-decor-" + r.k; grp.add(sp); });
+      });
+      Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
+      /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
+      var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"] };
+      try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
+      sc.add(grp);
+    });
   });
 
   /* Tamu lain di scene: kirim posisi sendiri, terima tamu aktif lain, tampilkan sebagai karakter. */
@@ -221,7 +322,7 @@
     rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {
-        clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { }
+        clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
         var sb = $("#sb"), ci = $("#ci"); if (sb) sb.onclick = sendChat; if (ci) ci.onkeydown = function (e) { if (e.key === "Enter") sendChat(); };
       }
     }, 400);
