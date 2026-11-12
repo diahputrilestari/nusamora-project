@@ -1,0 +1,139 @@
+{
+  "id": "little-train",
+  "name": "Little Train Adventure",
+  "version": 1,
+  "description": "Pesta ulang tahun petualangan kereta api: panggung kayu berlampu dengan lokomotif uap, jembatan lengkung, dan stasiun bergaya klasik, serta karakter chibi masinis, kondektur, dan penumpang berseragam biru tua-merah marun.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Masinis Kecil",
+    "full": "Arsakha Dewangga Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#7A1F2B",
+    "deep2": "#9E3342",
+    "paper": "#FFF9EF",
+    "soft": "#F3E6D0",
+    "ink": "#2A2230",
+    "muted": "#7A6A5C",
+    "accent": "#C9971A",
+    "accent2": "#F0C24B",
+    "petal": "#F0C24B",
+    "heading": "#7A1F2B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Train Adventure Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si masinis cilik kami",
+    "profileTitle": "Si Masinis Kecil",
+    "countdownEyebrow": "Kereta berangkat dalam",
+    "countdownTitle": "Menuju Hari Berangkat",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Stasiun",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Masinis",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kereta",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Naik Kereta, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta petualangan kereta api si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Perjalanan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Stasiun",
+    "closingEyebrow": "Sampai jumpa di stasiun!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta petualangan kereta api!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/kr-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/kr-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/lokomotif.webp",
+    "figureBride": "art/kr-2.webp",
+    "figureGroom": "art/kr-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/kr-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/kr-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/kr-1.webp",
+      "art/kr-2.webp",
+      "art/kr-5.webp",
+      "art/kr-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

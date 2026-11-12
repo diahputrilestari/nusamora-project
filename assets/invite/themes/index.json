@@ -107,7 +107,14 @@
     "penerbang": "little-pilot",
     "aviator": "little-pilot",
     "pramugari": "little-pilot",
-    "terbang": "little-pilot"
+    "terbang": "little-pilot",
+    "kereta": "little-train",
+    "kereta-api": "little-train",
+    "train": "little-train",
+    "masinis": "little-train",
+    "stasiun": "little-train",
+    "lokomotif": "little-train",
+    "petualangan-kereta": "little-train"
   },
   "themes": [
     {
@@ -596,6 +603,20 @@
       "swatch": [
         "#1F3C88",
         "#F4C542"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-train",
+      "name": "Little Train Adventure",
+      "description": "Pesta ulang tahun petualangan kereta api: panggung kayu berlampu dengan lokomotif uap, jembatan lengkung, dan stasiun bergaya klasik, serta karakter chibi masinis, kondektur, dan penumpang berseragam biru tua-merah marun.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1F2B",
+        "#F0C24B"
       ],
       "art": true
     }
