@@ -1,0 +1,35 @@
+# NusaMora Signature 3D — Apache / LiteSpeed (Niagahoster). Pengganti rewrite vercel.json.
+Options -Indexes
+
+# /assets-signature/invite/index?demo=1&theme=...  →  index.html (tanpa .html)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^invite/index/?$ invite/index.html [L,QSA]
+</IfModule>
+
+# MIME: modul ES wajib text/javascript, GLB model/gltf-binary
+<IfModule mod_mime.c>
+  AddType text/javascript .js .mjs
+  AddType model/gltf-binary .glb
+  AddType application/json .json
+  AddType image/webp .webp
+</IfModule>
+
+# Kompres file teks (js/html/json); GLB sudah terkompres
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/javascript application/javascript application/json text/css
+</IfModule>
+
+# Cache panjang untuk aset berat
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType model/gltf-binary "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 week"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.glb$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
