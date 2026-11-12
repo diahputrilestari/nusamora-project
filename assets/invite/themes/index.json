@@ -22,7 +22,10 @@
     "aqiqah": "aqiqah-istana-pink",
     "aqiqah-pink": "aqiqah-istana-pink",
     "kuromi": "kuromi-party",
-    "viking": "viking-party"
+    "viking": "viking-party",
+    "samurai": "samurai-sakura",
+    "jepang": "samurai-sakura",
+    "sakura": "samurai-sakura"
   },
   "themes": [
     {
@@ -245,6 +248,20 @@
       "swatch": [
         "#34170F",
         "#E2AD4B"
+      ],
+      "art": true
+    },
+    {
+      "id": "samurai-sakura",
+      "name": "Samurai Sakura Party",
+      "description": "Pesta ulang tahun festival Jepang: panggung kayu di bawah sakura dengan gerbang torii, kabuto emas, katana, lentera kertas, kedai jajanan, daruma, kipas, dan karakter chibi berpakaian samurai serta hakama.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B2142",
+        "#C62F3C"
       ],
       "art": true
     }

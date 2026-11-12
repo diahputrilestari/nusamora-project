@@ -1,0 +1,134 @@
+{
+  "id": "samurai-sakura",
+  "name": "Samurai Sakura Party",
+  "version": 1,
+  "description": "Pesta ulang tahun festival Jepang: panggung kayu di bawah sakura dengan gerbang torii, kabuto emas, katana, lentera kertas, kedai jajanan, daruma, kipas, dan karakter chibi berpakaian samurai serta hakama.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Haru",
+    "full": "Haru Akira Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "9"
+  },
+  "colors": {
+    "deep": "#1B2142",
+    "deep2": "#2F3A74",
+    "paper": "#FFF8F3",
+    "soft": "#FBE8E8",
+    "ink": "#2A2233",
+    "muted": "#7D6A78",
+    "accent": "#C62F3C",
+    "accent2": "#E8B84A",
+    "petal": "#F5B5C8",
+    "heading": "#1B2142"
+  },
+  "fonts": {
+    "script": "Playfair Display",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Samurai Sakura Party",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Bintang festival hari ini",
+    "profileTitle": "Samurai Cilik",
+    "countdownEyebrow": "Festival dimulai dalam",
+    "countdownTitle": "Menuju Festival",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Festival Ulang Tahun",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Samurai Cilik",
+    "galleryEyebrow": "Kenangan sakura",
+    "galleryTitle": "Galeri Festival",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Festival, Kan?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir meramaikan festival ulang tahun ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kotak Hadiah",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Papan Harapan",
+    "closingEyebrow": "Sampai jumpa di festival!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa ini. Kami tunggu kehadiranmu di festival!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/samurai-3.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado-daruma.webp",
+        "w": 112
+      },
+      {
+        "src": "art/samurai-6.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/papan-fuji.webp",
+    "figureBride": "art/samurai-4.webp",
+    "figureGroom": "art/samurai-7.webp",
+    "countdownRow": [
+      {
+        "src": "art/samurai-5.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/samurai-2.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/kedai-jajanan.webp",
+    "storyTop": "art/tenda.webp",
+    "giftTop": "art/kado-daruma.webp",
+    "wishesTop": "art/rak-samurai.webp",
+    "closingScene": "art/torii.webp",
+    "closingFigures": [
+      "art/samurai-1.webp",
+      "art/samurai-4.webp",
+      "art/samurai-5.webp",
+      "art/samurai-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
