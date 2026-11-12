@@ -19,5 +19,9 @@ do $$ declare ok1 boolean; begin
   if (select count(*) from public.live_venues v, jsonb_array_elements(v.areas) e where v.key = 'romantic-garden' and e ->> 'id' in ('resepsi', 'video') and (e ->> 'enabled')::boolean) <> 2 then raise exception 'venue lain tidak boleh berubah'; end if;
   -- admin-live-theme-viking.sql: venue contoh valid, nonaktif, semua area tetap aktif
   if not exists (select 1 from public.live_venues where key = 'viking-feast' and event_type = 'birthday' and not active and public.live_theme_ok(nm_theme)) then raise exception 'venue viking-feast tidak ada / tema tidak valid'; end if;
+  -- admin-live-decor-avatars.sql: slot avatar tamu (url + nama), slot lama tetap sah
+  if not public.live_decor_ok('{"av_l1":{"url":"https://x.test/a.webp","name":"Prajurit Perisai"},"av_p3":{"url":"/a.png"},"table":{"url":"https://x.test/t.png","w":3}}') then raise exception 'avatar valid ditolak'; end if;
+  if public.live_decor_ok('{"av_l6":{"url":"https://x.test/a.png"}}') or public.live_decor_ok('{"av_x1":{"url":"https://x.test/a.png"}}') or public.live_decor_ok('{"av_l1":{"url":"https://x.test/a.png","w":2}}')
+     or public.live_decor_ok('{"table":{"url":"https://x.test/a.png","name":"x"}}') or public.live_decor_ok('{"av_l1":{"url":"https://x.test/a.png","name":"<b>x</b>"}}') or public.live_decor_ok('{"av_l1":{"url":"//evil.test/a.png"}}') then raise exception 'avatar tidak valid diterima'; end if;
   raise notice 'OK live_decor (validator)';
 end $$;

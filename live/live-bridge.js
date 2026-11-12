@@ -75,7 +75,7 @@
     var ev = t.event && NM.events[t.event] ? t.event : null;
     var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
     if (!NM.registerTheme(id, cfg)) return;
-    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; tryDecor();
+    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; applyAvatars(decorPending); tryDecor();
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
@@ -116,6 +116,38 @@
     if (fl && th.ui && ok(th.ui.soft)) fl.material.color.set(th.ui.soft);
     if (cp && th.mono && ok(th.mono.accent)) cp.material.color.set(th.mono.accent);
   };
+  /* avatar tamu bertema: slot decor av_l1..5 (laki-laki) & av_p1..5 (perempuan) menggantikan pilihan avatar bawaan; nama pilihan dari dc[slot].name */
+  /* indeks di luar jumlah avatar tema (bot bawaan memakai i%4) dipetakan melingkar, bukan undefined */
+  var wrapAv = function (arr) { return new Proxy(arr, { get: function (t, p) { if (typeof p === "string" && /^\d+$/.test(p) && t.length && !(p in t)) return t[+p % t.length]; return Reflect.get(t, p); } }); };
+  var applyAvatars = safe(function (dc) {
+    var ks = Object.keys(dc || {}).filter(function (k) { return /^av_[lp][1-5]$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
+    if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
+    Promise.all(ks.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
+      var ok = res.filter(Boolean); if (!ok.length) return;
+      if (!window.__nmAvWrap) {
+        window.__nmAvWrap = 1;
+        var c1 = chibiC, m1 = mk;
+        chibiC = function (a) {
+          if (!a || !a.tv) return c1(a); var k = "i" + a.id; if (TC[k]) return TC[k];
+          var c = cvs(320, Math.round(320 / a.ar), function () { }), im = new Image(); im.onload = function () { c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); if (c.t) c.t.needsUpdate = true; }; im.src = a.img; return (TC[k] = c);
+        };
+        mk = function (a) {
+          if (!a || !a.tv) return m1(a);
+          var g = new THREE.Group(), w = 2.1, h = w / a.ar; if (h > 2.7) { h = 2.7; w = h * a.ar; }
+          g.add(spr(chibiC(a), w, h, 0, 0, 0)); g.userData.legs = []; return g;
+        };
+      }
+      var grp = { L: [], P: [] }, nm = { L: [], P: [] };
+      ok.forEach(function (r) {
+        var g = r.k.charAt(3) === "l" ? "L" : "P", c = document.createElement("canvas"), w = Math.min(320, r.cv.width); c.width = w; c.height = Math.max(1, Math.round(w * r.cv.height / r.cv.width));
+        c.getContext("2d").drawImage(r.cv, 0, 0, c.width, c.height);
+        grp[g].push({ img: c.toDataURL("image/webp", 0.9), id: "tv" + r.k, ar: r.cv.width / r.cv.height, tv: 1 });
+        nm[g].push(String(dc[r.k].name || "Karakter " + grp[g].length).slice(0, 24));
+      });
+      ["L", "P"].forEach(function (g) { if (grp[g].length) { AV[g] = wrapAv(grp[g]); if (typeof NA !== "undefined") NA[g] = nm[g]; grp[g].forEach(function (a) { try { chibiC(a); } catch (e) { } }); } });
+      if (typeof P === "undefined" || !P) { if (!AV[S.g] || !AV[S.g][S.i]) S.i = 0; try { rAv(); } catch (e) { } }
+    });
+  });
   var tryDecor = safe(function () {
     if (tintPending && typeof P !== "undefined" && P && typeof THREE !== "undefined" && typeof sc !== "undefined" && sc.getObjectByName("meja")) { var tp = tintPending; tintPending = null; try { tintScene(tp); } catch (e) { } }
     var dc = decorPending; if (!dc || typeof P === "undefined" || !P || typeof THREE === "undefined" || typeof sc === "undefined" || !sc.getObjectByName("meja")) return;

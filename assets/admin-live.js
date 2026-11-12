@@ -140,8 +140,17 @@
       return '<div class="full"><h3 class="lg-sec">Dekor tema (gambar transparan per objek)</h3><p class="sub">Isi URL gambar PNG/WebP transparan (https:// atau /, maks. 4 MB, harus mengizinkan CORS; Asset Library sudah memenuhi). Slot kosong memakai dekor bawaan. Posisi objek diatur template. Pastikan gambar berlisensi milik penyelenggara.</p></div>' +
         DC_SLOT.map(function (s) { return '<label class="fld"><span>' + s[1] + '</span><input name="d_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc((dc[s[0]] && dc[s[0]].url) || "") + '"' + dis + "></label>"; }).join("");
     }
+    /* Avatar tamu bertema (gambar karakter): slot av_l1..5 (laki-laki) & av_p1..5 (perempuan), URL + nama; disimpan di kolom decor yang sama. */
+    var AV_SLOT = []; [["l", "Laki-laki"], ["p", "Perempuan"]].forEach(function (g) { for (var i = 1; i <= 5; i++) AV_SLOT.push(["av_" + g[0] + i, g[1] + " " + i]); });
+    function avatarHtml(v, dis) {
+      var dc = (v && v.decor) || {};
+      return '<div class="full"><h3 class="lg-sec">Avatar tamu bertema (opsional)</h3><p class="sub">Gambar karakter PNG/WebP transparan, berdiri penuh (https:// atau /, maks. 4 MB, CORS). Bila minimal satu diisi, pilihan avatar tamu memakai gambar ini, bukan avatar bawaan. Isi 1-5 per jenis kelamin.</p></div>' +
+        AV_SLOT.map(function (s) { var d = dc[s[0]] || {}; return '<label class="fld"><span>Avatar ' + s[1] + '</span><input name="av_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc(d.url || "") + '"' + dis + '><input name="avn_' + s[0] + '" maxlength="24" placeholder="Nama pilihan" value="' + esc(d.name || "") + '"' + dis + "></label>"; }).join("");
+    }
     function decorCollect(f) {
-      var o = {}, n = 0; DC_SLOT.forEach(function (s) { var u = f["d_" + s[0]].value.trim(); if (u) { o[s[0]] = { url: u }; n++; } }); return n ? o : null;
+      var o = {}, n = 0; DC_SLOT.forEach(function (s) { var u = f["d_" + s[0]].value.trim(); if (u) { o[s[0]] = { url: u }; n++; } });
+      AV_SLOT.forEach(function (s) { var u = f["av_" + s[0]].value.trim(), nm = f["avn_" + s[0]].value.trim(); if (u) { o[s[0]] = nm ? { url: u, name: nm } : { url: u }; n++; } });
+      return n ? o : null;
     }
 
     /* ---------- Venue builder ---------- */
@@ -161,7 +170,7 @@
       dl.innerHTML = '<div class="dlg-h"><h2 id="lg-ven-t">' + esc(v ? v.name : "Venue baru") + "</h2>" + xBtn + '</div><form class="lg-f" id="vf" novalidate><label class="fld"><span>Nama</span><input name="name" maxlength="60" value="' + esc(v ? v.name : "") + '"' + dis + '></label><label class="fld"><span>Kunci (unik)</span><input name="key" maxlength="39" value="' + esc(v ? v.key : "") + '"' + dis + '></label><label class="fld"><span>Template</span><input name="template" maxlength="40" value="' + esc(v && v.template || "") + '"' + dis + '></label>' +
         '<label class="fld"><span>Kapasitas tamu online</span><input type="number" name="max" min="1" max="5000" value="' + esc(v ? v.max_guests : 300) + '"' + dis + '></label><label class="fld full"><span>URL background (https:// atau /)</span><input name="bg" maxlength="500" value="' + esc(v && v.background_url || "") + '"' + dis + '></label><label class="fld"><span>Urutan</span><input type="number" name="sort" value="' + esc(v ? v.sort : 0) + '"' + dis + '></label><label class="fld"><span><input type="checkbox" name="active"' + (!v || v.active ? " checked" : "") + dis + '> Aktif</span></label>' +
         themeHtml(v, dis) +
-        decorHtml(v, dis) +
+        decorHtml(v, dis) + avatarHtml(v, dis) +
         '<div class="full"><h3 class="lg-sec">Area</h3><div class="tbl-w"><table class="lg-ar"><thead><tr><th>ID</th><th>Nama</th><th>X</th><th>Z</th><th>Ikon</th><th>Aktif</th><th></th></tr></thead><tbody id="vf-ar"></tbody></table></div>' + (W ? '<button class="btn o" type="button" id="vf-add" style="margin-top:8px">Tambah area</button>' : "") + '<p class="sub">Koordinat x dan z antara -40 dan 40. Catatan: pada tampilan Live Guest saat ini, yang diterapkan dari sini hanya nama, ikon, dan aktif/nonaktif area; letak objek pada pemandangan masih ditetapkan oleh halaman.</p><svg class="lg-map" id="vf-map" viewBox="-40 -40 80 80" role="img" aria-label="Pratinjau posisi area"></svg></div>' +
         '<div class="full lg-e" role="alert"></div>' + (W ? '<div class="full lg-btns"><button class="btn" type="submit">Simpan venue</button>' + (v && canD() ? '<button class="btn o bad" type="button" id="vf-del">Hapus</button>' : "") + "</div>" : "") + "</form>";
       function draw() {
