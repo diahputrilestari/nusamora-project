@@ -17,3 +17,5 @@
 .th-little-arab .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(52, 16, 72, .7), rgba(52, 16, 72, .36) 62%, rgba(52, 16, 72, .08) 84%), linear-gradient(180deg, rgba(52, 16, 72, .08), rgba(52, 16, 72, .58)); }
 .th-little-arab .cv-dt { color: #FFF0C8; font-weight: 600; }
 .th-little-arab .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-arab .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(52, 16, 72, .9); }
