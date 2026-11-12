@@ -38,7 +38,7 @@ window.supabase={createClient:function(){return{
   if(n==='admin_asset_restore_version')return ok({ok:true,asset:{}});
   if(n==='admin_asset_duplicates')return ok([{reason:'ukuran_sama',label:'Format, dimensi, dan ukuran sama',assets:[{id:'a1',name:'Ornamen Emas',status:'active',deleted:false,file_url:'https://cdn.test/a1.png',thumbnail_url:null,file_type:'png',file_size:150000,width:100,height:100,uses:2},{id:'a2',name:'Ornamen Perak',status:'inactive',deleted:false,file_url:'https://cdn.test/a2.png',thumbnail_url:null,file_type:'png',file_size:150000,width:100,height:100,uses:0}]},{reason:'nama_sama',label:'Nama sama',assets:[{id:'a3',name:'Bunga',status:'active',deleted:false,file_url:'x',thumbnail_url:null,file_type:'png',file_size:1,width:1,height:1,uses:0},{id:'a3',name:'bunga ',status:'archived',deleted:true,file_url:'x',thumbnail_url:null,file_type:'png',file_size:1,width:1,height:1,uses:0}]}]);
   return ok([])},
- functions:{invoke:function(n,o){window.__inv.push([n,o.body]);return Promise.resolve({data:{ok:true,asset:{id:'a1'},version:3,dimensi_berubah:false},error:null})}},
+ functions:{invoke:function(n,o){window.__inv.push([n,o.body]);if(o.body&&o.body.name==='dup')return Promise.resolve({data:{ok:false,error:'duplikat'},error:null});return Promise.resolve({data:{ok:true,asset:{id:'a1'},version:3,dimensi_berubah:false},error:null})}},
  storage:{from:function(b){return{upload:function(p,f,o){window.__up.push([b,p,f.name]);return ok({path:p})}}}},
  auth:{getSession:function(){return Promise.resolve({data:{session:{access_token:'tok',user:{id:'u1',email:'adm@uji.test'}}}})},signOut:function(){return Promise.resolve({})},onAuthStateChange:function(){return{data:{subscription:{unsubscribe:function(){}}}}}}}}};"""
 ok_n = bad_n = 0
@@ -125,6 +125,15 @@ with sync_playwright() as pw:
     chk("izin baca saja: tanpa kotak pilih, tanpa tombol unggah", pg.locator(".al-sel").count() == 0 and pg.locator("#l-up").count() == 0)
     pg.click(".al-card[data-i='0']"); pg.wait_for_selector("#adlg[open] .al-ver")
     chk("izin baca saja: tanpa unggah versi dan tanpa pulihkan, lisensi terkunci", pg.locator("#v-pick, [data-rv]").count() == 0 and pg.locator("#a-lic:disabled").count() == 1)
+    # dialog unggah: baris gagal/duplikat bisa dihapus dari daftar
+    ctx.close(); ctx, pg, errs = newpage(b); pg.goto(BASE + "/admin#assetlib:lib"); pg.wait_for_selector(".al-card"); pg.click("#l-up"); pg.wait_for_selector("#udlg[open] #u-file", state="attached")
+    pg.evaluate("(()=>{for(const r of document.querySelectorAll('#u-glist input')){r.click();if(document.querySelectorAll('#u-cat option').length)return}})()")
+    pg.set_input_files("#u-file", [{"name": "bagus.png", "mimeType": "image/png", "buffer": PNG}, {"name": "dup.png", "mimeType": "image/png", "buffer": PNG}])
+    chk("unggah: tombol hapus-duplikat tersembunyi sebelum ada yang gagal", pg.locator("#u-clr").is_hidden())
+    pg.click("#u-go"); pg.wait_for_function("document.querySelectorAll('#u-list li.bad').length===1 && document.querySelectorAll('#u-list li.ok').length===1", timeout=10000)
+    chk("unggah: baris duplikat punya tombol hapus, baris tersimpan tidak", pg.locator("#u-list li.bad [data-rm]").count() == 1 and pg.locator("#u-list li.ok [data-rm]").count() == 0 and pg.locator("#u-clr").is_visible() and "1 file gagal" in pg.inner_text("#u-clr"), pg.inner_text("#u-list"))
+    pg.click("#u-clr")
+    chk("unggah: hapus gagal/duplikat menyisakan file yang tersimpan saja", pg.locator("#u-list li").count() == 1 and pg.locator("#u-list li.ok").count() == 1 and pg.locator("#u-clr").is_hidden(), pg.inner_text("#u-list"))
     ctx.close(); ctx, pg, errs = newpage(b, vw=375); pg.goto(BASE + "/admin#assetlib:lib"); pg.wait_for_selector(".al-card"); pg.check("[data-sel=a1]")
     chk("mobile 375px: tanpa scroll horizontal", pg.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1"))
     b.close()

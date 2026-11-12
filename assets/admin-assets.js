@@ -145,6 +145,7 @@
           <label class="fld full">Kredit / tautan sumber (wajib untuk CC BY dan berlisensi komersial)<input id="u-credit" maxlength="160" placeholder="mis. Freepik - Nama Seniman"></label></div></fieldset>
         <div class="full" id="u-e" role="alert"></div>
         <div class="al-drop" id="u-drop" tabindex="0" role="button" aria-label="Pilih atau seret file ke sini"><b>Seret file ke sini</b><span>atau klik untuk memilih (bisa banyak file)</span><input type="file" id="u-file" multiple hidden></div>
+        <div class="row-end" style="justify-content:flex-start;margin:6px 0"><button class="btn o sm" type="button" id="u-clr" style="display:none">Hapus yang gagal / duplikat dari daftar</button></div>
         <ul class="al-files" id="u-list"></ul>
         <div class="row-end"><button class="btn o" type="button" data-close>Tutup</button><button class="btn" type="button" id="u-go" disabled>Unggah</button></div>`;
         const files = []; let GK = opt.group || "";
@@ -167,8 +168,9 @@
           fillCats(); drawFields(); revalidate();
         };
         const draw = () => {
-          $("#u-list").innerHTML = files.map((f, i) => `<li class="al-f ${f.st || ""}"><span class="n">${esc(f.file.name)}</span><span class="s">${fmtSize(f.file.size)}</span><span class="m">${esc(f.msg || "Menunggu")}</span>${f.st ? "" : `<button type="button" class="btn o sm" data-rm="${i}" aria-label="Hapus dari daftar">×</button>`}</li>`).join("");
+          $("#u-list").innerHTML = files.map((f, i) => `<li class="al-f ${f.st || ""}"><span class="n">${esc(f.file.name)}</span><span class="s">${fmtSize(f.file.size)}</span><span class="m">${esc(f.msg || "Menunggu")}</span>${f.st === "ok" || f.st === "run" ? "" : `<button type="button" class="btn o sm" data-rm="${i}" aria-label="Hapus dari daftar">×</button>`}</li>`).join("");
           $("#u-go").disabled = !files.some(f => !f.st);
+          const nb = files.filter(f => f.st === "bad").length; $("#u-clr").style.display = nb ? "" : "none"; $("#u-clr").textContent = "Hapus " + nb + " file gagal / duplikat dari daftar";
         };
         const add = (list) => { Array.prototype.forEach.call(list, file => { files.push({ file, ext: (file.name.split(".").pop() || "").toLowerCase(), st: "", msg: "" }); }); revalidate(); };
         $("#u-pkg").onchange = () => { GK = ""; drawGroups(); };
@@ -180,6 +182,7 @@
         ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("on"); }));
         ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("on"); }));
         drop.addEventListener("drop", e => add(e.dataTransfer.files));
+        $("#u-clr").onclick = () => { for (let i = files.length - 1; i >= 0; i--) if (files[i].st === "bad") files.splice(i, 1); draw(); };
         $("#u-list").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { files.splice(Number(b.dataset.rm), 1); draw(); } };
         dl.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) dl.close(); });
         const created = [];
