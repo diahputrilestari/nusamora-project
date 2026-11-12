@@ -114,7 +114,15 @@
     "masinis": "little-train",
     "stasiun": "little-train",
     "lokomotif": "little-train",
-    "petualangan-kereta": "little-train"
+    "petualangan-kereta": "little-train",
+    "roket": "little-rocket",
+    "rocket": "little-rocket",
+    "astronot": "little-rocket",
+    "antariksa": "little-rocket",
+    "angkasa": "little-rocket",
+    "space": "little-rocket",
+    "penjelajah-roket": "little-rocket",
+    "luar-angkasa": "little-rocket"
   },
   "themes": [
     {
@@ -617,6 +625,20 @@
       "swatch": [
         "#7A1F2B",
         "#F0C24B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-rocket",
+      "name": "Little Rocket Explorer",
+      "description": "Pesta ulang tahun penjelajah roket: panggung podium berlampu dengan peluncuran roket, bulan, dan observatorium di langit berbintang, serta karakter chibi astronot, penjelajah, dan kru antariksa berseragam biru tua-oranye.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#232B7A",
+        "#F4C542"
       ],
       "art": true
     }

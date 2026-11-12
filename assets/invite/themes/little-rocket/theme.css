@@ -1,0 +1,21 @@
+/* Little Rocket Explorer: ukuran ilustrasi & sentuhan biru malam-emas */
+.th-little-rocket .ulos-dec { width: min(150px, 46vw); }
+.th-little-rocket .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-rocket .gf-amp { width: min(160px, 48vw); }
+.th-little-rocket .ws-bk { width: min(150px, 46vw); }
+.th-little-rocket .ev-lt { width: 30px; }
+.th-little-rocket .rs-lt { width: 54px; top: -30px; }
+.th-little-rocket .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-rocket .gable .art { height: 26px; }
+.th-little-rocket .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-rocket .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-rocket .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-rocket .end-art .eg { filter: drop-shadow(0 18px 28px rgba(18, 20, 70, .4)); }
+.th-little-rocket .deep .eb { color: #EAF0FF; }
+.th-little-rocket .cv-nm, .th-little-rocket .hero-nm, .th-little-rocket .end-nm { text-shadow: 0 2px 0 rgba(18, 20, 70, .5), 0 0 18px rgba(255, 226, 140, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-rocket .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(18, 20, 70, .58), rgba(18, 20, 70, .3) 62%, rgba(18, 20, 70, .06) 84%), linear-gradient(180deg, rgba(18, 20, 70, .06), rgba(18, 20, 70, .5)); }
+.th-little-rocket .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-rocket .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-rocket .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(18, 20, 70, .9); }
