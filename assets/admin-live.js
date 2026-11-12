@@ -138,7 +138,7 @@
     function decorHtml(v, dis) {
       var dc = (v && v.decor) || {};
       return '<div class="full"><h3 class="lg-sec">Dekor tema (gambar transparan per objek)</h3><p class="sub">Isi URL gambar PNG/WebP transparan (https:// atau /, maks. 4 MB, harus mengizinkan CORS; Asset Library sudah memenuhi). Slot kosong memakai dekor bawaan. Posisi objek diatur template. Pastikan gambar berlisensi milik penyelenggara.</p></div>' +
-        DC_SLOT.map(function (s) { return '<label class="fld"><span>' + s[1] + '</span><input name="d_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc((dc[s[0]] && dc[s[0]].url) || "") + '"' + dis + "></label>"; }).join("");
+        DC_SLOT.map(function (s) { return '<label class="fld"><span>' + s[1] + '</span><input name="d_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc((dc[s[0]] && dc[s[0]].url) || "") + '"' + dis + '><input name="dw_' + s[0] + '" type="number" step="0.1" min="0.3" max="20" placeholder="lebar" title="Lebar objek (opsional, satuan dunia 3D)" style="max-width:90px" value="' + esc((dc[s[0]] && dc[s[0]].w) || "") + '"' + dis + '><input name="dx_' + s[0] + '" type="number" step="0.1" min="-19" max="19" placeholder="x" title="Posisi kiri(-)/kanan(+), kosongkan = posisi bawaan" style="max-width:70px" value="' + esc(dc[s[0]] && typeof dc[s[0]].x === "number" ? dc[s[0]].x : "") + '"' + dis + '><input name="dz_' + s[0] + '" type="number" step="0.1" min="-27.5" max="12" placeholder="z" title="Jarak: panggung(-) sampai depan(+)" style="max-width:70px" value="' + esc(dc[s[0]] && typeof dc[s[0]].z === "number" ? dc[s[0]].z : "") + '"' + dis + '><label title="Salin cermin di sisi seberang"><input type="checkbox" name="dm_' + s[0] + '"' + (dc[s[0]] && dc[s[0]].mirror ? " checked" : "") + dis + "> cermin</span></label>"; }).join("");
     }
     /* Avatar tamu bertema (gambar karakter): slot av_l1..5 (laki-laki) & av_p1..5 (perempuan), URL + nama; disimpan di kolom decor yang sama. */
     var AV_SLOT = []; [["l", "Laki-laki"], ["p", "Perempuan"]].forEach(function (g) { for (var i = 1; i <= 5; i++) AV_SLOT.push(["av_" + g[0] + i, g[1] + " " + i]); }); AV_SLOT.push(["av_host", "yang berulang tahun (panggung)"]);
@@ -148,7 +148,7 @@
         AV_SLOT.map(function (s) { var d = dc[s[0]] || {}; return '<label class="fld"><span>Avatar ' + s[1] + '</span><input name="av_' + s[0] + '" maxlength="500" placeholder="https://..." value="' + esc(d.url || "") + '"' + dis + '><input name="avn_' + s[0] + '" maxlength="24" placeholder="Nama pilihan" value="' + esc(d.name || "") + '"' + dis + "></label>"; }).join("");
     }
     function decorCollect(f) {
-      var o = {}, n = 0; DC_SLOT.forEach(function (s) { var u = f["d_" + s[0]].value.trim(); if (u) { o[s[0]] = { url: u }; n++; } });
+      var o = {}, n = 0; DC_SLOT.forEach(function (s) { var u = f["d_" + s[0]].value.trim(); if (u) { var w = Number(f["dw_" + s[0]].value); var e = { url: u }; if (w >= 0.3 && w <= 20) e.w = w; var xs = f["dx_" + s[0]].value.trim(), zs = f["dz_" + s[0]].value.trim(); if (xs !== "" && zs !== "" && isFinite(xs) && isFinite(zs)) { e.x = Number(xs); e.z = Number(zs); if (f["dm_" + s[0]].checked) e.mirror = true; } o[s[0]] = e; n++; } });
       AV_SLOT.forEach(function (s) { var u = f["av_" + s[0]].value.trim(), nm = f["avn_" + s[0]].value.trim(); if (u) { o[s[0]] = nm ? { url: u, name: nm } : { url: u }; n++; } });
       return n ? o : null;
     }

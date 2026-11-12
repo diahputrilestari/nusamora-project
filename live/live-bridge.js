@@ -169,7 +169,7 @@
       var have = {}, grp = new THREE.Group(); grp.name = "nm-decor"; ok.forEach(function (r) { have[r.k] = 1; });
       ok.forEach(function (r) {
         var L = DECOR[r.k], w = Number(dc[r.k].w) > 0 ? Number(dc[r.k].w) : L[0], h = w * r.cv.height / r.cv.width, tex = new THREE.CanvasTexture(r.cv);
-        L[1].forEach(function (p) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.04 })); sp.center.set(0.5, 0); sp.scale.set(w, h, 1); sp.position.set(p[0], 0, p[1]); sp.name = "nm-decor-" + r.k; grp.add(sp); });
+        var pos = typeof dc[r.k].x === "number" && typeof dc[r.k].z === "number" ? (dc[r.k].mirror ? [[dc[r.k].x, dc[r.k].z], [-dc[r.k].x, dc[r.k].z]] : [[dc[r.k].x, dc[r.k].z]]) : L[1]; pos.forEach(function (p) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.04 })); sp.center.set(0.5, 0); sp.scale.set(w, h, 1); sp.position.set(p[0], 0, p[1]); sp.name = "nm-decor-" + r.k; grp.add(sp); });
       });
       Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
       /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
