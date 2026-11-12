@@ -1,0 +1,21 @@
+/* Little Pilot: ukuran ilustrasi & sentuhan biru-emas */
+.th-little-pilot .ulos-dec { width: min(150px, 46vw); }
+.th-little-pilot .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-pilot .gf-amp { width: min(160px, 48vw); }
+.th-little-pilot .ws-bk { width: min(150px, 46vw); }
+.th-little-pilot .ev-lt { width: 30px; }
+.th-little-pilot .rs-lt { width: 54px; top: -30px; }
+.th-little-pilot .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-pilot .gable .art { height: 26px; }
+.th-little-pilot .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-pilot .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-pilot .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-pilot .end-art .eg { filter: drop-shadow(0 18px 28px rgba(20, 35, 90, .4)); }
+.th-little-pilot .deep .eb { color: #EAF0FF; }
+.th-little-pilot .cv-nm, .th-little-pilot .hero-nm, .th-little-pilot .end-nm { text-shadow: 0 2px 0 rgba(20, 35, 90, .5), 0 0 18px rgba(255, 226, 140, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-pilot .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(20, 35, 90, .58), rgba(20, 35, 90, .3) 62%, rgba(20, 35, 90, .06) 84%), linear-gradient(180deg, rgba(20, 35, 90, .06), rgba(20, 35, 90, .5)); }
+.th-little-pilot .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-pilot .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-pilot .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(20, 35, 90, .9); }

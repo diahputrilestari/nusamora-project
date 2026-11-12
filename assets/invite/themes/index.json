@@ -99,7 +99,15 @@
     "pemadam-kebakaran": "little-firefighter",
     "kebakaran": "little-firefighter",
     "fireman": "little-firefighter",
-    "pos-damkar": "little-firefighter"
+    "pos-damkar": "little-firefighter",
+    "pilot": "little-pilot",
+    "pesawat": "little-pilot",
+    "bandara": "little-pilot",
+    "airport": "little-pilot",
+    "penerbang": "little-pilot",
+    "aviator": "little-pilot",
+    "pramugari": "little-pilot",
+    "terbang": "little-pilot"
   },
   "themes": [
     {
@@ -574,6 +582,20 @@
       "swatch": [
         "#9E1220",
         "#FFC93C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pilot",
+      "name": "Little Pilot",
+      "description": "Pesta ulang tahun little pilot: panggung podium berlampu biru-emas dengan landasan bandara, pesawat, dan menara kontrol, awan-awan lembut, serta karakter chibi pilot, pramugari, dan kru bandara berseragam biru tua.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3C88",
+        "#F4C542"
       ],
       "art": true
     }

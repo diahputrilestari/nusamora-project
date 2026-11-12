@@ -1,0 +1,139 @@
+{
+  "id": "little-pilot",
+  "name": "Little Pilot",
+  "version": 1,
+  "description": "Pesta ulang tahun little pilot: panggung podium berlampu biru-emas dengan landasan bandara, pesawat, dan menara kontrol, awan-awan lembut, serta karakter chibi pilot, pramugari, dan kru bandara berseragam biru tua.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Pilot Kecil",
+    "full": "Kenzo Alvaro Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#1F3C88",
+    "deep2": "#3D63C9",
+    "paper": "#F7FAFF",
+    "soft": "#E3ECFB",
+    "ink": "#1B2440",
+    "muted": "#5D6B8C",
+    "accent": "#D9A400",
+    "accent2": "#F4C542",
+    "petal": "#CFE0FF",
+    "heading": "#1F3C88"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Pilot Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si pilot cilik kami",
+    "profileTitle": "Si Pilot Kecil",
+    "countdownEyebrow": "Lepas landas dalam",
+    "countdownTitle": "Menuju Hari Terbang",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Bandara Awan",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Pilot",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Terbang",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Terbang, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta little pilot si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Penerbangan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Bandara",
+    "closingEyebrow": "Sampai jumpa di bandara!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta little pilot!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/pl-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/pl-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/globe.webp",
+    "figureBride": "art/pl-2.webp",
+    "figureGroom": "art/pl-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/pl-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/pl-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/pl-1.webp",
+      "art/pl-2.webp",
+      "art/pl-5.webp",
+      "art/pl-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
