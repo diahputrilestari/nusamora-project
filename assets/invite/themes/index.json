@@ -38,7 +38,9 @@
     "medis": "little-doctor",
     "princess": "little-princess",
     "putri": "little-princess",
-    "cinderella": "little-princess"
+    "cinderella": "little-princess",
+    "swan": "little-swan",
+    "angsa": "little-swan"
   },
   "themes": [
     {
@@ -345,6 +347,20 @@
       "swatch": [
         "#26378A",
         "#F2CE7A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-swan",
+      "name": "Little Swan Princess",
+      "description": "Pesta ulang tahun putri angsa: aula istana merah muda-lavender dengan angsa bermahkota, danau berkilau, lampu kristal, bunga mawar, serta karakter chibi pangeran dan putri bergaun sayap angsa.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5E2F7A",
+        "#F6B7D2"
       ],
       "art": true
     }

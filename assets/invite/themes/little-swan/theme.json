@@ -1,0 +1,134 @@
+{
+  "id": "little-swan",
+  "name": "Little Swan Princess",
+  "version": 1,
+  "description": "Pesta ulang tahun putri angsa: aula istana merah muda-lavender dengan angsa bermahkota, danau berkilau, lampu kristal, bunga mawar, serta karakter chibi pangeran dan putri bergaun sayap angsa.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Kirana",
+    "full": "Kirana Putri Wijaya",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#5E2F7A",
+    "deep2": "#8E55B5",
+    "paper": "#FFF9FC",
+    "soft": "#F8E8F1",
+    "ink": "#3E2448",
+    "muted": "#86708F",
+    "accent": "#A67A1E",
+    "accent2": "#F7D68A",
+    "petal": "#F6B7D2",
+    "heading": "#5E2F7A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Swan Princess",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Putri angsa kami",
+    "profileTitle": "Sang Putri Angsa",
+    "countdownEyebrow": "Pesta di tepi danau dimulai dalam",
+    "countdownTitle": "Menuju Pesta Putri",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana Angsa",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Putri Angsa",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Istana",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Pesta Putri, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta putri angsa ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Istana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Istana",
+    "closingEyebrow": "Sampai jumpa di istana angsa!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang putri angsa. Kami tunggu kehadiranmu di pesta istana!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/swan-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado-angsa.webp",
+        "w": 100
+      },
+      {
+        "src": "art/swan-2.webp",
+        "w": 76
+      }
+    ],
+    "introTop": "art/lemari-sepatu.webp",
+    "figureBride": "art/swan-6.webp",
+    "figureGroom": "art/swan-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/swan-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/swan-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado-angsa.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/swan-1.webp",
+      "art/swan-2.webp",
+      "art/swan-5.webp",
+      "art/swan-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
