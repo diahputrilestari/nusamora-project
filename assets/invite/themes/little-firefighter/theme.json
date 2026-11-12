@@ -1,0 +1,139 @@
+{
+  "id": "little-firefighter",
+  "name": "Little Firefighter",
+  "version": 1,
+  "description": "Pesta ulang tahun little firefighter: panggung podium berlampu dengan pos pemadam, truk damkar dan helikopter, hidran, serta karakter chibi pemadam kebakaran berhelm dan seragam merah-kuning.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Damkar Kecil",
+    "full": "Rafael Aditya Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#9E1220",
+    "deep2": "#D8281E",
+    "paper": "#FFFAF0",
+    "soft": "#FBE8D2",
+    "ink": "#2B1B1B",
+    "muted": "#7A6258",
+    "accent": "#E7A500",
+    "accent2": "#FFC93C",
+    "petal": "#FFC93C",
+    "heading": "#9E1220"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Firefighter Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si pemadam cilik kami",
+    "profileTitle": "Si Pemadam Kecil",
+    "countdownEyebrow": "Sirene berbunyi dalam",
+    "countdownTitle": "Menuju Hari Siaga",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Pos Damkar",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Pemadam",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Siaga",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Siap Bergabung, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta little firefighter si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Pahlawan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Pos",
+    "closingEyebrow": "Sampai jumpa di pos pemadam!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta little firefighter!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/ff-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/ff-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/hidran.webp",
+    "figureBride": "art/ff-2.webp",
+    "figureGroom": "art/ff-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/ff-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/ff-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/ff-1.webp",
+      "art/ff-2.webp",
+      "art/ff-5.webp",
+      "art/ff-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

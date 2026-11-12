@@ -92,7 +92,14 @@
     "alat-berat": "little-construction",
     "ekskavator": "little-construction",
     "excavator": "little-construction",
-    "zona-konstruksi": "little-construction"
+    "zona-konstruksi": "little-construction",
+    "damkar": "little-firefighter",
+    "firefighter": "little-firefighter",
+    "pemadam": "little-firefighter",
+    "pemadam-kebakaran": "little-firefighter",
+    "kebakaran": "little-firefighter",
+    "fireman": "little-firefighter",
+    "pos-damkar": "little-firefighter"
   },
   "themes": [
     {
@@ -553,6 +560,20 @@
       "swatch": [
         "#33353B",
         "#FFD21F"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-firefighter",
+      "name": "Little Firefighter",
+      "description": "Pesta ulang tahun little firefighter: panggung podium berlampu dengan pos pemadam, truk damkar dan helikopter, hidran, serta karakter chibi pemadam kebakaran berhelm dan seragam merah-kuning.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#9E1220",
+        "#FFC93C"
       ],
       "art": true
     }
