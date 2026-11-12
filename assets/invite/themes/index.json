@@ -84,7 +84,15 @@
     "patroli": "little-police",
     "polisi-patroli": "little-police",
     "polantas": "little-police",
-    "satpam": "little-police"
+    "satpam": "little-police",
+    "konstruksi": "little-construction",
+    "construction": "little-construction",
+    "proyek": "little-construction",
+    "bangunan": "little-construction",
+    "alat-berat": "little-construction",
+    "ekskavator": "little-construction",
+    "excavator": "little-construction",
+    "zona-konstruksi": "little-construction"
   },
   "themes": [
     {
@@ -531,6 +539,20 @@
       "swatch": [
         "#1B2A6B",
         "#F5C842"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-construction",
+      "name": "Little Construction Zone",
+      "description": "Pesta ulang tahun zona konstruksi: panggung podium berlampu kuning-hitam dengan derek, ekskavator, dan truk, tenda proyek, rambu alat berat, serta karakter chibi pekerja bangunan berhelm dan rompi safety.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#33353B",
+        "#FFD21F"
       ],
       "art": true
     }

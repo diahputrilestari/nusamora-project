@@ -1,0 +1,21 @@
+/* Little Construction Zone: ukuran ilustrasi & sentuhan kuning-hitam */
+.th-little-construction .ulos-dec { width: min(150px, 46vw); }
+.th-little-construction .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-construction .gf-amp { width: min(160px, 48vw); }
+.th-little-construction .ws-bk { width: min(150px, 46vw); }
+.th-little-construction .ev-lt { width: 30px; }
+.th-little-construction .rs-lt { width: 54px; top: -30px; }
+.th-little-construction .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-construction .gable .art { height: 26px; }
+.th-little-construction .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-construction .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-construction .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-construction .end-art .eg { filter: drop-shadow(0 18px 28px rgba(30, 26, 10, .4)); }
+.th-little-construction .deep .eb { color: #FFF1B8; }
+.th-little-construction .cv-nm, .th-little-construction .hero-nm, .th-little-construction .end-nm { text-shadow: 0 2px 0 rgba(30, 26, 10, .5), 0 0 18px rgba(255, 210, 60, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-construction .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(30, 26, 10, .58), rgba(30, 26, 10, .3) 62%, rgba(30, 26, 10, .06) 84%), linear-gradient(180deg, rgba(30, 26, 10, .06), rgba(30, 26, 10, .5)); }
+.th-little-construction .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-construction .cv-eb { color: #FFF1B8; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-construction .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(30, 26, 10, .9); }
