@@ -1,0 +1,139 @@
+{
+  "id": "little-baseball",
+  "name": "Baseball League",
+  "version": 1,
+  "description": "Pesta ulang tahun baseball league: panggung podium berlampu dengan lencana bola dan tongkat, lapangan, papan skor, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-merah.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Juara Kecil",
+    "full": "Bima Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "6"
+  },
+  "colors": {
+    "deep": "#1C2F6B",
+    "deep2": "#3A5BB0",
+    "paper": "#FBF8F0",
+    "soft": "#EAEDF6",
+    "ink": "#17203F",
+    "muted": "#5A6285",
+    "accent": "#C8312B",
+    "accent2": "#E8B84A",
+    "petal": "#E8B84A",
+    "heading": "#1C2F6B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Baseball League Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si pemain andalan kami",
+    "profileTitle": "Si Juara Kecil",
+    "countdownEyebrow": "Pertandingan dimulai dalam",
+    "countdownTitle": "Menuju Hari Pertandingan",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Pesta di Stadion",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Juara",
+    "galleryEyebrow": "Momen istimewa",
+    "galleryTitle": "Galeri Lapangan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Bertanding, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta baseball league si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Sang Juara",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Stadion",
+    "closingEyebrow": "Sampai jumpa di stadion!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta baseball league!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/bb-6.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/bb-3.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/papan-skor.webp",
+    "figureBride": "art/bb-2.webp",
+    "figureGroom": "art/bb-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/bb-4.webp",
+        "w": 66
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/bb-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/bb-1.webp",
+      "art/bb-2.webp",
+      "art/bb-5.webp",
+      "art/bb-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

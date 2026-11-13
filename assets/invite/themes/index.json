@@ -135,7 +135,14 @@
     "ternak": "little-farm",
     "lumbung": "little-farm",
     "sapi": "little-farm",
-    "little-farm": "little-farm"
+    "little-farm": "little-farm",
+    "baseball": "little-baseball",
+    "baseball-league": "little-baseball",
+    "bisbol": "little-baseball",
+    "softball": "little-baseball",
+    "basebal": "little-baseball",
+    "liga-baseball": "little-baseball",
+    "little-baseball": "little-baseball"
   },
   "themes": [
     {
@@ -680,6 +687,20 @@
       "swatch": [
         "#B5322A",
         "#F3C24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-baseball",
+      "name": "Baseball League",
+      "description": "Pesta ulang tahun baseball league: panggung podium berlampu dengan lencana bola dan tongkat, lapangan, papan skor, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-merah.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1C2F6B",
+        "#C8312B"
       ],
       "art": true
     }
