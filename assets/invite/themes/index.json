@@ -126,7 +126,16 @@
     "dino-friends": "little-dino",
     "dinofriends": "little-dino",
     "dinosaurus-friends": "little-dino",
-    "little-dino": "little-dino"
+    "little-dino": "little-dino",
+    "farm": "little-farm",
+    "farm-friends": "little-farm",
+    "peternakan": "little-farm",
+    "petani": "little-farm",
+    "kebun": "little-farm",
+    "ternak": "little-farm",
+    "lumbung": "little-farm",
+    "sapi": "little-farm",
+    "little-farm": "little-farm"
   },
   "themes": [
     {
@@ -657,6 +666,20 @@
       "swatch": [
         "#3E7A2E",
         "#F6B84B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-farm",
+      "name": "Little Farm Friends",
+      "description": "Pesta ulang tahun peternakan: panggung lumbung merah berlampu dengan bendera kotak-kotak, jerami, kincir angin, dan padang rumput, serta karakter chibi petani cilik berkostum overall, topi jerami, dan sapi.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B5322A",
+        "#F3C24A"
       ],
       "art": true
     }
