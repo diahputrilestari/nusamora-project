@@ -207,7 +207,12 @@
     "cream": "little-beige",
     "beige-gold": "little-beige",
     "elegan": "little-beige",
-    "little-beige": "little-beige"
+    "little-beige": "little-beige",
+    "luxury": "little-luxury",
+    "luxury-maroon": "little-luxury",
+    "mewah": "little-luxury",
+    "maroon-mewah": "little-luxury",
+    "little-luxury": "little-luxury"
   },
   "themes": [
     {
@@ -868,6 +873,21 @@
       "swatch": [
         "#6B4A2B",
         "#F0D08A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-luxury",
+      "name": "Luxury Maroon Wedding",
+      "description": "Pernikahan mewah maroon-emas: aula marmer berkarpet merah dengan tirai beludru, lampu kristal, dan rangkaian mawar, serta pengantin chibi berbusana maroon bersulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6E0F22",
+        "#F6D27A"
       ],
       "art": true
     },
