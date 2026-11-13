@@ -5,11 +5,11 @@
 <p>Memuat undangan 3D…</p>
 <script>
 // /assets-signature/invite/index?demo=1&theme=<id> → memilih build tema (satu folder per tema)
-var THEMES = { 'minang-royal': 1, 'keraton-jawa': 1, 'betawi-heritage': 1, 'dusk-flower-garden': 1, 'golden-hour-estate': 1, 'chinese-imperial': 1, 'korean-royal': 1, 'bali-royal': 1, 'sundanese-royal': 1 }
+var THEMES = { 'minang-royal': 1, 'keraton-jawa': 1, 'betawi-heritage': 1, 'dusk-flower-garden': 1, 'golden-hour-estate': 1, 'chinese-imperial': 1, 'korean-royal': 1, 'bali-royal': 1, 'sundanese-royal': 1, 'bugis-makassar-royal': 1 }
 var q = new URLSearchParams(location.search)
 var t = q.get('theme')
 if (!THEMES[t]) t = 'minang-royal'
 location.replace('./' + t + '/' + (location.search || '') + location.hash)
 </script>
-<noscript><p><a href="minang-royal/">Tema Minangkabau</a> · <a href="keraton-jawa/">Tema Keraton Jawa</a> · <a href="betawi-heritage/">Tema Betawi</a> · <a href="dusk-flower-garden/">Taman Bunga Senja</a> · <a href="golden-hour-estate/">Golden Hour Estate</a> · <a href="chinese-imperial/">Chinese Imperial</a> · <a href="korean-royal/">Korean Royal</a> · <a href="bali-royal/">Bali Royal</a>  · <a href="sundanese-royal/">Sundanese Royal</a></p></noscript>
+<noscript><p><a href="minang-royal/">Tema Minangkabau</a> · <a href="keraton-jawa/">Tema Keraton Jawa</a> · <a href="betawi-heritage/">Tema Betawi</a> · <a href="dusk-flower-garden/">Taman Bunga Senja</a> · <a href="golden-hour-estate/">Golden Hour Estate</a> · <a href="chinese-imperial/">Chinese Imperial</a> · <a href="korean-royal/">Korean Royal</a> · <a href="bali-royal/">Bali Royal</a>  · <a href="sundanese-royal/">Sundanese Royal</a>  · <a href="bugis-makassar-royal/">Bugis-Makassar Royal</a></p></noscript>
 </html>
