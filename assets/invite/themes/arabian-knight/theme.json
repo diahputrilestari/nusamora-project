@@ -1,0 +1,115 @@
+{
+  "id": "arabian-knight",
+  "name": "Arabian Knight Wedding",
+  "version": 1,
+  "description": "Pernikahan malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta pengantin chibi berbusana ungu-emas.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#4A1A66",
+    "deep2": "#7A2E94",
+    "paper": "#FFFAF2",
+    "soft": "#F7E8EE",
+    "ink": "#341A44",
+    "muted": "#80608F",
+    "accent": "#B8860B",
+    "accent2": "#FFD27A",
+    "petal": "#E9A8E0",
+    "heading": "#4A1A66"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Arabian Wedding of",
+    "coupleEyebrow": "Pengantin · Malam Arabia",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Syukran · Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/ak-groom.webp",
+        "w": 70
+      },
+      {
+        "src": "art/guest-book.webp",
+        "w": 112
+      },
+      {
+        "src": "art/ak-bride.webp",
+        "w": 70
+      }
+    ],
+    "introTop": "art/istana-air.webp",
+    "figureBride": "art/ak-bride.webp",
+    "figureGroom": "art/ak-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/kado.webp",
+        "w": 84
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 124
+      },
+      {
+        "src": "art/piala.webp",
+        "w": 76
+      }
+    ],
+    "eventBadge": "art/kedai-minum.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/panggung-tirai.webp",
+    "closingFigures": [
+      "art/ak-groom.webp",
+      "art/ak-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

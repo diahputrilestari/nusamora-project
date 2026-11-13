@@ -164,7 +164,12 @@
     "bajaklaut": "little-pirates",
     "kapten": "little-pirates",
     "little-pirates": "little-pirates",
-    "harta-karun": "little-pirates"
+    "harta-karun": "little-pirates",
+    "arabian-knight": "arabian-knight",
+    "arab-wedding": "arabian-knight",
+    "arabian-night": "arabian-knight",
+    "pernikahan-arab": "arabian-knight",
+    "ksatria-arab": "arabian-knight"
   },
   "themes": [
     {
@@ -765,6 +770,21 @@
       "swatch": [
         "#7A1F1B",
         "#F2C14E"
+      ],
+      "art": true
+    },
+    {
+      "id": "arabian-knight",
+      "name": "Arabian Knight Wedding",
+      "description": "Pernikahan malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta pengantin chibi berbusana ungu-emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A1A66",
+        "#FFD27A"
       ],
       "art": true
     }
