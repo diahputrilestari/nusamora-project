@@ -28,6 +28,8 @@ do $$ declare ok1 boolean; begin
   -- admin-live-theme-hackathon.sql: venue event valid, nonaktif
   if not exists (select 1 from public.live_venues where key = 'hackathon' and event_type = 'corporate' and not active and public.live_theme_ok(nm_theme)) then raise exception 'venue hackathon tidak ada / tema tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'hackathon' and (select count(*) from jsonb_array_elements(areas) x where (x ->> 'enabled')::boolean) = 6) then raise exception 'venue hackathon: menu area harus valid dengan 6 area aktif'; end if;
+  -- admin-live-theme-kpop-birthday.sql: venue event valid, nonaktif, 6 area aktif
+  if not exists (select 1 from public.live_venues where key = 'kpop-birthday' and event_type = 'corporate' and not active and public.live_theme_ok(nm_theme) and (select count(*) from jsonb_array_elements(areas) x where (x ->> 'enabled')::boolean) = 6) then raise exception 'venue kpop-birthday tidak valid / area menu salah'; end if;
   -- admin-live-decor-avatars.sql: slot avatar tamu (url + nama), slot lama tetap sah
   if not public.live_decor_ok('{"av_l1":{"url":"https://x.test/a.webp","name":"Prajurit Perisai"},"av_p3":{"url":"/a.png"},"fountain":{"url":"https://x.test/f.png","x":8.5,"z":3,"mirror":true},"av_host":{"url":"https://x.test/h.webp","name":"Alya"},"table":{"url":"https://x.test/t.png","w":3}}') then raise exception 'avatar valid ditolak'; end if;
   if public.live_decor_ok('{"av_l6":{"url":"https://x.test/a.png"}}') or public.live_decor_ok('{"av_x1":{"url":"https://x.test/a.png"}}') or public.live_decor_ok('{"av_l1":{"url":"https://x.test/a.png","w":2}}')
