@@ -44,6 +44,14 @@ $$;
 revoke all on function public.mfa_ok(uuid, text) from public, anon, authenticated;
 grant execute on function public.mfa_ok(uuid, text) to service_role;
 
+-- admin_gate() (pemeriksaan sesi admin) didefinisikan sebenarnya di admin-roles.sql; stub ini hanya agar urutan file tidak jadi masalah.
+do $$ begin
+  if to_regprocedure('public.admin_gate()') is null then
+    execute 'create function public.admin_gate() returns boolean language sql stable as ''select true''';
+    execute 'revoke all on function public.admin_gate() from public, anon, authenticated';
+  end if;
+end $$;
+
 ----------------------------------------------------------------------------- 2. has_perm (JWT) & has_perm_session (Edge Function)
 create or replace function public.has_perm(p text) returns boolean
 language sql stable security definer set search_path = public as $$
@@ -51,7 +59,7 @@ language sql stable security definer set search_path = public as $$
     select 1 from public.admin_users a
     where a.user_id = auth.uid() and a.active
       and (a.role = 'super_admin' or exists (select 1 from public.role_permissions r where r.role = a.role and r.permission = p))
-  ) and public.mfa_ok(auth.uid(), coalesce(auth.jwt()->>'aal', ''));
+  ) and public.mfa_ok(auth.uid(), coalesce(auth.jwt()->>'aal', '')) and public.admin_gate();
 $$;
 grant execute on function public.has_perm(text) to anon, authenticated;
 

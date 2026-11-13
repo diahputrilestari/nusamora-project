@@ -1,0 +1,140 @@
+{
+  "id": "metal-rock",
+  "name": "Metal Rock Party",
+  "version": 1,
+  "description": "Pesta ulang tahun bergaya konser metal rock: panggung neon merah, gitar listrik, drum, ampli, tengkorak bersayap, mahkota krom, dan percikan petir.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Aisha",
+    "full": "Aisha Naura Pratiwi",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "17"
+  },
+  "colors": {
+    "deep": "#0D0609",
+    "deep2": "#2A0911",
+    "paper": "#17101A",
+    "soft": "#1F1520",
+    "ink": "#F2EBEE",
+    "muted": "#B5A2AC",
+    "accent": "#E3243A",
+    "accent2": "#D9DBE0",
+    "petal": "#FF3B4E",
+    "onDeep": "#F5EFF1",
+    "surface": "#251A22",
+    "btnBg": "#C8192E",
+    "toastBg": "#F2EBEE",
+    "toastFg": "#14090D",
+    "ok": "#7EE2A0",
+    "err": "#FF8A80",
+    "heading": "#F1F2F5"
+  },
+  "fonts": {
+    "script": "Metal Mania",
+    "serif": "Oswald",
+    "sans": "Barlow"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "art/bintang.webp"
+    ],
+    "petalCount": 12
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Metal Rock Birthday Party",
+    "guestSalute": "Para rocker tersayang",
+    "profileEyebrow": "The birthday rockstar",
+    "profileTitle": "Rock Star",
+    "countdownEyebrow": "Konser dimulai dalam",
+    "countdownTitle": "Countdown to Rock",
+    "eventsEyebrow": "Line-up acara",
+    "eventsTitle": "The Show",
+    "storyEyebrow": "Setlist perjalanan",
+    "storyTitle": "My Story",
+    "galleryTitle": "Backstage",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Get Your Ticket",
+    "rsvpLead": "Amankan tempatmu di depan panggung. Kabari kami apakah kamu bisa datang!",
+    "giftEyebrow": "Tanda kasih",
+    "giftTitle": "Kado Spesial",
+    "giftLead": "Kehadiranmu sudah jadi kado terbaik. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Ucapan & doa",
+    "wishesTitle": "Shout Out",
+    "closingEyebrow": "Sampai jumpa di panggung!",
+    "closingText": "Terima kasih sudah jadi bagian dari malam istimewa ini. Kami tunggu kehadiranmu di depan panggung!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
+    "coverHang": "art/lentera.webp",
+    "coverGround": [
+      {
+        "src": "art/speaker.webp",
+        "w": 62
+      },
+      {
+        "src": "art/drum.webp",
+        "w": 160
+      },
+      {
+        "src": "art/speaker.webp",
+        "w": 62
+      }
+    ],
+    "heading": "art/petir.webp",
+    "introTop": "art/gitar.webp",
+    "countdownRow": [
+      {
+        "src": "art/lampu-panggung.webp",
+        "w": 56
+      },
+      {
+        "src": "art/ampli.webp",
+        "w": 130
+      },
+      {
+        "src": "art/lampu-panggung.webp",
+        "w": 56
+      }
+    ],
+    "eventBadge": "art/pick-gitar.webp",
+    "storyTop": "art/tengkorak-headphone.webp",
+    "rsvpHang": "art/lentera.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/kursi-takhta.webp"
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

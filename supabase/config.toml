@@ -16,3 +16,12 @@ verify_jwt = false
 
 [functions.asset-url]
 verify_jwt = false
+
+[functions.notify-dispatch]
+verify_jwt = false
+
+[functions.notify-webhook]
+verify_jwt = false
+
+[functions.system-status]
+verify_jwt = false

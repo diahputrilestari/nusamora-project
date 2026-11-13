@@ -1,0 +1,22 @@
+import { handleAssetRegister } from "../../supabase/functions/_shared/assets.ts";
+let pass=0,fail=0; const ok=(n,c)=>{ if(c){pass++;console.log("PASS ",n)}else{fail++;console.log("FAIL ",n)} };
+const PNG=Uint8Array.from(Buffer.from("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d49444154789c6360000002000001e221bc330000000049454e44ae426082","hex"));
+const calls=[], removed=[]; let versionResult={ok:true,asset:{id:"a"},version:2,dimensi_berubah:false};
+const deps=(over={})=>({ env:{allowedOrigins:["https://nusamora.com"],publicBase:"https://cdn.test/"}, async getUser(){return {id:"u1"}}, async download(){return PNG}, async remove(p){removed.push(p)},
+  async rpc(n,a){ calls.push([n,a]); if(n==="rl_hit")return {data:{allowed:true},error:null}; if(n==="has_perm_session")return {data:true,error:null};
+    if(n==="admin_register_asset_version")return {data:versionResult,error:null}; if(n==="admin_register_asset")return {data:{ok:true,asset:{id:"new"}},error:null}; return {data:null,error:null}; }, ...over });
+const rq=(b)=>new Request("https://x/f/asset-register",{method:"POST",headers:{"content-type":"application/json",origin:"https://nusamora.com",authorization:"Bearer t"},body:JSON.stringify(b)});
+const ID="123e4567-e89b-12d3-a456-426614174000";
+let r=await handleAssetRegister(rq({path:"incoming/u1/a.png",replace_asset:ID,note:"warna baru"}),deps()); let j=await r.json();
+const c=calls.filter(x=>x[0]==="admin_register_asset_version");
+ok("ganti versi: memanggil admin_register_asset_version dengan checksum hasil hitung server",r.status===200&&j.version===2&&c.length===1&&c[0][1].p_asset===ID&&/^[0-9a-f]{64}$/.test(c[0][1].p_meta.checksum)&&c[0][1].p_note==="warna baru");
+ok("ganti versi tidak membuat aset baru",!calls.some(x=>x[0]==="admin_register_asset"));
+r=await handleAssetRegister(rq({path:"incoming/u1/b.png",replace_asset:"bukan-uuid"}),deps()); ok("replace_asset tidak valid ditolak 400 dan file dibersihkan",r.status===400&&removed.includes("incoming/u1/b.png"));
+versionResult={ok:false,error:"tipe_berbeda",expected:"webp"}; removed.length=0;
+r=await handleAssetRegister(rq({path:"incoming/u1/c.png",replace_asset:ID}),deps()); j=await r.json();
+ok("tipe berbeda: 422, pesan jelas, file hasil unggah dibuang",r.status===422&&j.error==="tipe_berbeda"&&/format sama/.test(j.message)&&removed.includes("incoming/u1/c.png"));
+versionResult={ok:false,error:"duplikat",id:"x",name:"Lain"}; r=await handleAssetRegister(rq({path:"incoming/u1/d.png",replace_asset:ID}),deps()); ok("duplikat dengan aset lain: 409",r.status===409);
+versionResult={ok:false,error:"versi_sudah_ada",version:1}; r=await handleAssetRegister(rq({path:"incoming/u1/e.png",replace_asset:ID}),deps()); j=await r.json(); ok("versi pernah ada: arahkan ke pulihkan (versi 1)",r.status===422&&j.version===1&&/Pulihkan/.test(j.message));
+calls.length=0; r=await handleAssetRegister(rq({path:"incoming/u1/f.png",name:"Biasa",category_id:ID}),deps()); ok("unggah biasa (tanpa replace_asset) tidak berubah",r.status===200&&calls.some(x=>x[0]==="admin_register_asset"));
+r=await handleAssetRegister(rq({path:"incoming/u1/g.png",replace_asset:ID}),deps({rpc:async(n)=>n==="has_perm_session"?{data:false,error:null}:n==="rl_hit"?{data:{allowed:true},error:null}:{data:null,error:null}})); ok("tanpa izin templates.write: 403 sebelum membaca file",r.status===403);
+console.log(`\n${pass} lulus, ${fail} gagal`); process.exit(fail?1:0);

@@ -1,0 +1,10 @@
+/* Korean Royal Wedding: ukuran ilustrasi per slot */
+.th-korean-royal .ulos-dec { width: min(130px, 40vw); }
+.th-korean-royal .st-kf { width: min(230px, 70vw); margin-top: -6px; }
+.th-korean-royal .gf-amp { width: min(150px, 44vw); }
+.th-korean-royal .ws-bk { width: min(200px, 58vw); }
+.th-korean-royal .ev-lt { width: 26px; }
+.th-korean-royal .cv-lt { width: clamp(38px, 9vw, 56px); top: -2px; }
+.th-korean-royal .rs-lt { width: 34px; }
+.th-korean-royal .end-art { width: min(340px, 86%); }
+.th-korean-royal .jb-row { align-items: flex-end; gap: 0; }

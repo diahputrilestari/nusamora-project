@@ -36,8 +36,21 @@
   var CAMN = { orbit: "Orbit", dolly: "Dolly maju", crane: "Crane naik", static: "Statis" }, INTN = { fade: "Fade", zoom: "Zoom", flythrough: "Fly-through" }, PARN = { none: "Tanpa efek", petals: "Kelopak bunga", fireflies: "Kunang-kunang" }, GRN = { warm: "Hangat", cool: "Sejuk", soft: "Lembut" };
 
   /* Template dibaca dari DB dan selalu difilter menurut paket. */
-  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "/preview?demo=" + encodeURIComponent(t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {}, created: t.created_at || "", culture: String(((t.capabilities || {}).culture) || ""), palettes: Array.isArray((t.capabilities || {}).palettes) ? t.capabilities.palettes : [] }; }
-  var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities,created_at";
+  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "/preview?demo=" + encodeURIComponent(t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {}, created: t.created_at || "", themeKey: t.theme_key || "", culture: String(((t.capabilities || {}).culture) || ""), palettes: Array.isArray((t.capabilities || {}).palettes) ? t.capabilities.palettes : [] }; }
+  var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities,created_at,theme_key";
+  /* Undangan 2D universal: template Essential dengan capabilities.engine = "universal-2d" dirender oleh /undangan (assets/invite).
+     Daftar tema dibaca dari assets/invite/themes/index.json, jadi menambah tema tidak perlu mengubah file ini. */
+  var T2D = { list: [], ids: {}, aliases: {}, def: "" }, t2dP = null;
+  function loadThemes2D() {
+    return t2dP || (t2dP = fetch("/assets/invite/themes/index.json").then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }).then(function (ix) {
+      T2D.list = (ix.themes || []).filter(function (t) { return /^[a-z0-9-]+$/.test(t.id || ""); }); T2D.aliases = ix.aliases || {}; T2D.def = ix.default || (T2D.list[0] || {}).id || "";
+      T2D.list.forEach(function (t) { T2D.ids[t.id] = t; }); return T2D;
+    }));
+  }
+  function themeId(x) { x = T2D.aliases[x] || x; return x && T2D.ids[x] ? x : ""; }
+  function isEngine(tpl) { return !!(tpl && tpl.caps && tpl.caps.engine === "universal-2d"); }
+  function themeThumb(t) { return "/assets/invite/themes/" + t.id + "/" + (t.thumb || "thumb.webp"); }
+
   function loadTemplates(pkg) { return sb.from("templates").select(TSEL).eq("status", "published").eq("package_type", pkg).order("sort").then(function (r) { return r.error || !r.data ? [] : r.data.map(mapT); }, function () { return []; }); }
   /* Tema (set aset) per template; gagal/belum ada tabel -> tanpa tema, alur lama tetap jalan. */
   function loadThemes(slugs) { if (!slugs.length) return Promise.resolve({}); return sb.rpc("get_template_themes", { p_templates: slugs }).then(function (r) { return r.error || !r.data || typeof r.data !== "object" ? {} : r.data; }, function () { return {}; }); }
@@ -58,7 +71,10 @@
     }).join("");
     return parts ? '<section class="avb card"><h3>Avatar mempelai</h3><div class="avr">' + parts + "</div></section>" : "";
   }
-  function loadPlans() { return sb.from("plans").select("id,name,price,duration_days,gallery_limit,allow_3d,allow_live_guest,features").eq("active", true).order("sort").then(function (r) { return r.data || []; }, function () { return []; }); }
+  function loadPlansLegacy() { return sb.from("plans").select("id,name,price,duration_days,gallery_limit,allow_3d,allow_live_guest,features").eq("active", true).order("sort").then(function (r) { return r.data || []; }, function () { return []; }); }
+  /* harga efektif (termasuk diskon terjadwal) dari server; bila fungsi belum ada, pakai tabel plans seperti sebelumnya */
+  function loadPlans() { try { return Promise.resolve(sb.rpc("public_plans")).then(function (r) { var a = r && r.data; return Array.isArray(a) && a.length ? a : loadPlansLegacy(); }, loadPlansLegacy); } catch (e) { return loadPlansLegacy(); } }
+  function prc(p) { return p.base_price && p.base_price > p.price ? "<s>" + rp(p.base_price) + "</s> " + rp(p.price) : rp(p.price); }
   function rp(n) { return "Rp" + Number(n || 0).toLocaleString("id-ID"); }
 
   /* ================= 1. PILIH PAKET ================= */
@@ -74,7 +90,7 @@
         var th = '<tr><th scope="col">Fitur</th>' + shown.map(function (k) { return '<th scope="col"' + (k === sel ? ' class="on"' : "") + ">" + PK[k].name + "</th>"; }).join("") + "</tr>";
         var yes = '<td class="y"><span aria-hidden="true">\u2713</span><span class="sr">Termasuk</span></td>', no = '<td class="n"><span aria-hidden="true">\u2013</span><span class="sr">Tidak termasuk</span></td>';
         var rows = CMP.map(function (c) { return "<tr><th scope=\"row\">" + esc(c[0]) + "</th>" + shown.map(function (k) { return c[1][PKS.indexOf(k)] ? yes : no; }).join("") + "</tr>"; }).join("");
-        var nums = [["Masa aktif", function (p) { return p.duration_days + " hari"; }], ["Batas galeri foto", function (p) { return p.gallery_limit + " foto"; }], ["Harga", function (p) { return rp(p.price); }]].map(function (n) { return '<tr class="num"><th scope="row">' + n[0] + "</th>" + shown.map(function (k) { return "<td>" + n[1](by[k]) + "</td>"; }).join("") + "</tr>"; }).join("");
+        var nums = [["Masa aktif", function (p) { return p.duration_days + " hari"; }], ["Batas galeri foto", function (p) { return p.gallery_limit + " foto"; }], ["Harga", function (p) { return prc(p); }]].map(function (n) { return '<tr class="num"><th scope="row">' + n[0] + "</th>" + shown.map(function (k) { return "<td>" + n[1](by[k]) + "</td>"; }).join("") + "</tr>"; }).join("");
         return '<section class="cmpw card" aria-labelledby="cmp-h"><h2 id="cmp-h">Bandingkan fitur paket</h2><p class="cmph">Geser tabel ke samping untuk melihat semua paket.</p><div class="cmps" tabindex="0" role="region" aria-labelledby="cmp-h"><table class="cmp"><thead>' + th + "</thead><tbody>" + rows + nums + "</tbody></table></div></section>";
       }
       function info() {
@@ -89,7 +105,7 @@
           '<div class="pkg3" role="radiogroup" aria-label="Pilih paket">' + shown.map(function (k) {
             var p = by[k], m = PK[k], ex = notIn(k);
             return '<div class="pkw"><label class="card pkc' + (k === sel ? " on" : "") + (k === "signature" ? " hot" : "") + '"><input type="radio" name="pk" value="' + k + '"' + (k === sel ? " checked" : "") + '>' + (k === "signature" ? '<span class="ribbon">Paling dipilih</span>' : "") +
-              '<span class="pk-ic">' + m.icon + '</span><h2>' + m.name + '</h2><b class="pk-kind">' + m.kind + '</b><p>' + m.desc + '</p><div class="pk-pr">' + rp(p.price) + "<small> / undangan</small></div><div class=\"pk-du\">Aktif " + p.duration_days + " hari &middot; galeri maks. " + p.gallery_limit + " foto</div><ul>" + m.feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>" +
+              '<span class="pk-ic">' + m.icon + '</span><h2>' + m.name + '</h2><b class="pk-kind">' + m.kind + '</b><p>' + m.desc + '</p><div class="pk-pr">' + prc(p) + "<small> / undangan</small></div>" + (p.discount ? '<div class="pk-du"><b>Promo: ' + esc(p.discount.name) + "</b></div>" : "") + "<div class=\"pk-du\">Aktif " + p.duration_days + " hari &middot; galeri maks. " + p.gallery_limit + " foto</div><ul>" + m.feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul>" +
               (ex.length ? '<div class="pk-no"><b>Tidak termasuk:</b> ' + ex.map(esc).join(", ") + "</div>" : "") + "</label>" +
               (demo[k] ? '<a class="btn o pk-demo" target="_blank" rel="noopener" href="' + esc(demo[k]) + '">Lihat demo ' + m.name + "</a>" : '<span class="btn o pk-demo off" aria-disabled="true">Demo segera hadir</span>') + "</div>";
           }).join("") + "</div>" + cmpTable() + info() + '<div class="acts stk"><a class="btn o" href="/akun#undangan">Batal</a><button class="btn" type="button" id="go">Lanjut dengan paket ' + PK[sel].name + "</button></div></div>";
@@ -258,7 +274,7 @@
   var LAB = { wedding: ["Nama mempelai wanita", "Nama mempelai pria"], engagement: ["Nama calon mempelai wanita", "Nama calon mempelai pria"], birthday: ["Nama yang berulang tahun", ""], graduation: ["Nama wisudawan/wisudawati", ""], aqiqah: ["Nama anak", "Nama orang tua"], seminar: ["Nama acara", "Penyelenggara"], corporate: ["Nama acara", "Perusahaan / penyelenggara"], other: ["Nama acara", "Penyelenggara"] };
   var DEF = { names: { a: "", b: "" }, welcome: "", event: { start: "", end: "", tz: "WIB", venue: "", address: "", maps: "" }, photos: { cover: "", gallery: [] }, avatars: { groom: "", bride: "" }, music: { enabled: true, track: "we-are" }, features: { rsvp: true, guestbook: true, countdown: true, gift: false }, gift: { bank: "", number: "", holder: "" } };
   var COMMON_KEYS = ["names", "welcome", "event", "photos", "avatars", "music", "features", "gift"];
-  var PKEYS = { essential: ["design2d", "texts", "sections"], signature: ["scene", "camera", "anim", "cinematic"], luxe: ["scene", "venue", "live"] };
+  var PKEYS = { essential: ["design2d", "texts", "sections", "couple", "events", "story", "accounts"], signature: ["scene", "camera", "anim", "cinematic"], luxe: ["scene", "venue", "live"] };
   function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); Object.keys(b || {}).forEach(function (k) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = merge(o[k], b[k]); else if (b[k] != null) o[k] = b[k]; }); return o; }
   function get(o, p) { return p.split(".").reduce(function (x, k) { return x && x[k]; }, o); }
   function set(o, p, v) { var ks = p.split("."), last = ks.pop(), t = ks.reduce(function (x, k) { return x[k] || (x[k] = {}); }, o); t[last] = v; }
@@ -287,7 +303,7 @@
     sb.from("invitations").select("id,title,category,template_id,package_type,slug,status,event_date,content,updated_at,moderation,public_url,expires_at,theme_key").eq("id", id).maybeSingle().then(function (r) {
       var inv = r.data;
       if (r.error || !inv) { view.innerHTML = note("Undangan tidak ditemukan", "Undangan ini tidak ada atau bukan milik akun Anda.", '<a class="btn" href="/akun#undangan">Undangan Saya</a>'); return; }
-      return Promise.all([loadTemplate(inv.template_id), loadPlans(), loadAvatarOpts(inv.template_id, inv.theme_key)]).then(function (z) { startEditor(inv, z[0], z[1], z[2]); });
+      return Promise.all([loadTemplate(inv.template_id), loadPlans(), loadAvatarOpts(inv.template_id, inv.theme_key), loadThemes2D()]).then(function (z) { startEditor(inv, z[0], z[1], z[2]); });
     }, function () { view.innerHTML = note("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang halaman."); });
   }
   function startEditor(inv, tpl, plans, avOpts) {
@@ -296,6 +312,11 @@
     var caps = (tpl && tpl.caps) || {}, cat = CATN[inv.category] ? inv.category : "other", lab = LAB[cat], C0 = fullContent(pkg, caps, inv.content), date = inv.event_date || "";
     var locked = !(inv.status === "draft" || inv.status === "aktif") || inv.moderation === "takedown", pend = inv.status === "menunggu_pembayaran";
     var plan = plans.filter(function (p) { return p.id === pkg; })[0], GMAX = plan ? plan.gallery_limit : PK[pkg].gal;
+    var ENG = pkg === "essential" && isEngine(tpl), couple2 = cat === "wedding" || cat === "engagement";
+    if (ENG) {
+      C0 = merge({ event: { name: "" }, photos: { groom: "", bride: "" }, gift: { address: "" }, texts: { quoteSource: "" }, design2d: { theme: "" }, couple: { order: "pria", groom: { full: "", parents: "", ig: "" }, bride: { full: "", parents: "", ig: "" } }, events: [], story: [], accounts: [] }, C0);
+      C0.design2d.theme = themeId(C0.design2d.theme) || themeId(tpl.themeKey) || themeId(tpl.slug) || T2D.def;
+    }
     var dirty = false, busy = false, timer = null, retry = 0, state = "ok", restored = false, BK = "nm:draft:" + inv.id, couple = cat === "wedding" || cat === "engagement";
     try { var bk = JSON.parse(localStorage.getItem(BK) || "null"); if (bk && bk.c && !locked && bk.t > Date.parse(inv.updated_at || 0)) { C0 = fullContent(pkg, caps, bk.c); date = bk.d || ""; restored = true; } } catch (e) {}
     function bkSave() { try { localStorage.setItem(BK, JSON.stringify({ t: Date.now(), c: content(), d: date })); } catch (e) {} }
@@ -308,6 +329,65 @@
     function RNG(label, p, min, max, help) { var v = get(C0, p); return '<div class="f full"><label for="e-' + p + '">' + esc(label) + ' <output id="o-' + p + '">' + esc(v) + '</output></label><input type="range" id="e-' + p + '" data-p="' + p + '" min="' + min + '" max="' + max + '" value="' + esc(v) + '"' + dis() + (help ? "><small>" + esc(help) + "</small>" : ">") + "</div>"; }
     function sec(id, title, sub, body) { return '<section class="card sec acc" id="s-' + id + '" data-s="' + id + '"><h2><button type="button" class="ach" aria-expanded="false" aria-controls="b-' + id + '" data-ac="' + id + '"><span class="asi" aria-hidden="true"></span><span class="att">' + esc(title) + '</span><small class="ast"></small><span class="chev" aria-hidden="true"></span></button></h2><div class="acb" id="b-' + id + '" hidden>' + (sub ? '<p class="sub">' + esc(sub) + "</p>" : "") + body + "</div></section>"; }
     var secs = [], S = function (id, title, sub, body) { secs.push([id, title]); return sec(id, title, sub, body); };
+    /* ---------- undangan 2D universal (engine /undangan): bagian & interaksi tambahan ---------- */
+    function engPh(lbl, p) { var u = get(C0, p) || "", k = p.replace(/\./g, "-"); return '<div class="f full"><label>' + esc(lbl) + '</label><div class="eph" id="ph-' + k + '">' + engPhInner(p) + "</div>" + (locked ? "" : '<label class="drop sm"><b>Pilih foto</b><input type="file" accept="image/png,image/jpeg,image/webp" data-up="' + p + '"></label>') + '<span class="err" id="er-' + k + '"></span></div>'; }
+    function engPhInner(p) { var u = get(C0, p) || ""; return u ? '<img src="' + esc(u) + '" alt="">' + (locked ? "" : '<button type="button" data-rmp="' + p + '" aria-label="Hapus foto">&times;</button>') : "<span>Belum ada foto</span>"; }
+    var REP = {
+      events: { max: 4, t: "Acara", add: "Tambah acara", f: [["name", "Nama acara", { max: 60, ph: "Mis. Resepsi" }], ["date", "Tanggal", { type: "date" }], ["start", "Jam mulai", { type: "time" }], ["end", "Jam selesai", { type: "time" }], ["venue", "Nama lokasi", { full: 1, max: 120 }], ["address", "Alamat", { ta: 1, full: 1, max: 400 }], ["maps", "Tautan Google Maps", { type: "url", full: 1, max: 500, ph: "https://maps.app.goo.gl/..." }]] },
+      story: { max: 8, t: "Cerita", add: "Tambah cerita", f: [["date", "Waktu", { max: 40, ph: "Mis. Agustus 2019" }], ["title", "Judul", { max: 80, ph: "Mis. Pertama Bertemu" }], ["text", "Cerita", { ta: 1, full: 1, max: 600 }], ["photo", "Foto (opsional)", { photo: 1 }]] },
+      accounts: { max: 4, t: "Rekening", add: "Tambah rekening / e-wallet", f: [["bank", "Bank / e-wallet", { max: 40, ph: "Mis. BCA, GoPay" }], ["number", "Nomor rekening / HP", { max: 40 }], ["holder", "Atas nama", { full: 1, max: 80 }]] }
+    };
+    function repHtml(key) { var R = REP[key], L = C0[key] || []; return L.map(function (it, i) { return '<div class="rep-it"><div class="rep-h"><b>' + R.t + " " + (i + 1) + "</b>" + (locked ? "" : '<button type="button" class="btn o sm" data-del="' + key + '" data-i="' + i + '">Hapus</button>') + '</div><div class="g2f">' + R.f.map(function (f) { var p = key + "." + i + "." + f[0]; return f[2].photo ? engPh(f[1], p) : T(f[1], p, f[2]); }).join("") + "</div></div>"; }).join("") + (locked || L.length >= R.max ? "" : '<button type="button" class="btn o sm rep-add" data-add="' + key + '">+ ' + R.add + "</button>"); }
+    function rep(key) { return '<div class="rep" id="rep-' + key + '">' + repHtml(key) + "</div>"; }
+    function engCouple() {
+      return '<div class="g2f">' + '<div class="f full"><label for="e-couple.order">Urutan nama di undangan</label><select id="e-couple.order" data-p="couple.order"' + dis() + ">" + [["pria", "Mempelai pria lebih dulu"], ["wanita", "Mempelai wanita lebih dulu"]].map(function (o) { return '<option value="' + o[0] + '"' + (C0.couple.order === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></div></div>" +
+        ["groom", "bride"].map(function (k) { var L = k === "groom" ? "pria" : "wanita"; return '<h3 class="sub-h">Mempelai ' + L + '</h3><div class="g2f">' + T("Nama lengkap & gelar", "couple." + k + ".full", { full: 1, max: 120 }) + T("Keterangan orang tua", "couple." + k + ".parents", { ta: 1, full: 1, max: 200, ph: "Putra/putri ... dari Bapak ... & Ibu ..." }) + T("Instagram (opsional)", "couple." + k + ".ig", { max: 40, ph: "@username" }) + engPh("Foto mempelai " + L, "photos." + k) + "</div>"; }).join("");
+    }
+    function engThemes() {
+      var list = T2D.list.filter(function (t) { return !t.categories || t.categories.indexOf(cat) > -1; }), cur = C0.design2d.theme;
+      if (!list.some(function (t) { return t.id === cur; }) && T2D.ids[cur]) list.unshift(T2D.ids[cur]);
+      return '<div class="f full"><div class="ethm" role="radiogroup" aria-label="Tema undangan">' + list.map(function (t) { return '<label class="ethm-o"><input type="radio" name="r-design2d.theme" data-p="design2d.theme" value="' + esc(t.id) + '"' + (cur === t.id ? " checked" : "") + dis() + '><span><img src="' + esc(themeThumb(t)) + '" alt="" loading="lazy"><b>' + esc(t.name) + '</b><a href="/undangan?demo=1&amp;theme=' + encodeURIComponent(t.id) + '" target="_blank" rel="noopener">Lihat demo</a></span></label>'; }).join("") + "</div><small>Tema mengatur warna, huruf, ornamen, ilustrasi, dan animasi. Isi undangan tidak berubah saat tema diganti.</small></div>";
+    }
+    function engGuests() { return '<div class="f"><label for="g-names">Nama tamu <small>(satu nama per baris)</small></label><textarea id="g-names" rows="4" placeholder="Bapak Hendra Wijaya&#10;Keluarga Ibu Sari"></textarea></div><div class="acts"><button type="button" class="btn o sm" id="g-make">Buat link tamu</button></div><ul class="glinks" id="g-out"></ul><h3 class="sub-h">Konfirmasi kehadiran</h3><div id="g-rsvp" class="fine">Memuat...</div><h3 class="sub-h">Ucapan tamu</h3><div id="g-wish" class="fine">Memuat...</div>'; }
+    function engBind() {
+      view.addEventListener("click", function (e) {
+        var a = e.target.closest("[data-add]"), dl = e.target.closest("[data-del]"), rp = e.target.closest("[data-rmp]");
+        if (a) { var k = a.dataset.add, blank = {}; REP[k].f.forEach(function (f) { blank[f[0]] = ""; }); C0[k].push(blank); $("#rep-" + k).innerHTML = repHtml(k); save(false); var it = $$("#rep-" + k + " .rep-it"); if (it.length) { var inp = it[it.length - 1].querySelector("input,textarea"); if (inp) inp.focus(); } }
+        if (dl) { var k2 = dl.dataset.del; C0[k2].splice(Number(dl.dataset.i), 1); $("#rep-" + k2).innerHTML = repHtml(k2); save(false); }
+        if (rp) { var p = rp.dataset.rmp, old = get(C0, p); set(C0, p, ""); refreshPh(p); save(true); var sp = old && old.split("/invitation-media/")[1]; if (sp) sb.storage.from("invitation-media").remove([sp]); }
+      });
+      view.addEventListener("change", function (e) {
+        var el = e.target.closest("[data-up]"); if (!el || !el.files || !el.files[0]) return;
+        var p = el.dataset.up, er = $("#er-" + p.replace(/\./g, "-")); er.textContent = "Mengunggah...";
+        upload(el.files[0]).then(function (u) { set(C0, p, u); refreshPh(p); save(true); }, function (m) { er.textContent = typeof m === "string" ? m : "Gagal mengunggah."; });
+        el.value = "";
+      });
+      function refreshPh(p) { var k = p.replace(/\./g, "-"), box = $("#ph-" + k), er = $("#er-" + k); if (er) er.textContent = ""; if (box) box.innerHTML = engPhInner(p); }
+      var base = (inv.public_url || (location.origin + "/" + (inv.slug || ""))).replace(/\/$/, "");
+      $("#g-make").addEventListener("click", function () {
+        var names = $("#g-names").value.split("\n").map(function (x) { return x.trim().slice(0, 60); }).filter(Boolean).slice(0, 300);
+        $("#g-out").innerHTML = names.length ? names.map(function (n) {
+          var url = base + "?to=" + encodeURIComponent(n).replace(/%20/g, "+"), msg = "Kepada Yth. " + n + ",\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara kami.\n\nInfo lengkap acara:\n" + url + "\n\nMerupakan suatu kebahagiaan bagi kami apabila Anda berkenan hadir. Terima kasih.";
+          return "<li><div><b>" + esc(n) + "</b><code>" + esc(url.replace(/^https?:\/\//, "")) + '</code></div><div class="acts"><button type="button" class="btn o sm" data-cp="' + esc(url) + '">Salin link</button><a class="btn sm" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(msg) + '">Kirim WhatsApp</a></div></li>';
+        }).join("") : '<li class="fine">Tulis minimal satu nama tamu.</li>';
+      });
+      $("#g-out").addEventListener("click", function (e) { var b = e.target.closest("[data-cp]"); if (b) copyText(b.dataset.cp, b); });
+      var NOTDB = "<span>Fitur ini aktif setelah <code>backend/essential-schema.sql</code> dijalankan di Supabase.</span>";
+      sb.from("rsvps").select("guest_name,attendance,pax,note,updated_at").eq("invitation_id", inv.id).order("updated_at", { ascending: false }).limit(1000).then(function (r) {
+        var box = $("#g-rsvp"); if (r.error) { box.innerHTML = NOTDB; return; }
+        var L = r.data || [], c = { hadir: 0, tidak: 0, ragu: 0 }, pax = 0; L.forEach(function (x) { c[x.attendance]++; if (x.attendance === "hadir") pax += x.pax; });
+        box.innerHTML = L.length ? '<div class="gstat"><div><b>' + c.hadir + "</b><span>Hadir (" + pax + " orang)</span></div><div><b>" + c.ragu + "</b><span>Masih ragu</span></div><div><b>" + c.tidak + '</b><span>Tidak hadir</span></div></div><ul class="glist">' + L.slice(0, 200).map(function (x) { return "<li><b>" + esc(x.guest_name) + '</b><span class="tag">' + esc({ hadir: "Hadir " + x.pax + " org", tidak: "Tidak hadir", ragu: "Ragu" }[x.attendance]) + "</span>" + (x.note ? "<small>" + esc(x.note) + "</small>" : "") + "</li>"; }).join("") + "</ul>" : "Belum ada konfirmasi kehadiran.";
+      });
+      function loadWishes() {
+        sb.from("wishes").select("id,guest_name,message,hidden,created_at").eq("invitation_id", inv.id).order("created_at", { ascending: false }).limit(300).then(function (r) {
+          var box = $("#g-wish"); if (r.error) { box.innerHTML = NOTDB; return; }
+          var L = r.data || [];
+          box.innerHTML = L.length ? '<ul class="glist">' + L.map(function (x) { return '<li class="' + (x.hidden ? "hid" : "") + '"><b>' + esc(x.guest_name) + "</b><small>" + esc(x.message) + '</small><button type="button" class="btn o sm" data-wh="' + x.id + '" data-v="' + (!x.hidden) + '">' + (x.hidden ? "Tampilkan" : "Sembunyikan") + "</button></li>"; }).join("") + "</ul>" : "Belum ada ucapan.";
+        });
+      }
+      $("#g-wish").addEventListener("click", function (e) { var b = e.target.closest("[data-wh]"); if (!b) return; b.disabled = true; sb.rpc("set_wish_hidden", { p_id: b.dataset.wh, p_hidden: b.dataset.v === "true" }).then(function (r) { if (r.error) { b.disabled = false; toast("Gagal mengubah ucapan.", "bad"); return; } loadWishes(); }); });
+      loadWishes();
+    }
     var html = "";
     html += S("info", "Informasi Acara", "Nama acara dan sapaan yang tampil di undangan.", '<div class="g2f">' + T(lab[0], "names.a", { max: 80 }) + (lab[1] ? T(lab[1], "names.b", { max: 80 }) : "") + T("Kata sambutan", "welcome", { ta: 1, full: 1, max: 1000, ph: "Tulis sapaan hangat untuk tamu Anda..." }) + "</div>");
     function avSide(side, label) {
@@ -317,8 +397,13 @@
       }).join("") + "</div>" : '<p class="avn">Belum ada pilihan ' + esc(label.toLowerCase()) + " untuk tema ini.</p>") + "</div>";
     }
     var avSub = avOpts === null ? "Pilihan avatar tidak dapat dimuat sekarang. Muat ulang halaman." : "Pilih karakter yang mewakili mempelai. Pilihan mengikuti tema " + (inv.theme_key ? "yang Anda pilih" : "template ini") + ".";
-    html += S("mempelai", "Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
-    html += S("waktu", "Waktu & Lokasi", "", '<div class="g2f">' + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>");
+    if (ENG) {
+      if (couple2) html += S("mempelai", "Mempelai", "Profil lengkap yang tampil di bagian Mempelai.", engCouple());
+      else html += S("mempelai", "Profil", "Nama lengkap, keterangan, dan foto yang tampil di bagian Profil.", '<div class="g2f">' + T("Nama lengkap", "couple.bride.full", { full: 1, max: 120 }) + T("Keterangan", "couple.bride.parents", { ta: 1, full: 1, max: 200, ph: cat === "birthday" ? "Mis. Putri kecil Bapak ... & Ibu ..." : "Keterangan singkat" }) + T("Instagram (opsional)", "couple.bride.ig", { max: 40, ph: "@username" }) + '<div class="f full"><label for="e-couple.bride.sex">Ilustrasi profil</label><select id="e-couple.bride.sex" data-p="couple.bride.sex"' + dis() + ">" + [["f", "Perempuan"], ["m", "Laki-laki"]].map(function (o) { return '<option value="' + o[0] + '"' + ((get(C0, "couple.bride.sex") || "f") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select><small>Tampil bila foto belum diunggah, pada tema yang punya ilustrasi tokoh.</small></div>' + engPh("Foto", "photos.bride") + "</div>");
+    }
+    else html += S("mempelai", "Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
+    html += S("waktu", ENG ? "Acara" : "Waktu & Lokasi", "", '<div class="g2f">' + (ENG ? T("Nama acara utama", "event.name", { full: 1, max: 60, ph: "Mis. Akad Nikah" }) : "") + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>" +
+      (ENG ? '<h3 class="sub-h">Acara lainnya</h3><p class="sub">Mis. resepsi atau ngunduh mantu. Tanggal kosong berarti sama dengan acara utama.</p>' + rep("events") : ""));
     html += S("foto", "Galeri", "Foto sampul dan galeri. Format PNG, JPG, atau WebP, maks. 15 MB per foto; dikecilkan otomatis (sisi terpanjang 1600 px, hasil maks. 3 MB).", '<div class="f"><label>Foto sampul</label><div class="cover" id="cv">' + (C0.photos.cover ? '<img src="' + esc(C0.photos.cover) + '" alt="Foto sampul">' : "Belum ada foto sampul") + "</div>" + (locked ? "" : '<label class="drop"><b>Pilih foto sampul</b><span>atau seret ke sini</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-c"></label>') + '<span class="err" id="er-c"></span></div><div class="f"><label>Galeri foto <small>(maks. ' + GMAX + ' foto untuk paket ' + PK[pkg].name + ')</small></label><div class="ph" id="gl"></div>' + (locked ? "" : '<label class="drop"><b>Tambah foto galeri</b><span>Bisa pilih beberapa sekaligus</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-g" multiple></label>') + '<span class="err" id="er-g"></span></div>');
     function giftBlock() { return SW("features.gift", "Hadiah digital", "Tampilkan rekening untuk hadiah.") + '<div class="g2f" id="giftf"' + (C0.features.gift ? "" : " hidden") + ">" + T("Nama bank / e-wallet", "gift.bank", { max: 40 }) + T("Nomor rekening", "gift.number", { max: 40, inputmode: "numeric" }) + T("Atas nama", "gift.holder", { full: 1, max: 80 }) + "</div>"; }
     function rsvpSel() { var v = Number(get(C0, "live.rsvpMax")) || 2, o = ""; for (var i = 1; i <= 10; i++) o += '<option value="' + i + '"' + (i === v ? " selected" : "") + ">" + i + " orang</option>"; return '<div class="f full"><label for="e-live.rsvpMax">Maksimal jumlah tamu per undangan</label><select id="e-live.rsvpMax" data-p="live.rsvpMax" data-num="1"' + dis() + ">" + o + "</select></div>"; }
@@ -333,7 +418,15 @@
     }
     var comp = SW("features.countdown", "Hitung mundur", "Menampilkan sisa waktu menuju acara.") + SW("features.rsvp", "RSVP", "Tamu mengonfirmasi kehadiran dari link pribadinya.") + SW("features.guestbook", "Buku ucapan", "Ucapan dan doa dari tamu terundang.") + giftBlock();
     var music = SW("music.enabled", "Putar musik latar", "Tamu dapat mematikannya kapan saja.") + '<div class="f"><label for="e-music.track">Pilihan lagu</label><select id="e-music.track" data-p="music.track"' + dis() + '><option value="we-are">We Are - Moavii (bawaan)</option></select></div>';
-    if (pkg === "essential") {
+    if (ENG) {
+      html += S("design", "Tema Undangan", "Pilih tampilan undangan. Anda bisa menggantinya kapan saja.", engThemes());
+      html += S("teks", "Teks Undangan", "Kutipan dan penutup. Kosongkan untuk memakai teks bawaan tema.", '<div class="g2f">' + T("Kutipan / ayat", "texts.quote", { ta: 1, full: 1, max: 500 }) + T("Sumber kutipan", "texts.quoteSource", { max: 80, ph: "Mis. QS. Ar-Rum: 21" }) + T("Kalimat penutup", "texts.closing", { ta: 1, full: 1, max: 600, ph: "Merupakan suatu kehormatan dan kebahagiaan bagi kami..." }) + "</div>");
+      html += S("kisah", couple2 ? "Love Story" : "Cerita & Momen", (couple2 ? "Perjalanan cinta" : "Momen berharga") + " yang tampil sebagai timeline. Bagian ini disembunyikan bila kosong.", rep("story"));
+      html += S("musik", "Musik", "Musik latar yang diputar setelah tamu membuka undangan.", music);
+      html += S("fitur", "Komponen Undangan", "", comp + SW("sections.gallery", "Bagian galeri", "Tampilkan galeri foto di undangan.") + SW("sections.map", "Tombol peta lokasi", "Tampilkan alamat dan tombol Google Maps di kartu acara."));
+      html += S("hadiah", "Hadiah Digital", "Rekening tambahan dan alamat kirim kado. Aktifkan juga Hadiah digital di Komponen Undangan.", rep("accounts") + '<div class="g2f">' + T("Alamat kirim kado (opsional)", "gift.address", { ta: 1, full: 1, max: 300 }) + "</div>");
+      html += S("tamu", "Tamu & Ucapan", "Buat link pribadi untuk setiap tamu, lalu pantau RSVP dan ucapan yang masuk.", engGuests());
+    } else if (pkg === "essential") {
       html += S("design", "Warna & Tipografi", "Tampilan undangan 2D Anda.", '<div class="g2f">' + SEG("Palet warna", "design2d.palette", opts(caps.palettes).map(function (x) { return [x[0], (PCOL[x[0]] || [0, 0, x[1]])[2]]; }), { sw: 1 }) + SEG("Gaya huruf", "design2d.font", opts(caps.fonts).map(function (x) { return [x[0], (FONTS[x[0]] || [0, x[1]])[1]]; })) + '<div class="f"><label for="e-design2d.accent">Warna aksen khusus <small>(opsional)</small></label><div class="colr"><input type="color" id="e-design2d.accent" data-p="design2d.accent" value="' + esc(/^#[0-9a-f]{6}$/i.test(C0.design2d.accent) ? C0.design2d.accent : (PCOL[C0.design2d.palette] || PCOL.lavender)[0]) + '"' + dis() + '><button type="button" class="btn o sm" id="acc-x"' + dis() + ">Pakai warna palet</button></div></div></div>");
       html += S("teks", "Teks Undangan", "Kalimat pembuka, kutipan, dan penutup.", '<div class="g2f">' + T("Kalimat pembuka", "texts.opening", { full: 1, max: 200, ph: "Dengan penuh syukur, kami mengundang Anda..." }) + T("Kutipan / ayat", "texts.quote", { ta: 1, full: 1, max: 500 }) + T("Kalimat penutup", "texts.closing", { ta: 1, full: 1, max: 300, ph: "Terima kasih atas doa dan kehadiran Anda." }) + "</div>");
       html += S("musik", "Musik", "Musik latar yang diputar saat tamu membuka undangan.", music);
@@ -392,7 +485,7 @@
     function upload(file) {
       if (!/^image\/(png|jpeg|webp)$/.test(file.type)) return Promise.reject("Hanya PNG, JPG, atau WebP.");
       if (file.size > 15 * 1024 * 1024) return Promise.reject("Ukuran foto maksimal 15 MB.");
-      return resize(file).then(function (b) { if (b.size > 3145728) throw "Foto terlalu besar setelah dikecilkan."; var path = U.id + "/" + inv.id + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + ".webp"; return sb.storage.from("invitation-media").upload(path, b, { contentType: "image/webp" }).then(function (r) { if (r.error) throw "Gagal mengunggah foto. Coba lagi."; return sb.storage.from("invitation-media").getPublicUrl(path).data.publicUrl; }); }, function () { throw "Foto tidak bisa dibaca."; });
+      return resize(file).then(function (b) { var cap = Math.min(3, (plan && Number(plan.upload_max_mb)) || 3) * 1048576; if (b.size > cap) throw "Foto terlalu besar setelah dikecilkan (maksimal " + (cap / 1048576) + " MB untuk paket ini)."; var path = U.id + "/" + inv.id + "/" + Date.now() + "-" + Math.random().toString(36).slice(2, 7) + ".webp"; return sb.storage.from("invitation-media").upload(path, b, { contentType: "image/webp" }).then(function (r) { if (r.error) throw "Gagal mengunggah foto. Coba lagi."; return sb.storage.from("invitation-media").getPublicUrl(path).data.publicUrl; }); }, function () { throw "Foto tidak bisa dibaca."; });
     }
     var uc = $("#up-c"), ug = $("#up-g");
     if (uc) uc.onchange = function () { var f = uc.files[0]; if (!f) return; $("#er-c").textContent = "Mengunggah..."; upload(f).then(function (u) { C0.photos.cover = u; $("#cv").innerHTML = '<img src="' + esc(u) + '" alt="Foto sampul">'; $("#er-c").textContent = ""; progress(); save(true); }, function (m) { $("#er-c").textContent = typeof m === "string" ? m : "Gagal mengunggah."; }); uc.value = ""; };
@@ -501,6 +594,7 @@
       if (TEXTP.indexOf(p) > -1) inlineEdit(el, p); else jump(p);
     });
     function lpDraw() {
+      if (ENG) return; /* template engine 2D: tampilan lewat /undangan, bukan renderStage */
       var h = $("#lpi"), box = $("#lpv"); if (!h || !box || lpEdit) return; var w = lpMode === "m" ? 390 : 900, top = box.scrollTop; h.style.width = w + "px"; h.className = "lpi" + (lpMode === "m" ? " mob" : "");
       var ca = C0.avatars || {}, c2 = C0, dt = date;
       try { if (tpl) { c2 = ovl(sampleContent(pkg, tpl), C0); dt = date || new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10); } } catch (e) { c2 = C0; }
@@ -514,6 +608,7 @@
     $("#lp-o").addEventListener("click", function () { $("#lpc").classList.add("open"); lpDraw(); }); $("#lp-x").addEventListener("click", function () { $("#lpc").classList.remove("open"); });
     $("#lpn").innerHTML = pkg === "luxe" ? "Klik elemen di preview untuk mengeditnya. Preview venue memakai tampilan ringkas; bagian yang belum diisi memakai contoh." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Klik teks di preview untuk mengetik langsung, atau klik bagian lain untuk membuka pengaturannya. Bagian yang belum diisi memakai contoh.";
     addEventListener("resize", function () { lp(); });
+    if (ENG) { engBind(); [$("#lpc"), $("#lp-o")].forEach(function (x) { if (x) x.hidden = true; }); }
     progress(); lpDraw();
     (function () { var hm = (location.hash || "").match(/^#s-(\w+)/); if (hm && secIds.indexOf(hm[1]) > -1) { setOpen(hm[1]); return; } var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
     if (restored) { save(true); toast("Perubahan terakhir yang belum tersimpan sudah dipulihkan dari perangkat ini."); }
@@ -560,6 +655,10 @@
       (x.tpl && /^\/live/.test(x.tpl.demo || "") ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(x.tpl.demo) + '">Coba demo Live Guest template ini</a>' : "") + '<p class="fine">Denah mengikuti pengaturan Anda. Pengalaman 3D penuh dapat dicoba di demo template.</p></div>';
   }
   function renderStage(x, host) {
+    if (x.pkg === "essential" && isEngine(x.tpl)) {
+      var src = x.inv && x.inv.id ? "/undangan?preview=" + encodeURIComponent(x.inv.id) : "/undangan?demo=1&theme=" + encodeURIComponent(x.tpl.themeKey || x.tpl.slug);
+      host.innerHTML = '<iframe class="eng-fr" src="' + esc(src) + '" title="Pratinjau undangan" allow="autoplay"></iframe>'; return;
+    }
     host.innerHTML = x.pkg === "essential" ? r2d(x) : x.pkg === "signature" ? rCin(x) : rLive(x);
     host.insertAdjacentHTML("beforeend", avatarBlock(x));
     $$(".i2-cd", host).forEach(function (el) { var ts = Number(el.dataset.ts); function t() { var s = Math.max(0, Math.floor((ts - Date.now()) / 1000)), b = el.querySelectorAll("b"); b[0].textContent = Math.floor(s / 86400); b[1].textContent = Math.floor(s % 86400 / 3600); b[2].textContent = Math.floor(s % 3600 / 60); b[3].textContent = s % 60; } t(); var iv = setInterval(function () { if (!d.body.contains(el)) clearInterval(iv); else t(); }, 1000); });
@@ -642,7 +741,7 @@
     if (miss.length) { dlg('<h2>Lengkapi data undangan</h2><p class="sub">Data berikut wajib diisi sebelum Anda dapat lanjut ke checkout.</p>' + missingHtml(miss, inv) + '<div class="acts"><button class="btn o" type="button" data-x>Tutup</button><a class="btn" href="/editor?id=' + encodeURIComponent(inv.id) + '">Lengkapi di editor</a></div>'); return; }
     if (!p) { dlg('<h2>Ringkasan pesanan</h2><p class="sub">Data paket belum dapat dimuat. Muat ulang halaman lalu coba lagi.</p><div class="acts"><button class="btn o" type="button" data-x>Tutup</button></div>'); return; }
     var e = dlg('<h2>Checkout</h2><p class="sub">Periksa pesanan Anda sebelum membayar. Undangan belum dipublikasikan dan baru aktif setelah pembayaran kami verifikasi.</p><div class="ord"><span class="pkchip"><i>' + PK[x.pkg].icon + "</i>Paket " + PK[x.pkg].name + "</span><b>" + PK[x.pkg].kind + "</b><ul>" + PK[x.pkg].feats.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("") + "</ul></div>" +
-      '<dl class="sum"><div><dt>Undangan</dt><dd>' + esc(inv.title) + "</dd></div><div><dt>Template</dt><dd>" + esc(x.tpl ? x.tpl.name : inv.template_id) + "</dd></div><div><dt>Link undangan</dt><dd>nusamora.com/" + esc(inv.slug) + "</dd></div><div><dt>Masa aktif</dt><dd>" + p.duration_days + " hari, hingga " + esc(fdate(Date.now() + p.duration_days * 864e5)) + "</dd></div><div><dt>Harga paket</dt><dd>" + rp(p.price) + '</dd></div><div class="tot"><dt>Total</dt><dd>' + rp(p.price) + '</dd></div></dl><p class="fine">Harga final dihitung server saat pembayaran dibuat. Pembayaran diproses aman oleh Midtrans.</p><div class="err" id="pe" role="alert"></div><div class="acts"><button class="btn o" type="button" data-x>Kembali ke preview</button><button class="btn" type="button" id="pay-go">Bayar ' + rp(p.price) + "</button></div>", "wide");
+      '<dl class="sum"><div><dt>Undangan</dt><dd>' + esc(inv.title) + "</dd></div><div><dt>Template</dt><dd>" + esc(x.tpl ? x.tpl.name : inv.template_id) + "</dd></div><div><dt>Link undangan</dt><dd>nusamora.com/" + esc(inv.slug) + "</dd></div><div><dt>Masa aktif</dt><dd>" + p.duration_days + " hari, hingga " + esc(fdate(Date.now() + p.duration_days * 864e5)) + "</dd></div><div><dt>Harga paket</dt><dd>" + rp(p.base_price || p.price) + '</dd></div>' + (p.base_price && p.base_price > p.price ? "<div><dt>Promo " + esc(p.discount ? p.discount.name : "") + "</dt><dd>-" + rp(p.base_price - p.price) + "</dd></div>" : "") + '<div class="tot"><dt>Total</dt><dd>' + rp(p.price) + '</dd></div></dl><p class="fine">Harga final dihitung server saat pembayaran dibuat. Pembayaran diproses aman oleh Midtrans.</p><div class="err" id="pe" role="alert"></div><div class="acts"><button class="btn o" type="button" data-x>Kembali ke preview</button><button class="btn" type="button" id="pay-go">Bayar ' + rp(p.price) + "</button></div>", "wide");
     $("#pay-go", e).addEventListener("click", function () {
       var b = this, er = $("#pe", e); b.disabled = true; b.innerHTML = '<i class="spin"></i> Menyiapkan pembayaran...'; er.textContent = "";
       checkout({ invitation_id: inv.id, plan_id: x.pkg }).then(function (r) {

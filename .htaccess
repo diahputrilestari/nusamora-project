@@ -9,6 +9,10 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteCond %{REQUEST_FILENAME}/index.html !-f
 RewriteRule ^ - [F,L]
 
+# Konten publik dari database (Manajemen Konten): daftar dan detail dilayani satu halaman konten.html
+RewriteRule ^(artikel|bantuan|tutorial)/?$ konten.html [L,QSA]
+RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
+
 # Hapus .html dari URL yang diketik
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L,NE]
@@ -17,6 +21,12 @@ RewriteRule ^ /%1 [R=301,L,NE]
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+?)/?$ $1.html [L]
+
+# Undangan publik: nusamora.com/{slug} -> undangan.html (file & halaman yang ada tetap didahulukan)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html !-f
+RewriteRule ^([a-z0-9]+(-[a-z0-9]+)*)/?$ undangan.html [L,QSA]
 
 DirectoryIndex index.html
 

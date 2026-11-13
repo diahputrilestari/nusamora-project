@@ -10,6 +10,11 @@
     const BUCKET = "theme-assets";
     const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif", svg: "image/svg+xml", json: "application/json", glb: "model/gltf-binary", gltf: "model/gltf+json", mp3: "audio/mpeg", ogg: "audio/ogg", wav: "audio/wav", hdr: "image/vnd.radiance" };
     const IMG = ["png", "jpg", "jpeg", "webp", "gif", "svg"];
+    const LIC = { belum_diatur: "Belum diatur", milik_sendiri: "Milik sendiri / buatan sendiri", berlisensi_komersial: "Berlisensi komersial (dibeli)", cc0: "CC0 / domain publik", cc_by: "CC BY (wajib kredit)", ai_generated: "Hasil AI generator", lainnya: "Lainnya" };
+    const SRC = { upload: "Unggahan admin", ai_generator: "AI Generator", stok: "Situs stok", klien: "Dari klien", lainnya: "Lainnya" };
+    const STL = { active: "Aktif", inactive: "Nonaktif", archived: "Arsip" };
+    const ACT = { dipasang: "Dipasang", dilepas: "Dilepas" };
+    const SIM = { isi_sama: "Isi file identik", ukuran_sama: "Format, dimensi, dan ukuran sama", nama_sama: "Nama sama" };
     const FM = window.NM_ASSET_FORMS || {};
     const pcfg = (pkg) => Object.assign({ groups: [], fields: {}, slots: [], config: [], layout: [], title: pkg, intro: "" }, FM[pkg] || {});
     const SLOTS = { get essential() { return pcfg("essential").slots.map(x => x.key); }, get signature() { return pcfg("signature").slots.map(x => x.key); }, get luxe() { return pcfg("luxe").slots.map(x => x.key); } };
@@ -54,7 +59,9 @@
       slot_tidak_valid: "Nama slot hanya huruf kecil, angka, dan garis bawah (2-40 karakter).", asset_tidak_tersedia: "Ada aset yang sudah dihapus/diarsipkan.", terlalu_banyak_asset: "Maksimal 200 aset per template.",
       config_tidak_valid: "Konfigurasi aset terlalu besar/tidak valid.", layout_tidak_valid: "Layout tidak valid (maks. 30 section).", tema_tidak_ditemukan: "Tema tidak ditemukan.", template_tidak_ditemukan: "Template tidak ditemukan.",
       belum_dikonfigurasi: "AI Asset Generator belum dikonfigurasi.", kuota_harian: "Batas 40 gambar per 24 jam tercapai.", provider_gagal: "Provider AI gagal membuat gambar. Coba lagi nanti.", hasil_tidak_valid: "Provider tidak menghasilkan gambar yang valid untuk kategori ini.", kategori_tidak_didukung_ai: "AI hanya membuat gambar. Kategori 3D/audio/animasi diunggah manual.", prompt_tidak_valid: "Prompt 3-2000 karakter.", jumlah_tidak_valid: "Jumlah 1-4 gambar.", kategori_tidak_cocok: "Kategori bukan milik paket yang dipilih.", perlu_login: "Silakan masuk terlebih dahulu.", jaringan: "Tidak bisa terhubung ke server.",
-      attrs_tidak_valid: "Isian khusus tidak valid (maks. 20 isian, nilai teks/angka/ya-tidak).", unauthorized: "Sesi berakhir. Muat ulang dan masuk lagi.", status_tidak_valid: "Status tidak valid.", tidak_ditemukan: "Aset tidak ditemukan."
+      attrs_tidak_valid: "Isian khusus tidak valid (maks. 20 isian, nilai teks/angka/ya-tidak).", unauthorized: "Sesi berakhir. Muat ulang dan masuk lagi.", status_tidak_valid: "Status tidak valid.", lisensi_tidak_valid: "Lisensi tidak valid.", sumber_tidak_valid: "Sumber tidak valid.", url_tidak_valid: "Tautan sumber harus diawali http:// atau https://.", tanggal_tidak_valid: "Tanggal tidak valid.",
+      bukti_lisensi_kosong: "Lisensi ini wajib disertai kredit, catatan, atau tautan sumber.", tipe_berbeda: "Versi baru harus berformat sama dengan aset.", sama_dengan_versi_sekarang: "File ini sama persis dengan versi yang sedang dipakai.", versi_sudah_ada: "File ini pernah menjadi versi aset ini. Pulihkan dari riwayat versi.",
+      versi_tidak_ditemukan: "Versi tidak ditemukan.", versi_sudah_aktif: "Versi ini sudah aktif.", dipakai_template_terbit: "Dipakai di template yang sudah terbit.", aksi_tidak_valid: "Aksi tidak valid.", tidak_ada_aset: "Pilih aset dulu.", terlalu_banyak: "Maksimal 200 aset sekali proses.", terlalu_banyak_tag: "Maksimal 20 tag per aset.", gagal: "Gagal diproses.", tidak_ditemukan: "Aset tidak ditemukan."
     };
     const errText = (c, fb) => ERR[c] || fb || ("Gagal: " + c);
     const fmtSize = (b) => b == null ? "-" : b < 1024 ? b + " B" : b < 1048576 ? (b / 1024).toFixed(1) + " KB" : (b / 1048576).toFixed(1) + " MB";
@@ -132,8 +139,13 @@
           <label class="chk-l full"><input type="checkbox" id="u-also" ${opt.lock ? "disabled" : ""}> Aset juga boleh dipakai paket lain yang formatnya kompatibel</label>
         </div>
         <p class="sub" id="u-rule" style="margin:10px 0"></p>
+        <fieldset class="al-lic full"><legend>Lisensi &amp; sumber (berlaku untuk semua file ini)</legend><div class="fgrid" style="margin:0">
+          <label class="fld">Lisensi<select id="u-lic">${Object.keys(LIC).filter(k => k !== "ai_generated").map(k => `<option value="${k}">${esc(LIC[k])}</option>`).join("")}</select></label>
+          <label class="fld">Sumber<select id="u-src">${Object.keys(SRC).filter(k => k !== "ai_generator").map(k => `<option value="${k}">${esc(SRC[k])}</option>`).join("")}</select></label>
+          <label class="fld full">Kredit / tautan sumber (wajib untuk CC BY dan berlisensi komersial)<input id="u-credit" maxlength="160" placeholder="mis. Freepik - Nama Seniman"></label></div></fieldset>
         <div class="full" id="u-e" role="alert"></div>
         <div class="al-drop" id="u-drop" tabindex="0" role="button" aria-label="Pilih atau seret file ke sini"><b>Seret file ke sini</b><span>atau klik untuk memilih (bisa banyak file)</span><input type="file" id="u-file" multiple hidden></div>
+        <div class="row-end" style="justify-content:flex-start;margin:6px 0"><button class="btn o sm" type="button" id="u-clr" style="display:none">Hapus yang gagal / duplikat dari daftar</button></div>
         <ul class="al-files" id="u-list"></ul>
         <div class="row-end"><button class="btn o" type="button" data-close>Tutup</button><button class="btn" type="button" id="u-go" disabled>Unggah</button></div>`;
         const files = []; let GK = opt.group || "";
@@ -156,8 +168,9 @@
           fillCats(); drawFields(); revalidate();
         };
         const draw = () => {
-          $("#u-list").innerHTML = files.map((f, i) => `<li class="al-f ${f.st || ""}"><span class="n">${esc(f.file.name)}</span><span class="s">${fmtSize(f.file.size)}</span><span class="m">${esc(f.msg || "Menunggu")}</span>${f.st ? "" : `<button type="button" class="btn o sm" data-rm="${i}" aria-label="Hapus dari daftar">×</button>`}</li>`).join("");
+          $("#u-list").innerHTML = files.map((f, i) => `<li class="al-f ${f.st || ""}"><span class="n">${esc(f.file.name)}</span><span class="s">${fmtSize(f.file.size)}</span><span class="m">${esc(f.msg || "Menunggu")}</span>${f.st === "ok" || f.st === "run" ? "" : `<button type="button" class="btn o sm" data-rm="${i}" aria-label="Hapus dari daftar">×</button>`}</li>`).join("");
           $("#u-go").disabled = !files.some(f => !f.st);
+          const nb = files.filter(f => f.st === "bad").length; $("#u-clr").style.display = nb ? "" : "none"; $("#u-clr").textContent = "Hapus " + nb + " file gagal / duplikat dari daftar";
         };
         const add = (list) => { Array.prototype.forEach.call(list, file => { files.push({ file, ext: (file.name.split(".").pop() || "").toLowerCase(), st: "", msg: "" }); }); revalidate(); };
         $("#u-pkg").onchange = () => { GK = ""; drawGroups(); };
@@ -169,6 +182,7 @@
         ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("on"); }));
         ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("on"); }));
         drop.addEventListener("drop", e => add(e.dataTransfer.files));
+        $("#u-clr").onclick = () => { for (let i = files.length - 1; i >= 0; i--) if (files[i].st === "bad") files.splice(i, 1); draw(); };
         $("#u-list").onclick = (e) => { const b = e.target.closest("[data-rm]"); if (b) { files.splice(Number(b.dataset.rm), 1); draw(); } };
         dl.addEventListener("click", (e) => { if (e.target.closest("[data-close]")) dl.close(); });
         const created = [];
@@ -191,7 +205,14 @@
             // paket tambahan hanya yang punya kategori aktif yang menerima format file ini (server tetap memvalidasi ulang)
             const pkgs = [pk]; if (also) PKGS.forEach(q => { if (q !== pk && CATS.some(x => x.package_type === q && x.active && x.allowed_ext.indexOf(f.ext) > -1)) pkgs.push(q); });
             const r = await callRegister({ path, name: base, category_id: c.id, package_types: pkgs, theme_key: theme, tags, attrs: rd.v });
-            if (r.ok) { f.st = "ok"; f.msg = "Tersimpan"; created.push(r.asset); } else { f.st = "bad"; f.msg = errText(r.error, r.error === "jaringan" ? "Tidak bisa terhubung ke server." : "Gagal memproses file."); }
+            if (r.ok) {
+              f.st = "ok"; f.msg = "Tersimpan"; created.push(r.asset);
+              const lic = $("#u-lic").value, src = $("#u-src").value, cr = $("#u-credit").value.trim();
+              if (lic !== "belum_diatur" || src !== "upload" || cr) {
+                const mr = await sb.rpc("admin_asset_set_meta", { p_id: r.asset.id, p_patch: { license: lic, source: src, credit: cr, source_url: /^https?:\/\//i.test(cr) ? cr : "" } });
+                if (mr.error || !mr.data || !mr.data.ok) f.msg = "Tersimpan, tetapi lisensi belum diatur" + (mr.data && mr.data.error ? ": " + errText(mr.data.error) : "") + ". Atur dari detail aset.";
+              }
+            } else { f.st = "bad"; f.msg = errText(r.error, r.error === "jaringan" ? "Tidak bisa terhubung ke server." : "Gagal memproses file."); }
             draw();
           }
           $("#u-go").disabled = true; $("#u-pkg").disabled = !!opt.lock; $("#u-cat").disabled = false; $$("#u-glist input, #u-fields input, #u-fields select", dl).forEach(x => { x.disabled = false; });
@@ -220,7 +241,14 @@
           <label class="fld">Tema<input id="a-theme" maxlength="60" value="${esc(a.theme_key || "")}" ${canW && !gone ? "" : "disabled"}></label>
           <label class="fld">Tag (pisahkan koma)<input id="a-tags" value="${esc((a.tags || []).join(", "))}" ${canW && !gone ? "" : "disabled"}></label>
           <label class="chk-l"><input type="checkbox" id="a-tr" ${a.is_transparent ? "checked" : ""} ${canW && !gone ? "" : "disabled"}> Latar transparan</label>
-          <label class="fld">Status<select id="a-st" ${canW && !gone ? "" : "disabled"}><option value="active" ${a.status === "active" ? "selected" : ""}>Aktif</option><option value="archived" ${a.status === "archived" ? "selected" : ""}>Arsip (tidak muncul di pemilih)</option></select></label>
+          <fieldset class="al-lic full"><legend>Lisensi &amp; sumber</legend><div class="fgrid" style="margin:0">
+            <label class="fld">Lisensi<select id="a-lic" ${canW && !gone ? "" : "disabled"}>${Object.keys(LIC).map(k => `<option value="${k}" ${a.license === k ? "selected" : ""}>${esc(LIC[k])}</option>`).join("")}</select></label>
+            <label class="fld">Sumber<select id="a-src" ${canW && !gone ? "" : "disabled"}>${Object.keys(SRC).map(k => `<option value="${k}" ${a.source === k ? "selected" : ""}>${esc(SRC[k])}</option>`).join("")}</select></label>
+            <label class="fld">Kredit / atribusi<input id="a-credit" maxlength="160" value="${esc(a.credit || "")}" ${canW && !gone ? "" : "disabled"}></label>
+            <label class="fld">Tautan sumber<input id="a-surl" maxlength="500" placeholder="https://..." value="${esc(a.source_url || "")}" ${canW && !gone ? "" : "disabled"}></label>
+            <label class="fld">Lisensi berlaku sampai<input id="a-lexp" type="date" value="${esc(a.license_expires || "")}" ${canW && !gone ? "" : "disabled"}></label>
+            <label class="fld">Catatan lisensi<input id="a-lnote" maxlength="500" value="${esc(a.license_note || "")}" ${canW && !gone ? "" : "disabled"}></label></div></fieldset>
+          <label class="fld">Status<select id="a-st" ${canW && !gone ? "" : "disabled"}><option value="active" ${a.status === "active" ? "selected" : ""}>Aktif</option><option value="inactive" ${a.status === "inactive" ? "selected" : ""}>Nonaktif (tidak bisa dipilih baru; penempatan lama tetap tampil)</option><option value="archived" ${a.status === "archived" ? "selected" : ""}>Arsip (tidak bisa dipilih dan tidak tampil)</option></select></label>
           <div class="full" id="a-e" role="alert"></div>
           <div class="row-end">${canW ? (gone ? '<button class="btn o" type="button" id="a-restore">Pulihkan</button>' : '<button class="btn o bad" type="button" id="a-del">Hapus</button>') : ""}<button class="btn o" type="button" data-close>Tutup</button>${canW && !gone ? '<button class="btn" type="submit" id="a-save">Simpan</button>' : ""}</div>
         </form></div>`;
@@ -229,10 +257,36 @@
         const aFields = () => { const c = CATS.filter(x => x.id === $("#a-cat").value)[0]; if (!c) return []; const g = groupOfCat(c.package_type, c.slug), cfg = pcfg(c.package_type); return g ? g.fields.map(k => cfg.fields[k]).filter(Boolean) : []; };
         const drawAttrs = () => { const fs = aFields(), at = a.attrs || {}; $("#a-attrs").innerHTML = fs.length ? '<p class="sub full" style="margin:0"><b>Isian khusus paket</b></p>' + fs.map(f => fieldHTML(f, at[f.k], "af-")).join("") : ""; if (!(canW && !gone)) $$("#a-attrs input,#a-attrs select").forEach(x => { x.disabled = true; }); };
         drawAttrs(); $("#a-cat").onchange = drawAttrs;
-        sb.from("template_assets").select("slot_key,theme_id,templates(name,package_type)").eq("asset_id", a.id).then(r => {
-          const rows = r.data || [];
-          $("#a-use").innerHTML = rows.length ? `<h3>Dipakai di ${rows.length} penempatan</h3><ul>${rows.map(x => `<li>${esc(x.templates ? x.templates.name : "?")} · <code>${esc(x.slot_key)}</code></li>`).join("")}</ul>` : '<p class="sub">Belum dipakai template mana pun.</p>';
-        });
+        const reopen = () => { dl.close(); sb.from("assets").select("*").eq("id", a.id).maybeSingle().then(r => { if (r.data) openAsset(r.data, onChange); if (onChange) onChange(); }); };
+        const loadDetail = () => sb.rpc("admin_asset_detail", { p_id: a.id }).then(r => {
+          if (r.error) throw r.error; const D = r.data, pl = D.placements || [], lg = D.usage_log || [], vs = D.versions || [], sm = D.similar || [];
+          const when = (t) => new Date(t).toLocaleString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+          const info = `<p class="sub" style="margin:6px 0">Dibuat ${esc(when(D.asset.created_at))}${D.created_by_name ? " oleh " + esc(D.created_by_name) : ""} &middot; versi aktif v${D.asset.current_version}</p>`;
+          const useH = pl.length ? `<h3>Dipakai di ${pl.length} penempatan</h3><ul>${pl.map(x => `<li>${esc(x.template)} <small>(${esc(x.template_status)})</small> &middot; <code>${esc(x.slot)}</code>${x.theme ? " &middot; tema " + esc(x.theme) : ""}</li>`).join("")}</ul>` : '<p class="sub">Belum dipakai template mana pun.</p>';
+          const logH = lg.length ? `<h3>Riwayat penggunaan</h3><ul class="al-log">${lg.map(x => `<li><b>${esc(ACT[x.action] || x.action)}</b> &middot; ${esc(x.template)} &middot; <code>${esc(x.slot || "")}</code><small> ${esc(when(x.at))}${x.by ? " &middot; " + esc(x.by) : ""}</small></li>`).join("")}</ul>` : "";
+          const verH = `<h3>Versi file</h3>${canW && !gone ? `<div class="al-vup"><input id="v-note" maxlength="300" placeholder="Catatan versi baru (opsional)" aria-label="Catatan versi"><button class="btn o sm" type="button" id="v-pick">Unggah versi baru</button><input type="file" id="v-file" accept=".${esc(a.file_type)}" hidden></div><p class="sub" id="v-msg" role="status" style="margin:4px 0"></p>` : ""}<ul class="al-ver">${vs.map(v => `<li class="${v.current ? "cur" : ""}"><b>v${v.version}</b>${v.current ? ' <i class="al-pkb essential">Aktif</i>' : ""} &middot; ${dims(v)} &middot; ${fmtSize(v.file_size)}<small> ${esc(when(v.at))}${v.by ? " &middot; " + esc(v.by) : ""}</small>${v.note ? `<br><small>${esc(v.note)}</small>` : ""} ${!v.current && canW && !gone ? `<button class="btn o sm" type="button" data-rv="${v.version}">Pulihkan</button>` : ""} <a href="${esc(v.file_url)}" target="_blank" rel="noopener">Buka file</a></li>`).join("")}</ul>`;
+          const simH = sm.length ? `<h3>Aset serupa</h3><ul>${sm.map(x => `<li><button type="button" class="lnk" data-sim="${esc(x.id)}">${esc(x.name)}</button> <small>${esc(SIM[x.reason] || x.reason)}${x.deleted ? " &middot; terhapus" : x.status !== "active" ? " &middot; " + esc(STL[x.status] || x.status) : ""}</small></li>`).join("")}</ul>` : "";
+          $("#a-use").innerHTML = info + useH + logH + verH + simH;
+          $$("[data-sim]", dl).forEach(b => { b.onclick = () => { dl.close(); sb.from("assets").select("*").eq("id", b.dataset.sim).maybeSingle().then(r => { if (r.data) openAsset(r.data, onChange); }); }; });
+          $$("[data-rv]", dl).forEach(b => { b.onclick = async () => { if (!(await dlgConfirm("Pulihkan file ke versi " + b.dataset.rv + "? Penempatan di template tidak berubah, tetapi tampilannya memakai file versi itu.", "Pulihkan"))) return;
+            sb.rpc("admin_asset_restore_version", { p_id: a.id, p_version: Number(b.dataset.rv) }).then(r => { if (r.error) return fail(r.error, "Gagal memulihkan"); if (!r.data.ok) return toast(errText(r.data.error), "bad"); toast("Versi dipulihkan.", "ok"); reopen(); }); }; });
+          const pick = $("#v-pick"), vf = $("#v-file");
+          if (pick) { pick.onclick = () => vf.click(); vf.onchange = async () => {
+            const f = vf.files[0]; vf.value = ""; if (!f) return; const msg = $("#v-msg"), ext = (f.name.split(".").pop() || "").toLowerCase();
+            if (ext !== a.file_type) { msg.textContent = "Versi baru harus berformat ." + a.file_type + "."; return; }
+            const sess = await sb.auth.getSession(); const user = sess.data && sess.data.session && sess.data.session.user; if (!user) return toast("Sesi berakhir. Masuk lagi.", "bad");
+            pick.disabled = true; msg.textContent = "Mengunggah...";
+            const path = "incoming/" + user.id + "/" + Date.now() + "-" + uid() + "." + ext;
+            const up = await sb.storage.from(BUCKET).upload(path, f, { contentType: MIME[ext] || "application/octet-stream", upsert: false });
+            if (up.error) { pick.disabled = false; msg.textContent = "Gagal mengunggah. Periksa izin dan bucket."; return; }
+            msg.textContent = "Memeriksa file...";
+            const r = await callRegister({ path, replace_asset: a.id, note: $("#v-note").value.trim() });
+            pick.disabled = false;
+            if (!r.ok) { msg.textContent = errText(r.error, r.error === "jaringan" ? "Tidak bisa terhubung ke server." : "Gagal memproses file."); return; }
+            toast(r.dimensi_berubah ? "Versi baru tersimpan. Dimensi berubah: periksa tampilannya di template." : "Versi baru tersimpan.", r.dimensi_berubah ? "bad" : "ok"); reopen();
+          }; }
+        }).catch(e => { $("#a-use").innerHTML = '<p class="sub">Detail tidak bisa dimuat: ' + esc(e && e.message || "coba lagi") + "</p>"; });
+        loadDetail();
         const done = (msg) => { toast(msg, "ok"); dl.close(); if (onChange) onChange(); };
         const f = $("#a-f"); if (!f) return;
         f.onsubmit = (e) => {
@@ -243,7 +297,8 @@
           const fs = aFields(), rd = readFields(fs, f, "af-"); if (rd.errs.length) { er.textContent = "Lengkapi isian: " + rd.errs.join(", ") + "."; return; }
           const at = Object.assign({}, a.attrs || {}); fs.forEach(x => { delete at[x.k]; }); patch.attrs = Object.assign(at, rd.v);
           const b = $("#a-save"); b.disabled = true; b.textContent = "Menyimpan...";
-          sb.rpc("admin_update_asset", { p_id: a.id, p_patch: patch }).then(r => { b.disabled = false; b.textContent = "Simpan"; if (r.error) { er.textContent = fail(r.error, "Gagal menyimpan"); return; } if (!r.data.ok) { er.textContent = errText(r.data.error) + (r.data.package ? " (" + PKG[r.data.package] + ")" : ""); return; } done("Metadata tersimpan."); });
+          sb.rpc("admin_update_asset", { p_id: a.id, p_patch: patch }).then(r => { b.disabled = false; b.textContent = "Simpan"; if (r.error) { er.textContent = fail(r.error, "Gagal menyimpan"); return; } if (!r.data.ok) { er.textContent = errText(r.data.error) + (r.data.package ? " (" + PKG[r.data.package] + ")" : ""); return; } const meta = { license: $("#a-lic").value, source: $("#a-src").value, credit: $("#a-credit").value.trim(), source_url: $("#a-surl").value.trim(), license_expires: $("#a-lexp").value, license_note: $("#a-lnote").value.trim() };
+            sb.rpc("admin_asset_set_meta", { p_id: a.id, p_patch: meta }).then(m => { if (m.error) { er.textContent = fail(m.error, "Gagal menyimpan lisensi"); return; } if (!m.data.ok) { er.textContent = "Metadata tersimpan, tetapi lisensi ditolak: " + errText(m.data.error); return; } done("Metadata tersimpan."); }); });
         };
         const del = $("#a-del");
         if (del) del.onclick = () => {
@@ -264,7 +319,7 @@
     /* ============================================================
        ASSET LIBRARY (halaman admin)
        ============================================================ */
-    const LS = { q: "", pkg: "", cat: "", theme: "", ext: "", status: "active", view: "grid", page: 0 }, PAGE = 24;
+    const LS = { q: "", pkg: "", cat: "", theme: "", ext: "", status: "active", view: "grid", page: 0 }, PAGE = 24, SEL = new Set();
     function renderLibrary(root) {
       const canW = can("templates", "write");
       root.innerHTML = skel();
@@ -277,9 +332,9 @@
           <label class="fld">Kategori<select id="l-cat"></select></label>
           <label class="fld">Tema<select id="l-theme"><option value="">Semua</option>${(THEMES || []).map(t => `<option value="${esc(t.slug)}" ${LS.theme === t.slug ? "selected" : ""}>${esc(t.name)}</option>`).join("")}</select></label>
           <label class="fld">Format<select id="l-ext"><option value="">Semua</option>${exts.map(x => `<option value="${x}" ${LS.ext === x ? "selected" : ""}>${x.toUpperCase()}</option>`).join("")}</select></label>
-          <label class="fld">Status<select id="l-st"><option value="active" ${LS.status === "active" ? "selected" : ""}>Aktif</option><option value="archived" ${LS.status === "archived" ? "selected" : ""}>Arsip</option><option value="deleted" ${LS.status === "deleted" ? "selected" : ""}>Terhapus</option></select></label>
+          <label class="fld">Status<select id="l-st"><option value="active" ${LS.status === "active" ? "selected" : ""}>Aktif</option><option value="inactive" ${LS.status === "inactive" ? "selected" : ""}>Nonaktif</option><option value="archived" ${LS.status === "archived" ? "selected" : ""}>Arsip</option><option value="deleted" ${LS.status === "deleted" ? "selected" : ""}>Terhapus</option></select></label>
           <div class="al-vt" role="group" aria-label="Tampilan"><button type="button" class="btn o sm" data-v="grid" aria-pressed="${LS.view === "grid"}">Grid</button><button type="button" class="btn o sm" data-v="list" aria-pressed="${LS.view === "list"}">Daftar</button></div>
-          ${canW ? '<button class="btn" type="button" id="l-up">' + ico("plus") + " Unggah aset</button>" : ""}</div><div id="l-res" class="card"><div class="sk h4"></div></div>`;
+          ${canW ? '<button class="btn" type="button" id="l-up">' + ico("plus") + " Unggah aset</button>" : ""}</div><div id="l-bulk" class="card al-bulk" hidden></div><div id="l-res" class="card"><div class="sk h4"></div></div>`;
         const fillCat = () => { $("#l-cat").innerHTML = '<option value="">Semua</option>' + catsFor().map(c => `<option value="${c.id}" ${LS.cat === c.id ? "selected" : ""}>${esc((LS.pkg ? "" : c.package_type + " · ") + c.name)}</option>`).join(""); };
         fillCat();
         const go = () => { LS.page = 0; load(); };
@@ -293,6 +348,7 @@
         const up = $("#l-up"); if (up) up.onclick = () => openUpload({ pkg: LS.pkg || "essential", onDone: load });
         let ROWS = [];
         function load() {
+          bulkBar();
           const box = $("#l-res"); box.innerHTML = '<div class="sk h4"></div>';
           let qy = sb.from("assets").select("*", { count: "exact" });
           if (LS.status === "deleted") qy = qy.not("deleted_at", "is", null); else qy = qy.is("deleted_at", null).eq("status", LS.status);
@@ -308,16 +364,64 @@
             ROWS = r.data || [];
             if (!ROWS.length) { const f = LS.q || LS.pkg || LS.cat || LS.theme || LS.ext || LS.status !== "active"; box.innerHTML = empty(f ? "Tidak ada aset yang cocok" : "Library masih kosong", f ? "Ubah kata kunci atau filter." : "Unggah aset pertama untuk dipakai di banyak template.", !f && canW ? '<button class="btn" type="button" id="l-up2">Unggah aset</button>' : ""); const b2 = $("#l-up2"); if (b2) b2.onclick = () => openUpload({ onDone: load }); return; }
             const pages = Math.max(1, Math.ceil((r.count || ROWS.length) / PAGE));
-            const meta = (a) => `${esc(a.file_type.toUpperCase())} · ${dims(a)} · ${fmtSize(a.file_size)}`;
+            const meta = (a) => `${esc(a.file_type.toUpperCase())} · ${dims(a)} · ${fmtSize(a.file_size)}${a.status === "inactive" ? " · Nonaktif" : a.status === "archived" ? " · Arsip" : ""}`;
             const pkb = (a) => a.package_types.map(p => `<i class="al-pkb ${p}">${p === "essential" ? "2D" : p === "signature" ? "Cinematic" : "Live"}</i>`).join("");
             const cats = {}; CATS.forEach(c => { cats[c.id] = c.name; });
             const body = LS.view === "grid"
-              ? `<ul class="al-grid">${ROWS.map((a, i) => `<li><button type="button" class="al-card" data-i="${i}">${thumb(a, "al-th")}<span class="al-n">${esc(a.name)}</span><span class="al-m">${esc(cats[a.category_id] || "-")}</span><span class="al-m">${meta(a)}</span><span class="al-b">${pkb(a)}${use[a.id] ? `<i class="al-use">dipakai ${use[a.id]}×</i>` : ""}</span></button></li>`).join("")}</ul>`
-              : `<div class="tbl-w"><table><thead><tr><th></th><th>Nama</th><th>Kategori</th><th>Paket</th><th>Format</th><th class="num">Ukuran</th><th class="num">Dipakai</th></tr></thead><tbody>${ROWS.map((a, i) => `<tr class="row" tabindex="0" data-i="${i}"><td>${thumb(a, "al-th s")}</td><td><b>${esc(a.name)}</b><span class="cell-s">${esc((a.tags || []).join(", "))}</span></td><td>${esc(cats[a.category_id] || "-")}</td><td>${pkb(a)}</td><td>${esc(a.file_type.toUpperCase())} ${dims(a)}</td><td class="num">${fmtSize(a.file_size)}</td><td class="num">${use[a.id] || 0}</td></tr>`).join("")}</tbody></table></div>`;
+              ? `<ul class="al-grid">${ROWS.map((a, i) => `<li class="al-li">${canW ? `<label class="al-sel-l"><input type="checkbox" class="al-sel" data-sel="${a.id}" ${SEL.has(a.id) ? "checked" : ""} aria-label="Pilih ${esc(a.name)}"></label>` : ""}<button type="button" class="al-card" data-i="${i}">${thumb(a, "al-th")}<span class="al-n">${esc(a.name)}</span><span class="al-m">${esc(cats[a.category_id] || "-")}</span><span class="al-m">${meta(a)}</span><span class="al-b">${pkb(a)}${use[a.id] ? `<i class="al-use">dipakai ${use[a.id]}×</i>` : ""}</span></button></li>`).join("")}</ul>`
+              : `<div class="tbl-w"><table><thead><tr>${canW ? '<th><input type="checkbox" id="l-all" aria-label="Pilih semua di halaman ini"></th>' : ""}<th></th><th>Nama</th><th>Kategori</th><th>Paket</th><th>Format</th><th class="num">Ukuran</th><th class="num">Dipakai</th></tr></thead><tbody>${ROWS.map((a, i) => `<tr class="row" tabindex="0" data-i="${i}">${canW ? `<td><input type="checkbox" class="al-sel" data-sel="${a.id}" ${SEL.has(a.id) ? "checked" : ""} aria-label="Pilih ${esc(a.name)}"></td>` : ""}<td>${thumb(a, "al-th s")}</td><td><b>${esc(a.name)}</b><span class="cell-s">${esc((a.tags || []).join(", "))}</span></td><td>${esc(cats[a.category_id] || "-")}</td><td>${pkb(a)}</td><td>${esc(a.file_type.toUpperCase())} ${dims(a)}</td><td class="num">${fmtSize(a.file_size)}</td><td class="num">${use[a.id] || 0}</td></tr>`).join("")}</tbody></table></div>`;
             box.innerHTML = body + `<div class="pager"><span>${LS.page * PAGE + 1}&ndash;${LS.page * PAGE + ROWS.length} dari ${r.count == null ? ROWS.length : r.count}</span><div><button class="btn o sm" type="button" data-pg="-1" ${LS.page === 0 ? "disabled" : ""}>Sebelumnya</button><button class="btn o sm" type="button" data-pg="1" ${LS.page + 1 >= pages ? "disabled" : ""}>Berikutnya</button></div></div>`;
           }).catch(e => { box.innerHTML = empty("Library tidak bisa dimuat", e && (e.code === "42P01" || e.code === "PGRST205" || e.code === "PGRST202") ? "Tabel/fungsi belum dibuat. Jalankan backend/asset-schema.sql di Supabase." : "Terjadi kendala saat memuat. Coba lagi.", '<button class="btn" type="button" data-retry>Coba lagi</button>'); });
         }
+        const bulkBar = () => {
+          const bar = $("#l-bulk"); if (!bar) return; const n = SEL.size;
+          if (!canW || !n) { bar.hidden = true; bar.innerHTML = ""; return; }
+          const deleted = LS.status === "deleted";
+          bar.hidden = false;
+          bar.innerHTML = `<div class="al-bulk-h"><b>${n} aset dipilih</b><button type="button" class="btn o sm" id="b-clear">Batal pilih</button></div>
+            <div class="al-bulk-b"><label class="fld">Aksi<select id="b-act">${deleted ? '<option value="restore">Pulihkan</option>' : `<option value="status">Ubah status</option><option value="add_tags">Tambah tag</option><option value="remove_tags">Hapus tag</option><option value="packages">Atur paket yang boleh memakai</option><option value="meta">Atur lisensi &amp; sumber</option><option value="delete">Hapus dari library</option>`}</select></label><div id="b-par" class="al-bulk-p"></div><button class="btn" type="button" id="b-go">Terapkan</button></div><div id="b-res" role="status"></div>`;
+          const par = () => {
+            const a = $("#b-act").value, box = $("#b-par");
+            box.innerHTML = a === "status" ? `<label class="fld">Status<select id="b-v"><option value="active">Aktif</option><option value="inactive">Nonaktif</option><option value="archived">Arsip</option></select></label>`
+              : a === "add_tags" || a === "remove_tags" ? `<label class="fld">Tag (pisahkan koma)<input id="b-v" maxlength="200" placeholder="floral, emas"></label>`
+              : a === "packages" ? `<fieldset class="al-pk"><legend>Boleh dipakai paket</legend>${PKGS.map(q => `<label class="chk-l"><input type="checkbox" data-bp="${q}"> ${esc(PKG[q])}</label>`).join("")}</fieldset>`
+              : a === "meta" ? `<label class="fld">Lisensi<select id="b-lic"><option value="">(tidak diubah)</option>${Object.keys(LIC).map(k => `<option value="${k}">${esc(LIC[k])}</option>`).join("")}</select></label><label class="fld">Sumber<select id="b-src"><option value="">(tidak diubah)</option>${Object.keys(SRC).map(k => `<option value="${k}">${esc(SRC[k])}</option>`).join("")}</select></label><label class="fld">Kredit<input id="b-credit" maxlength="160"></label>`
+              : "";
+          };
+          par(); $("#b-act").onchange = par;
+          $("#b-clear").onclick = () => { SEL.clear(); $$(".al-sel").forEach(x => { x.checked = false; }); bulkBar(); };
+          $("#b-go").onclick = async () => {
+            const act = $("#b-act").value, ids = Array.from(SEL), res = $("#b-res"); let val = {};
+            if (act === "status") val = { status: $("#b-v").value };
+            else if (act === "add_tags" || act === "remove_tags") { val = { tags: $("#b-v").value.split(",").map(x => x.trim()).filter(Boolean) }; if (!val.tags.length) { res.textContent = "Isi minimal satu tag."; return; } }
+            else if (act === "packages") { val = { package_types: $$("[data-bp]", bar).filter(x => x.checked).map(x => x.dataset.bp) }; if (!val.package_types.length) { res.textContent = "Pilih minimal satu paket."; return; } }
+            else if (act === "meta") { if ($("#b-lic").value) val.license = $("#b-lic").value; if ($("#b-src").value) val.source = $("#b-src").value; if ($("#b-credit").value.trim()) val.credit = $("#b-credit").value.trim(); if (!Object.keys(val).length) { res.textContent = "Pilih minimal satu isian."; return; } }
+            else if (act === "delete" && !(await dlgConfirm("Hapus " + ids.length + " aset dari library? File asli di storage tidak dihapus dan aset bisa dipulihkan dari filter Terhapus.", "Hapus"))) return;
+            const run = (list, force) => sb.rpc("admin_assets_bulk", { p_ids: list, p_action: act, p_value: val, p_force: !!force });
+            $("#b-go").disabled = true; res.textContent = "Memproses...";
+            let r = await run(ids, false);
+            if (r.error) { $("#b-go").disabled = false; res.textContent = ""; return fail(r.error, "Aksi massal gagal"); }
+            if (!r.data.ok) { $("#b-go").disabled = false; res.textContent = errText(r.data.error); return; }
+            let done = r.data.done, failed = r.data.failed || [];
+            const blocked = failed.filter(x => x.error === "dipakai_template_terbit" || x.error === "asset_dipakai");
+            if (blocked.length && (act === "status" || act === "delete") && await dlgConfirm(blocked.length + " aset dipakai di template (" + blocked.slice(0, 5).map(x => x.name).join(", ") + (blocked.length > 5 ? ", ..." : "") + "). Lanjutkan juga? " + (act === "delete" ? "Relasi ke template dilepas." : "Aset tidak akan tampil lagi di template yang sudah terbit."), "Lanjutkan")) {
+              const r2 = await run(blocked.map(x => x.id), true);
+              if (!r2.error && r2.data.ok) { done += r2.data.done; failed = failed.filter(x => blocked.indexOf(x) < 0).concat(r2.data.failed || []); }
+            }
+            $("#b-go").disabled = false;
+            toast(done + " aset diproses" + (failed.length ? ", " + failed.length + " gagal." : "."), failed.length ? "bad" : "ok");
+            if (!failed.length) SEL.clear();
+            load();
+            const res2 = $("#b-res");
+            if (failed.length && res2) res2.innerHTML = "<b>Gagal:</b> " + failed.slice(0, 10).map(x => esc(x.name || x.id) + " (" + esc(errText(x.error)) + ")").join("; ") + (failed.length > 10 ? "; ..." : "");
+          };
+        };
+        $("#l-res").onchange = (e) => {
+          const c = e.target.closest("[data-sel]"); if (c) { if (c.checked) SEL.add(c.dataset.sel); else SEL.delete(c.dataset.sel); bulkBar(); return; }
+          if (e.target.id === "l-all") { $$("[data-sel]", $("#l-res")).forEach(x => { x.checked = e.target.checked; if (x.checked) SEL.add(x.dataset.sel); else SEL.delete(x.dataset.sel); }); bulkBar(); }
+        };
         $("#l-res").onclick = (e) => {
+          if (e.target.closest("[data-sel], #l-all, .al-sel-l")) return;
           if (e.target.closest("[data-retry]")) return load();
           const pg = e.target.closest("[data-pg]"); if (pg) { LS.page = Math.max(0, LS.page + Number(pg.dataset.pg)); return load(); }
           const it = e.target.closest("[data-i]"); if (it) openAsset(ROWS[Number(it.dataset.i)], load);
@@ -608,6 +712,15 @@
        AI ASSET GENERATOR (tambahan; provider diatur di server)
        ============================================================ */
     const AIL = { pkg: "essential", cat: "", theme: "", prompt: "", count: 2, run: null };
+    function renderDup(root) {
+      root.innerHTML = skel();
+      sb.rpc("admin_asset_duplicates").then(r => {
+        if (r.error) throw r.error; const gs = r.data || [];
+        if (!gs.length) { root.innerHTML = '<div class="card">' + empty("Tidak ada aset serupa", "Library bersih: tidak ditemukan file kembar, ukuran sama, atau nama sama.") + "</div>"; return; }
+        root.innerHTML = '<p class="sub" style="margin:0 0 10px">Kelompok aset yang mungkin kembar. Buka tiap aset untuk membandingkan, lalu arsipkan yang tidak perlu (pemakaian di template tercantum di detail aset).</p>' + gs.map(g => `<div class="card al-dup"><h3>${esc(g.label)} <small class="sub">${g.assets.length} aset</small></h3><ul class="al-grid">${g.assets.map(a => `<li><button type="button" class="al-card" data-dup="${esc(a.id)}">${thumb(a, "al-th")}<span class="al-n">${esc(a.name)}</span><span class="al-m">${esc((a.file_type || "").toUpperCase())} &middot; ${dims(a)} &middot; ${fmtSize(a.file_size)}</span><span class="al-m">${a.deleted ? "Terhapus" : esc(STL[a.status] || a.status)} &middot; dipakai ${a.uses}x</span></button></li>`).join("")}</ul></div>`).join("");
+        root.onclick = (e) => { const b = e.target.closest("[data-dup]"); if (b) sb.from("assets").select("*").eq("id", b.dataset.dup).maybeSingle().then(x => { if (x.data) openAsset(x.data, () => renderDup(root)); }); };
+      }).catch(e => { root.innerHTML = errBox(e && (e.code === "PGRST202" || e.code === "42883") ? "Fungsi belum dibuat. Jalankan backend/asset-library.sql di Supabase." : "Terjadi kendala saat memuat.", 1); const b = $("[data-retry]", root); if (b) b.onclick = () => renderDup(root); });
+    }
     function renderAI(root) {
       const canW = can("templates", "write");
       root.innerHTML = skel();
@@ -690,6 +803,7 @@
     const lib = {
       key: "assetlib", label: "Asset Library", icon: "layout", perm: "templates", grp: "Pelanggan & Acara", tabs: [
         { key: "lib", label: "Library", render: renderLibrary },
+        { key: "dup", label: "Duplikat", render: renderDup },
         { key: "ai", label: "AI Generator", render: renderAI },
         {
           key: "cats", label: "Kategori Aset", table: "asset_categories", order: ["package_type", true], search: ["name", "slug"], title: r => r.name,

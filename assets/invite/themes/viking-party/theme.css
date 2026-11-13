@@ -1,0 +1,19 @@
+/* Viking Party: ukuran ilustrasi & sentuhan kayu-emas */
+.th-viking-party .ulos-dec { width: min(150px, 46vw); }
+.th-viking-party .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-viking-party .gf-amp { width: min(160px, 48vw); }
+.th-viking-party .ws-bk { width: min(150px, 46vw); }
+.th-viking-party .ev-lt { width: 30px; }
+.th-viking-party .gable .art { height: 26px; }
+.th-viking-party .jb-row { gap: 6px; align-items: flex-end; }
+.th-viking-party .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-viking-party .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-viking-party .end-art .eg { filter: drop-shadow(0 18px 28px rgba(52, 23, 15, .4)); }
+.th-viking-party .deep .eb { color: #F1C879; }
+.th-viking-party .cv-nm, .th-viking-party .hero-nm, .th-viking-party .end-nm { text-transform: uppercase; letter-spacing: .04em; text-shadow: 0 2px 0 rgba(52, 23, 15, .55), 0 0 18px rgba(226, 173, 75, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-viking-party .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(40, 16, 8, .66), rgba(40, 16, 8, .32) 62%, rgba(40, 16, 8, .08) 84%), linear-gradient(180deg, rgba(40, 16, 8, .08), rgba(40, 16, 8, .58)); }
+.th-viking-party .cv-dt { color: #FFE2A6; font-weight: 600; }
+.th-viking-party .cv-eb { color: #FFD98F; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-viking-party .hero-in .eb { color: #FFE2A6; text-shadow: 0 1px 8px rgba(40, 16, 8, .9); }

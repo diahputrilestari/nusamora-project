@@ -36,9 +36,24 @@
 
   /* ---------- state & data ---------- */
   /* Fitur yang belum diluncurkan: ubah ke true saat program dibuka. Menu DAN rute ikut tersembunyi (hash langsung kembali ke Dashboard). */
-  var FEATURES = { affiliate: false, dompet: false };
-  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], loaded: false, warn: false, period: "30", from: "", to: "" };
+  var FEATURES = { affiliate: false, dompet: false }; /* diatur dinamis dari aff_me() setelah data termuat */
+  var S = { notif: null, tickets: null, user: null, profile: {}, inv: [], sub: null, wallet: { credits: 0, bonus_balance: 0 }, invoices: [], bonus: [], wd: [], aff: null, loaded: false, warn: false, period: "30", from: "", to: "" };
   function safe(p, fallback) { return p.then(function (r) { if (r.error) { S.warn = S.warn || (r.error.code !== "42P01" && r.error.code !== "PGRST205"); return fallback; } return r.data == null ? fallback : r.data; }, function () { S.warn = true; return fallback; }); }
+
+  /* ---------- Affiliate: data nyata dari aff_me(). Bila fungsi belum ada di database, menu tetap tersembunyi. ---------- */
+  var AERR = { program_belum_dibuka: "Program affiliate belum dibuka.", akun_tidak_aktif: "Akun Anda tidak aktif.", bank_tidak_valid: "Nama bank 2 sampai 40 karakter.", nomor_rekening_tidak_valid: "Nomor rekening harus 6 sampai 24 angka.", nama_rekening_tidak_valid: "Nama pemilik rekening 2 sampai 60 karakter.",
+    ada_penarikan_berjalan: "Masih ada penarikan yang diproses. Tunggu sampai selesai.", bukan_affiliate: "Anda belum terdaftar sebagai affiliate.", affiliate_tidak_aktif: "Akun affiliate Anda belum aktif.", rekening_belum_diisi: "Isi rekening bank terlebih dahulu.", rekening_belum_terverifikasi: "Rekening belum diverifikasi admin.", di_bawah_minimum: "Jumlah di bawah minimum penarikan.", saldo_tidak_cukup: "Saldo tidak cukup." };
+  function aErr(e) { var m = String(e && (e.message || e) || ""), k = Object.keys(AERR).filter(function (x) { return m.indexOf(x) > -1; })[0]; return k ? AERR[k] : "Gagal. Coba lagi."; }
+  function loadAff() { return sb.rpc("aff_me").then(function (r) { return r.error ? null : r.data; }, function () { return null; }); }
+  function applyAff() { var a = S.aff; FEATURES.affiliate = !!a; FEATURES.dompet = !!a && ((a.config && a.config.enabled) || !!a.affiliate || S.bonus.length > 0 || S.wd.length > 0); }
+  function takeRef() { try { return JSON.parse(localStorage.getItem("nm_ref") || "null"); } catch (e) { return null; } }
+  function clearRef() { try { localStorage.removeItem("nm_ref"); } catch (e) { } }
+  function attachRef() {
+    var r = takeRef(); if (!r || !r.code || !S.aff) return Promise.resolve();
+    if (Date.now() - (r.t || 0) > 180 * 864e5) { clearRef(); return Promise.resolve(); }
+    if (!(S.aff.config && S.aff.config.enabled)) return Promise.resolve();
+    return sb.rpc("aff_attach_referral", { p_code: r.code, p_click: r.click || null }).then(function () { clearRef(); }, function () { clearRef(); });
+  }
   function loadAll() {
     var uid = S.user.id;
     return Promise.all([
@@ -48,8 +63,9 @@
       safe(sb.from("wallets").select("credits,bonus_balance").eq("user_id", uid).maybeSingle(), { credits: 0, bonus_balance: 0 }),
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
       safe(sb.from("bonus_history").select("description,amount,created_at").order("created_at", { ascending: false }).limit(200), []),
-      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), [])
-    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.loaded = true; }).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
+      safe(sb.from("withdrawals").select("amount,destination,status,created_at").order("created_at", { ascending: false }).limit(200), []),
+      loadAff()
+    ]).then(function (r) { S.profile = r[0]; S.inv = r[1]; S.sub = r[2][0] || null; S.wallet = r[3]; S.invoices = r[4]; S.bonus = r[5]; S.wd = r[6]; S.aff = r[7]; S.loaded = true; applyAff(); }).then(attachRef).then(function () { return sb.rpc("my_notifications").then(function (r) { if (!r.error) { S.notif = r.data || []; S.unread = S.notif.filter(function (n) { return !n.read; }).length; } }, function () { }); });
   }
   function name() { return (S.profile && S.profile.full_name) || (S.user && S.user.email ? S.user.email.split("@")[0] : "Pelanggan"); }
   function range() {
@@ -141,10 +157,37 @@
     return '<div class="pghead"><div><h1>Tutorial</h1><p class="sub">Panduan singkat memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card faq">' + T.map(function (t) { return "<details><summary>" + esc(t[0]) + ico("plus") + "</summary><p>" + esc(t[1]) + "</p></details>"; }).join("") + '</div><div class="card"><h2 style="margin-bottom:14px">Alur singkat</h2><ol class="steps"><li><div><b>Pilih template</b><p class="sub">Coba demo, pilih yang cocok.</p></div></li><li><div><b>Isi data acara</b><p class="sub">Detail, galeri, musik, tamu.</p></div></li><li><div><b>Bayar dan bagikan</b><p class="sub">Kirim link pribadi ke tamu.</p></div></li></ol></div></div>';
   };
   V.affiliate = function () {
-    var code = S.user.id.replace(/-/g, "").slice(0, 8).toUpperCase(), link = SITE + "/daftar?ref=" + code;
-    return '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora</p></div></div><div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(code) + '</b></p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
-      '<p class="note" style="margin-top:16px">Pencatatan referral dan besaran komisi belum aktif. Ketentuan program akan diumumkan sebelum dibuka, jadi link ini baru dipakai setelah program berjalan.</p></div><div class="card"><h2 style="margin-bottom:14px">Saldo bonus</h2><div class="cred"><b>' + rp(S.wallet.bonus_balance) + '</b></div><div class="row-end"><a class="btn o sm" href="#bonus">History Bonus</a><a class="btn o sm" href="#penarikan">History Penarikan</a></div></div></div>';
+    var A = S.aff || {}, c = A.config || {}, af = A.affiliate, h = '<div class="pghead"><div><h1>Affiliate</h1><p class="sub">Ajak teman memakai NusaMora dan dapatkan komisi</p></div></div>';
+    if (!af && !c.enabled) return h + '<div class="card">' + empty("share", "Segera hadir", "Program affiliate NusaMora belum dibuka. Kami akan mengumumkan ketentuan dan besaran komisinya sebelum program dimulai.") + "</div>";
+    if (!af) return h + '<div class="card"><h2 style="margin-bottom:8px">Gabung program affiliate</h2><ul class="sub" style="margin:0 0 14px 18px"><li>Komisi <b>' + esc(c.commission_label) + "</b> dari pembayaran pertama setiap pelanggan yang mendaftar lewat link Anda.</li><li>Link berlaku " + esc(c.attribution_days) + " hari sejak diklik.</li><li>Komisi ditahan " + esc(c.hold_days) + " hari sebelum masuk saldo, dan bisa dibatalkan bila pembayaran direfund.</li><li>Penarikan minimal " + rp(c.min_withdrawal) + (c.require_bank_verified ? ", dan rekening harus terverifikasi admin" : "") + ".</li></ul><button class=\"btn\" type=\"button\" id=\"af-reg\">Daftar sebagai affiliate</button></div>";
+    var link = SITE + "/daftar?ref=" + af.code, st = A.stats || {};
+    if (af.status === "pending") return h + '<div class="card">' + empty("share", "Menunggu persetujuan", "Pendaftaran Anda sedang ditinjau admin. Kode Anda: " + af.code + ". Link baru bisa dipakai setelah disetujui.") + "</div>";
+    if (af.status === "suspended") return h + '<div class="card">' + empty("share", "Akun affiliate ditangguhkan", af.status_reason ? "Alasan: " + af.status_reason : "Hubungi dukungan untuk informasi lebih lanjut.") + "</div>";
+    h += c.enabled ? "" : '<p class="note" style="margin-bottom:16px">Program sedang ditutup sementara. Klik dan pendaftar baru tidak dihitung, tetapi saldo dan penarikan Anda tetap berjalan.</p>';
+    h += '<div class="grid g2" style="align-items:start"><div class="card"><h2 style="margin-bottom:6px">Link referral Anda</h2><p class="sub" style="margin-bottom:14px">Kode: <b>' + esc(af.code) + '</b> · Komisi ' + esc(af.rate ? (af.rate.type === "percent" ? af.rate.value + "%" : rp(af.rate.value)) : c.commission_label) + '</p><div class="copy"><input type="text" readonly value="' + esc(link) + '" id="ref" aria-label="Link referral"><button class="btn" type="button" data-copy="' + esc(link) + '">' + ico("copy") + " Salin</button></div>" +
+      '<p class="sub" style="margin-top:12px">Komisi masuk saldo setelah masa tahan ' + esc(c.hold_days) + " hari dan lolos pemeriksaan. Pembayaran pertama saja yang dihitung.</p></div>" +
+      '<div class="card"><h2 style="margin-bottom:14px">Ringkasan</h2><div class="cred"><b>' + rp(A.balance) + '</b><span>saldo bisa ditarik</span></div><dl class="sub" style="margin:14px 0 0;display:grid;grid-template-columns:1fr auto;gap:4px 12px"><dt>Klik</dt><dd style="margin:0">' + (st.clicks || 0) + "</dd><dt>Pendaftar</dt><dd style=\"margin:0\">" + (st.signups || 0) + "</dd><dt>Pelanggan berbayar</dt><dd style=\"margin:0\">" + (st.paid || 0) + "</dd><dt>Komisi ditahan</dt><dd style=\"margin:0\">" + rp(st.commission_pending || 0) + "</dd><dt>Komisi disetujui</dt><dd style=\"margin:0\">" + rp(st.commission_approved || 0) + "</dd></dl></div></div>";
+    var bs = { none: "Belum diisi", pending: "Menunggu verifikasi admin", verified: "Terverifikasi", rejected: "Ditolak" }[af.bank_status] || af.bank_status;
+    h += '<div class="grid g2" style="align-items:start;margin-top:16px"><form class="card form" id="af-bank" novalidate><h2>Rekening penarikan</h2><p class="sub">Status: <b>' + esc(bs) + "</b>" + (af.bank_account_mask ? " · " + esc(af.bank_name) + " " + esc(af.bank_account_mask) + " a.n. " + esc(af.bank_account_name) : "") + "</p>" + (af.bank_note ? '<p class="note">Alasan penolakan: ' + esc(af.bank_note) + "</p>" : "") +
+      '<label class="fld">Nama bank<input type="text" id="b-bank" maxlength="40" placeholder="BCA"></label><label class="fld">Nomor rekening<input type="text" id="b-no" inputmode="numeric" maxlength="24" autocomplete="off"></label><label class="fld">Nama pemilik rekening<input type="text" id="b-name" maxlength="60" placeholder="Sesuai buku tabungan"></label><span class="err" id="b-err"></span><div class="row-end"><button class="btn" type="submit" id="b-go"' + (A.pending_withdrawal ? " disabled" : "") + ">" + (af.bank_account_mask ? "Ganti rekening" : "Simpan rekening") + "</button></div>" + (af.bank_account_mask ? '<small class="sub">Mengganti rekening mengulang verifikasi.</small>' : "") + "</form>" +
+      '<form class="card form" id="af-wd" novalidate><h2>Tarik saldo</h2><p class="sub">Saldo ' + rp(A.balance) + " · minimal " + rp(c.min_withdrawal) + ". Pembayaran ditransfer manual oleh admin ke rekening Anda.</p>" + (A.pending_withdrawal ? '<p class="note">Anda masih punya penarikan yang sedang diproses.</p>' : "") + '<label class="fld">Jumlah (Rp)<input type="text" id="w-amt" inputmode="numeric" autocomplete="off"></label><span class="err" id="w-err"></span><div class="row-end"><button class="btn" type="submit" id="w-go2"' + (A.pending_withdrawal ? " disabled" : "") + ">Ajukan penarikan</button></div></form></div>";
+    var rc = A.recent || [], CSL = { none: "-", pending: "Ditahan", approved: "Disetujui", rejected: "Ditolak", reversed: "Dibatalkan" };
+    h += '<div class="card" style="margin-top:16px"><h2 style="margin-bottom:12px">Referral terbaru</h2>' + (rc.length ? '<div class="tbl-w"><table><thead><tr><th>Tanggal</th><th>Pelanggan</th><th>Status</th><th>Komisi</th><th class="num">Jumlah</th></tr></thead><tbody>' + rc.map(function (x) { return "<tr><td>" + dt(x.at) + "</td><td>" + esc(x.who) + "</td><td>" + (x.status === "berbayar" ? "Sudah membayar" : x.status === "batal" ? "Batal" : "Baru mendaftar") + "</td><td>" + esc(CSL[x.commission_status] || "-") + (x.commission_status === "pending" && x.available_at ? " (cair " + dt(x.available_at) + ")" : "") + '</td><td class="num">' + (x.status === "berbayar" ? rp(x.commission) : "-") + "</td></tr>"; }).join("") + "</tbody></table></div>" : empty("users", "Belum ada referral", "Bagikan link Anda untuk mulai mendapat komisi.")) + "</div>";
+    return h;
   };
+  function bindAff() {
+    var rg = $("#af-reg"); if (rg) rg.addEventListener("click", function () { rg.disabled = true; sb.rpc("aff_register").then(function (r) { if (r.error) { rg.disabled = false; return toast(aErr(r.error), "bad"); } toast("Pendaftaran terkirim.", "ok"); return loadAff().then(function (a) { S.aff = a; applyAff(); route(); }); }); });
+    var bf = $("#af-bank"); if (bf) bf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#b-err").textContent = ""; var bt = $("#b-go"); bt.disabled = true;
+      sb.rpc("aff_save_bank", { p_bank: $("#b-bank").value, p_no: $("#b-no").value, p_name: $("#b-name").value }).then(function (r) { if (r.error) { bt.disabled = false; $("#b-err").textContent = aErr(r.error); return; } toast("Rekening disimpan, menunggu verifikasi admin.", "ok"); return loadAff().then(function (a) { S.aff = a; route(); }); });
+    });
+    var wf = $("#af-wd"); if (wf) wf.addEventListener("submit", function (e) {
+      e.preventDefault(); $("#w-err").textContent = ""; var n = parseInt(String($("#w-amt").value).replace(/\D/g, ""), 10);
+      if (!n) { $("#w-err").textContent = "Isi jumlah penarikan."; return; }
+      var bt = $("#w-go2"); bt.disabled = true;
+      sb.rpc("aff_request_withdrawal", { p_amount: n }).then(function (r) { if (r.error) { bt.disabled = false; $("#w-err").textContent = aErr(r.error); return; } toast("Penarikan diajukan.", "ok"); S.loaded = false; route(); loadAll().then(function () { route(); }); });
+    });
+  }
   V.dompet = function () {
     var tab = S.dtab === "penarikan" ? "penarikan" : "bonus";
     var h = '<div class="pghead"><div><h1>Dompet Bonus</h1><p class="sub">Riwayat bonus dan penarikan saldo Anda</p></div></div>';
@@ -288,39 +331,78 @@
   });
   /* ---- Bantuan & Dukungan: tiket lewat RPC (support_*) ---- */
   var CAT = { bantuan: "Bantuan umum", pembayaran: "Pembayaran", teknis: "Masalah teknis", komplain: "Komplain", lainnya: "Lainnya" };
+  var TST = { open: ["Dibuka", "warn"], diproses: ["Sedang diproses", "warn"], menunggu_pelanggan: ["Menunggu balasan Anda", "bad"], selesai: ["Selesai", "ok"], ditutup: ["Ditutup", ""] };
+  var FTYPE = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }, FMAX = 3 * 1024 * 1024;
+  function tbadge(s) { var x = TST[s] || [s, ""]; return '<span class="badge ' + x[1] + '">' + esc(x[0]) + "</span>"; }
+  function fileLinks(fs) { return fs && fs.length ? '<div class="tkf">' + fs.map(function (f) { return '<button type="button" class="lnk" data-file="' + esc(f.path) + '">Lihat ' + esc(f.name) + "</button>"; }).join(" ") + "</div>" : ""; }
   V.bantuan = function () {
     var h = '<div class="pghead"><div><h1>Bantuan &amp; Dukungan</h1><p class="sub">Hubungi tim NusaMora</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-tk" novalidate><h2>Buat tiket baru</h2>' +
       '<label class="fld">Kategori<select id="tk-cat">' + Object.keys(CAT).map(function (k) { return '<option value="' + k + '">' + CAT[k] + "</option>"; }).join("") + '</select></label>' +
       '<label class="fld">Subjek<input type="text" id="tk-sub" maxlength="120"><span class="err" id="e-tks"></span></label>' +
       '<label class="fld">Pesan<textarea id="tk-msg" rows="5" maxlength="4000"></textarea><span class="err" id="e-tkm"></span></label>' +
-      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Tiket saya</h2><div id="tk-list">';
+      '<label class="fld">Screenshot (opsional)<input type="file" id="tk-file" accept="image/png,image/jpeg,image/webp" multiple><small>Maksimal 3 gambar (PNG, JPG, WebP), 3 MB per gambar.</small><span class="err" id="e-tkf"></span></label>' +
+      '<div class="row-end"><button class="btn" type="submit" id="tk-go">Kirim tiket</button></div></form><div class="card"><h2 style="margin-bottom:12px">Riwayat tiket saya</h2><div id="tk-list">';
     if (S.tickets === null) { loadTickets(); return h + '<div class="sk h3"></div></div></div></div>'; }
     if (S.tickets === false) return h + empty("chat", "Tiket belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.") + "</div></div></div>";
     if (!S.tickets.length) return h + empty("chat", "Belum ada tiket", "Tiket yang Anda buat akan tampil di sini.") + "</div></div></div>";
     return h + S.tickets.map(function (t) {
-      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + badge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small><p>" + esc(t.message || "") + "</p>" +
-        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + "</b><p>" + esc(r.body) + "</p></div>"; }).join("") +
-        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><button class="btn sm" type="submit">Balas</button></form>') + "</details>";
+      return '<details class="tk"><summary><span>' + esc(t.subject) + "</span>" + tbadge(t.status) + "</summary><small>" + esc(CAT[t.category] || t.category) + " &middot; " + dt(t.created_at, true) + "</small>" +
+        (t.status === "menunggu_pelanggan" ? '<p class="tkw">Tim kami menunggu balasan Anda.</p>' : "") + "<p>" + esc(t.message || "") + "</p>" + fileLinks(t.files) +
+        t.replies.map(function (r) { return '<div class="rp' + (r.is_staff ? " staff" : "") + '"><b>' + (r.is_staff ? "Tim NusaMora" : "Anda") + " <small>" + dt(r.created_at, true) + "</small></b><p>" + esc(r.body) + "</p>" + fileLinks(r.files) + "</div>"; }).join("") +
+        (t.status === "ditutup" ? "" : '<form class="rf" data-tk="' + esc(t.id) + '"><div class="rfc"><textarea rows="2" maxlength="4000" aria-label="Balasan"></textarea><input type="file" accept="image/png,image/jpeg,image/webp" multiple aria-label="Screenshot"></div><button class="btn sm" type="submit">Balas</button></form>' +
+          '<button type="button" class="btn o sm" data-close="' + esc(t.id) + '">Tutup tiket</button>') + "</details>";
     }).join("") + "</div></div></div>";
   };
   function loadTickets() { sb.rpc("support_my_tickets").then(function (r) { S.tickets = r.error ? false : (r.data || []); if (location.hash === "#bantuan") route(); }); }
-  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup." };
+  var ERR = { subjek_tidak_valid: "Subjek 3 sampai 120 karakter.", pesan_tidak_valid: "Pesan 5 sampai 4000 karakter.", terlalu_banyak_permintaan: "Terlalu banyak tiket. Coba lagi nanti.", tiket_ditutup: "Tiket ini sudah ditutup.", lampiran_terlalu_banyak: "Terlalu banyak lampiran.", lampiran_terlalu_besar: "Gambar maksimal 3 MB.", lampiran_tidak_valid: "Lampiran harus PNG, JPG, atau WebP." };
   function errMsg(e) { var m = (e && e.message) || ""; for (var k in ERR) if (m.indexOf(k) >= 0) return ERR[k]; return "Gagal mengirim. Coba lagi."; }
+  function pickFiles(inp, errEl) {
+    var fs = inp && inp.files ? Array.prototype.slice.call(inp.files) : [], msg = "";
+    if (fs.length > 3) msg = "Maksimal 3 gambar."; else fs.forEach(function (f) { if (!FTYPE[f.type]) msg = "Hanya PNG, JPG, atau WebP."; else if (f.size > FMAX) msg = "Setiap gambar maksimal 3 MB."; });
+    if (errEl) errEl.textContent = msg; return msg ? null : fs;
+  }
+  function uploadFiles(tid, rid, fs) {
+    var uid = S.user.id, bad = 0, chain = Promise.resolve();
+    fs.forEach(function (f) {
+      chain = chain.then(function () {
+        var path = uid + "/" + tid + "/" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + "." + FTYPE[f.type];
+        return sb.storage.from("ticket-files").upload(path, f, { contentType: f.type, upsert: false }).then(function (u) {
+          if (u.error) { bad++; return; }
+          return sb.rpc("support_add_attachment", { p_ticket: tid, p_reply: rid, p_path: path, p_name: f.name, p_mime: f.type, p_size: f.size }).then(function (r) { if (r.error) bad++; });
+        });
+      });
+    });
+    return chain.then(function () { return bad; }, function () { return bad + 1; });
+  }
   function bindSupport() {
     var f = $("#f-tk"); if (f) f.addEventListener("submit", function (e) {
       e.preventDefault(); $("#e-tks").textContent = ""; $("#e-tkm").textContent = "";
-      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true;
+      var sj = $("#tk-sub").value.trim(), ms = $("#tk-msg").value.trim(), ok = true, fs = pickFiles($("#tk-file"), $("#e-tkf"));
       if (sj.length < 3) { $("#e-tks").textContent = "Isi subjek (minimal 3 karakter)."; ok = false; }
       if (ms.length < 5) { $("#e-tkm").textContent = "Isi pesan (minimal 5 karakter)."; ok = false; }
-      if (!ok) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
+      if (!ok || fs === null) return; var bt = $("#tk-go"); bt.disabled = true; bt.textContent = "Mengirim...";
       sb.rpc("support_create_ticket", { p_subject: sj, p_category: $("#tk-cat").value, p_message: ms }).then(function (r) {
-        bt.disabled = false; bt.textContent = "Kirim tiket"; if (r.error) return toast(errMsg(r.error), "bad");
-        toast("Tiket terkirim.", "ok"); S.tickets = null; route();
+        if (r.error) { bt.disabled = false; bt.textContent = "Kirim tiket"; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(r.data, null, fs) : Promise.resolve(0)).then(function (bad) {
+          bt.disabled = false; bt.textContent = "Kirim tiket"; toast(bad ? "Tiket terkirim, tetapi " + bad + " lampiran gagal diunggah." : "Tiket terkirim.", bad ? "bad" : "ok"); S.tickets = null; route();
+        });
       });
     });
     $$(".rf").forEach(function (rf) { rf.addEventListener("submit", function (e) {
-      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(); if (!b) return;
-      sb.rpc("support_reply", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Balasan terkirim.", "ok"); S.tickets = null; route(); });
+      e.preventDefault(); var ta = rf.querySelector("textarea"), b = ta.value.trim(), fs = pickFiles(rf.querySelector("input[type=file]"), null); if (!b) return;
+      if (fs === null) return toast("Lampiran harus PNG, JPG, atau WebP (maks. 3 gambar, 3 MB).", "bad");
+      var btn = rf.querySelector("button"); btn.disabled = true;
+      sb.rpc("support_reply_v2", { p_ticket: rf.dataset.tk, p_body: b }).then(function (r) {
+        if (r.error) { btn.disabled = false; return toast(errMsg(r.error), "bad"); }
+        return (fs.length ? uploadFiles(rf.dataset.tk, r.data, fs) : Promise.resolve(0)).then(function (bad) { toast(bad ? "Balasan terkirim, tetapi " + bad + " lampiran gagal." : "Balasan terkirim.", bad ? "bad" : "ok"); S.tickets = null; route(); });
+      });
+    }); });
+    $$("[data-close]").forEach(function (bt) { bt.addEventListener("click", function () {
+      if (!bt.dataset.sure) { bt.dataset.sure = "1"; bt.textContent = "Yakin? Klik lagi untuk menutup"; return; }
+      sb.rpc("support_close", { p_ticket: bt.dataset.close }).then(function (r) { if (r.error) return toast(errMsg(r.error), "bad"); toast("Tiket ditutup.", "ok"); S.tickets = null; route(); });
+    }); });
+    $$("[data-file]").forEach(function (bt) { bt.addEventListener("click", function () {
+      sb.storage.from("ticket-files").createSignedUrl(bt.dataset.file, 120).then(function (r) { if (r.error || !r.data) return toast("Gambar tidak bisa dibuka.", "bad"); window.open(r.data.signedUrl, "_blank", "noopener"); });
     }); });
   }
   V.profil = function () {
@@ -351,6 +433,7 @@
     var a = $("#f-from"), b = $("#f-to"); if (a) a.addEventListener("change", function () { S.from = a.value; route(); }); if (b) b.addEventListener("change", function () { S.to = b.value; route(); });
     var st = $("#f-st"); if (st) st.addEventListener("change", function () { S.q = st.value; route(); $("#f-st").focus(); });
     if (r === "profil") bindProfile();
+    if (r === "affiliate") bindAff();
     if (r === "bantuan") bindSupport();
     if (r === "notifikasi") markNotifRead();
     if (["statistik", "rsvp", "bukutamu", "live"].indexOf(r) >= 0) bindGuests(r);

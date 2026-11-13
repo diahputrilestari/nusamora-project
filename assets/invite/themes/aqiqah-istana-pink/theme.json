@@ -1,0 +1,130 @@
+{
+  "id": "aqiqah-istana-pink",
+  "name": "Aqiqah Istana Pink",
+  "version": 1,
+  "description": "Tasyakuran aqiqah bernuansa istana merah muda: lentera emas, Al-Qur'an di atas rehal, bulan sabit, gazebo bertirai, teddy dan kelinci, serta ilustrasi bayi berhijab bermahkota.",
+  "categories": [
+    "aqiqah"
+  ],
+  "demo": {
+    "name": "Aisyah",
+    "full": "Aisyah Humaira Putri",
+    "parents": "Putri pertama Bapak Dimas Pratama & Ibu Rania Larasati"
+  },
+  "colors": {
+    "deep": "#7A2766",
+    "deep2": "#B04593",
+    "paper": "#FFF7FB",
+    "ink": "#4A1F42",
+    "muted": "#8A5C7E",
+    "accent": "#C2468E",
+    "accent2": "#FFD27A",
+    "soft": "#FCE6F2",
+    "petal": "#F9A8D4"
+  },
+  "fonts": {
+    "script": "Dancing Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Tasyakuran Aqiqah",
+    "guestSalute": "Keluarga & sahabat tersayang",
+    "profileEyebrow": "Si kecil yang dinantikan",
+    "profileTitle": "Buah Hati Kami",
+    "countdownEyebrow": "Menuju hari tasyakuran",
+    "countdownTitle": "Hari Bahagia",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Tasyakuran Aqiqah",
+    "storyEyebrow": "Kabar bahagia",
+    "storyTitle": "Kisah Kehadirannya",
+    "galleryEyebrow": "Momen pertama",
+    "galleryTitle": "Galeri Si Kecil",
+    "rsvpLead": "Mohon kabari kami apakah Bapak/Ibu/Saudara/i dapat hadir mendoakan si kecil.",
+    "giftEyebrow": "Tanda kasih",
+    "giftTitle": "Kado untuk Si Kecil",
+    "giftLead": "Doa dan kehadiran Anda adalah hadiah terindah. Bila ingin mengirim tanda kasih, bisa melalui:",
+    "wishesEyebrow": "Doa terbaik",
+    "wishesTitle": "Doa untuk Si Kecil",
+    "closingEyebrow": "Jazakumullahu khairan",
+    "closingText": "Merupakan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu untuk buah hati kami."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverHang": "art/lentera.webp",
+    "coverGround": [
+      {
+        "src": "art/pot-bunga.webp",
+        "w": 72
+      },
+      {
+        "src": "art/bulan-bintang.webp",
+        "w": 118
+      },
+      {
+        "src": "art/pot-bunga.webp",
+        "w": 72
+      }
+    ],
+    "heading": "art/kerincing.webp",
+    "introTop": "art/quran.webp",
+    "figureBride": "art/bayi.webp",
+    "countdownRow": [
+      {
+        "src": "art/teddy.webp",
+        "w": 74
+      },
+      {
+        "src": "art/balon.webp",
+        "w": 86
+      },
+      {
+        "src": "art/kelinci.webp",
+        "w": 64
+      }
+    ],
+    "eventBadge": "art/lentera-pink.webp",
+    "storyTop": "art/bulan-bintang.webp",
+    "rsvpHang": "art/lentera-2.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/bingkai-bunga.webp",
+    "closingScene": "art/gazebo.webp",
+    "closingFigures": [
+      "art/bayi.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

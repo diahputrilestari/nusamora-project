@@ -52,6 +52,8 @@ Tulis data lewat RPC `slug_available`, `create_invitation`, `save_invitation`; f
 
 Menu admin **Asset Library** dan **Manajemen Template > Studio (tab A-D)**. Satu template universal per paket (Essential 2D, Signature 3D Cinematic, Luxe 3D Live Guest); **tema = set aset** yang menimpa aset umum template pada slot yang sama.
 
+**Tema Live Guest (Luxe):** satu halaman live universal, tema = data venue. Admin > Live Guest > Venue Builder > bagian *Tema tampilan*: jenis acara, palet warna, font, ornamen, posisi lukisan; gambar lukisan venue (rasio 1672x941) diisi di URL background (bisa dari Asset Library). `live_theme()` mengirim tema ke tamu, `live/live-bridge.js` mendaftarkannya ke mesin tema halaman. Contoh tema `midnight-party` (nonaktif) tersedia lewat `backend/admin-live-theme.sql`. Aset gambar/karakter yang diunggah wajib berlisensi milik penyelenggara.
+
 **Setup (sekali):**
 1. SQL Editor: jalankan `backend/asset-schema.sql` **paling akhir** (setelah `package-schema.sql`). Aman dijalankan ulang; membuat kategori aset per paket, `assets`, `themes`, `template_themes`, `template_assets`, bucket storage `theme-assets`, dan fungsi `admin_*`.
 2. Deploy Edge Function pendaftaran aset: `supabase functions deploy asset-register --no-verify-jwt` (memakai `SUPABASE_SERVICE_ROLE_KEY` bawaan Supabase; tidak ada secret baru).
@@ -120,6 +122,16 @@ Status pembayaran HANYA diubah backend: `midtrans-webhook` (signature_key + veri
 
 Paket: Essential = 2D, Signature = 3D cinematic, Luxe = 3D + Live Guest (kolom `plans.allow_3d`, `plans.allow_live_guest`). Data publik undangan lewat RPC `get_public_invitation(slug)`, yang membuang fitur Live Guest bila paket tidak memilikinya.
 
+## Undangan 2D universal (engine + tema)
+Semua undangan paket Essential yang templatenya bertanda `capabilities.engine = "universal-2d"` dirender satu engine di `nusamora.com/{slug}`; tampilannya ditentukan paket tema.
+- `undangan.html` memuat `assets/invite/core/`: `data.js` (ambil & normalisasi undangan, RSVP/ucapan), `theme.js` (muat & terapkan paket tema), `motion.js` (reveal, parallax, partikel, animasi huruf, gulir otomatis; menghormati prefers-reduced-motion), `engine.js` + `engine.css` (semua section dan interaksi).
+- Paket tema di `assets/invite/themes/<id>/`: warna, font (termasuk font aksara lain), ornamen bawaan atau file, transisi cover, urutan section, teks, backdrop pemandangan, dan slot ilustrasi. Panduan: `assets/invite/themes/README.md`.
+- Tema bawaan: Marun Songket, Sage Garden, Biru Malam, Blush Rose, Batak Ulos, Korean Royal Wedding, Javanese Wedding, Chinese Wedding, serta tema ulang tahun Istana Pink, Dino Adventure, dan Metal Rock Party (tema gelap). Teks bawaan engine menyesuaikan kategori (pernikahan atau acara satu orang seperti ulang tahun).
+- Alur paket tetap sama (`/paket` → `/template` → `/buat` → `/editor` → `/preview`). Untuk template engine, editor Essential menampilkan Tema Undangan, Mempelai, Acara lainnya, Love Story, Hadiah Digital, dan Tamu & Ucapan; `/preview` menampilkan engine asli di dalam bingkai desktop/ponsel.
+- Konten disimpan dengan kunci paket Essential: `design2d.theme`, `texts.quote/quoteSource/closing`, `sections`, `gift.address`, ditambah `couple`, `events`, `story`, `accounts`.
+- URL: `?to=Nama` = nama tamu, `?preview=<id>` = pratinjau pemilik, `?demo=1&theme=<id>` = demo tema.
+
+**Setup:** setelah `asset-schema.sql`, jalankan `backend/essential-schema.sql` (RSVP, ucapan, kunci konten engine, validasi foto; menimpa `pkg_keys` dan `save_invitation`) lalu `backend/themes-seed.sql` (tema sebagai template Essential). Jika `package-schema.sql` atau `asset-schema.sql` dijalankan ulang, jalankan ulang kedua file ini. Routing slug sudah diatur di `vercel.json` dan `.htaccess`.
 
 ## Keamanan P0 (branch `security/p0`)
 Urutan SQL setelah `asset-schema.sql`: `backend/security-schema.sql` lalu `backend/security-mfa.sql` (jalankan ulang `security-mfa.sql` bila `admin-schema.sql` dijalankan ulang, karena `has_perm()` ditimpa). Edge Function baru/berubah: `admin-password`, `midtrans-*`, `asset-*` (secret baru: `RATE_LIMIT_SALT`). Dokumen: `docs/security/` (AUDIT-KEAMANAN, BACKUP_POLICY, DISASTER_RECOVERY, SECURITY-HEADERS, RATE-LIMITING, MFA-ADMIN). Skrip & uji: `ops/backup`, `ops/security`, `ops/tests`.
