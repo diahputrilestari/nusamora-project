@@ -139,7 +139,7 @@
       }
       var grp = { L: [], P: [] }, nm = { L: [], P: [] }, host = null;
       ok.forEach(function (r) {
-        if (r.k === "av_host") { var hw = Math.min(320, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
+        if (r.k === "av_host") { var hw = Math.min(512, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
         var g = r.k.charAt(3) === "l" ? "L" : "P", c = document.createElement("canvas"), w = Math.min(320, r.cv.width); c.width = w; c.height = Math.max(1, Math.round(w * r.cv.height / r.cv.width));
         c.getContext("2d").drawImage(r.cv, 0, 0, c.width, c.height);
         grp[g].push({ img: c.toDataURL("image/webp", 0.9), id: "tv" + r.k, ar: r.cv.width / r.cv.height, tv: 1 });
@@ -149,8 +149,14 @@
       if (host) {
         var setHost = function () {
           try {
-            if (typeof coupleEnts !== "function") return; var e = coupleEnts().filter(function (x) { return x.g.visible; })[0]; if (!e || e.g.userData.nmHost) return;
-            e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1;
+            if (typeof coupleEnts !== "function") return; var ce = coupleEnts(), e = ce.filter(function (x) { return x.g.visible; })[0]; if (!e) return;
+            /* acara pasangan (pernikahan/pertunangan): av_host = foto berdua, tampil di tengah panggung; mempelai pria disembunyikan */
+            var cp = typeof nmEv === "function" && nmEv().kind === "couple";
+            if (!e.g.userData.nmHost) { e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1; }
+            if (cp) {
+              e.g.position.x = 0; if (ce[1]) { ce[1].g.visible = false; if (ce[1].el) ce[1].el.classList.add("nm-hid"); }
+              if (e.el) { e.el.dataset.k = "solo"; try { if (NMID.pair) coupleLabel(e, NMID.pair); } catch (x) { } }
+            }
           } catch (x) { }
         };
         if (!window.__nmHostWrap && typeof nmStage === "function") { window.__nmHostWrap = 1; var ns = nmStage; nmStage = function () { ns.apply(this, arguments); setHost(); }; }
@@ -174,6 +180,8 @@
       Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
       /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
       var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"] };
+      /* posisi kustom (x,z) di decor: titik area ikut, 2.9 satuan di depan dekornya */
+      Object.keys(AT).forEach(function (id) { var o = dc[AT[id][2]]; if (o && typeof o.x === "number" && typeof o.z === "number") { AT[id][0] = o.x; AT[id][1] = o.z + 2.9; } });
       try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
       sc.add(grp);
     });
