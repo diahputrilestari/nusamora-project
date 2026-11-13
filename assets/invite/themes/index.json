@@ -122,7 +122,11 @@
     "angkasa": "little-rocket",
     "space": "little-rocket",
     "penjelajah-roket": "little-rocket",
-    "luar-angkasa": "little-rocket"
+    "luar-angkasa": "little-rocket",
+    "dino-friends": "little-dino",
+    "dinofriends": "little-dino",
+    "dinosaurus-friends": "little-dino",
+    "little-dino": "little-dino"
   },
   "themes": [
     {
@@ -639,6 +643,20 @@
       "swatch": [
         "#232B7A",
         "#F4C542"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-dino",
+      "name": "Little Dino Friends",
+      "description": "Pesta ulang tahun dino friends: panggung podium berlampu dengan gerbang batu berselimut sulur, hutan prasejarah, air terjun, dan gunung berapi, serta karakter chibi penjelajah berkostum dino.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3E7A2E",
+        "#F6B84B"
       ],
       "art": true
     }
