@@ -1,0 +1,21 @@
+/* Little Police Patrol: ukuran ilustrasi & sentuhan biru-emas */
+.th-little-police .ulos-dec { width: min(150px, 46vw); }
+.th-little-police .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-police .gf-amp { width: min(160px, 48vw); }
+.th-little-police .ws-bk { width: min(150px, 46vw); }
+.th-little-police .ev-lt { width: 30px; }
+.th-little-police .rs-lt { width: 54px; top: -30px; }
+.th-little-police .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-police .gable .art { height: 26px; }
+.th-little-police .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-police .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-police .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-police .end-art .eg { filter: drop-shadow(0 18px 28px rgba(14, 22, 70, .4)); }
+.th-little-police .deep .eb { color: #EAF0FF; }
+.th-little-police .cv-nm, .th-little-police .hero-nm, .th-little-police .end-nm { text-shadow: 0 2px 0 rgba(14, 22, 70, .5), 0 0 18px rgba(255, 226, 140, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-police .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(14, 22, 70, .58), rgba(14, 22, 70, .3) 62%, rgba(14, 22, 70, .06) 84%), linear-gradient(180deg, rgba(14, 22, 70, .06), rgba(14, 22, 70, .5)); }
+.th-little-police .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-police .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-police .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(14, 22, 70, .9); }

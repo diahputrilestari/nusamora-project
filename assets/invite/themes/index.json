@@ -25,7 +25,104 @@
     "viking": "viking-party",
     "samurai": "samurai-sakura",
     "jepang": "samurai-sakura",
-    "sakura": "samurai-sakura"
+    "sakura": "samurai-sakura",
+    "circus": "little-circus",
+    "sirkus": "little-circus",
+    "prince": "little-prince",
+    "pangeran": "little-prince",
+    "chef": "little-chef",
+    "koki": "little-chef",
+    "masak": "little-chef",
+    "doctor": "little-doctor",
+    "dokter": "little-doctor",
+    "medis": "little-doctor",
+    "princess": "little-princess",
+    "putri": "little-princess",
+    "cinderella": "little-princess",
+    "swan": "little-swan",
+    "angsa": "little-swan",
+    "pink-luxe": "little-barbie",
+    "barbie": "little-barbie",
+    "pink-princess": "little-barbie",
+    "arab": "little-arab",
+    "arabian": "little-arab",
+    "timur-tengah": "little-arab",
+    "ice": "little-ice",
+    "es": "little-ice",
+    "frozen": "little-ice",
+    "putri-es": "little-ice",
+    "snow": "little-ice",
+    "forest": "little-forest",
+    "hutan": "little-forest",
+    "hutan-ajaib": "little-forest",
+    "magic-forest": "little-forest",
+    "peri": "little-forest",
+    "candy": "little-candy",
+    "candyland": "little-candy",
+    "permen": "little-candy",
+    "gula-gula": "little-candy",
+    "strawberry": "little-strawberry",
+    "stroberi": "little-strawberry",
+    "kebun-strawberry": "little-strawberry",
+    "gingham": "little-strawberry",
+    "pearl": "little-pearl",
+    "mutiara": "little-pearl",
+    "laut": "little-pearl",
+    "lautan": "little-pearl",
+    "ocean": "little-pearl",
+    "mermaid": "little-pearl",
+    "racing": "little-racing",
+    "balap": "little-racing",
+    "balapan": "little-racing",
+    "racing-champion": "little-racing",
+    "pembalap": "little-racing",
+    "f1": "little-racing",
+    "sirkuit": "little-racing",
+    "juara": "little-racing",
+    "polisi": "little-police",
+    "police": "little-police",
+    "patroli": "little-police",
+    "polisi-patroli": "little-police",
+    "polantas": "little-police",
+    "satpam": "little-police",
+    "konstruksi": "little-construction",
+    "construction": "little-construction",
+    "proyek": "little-construction",
+    "bangunan": "little-construction",
+    "alat-berat": "little-construction",
+    "ekskavator": "little-construction",
+    "excavator": "little-construction",
+    "zona-konstruksi": "little-construction",
+    "damkar": "little-firefighter",
+    "firefighter": "little-firefighter",
+    "pemadam": "little-firefighter",
+    "pemadam-kebakaran": "little-firefighter",
+    "kebakaran": "little-firefighter",
+    "fireman": "little-firefighter",
+    "pos-damkar": "little-firefighter",
+    "pilot": "little-pilot",
+    "pesawat": "little-pilot",
+    "bandara": "little-pilot",
+    "airport": "little-pilot",
+    "penerbang": "little-pilot",
+    "aviator": "little-pilot",
+    "pramugari": "little-pilot",
+    "terbang": "little-pilot",
+    "kereta": "little-train",
+    "kereta-api": "little-train",
+    "train": "little-train",
+    "masinis": "little-train",
+    "stasiun": "little-train",
+    "lokomotif": "little-train",
+    "petualangan-kereta": "little-train",
+    "roket": "little-rocket",
+    "rocket": "little-rocket",
+    "astronot": "little-rocket",
+    "antariksa": "little-rocket",
+    "angkasa": "little-rocket",
+    "space": "little-rocket",
+    "penjelajah-roket": "little-rocket",
+    "luar-angkasa": "little-rocket"
   },
   "themes": [
     {
@@ -262,6 +359,286 @@
       "swatch": [
         "#1B2142",
         "#C62F3C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-circus",
+      "name": "Little Circus",
+      "description": "Pesta ulang tahun sirkus mungil: panggung tenda belang merah-putih dengan tirai dan lampu bohlam, komidi putar, gerobak popcorn, loket tiket, photo booth, serta karakter chibi badut, pesulap, dan pemain drum.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B2250",
+        "#D12A36"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-prince",
+      "name": "Little Prince",
+      "description": "Pesta ulang tahun pangeran kecil: panggung istana putih di bawah langit malam berbintang dengan bulan purnama, mahkota emas, balon udara, teleskop, rak buku, air mancur, dan karakter chibi pangeran serta putri berjubah biru-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#161B4D",
+        "#F2C14E"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-chef",
+      "name": "Little Chef",
+      "description": "Pesta ulang tahun koki cilik: panggung dapur ceria dengan gapura topi koki dan tirai merah-putih, kedai roti, oven pizza, papan menu, meja kotak-kotak, serta karakter chibi koki dan pastry chef berseragam merah.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1420",
+        "#F2B84B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-doctor",
+      "name": "Little Doctor",
+      "description": "Pesta ulang tahun dokter cilik: panggung klinik biru muda dengan sofa emas, kue detak jantung, balon palang merah, serta karakter chibi dokter dan perawat berjas putih.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#123C78",
+        "#D32F3A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-princess",
+      "name": "Little Princess",
+      "description": "Pesta ulang tahun putri kecil bergaya dongeng sepatu kaca: aula istana putih-biru dengan lampu kristal, karpet biru, bunga hydrangea, lentera emas, serta karakter chibi pangeran dan putri bergaun biru muda.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#26378A",
+        "#F2CE7A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-swan",
+      "name": "Little Swan Princess",
+      "description": "Pesta ulang tahun putri angsa: aula istana merah muda-lavender dengan angsa bermahkota, danau berkilau, lampu kristal, bunga mawar, serta karakter chibi pangeran dan putri bergaun sayap angsa.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5E2F7A",
+        "#F6B7D2"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-barbie",
+      "name": "Little Princess Pink Luxe",
+      "description": "Pesta ulang tahun putri pink mewah: panggung istana merah muda dengan menara puri, lampu kristal, vas emas berisi mawar, karpet glamor, serta karakter chibi pangeran dan putri bergaun pink berkilau.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B0185A",
+        "#FFD87A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-arab",
+      "name": "Little Princess Arabian Night",
+      "description": "Pesta ulang tahun putri malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta karakter chibi pangeran dan putri berbusana ungu-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A1A66",
+        "#FFD27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-ice",
+      "name": "Little Ice Princess",
+      "description": "Pesta ulang tahun putri es: aula salju berhias aurora, istana es, kristal biru, kereta camilan dan gapura bersalju, serta karakter chibi pangeran & putri berbusana biru-perak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3F8F",
+        "#BFE0FF"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-forest",
+      "name": "Little Magic Forest",
+      "description": "Pesta ulang tahun hutan ajaib: panggung kayu di bawah pohon rindang berhias lentera, jamur, air terjun dan rumah pohon, serta karakter chibi peri, pemanah, dan anak rubah berbusana hijau-krem.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2F5A2A",
+        "#F2C46A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-candy",
+      "name": "Little Candyland",
+      "description": "Pesta ulang tahun negeri permen: panggung merah muda dengan gapura permen, lolipop raksasa, bukit gula-gula, pelangi dan istana kue, serta karakter chibi bergaun krim-sprinkle.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B03073",
+        "#FFC1DD"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-strawberry",
+      "name": "Little Strawberry Garden",
+      "description": "Pesta ulang tahun kebun strawberry ceria: panggung merah muda berpagar putih, taplak gingham, rumah strawberry, bunga dan keranjang buah, serta karakter chibi bergaun gingham-renda.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B3203E",
+        "#FFC9D0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pearl",
+      "name": "Little Ocean Pearl",
+      "description": "Pesta ulang tahun mutiara lautan: panggung marmer dengan gapura kerang dan lumba-lumba, karang warna-warni, istana bawah laut, serta karakter chibi pangeran, putri duyung, pelaut, dan peri berbusana biru-ungu mutiara.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#35418F",
+        "#CFE0FF"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-racing",
+      "name": "Little Racing Champion",
+      "description": "Pesta ulang tahun racing champion: panggung podium berlampu dengan gapura bendera finish, sirkuit balap, tenda pit stop, trofi emas, serta karakter chibi pembalap, mekanik, dan kru berseragam merah-hitam kotak-kotak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B3121F",
+        "#F5C842"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-police",
+      "name": "Little Police Patrol",
+      "description": "Pesta ulang tahun polisi patroli: panggung podium berlampu biru-emas dengan markas polisi dan helikopter, mobil patroli, menara jaga, serta karakter chibi polisi, polisi lalu lintas, dan pilot berseragam biru tua kotak-kotak.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B2A6B",
+        "#F5C842"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-construction",
+      "name": "Little Construction Zone",
+      "description": "Pesta ulang tahun zona konstruksi: panggung podium berlampu kuning-hitam dengan derek, ekskavator, dan truk, tenda proyek, rambu alat berat, serta karakter chibi pekerja bangunan berhelm dan rompi safety.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#33353B",
+        "#FFD21F"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-firefighter",
+      "name": "Little Firefighter",
+      "description": "Pesta ulang tahun little firefighter: panggung podium berlampu dengan pos pemadam, truk damkar dan helikopter, hidran, serta karakter chibi pemadam kebakaran berhelm dan seragam merah-kuning.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#9E1220",
+        "#FFC93C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pilot",
+      "name": "Little Pilot",
+      "description": "Pesta ulang tahun little pilot: panggung podium berlampu biru-emas dengan landasan bandara, pesawat, dan menara kontrol, awan-awan lembut, serta karakter chibi pilot, pramugari, dan kru bandara berseragam biru tua.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3C88",
+        "#F4C542"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-train",
+      "name": "Little Train Adventure",
+      "description": "Pesta ulang tahun petualangan kereta api: panggung kayu berlampu dengan lokomotif uap, jembatan lengkung, dan stasiun bergaya klasik, serta karakter chibi masinis, kondektur, dan penumpang berseragam biru tua-merah marun.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1F2B",
+        "#F0C24B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-rocket",
+      "name": "Little Rocket Explorer",
+      "description": "Pesta ulang tahun penjelajah roket: panggung podium berlampu dengan peluncuran roket, bulan, dan observatorium di langit berbintang, serta karakter chibi astronot, penjelajah, dan kru antariksa berseragam biru tua-oranye.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#232B7A",
+        "#F4C542"
       ],
       "art": true
     }

@@ -1,0 +1,139 @@
+{
+  "id": "little-arab",
+  "name": "Little Princess Arabian Night",
+  "version": 1,
+  "description": "Pesta ulang tahun putri malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta karakter chibi pangeran dan putri berbusana ungu-emas.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Zahra",
+    "full": "Zahra Aulia Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#4A1A66",
+    "deep2": "#7A2E94",
+    "paper": "#FFFAF2",
+    "soft": "#F7E8EE",
+    "ink": "#341A44",
+    "muted": "#80608F",
+    "accent": "#B8860B",
+    "accent2": "#FFD27A",
+    "petal": "#E9A8E0",
+    "heading": "#4A1A66"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Arabian Night Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Putri kecil kami",
+    "profileTitle": "Sang Putri Kecil",
+    "countdownEyebrow": "Malam Arabia dimulai dalam",
+    "countdownTitle": "Menuju Malam Istimewa",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Malam Arabia",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Putri",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Istana",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Malam Arabia, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta putri kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Istana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Istana",
+    "closingEyebrow": "Sampai jumpa di malam Arabia!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang putri kecil. Kami tunggu kehadiranmu di pesta malam Arabia!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/arab-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/arab-2.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rak-camilan.webp",
+    "figureBride": "art/arab-6.webp",
+    "figureGroom": "art/arab-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/arab-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/arab-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/arab-1.webp",
+      "art/arab-2.webp",
+      "art/arab-5.webp",
+      "art/arab-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

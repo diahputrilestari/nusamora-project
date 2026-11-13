@@ -1,0 +1,139 @@
+{
+  "id": "little-princess",
+  "name": "Little Princess",
+  "version": 1,
+  "description": "Pesta ulang tahun putri kecil bergaya dongeng sepatu kaca: aula istana putih-biru dengan lampu kristal, karpet biru, bunga hydrangea, lentera emas, serta karakter chibi pangeran dan putri bergaun biru muda.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Aurelia",
+    "full": "Aurelia Putri Wijaya",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#26378A",
+    "deep2": "#4766C4",
+    "paper": "#FBFAFF",
+    "soft": "#E7EDFB",
+    "ink": "#1E2A55",
+    "muted": "#66708F",
+    "accent": "#A67A1E",
+    "accent2": "#F2CE7A",
+    "petal": "#BCD0F5",
+    "heading": "#26378A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Princess Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Putri kecil kami",
+    "profileTitle": "Sang Putri Kecil",
+    "countdownEyebrow": "Pesta dansa dimulai dalam",
+    "countdownTitle": "Menuju Pesta Istana",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Putri",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Istana",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Pesta Dansa, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta putri kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Istana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Istana",
+    "closingEyebrow": "Sampai jumpa di istana!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang putri kecil. Kami tunggu kehadiranmu di pesta istana!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/putri-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado-mahkota.webp",
+        "w": 100
+      },
+      {
+        "src": "art/putri-2.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/lemari-sepatu.webp",
+    "figureBride": "art/putri-6.webp",
+    "figureGroom": "art/putri-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/putri-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/putri-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado-mahkota.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/putri-1.webp",
+      "art/putri-2.webp",
+      "art/putri-5.webp",
+      "art/putri-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

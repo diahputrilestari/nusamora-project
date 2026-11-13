@@ -1,0 +1,139 @@
+{
+  "id": "little-barbie",
+  "name": "Little Princess Pink Luxe",
+  "version": 1,
+  "description": "Pesta ulang tahun putri pink mewah: panggung istana merah muda dengan menara puri, lampu kristal, vas emas berisi mawar, karpet glamor, serta karakter chibi pangeran dan putri bergaun pink berkilau.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Callista",
+    "full": "Callista Putri Wijaya",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#B0185A",
+    "deep2": "#E0408A",
+    "paper": "#FFF8FB",
+    "soft": "#FCE4EF",
+    "ink": "#4A1630",
+    "muted": "#8F5F76",
+    "accent": "#B8860B",
+    "accent2": "#FFD87A",
+    "petal": "#FF9BC4",
+    "heading": "#B0185A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Princess Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Putri kecil kami",
+    "profileTitle": "Sang Putri Kecil",
+    "countdownEyebrow": "Pesta pink dimulai dalam",
+    "countdownTitle": "Menuju Pesta Putri",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana Pink",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Putri",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Istana",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Pesta Putri, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta putri kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Istana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Istana",
+    "closingEyebrow": "Sampai jumpa di istana pink!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang putri kecil. Kami tunggu kehadiranmu di pesta istana!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/putri-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado-mahkota.webp",
+        "w": 100
+      },
+      {
+        "src": "art/putri-2.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/lemari-sepatu.webp",
+    "figureBride": "art/putri-6.webp",
+    "figureGroom": "art/putri-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/putri-3.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/putri-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado-mahkota.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/putri-1.webp",
+      "art/putri-2.webp",
+      "art/putri-5.webp",
+      "art/putri-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "id": "little-racing",
+  "name": "Little Racing Champion",
+  "version": 1,
+  "description": "Pesta ulang tahun racing champion: panggung podium berlampu dengan gapura bendera finish, sirkuit balap, tenda pit stop, trofi emas, serta karakter chibi pembalap, mekanik, dan kru berseragam merah-hitam kotak-kotak.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Juara Kecil",
+    "full": "Raffasya Juara Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#B3121F",
+    "deep2": "#D63A2F",
+    "paper": "#FFFBF3",
+    "soft": "#F6EEDD",
+    "ink": "#231F20",
+    "muted": "#6E6258",
+    "accent": "#C9A227",
+    "accent2": "#F5C842",
+    "petal": "#F2B8B0",
+    "heading": "#B3121F"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Racing Champion Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si juara kami",
+    "profileTitle": "Si Juara Kecil",
+    "countdownEyebrow": "Lampu start menyala dalam",
+    "countdownTitle": "Menuju Garis Start",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Sirkuit Juara",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Juara",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Juara",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Balapan, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta racing champion si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Juara",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Sirkuit",
+    "closingEyebrow": "Sampai jumpa di garis finish!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta racing champion!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/rc-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/rc-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/bendera.webp",
+    "figureBride": "art/rc-2.webp",
+    "figureGroom": "art/rc-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/rc-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/rc-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/rc-1.webp",
+      "art/rc-2.webp",
+      "art/rc-5.webp",
+      "art/rc-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

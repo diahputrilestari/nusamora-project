@@ -1,0 +1,139 @@
+{
+  "id": "little-pearl",
+  "name": "Little Ocean Pearl",
+  "version": 1,
+  "description": "Pesta ulang tahun mutiara lautan: panggung marmer dengan gapura kerang dan lumba-lumba, karang warna-warni, istana bawah laut, serta karakter chibi pangeran, putri duyung, pelaut, dan peri berbusana biru-ungu mutiara.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Mutiara",
+    "full": "Mutiara Samudra Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#35418F",
+    "deep2": "#6A5FC4",
+    "paper": "#FAF8FF",
+    "soft": "#ECE8FA",
+    "ink": "#28304F",
+    "muted": "#6A6F99",
+    "accent": "#6B4FC0",
+    "accent2": "#F3D8A0",
+    "petal": "#CFE0FF",
+    "heading": "#35418F"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Ocean Pearl Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si mutiara kami",
+    "profileTitle": "Si Mutiara Kecil",
+    "countdownEyebrow": "Pesta lautan dimulai dalam",
+    "countdownTitle": "Menuju Hari Istimewa",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana Mutiara",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Mutiara",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Mutiara",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Mutiara Lautan, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta mutiara lautan si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Mutiara",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Lautan",
+    "closingEyebrow": "Sampai jumpa di lautan mutiara!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta mutiara lautan!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/pe-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/pe-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/karang.webp",
+    "figureBride": "art/pe-2.webp",
+    "figureGroom": "art/pe-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/pe-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/pe-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/pe-1.webp",
+      "art/pe-2.webp",
+      "art/pe-5.webp",
+      "art/pe-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

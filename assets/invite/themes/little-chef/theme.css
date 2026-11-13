@@ -1,0 +1,21 @@
+/* Little Chef: ukuran ilustrasi & sentuhan biru-emas */
+.th-little-chef .ulos-dec { width: min(150px, 46vw); }
+.th-little-chef .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-chef .gf-amp { width: min(160px, 48vw); }
+.th-little-chef .ws-bk { width: min(150px, 46vw); }
+.th-little-chef .ev-lt { width: 30px; }
+.th-little-chef .rs-lt { width: 54px; top: -30px; }
+.th-little-chef .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-chef .gable .art { height: 26px; }
+.th-little-chef .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-chef .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-chef .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-chef .end-art .eg { filter: drop-shadow(0 18px 28px rgba(70, 8, 14, .4)); }
+.th-little-chef .deep .eb { color: #FFE2A0; }
+.th-little-chef .cv-nm, .th-little-chef .hero-nm, .th-little-chef .end-nm { text-shadow: 0 2px 0 rgba(70, 8, 14, .5), 0 0 18px rgba(255, 214, 120, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-chef .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(70, 8, 14, .7), rgba(70, 8, 14, .36) 62%, rgba(70, 8, 14, .08) 84%), linear-gradient(180deg, rgba(70, 8, 14, .08), rgba(70, 8, 14, .58)); }
+.th-little-chef .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-chef .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-chef .hero-in .eb { color: #FFF0C8; text-shadow: 0 1px 8px rgba(70, 8, 14, .9); }
