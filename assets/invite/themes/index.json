@@ -188,7 +188,14 @@
     "tech": "little-hackathon",
     "developer": "little-hackathon",
     "event-teknologi": "little-hackathon",
-    "little-hackathon": "little-hackathon"
+    "little-hackathon": "little-hackathon",
+    "idol": "little-idol",
+    "kpop-idol": "little-idol",
+    "idol-birthday": "little-idol",
+    "fan-party": "little-idol",
+    "fanmeet": "little-idol",
+    "konser": "little-idol",
+    "little-idol": "little-idol"
   },
   "themes": [
     {
@@ -834,6 +841,20 @@
       "swatch": [
         "#2A1270",
         "#22B8E8"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-idol",
+      "name": "Idol Birthday Event",
+      "description": "Fan party ulang tahun idol K-pop: panggung konser neon ungu-pink dengan lampu sorot, spanduk mahkota, dan booth fan, serta fans chibi berlightstick.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A2A8C",
+        "#E58BDD"
       ],
       "art": true
     },
