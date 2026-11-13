@@ -157,7 +157,14 @@
     "bola": "little-soccer",
     "futsal": "little-soccer",
     "soccer-champions": "little-soccer",
-    "little-soccer": "little-soccer"
+    "little-soccer": "little-soccer",
+    "pirates": "little-pirates",
+    "pirate": "little-pirates",
+    "bajak-laut": "little-pirates",
+    "bajaklaut": "little-pirates",
+    "kapten": "little-pirates",
+    "little-pirates": "little-pirates",
+    "harta-karun": "little-pirates"
   },
   "themes": [
     {
@@ -744,6 +751,20 @@
       "swatch": [
         "#1A3578",
         "#F2C94C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pirates",
+      "name": "Little Pirates",
+      "description": "Pesta ulang tahun bajak laut kecil: panggung kapal kayu berlampu dengan topi bajak laut, kompas, peta harta, kapal layar di lautan, serta karakter chibi kapten, bajak laut, dan pangeran berkostum merah-cokelat.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1F1B",
+        "#F2C14E"
       ],
       "art": true
     }
