@@ -1,0 +1,139 @@
+{
+  "id": "little-soccer",
+  "name": "Soccer Champions",
+  "version": 1,
+  "description": "Pesta ulang tahun sepak bola: panggung podium berlampu dengan lencana bola dan pita emas, gawang, banner juara, serta lapangan hijau, bersama karakter chibi pemain, pemandu sorak, kiper, dan penonton berseragam biru-emas.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Striker Kecil",
+    "full": "Fajar Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "8"
+  },
+  "colors": {
+    "deep": "#1A3578",
+    "deep2": "#3E62C4",
+    "paper": "#FBFAF3",
+    "soft": "#EAEEF8",
+    "ink": "#14204A",
+    "muted": "#56608A",
+    "accent": "#D6A21A",
+    "accent2": "#F2C94C",
+    "petal": "#F2C94C",
+    "heading": "#1A3578"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Soccer Champions Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si striker andalan kami",
+    "profileTitle": "Si Striker Kecil",
+    "countdownEyebrow": "Kick-off dimulai dalam",
+    "countdownTitle": "Menuju Kick-Off",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Pesta di Lapangan",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Striker",
+    "galleryEyebrow": "Momen istimewa",
+    "galleryTitle": "Galeri Lapangan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Main Bola, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta sepak bola si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Sang Juara",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Stadion",
+    "closingEyebrow": "Sampai jumpa di lapangan!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta sepak bola!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/sc-6.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/sc-3.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/papan-skor.webp",
+    "figureBride": "art/sc-2.webp",
+    "figureGroom": "art/sc-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/sc-4.webp",
+        "w": 66
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/sc-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/sc-1.webp",
+      "art/sc-2.webp",
+      "art/sc-5.webp",
+      "art/sc-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

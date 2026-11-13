@@ -149,7 +149,15 @@
     "allstar": "little-basketball",
     "nba": "little-basketball",
     "basketball-allstar": "little-basketball",
-    "little-basketball": "little-basketball"
+    "little-basketball": "little-basketball",
+    "soccer": "little-soccer",
+    "football": "little-soccer",
+    "sepak-bola": "little-soccer",
+    "sepakbola": "little-soccer",
+    "bola": "little-soccer",
+    "futsal": "little-soccer",
+    "soccer-champions": "little-soccer",
+    "little-soccer": "little-soccer"
   },
   "themes": [
     {
@@ -722,6 +730,20 @@
       "swatch": [
         "#1F2F6B",
         "#E8741C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-soccer",
+      "name": "Soccer Champions",
+      "description": "Pesta ulang tahun sepak bola: panggung podium berlampu dengan lencana bola dan pita emas, gawang, banner juara, serta lapangan hijau, bersama karakter chibi pemain, pemandu sorak, kiper, dan penonton berseragam biru-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1A3578",
+        "#F2C94C"
       ],
       "art": true
     }
