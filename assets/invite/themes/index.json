@@ -212,7 +212,12 @@
     "luxury-maroon": "little-luxury",
     "mewah": "little-luxury",
     "maroon-mewah": "little-luxury",
-    "little-luxury": "little-luxury"
+    "little-luxury": "little-luxury",
+    "black-gold": "little-blackgold",
+    "blackgold": "little-blackgold",
+    "hitam-emas": "little-blackgold",
+    "luxury-black": "little-blackgold",
+    "little-blackgold": "little-blackgold"
   },
   "themes": [
     {
@@ -888,6 +893,21 @@
       "swatch": [
         "#6E0F22",
         "#F6D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-blackgold",
+      "name": "Luxury Black Gold Wedding",
+      "description": "Pernikahan mewah hitam-emas: aula marmer gelap dengan lampu kristal, tirai beludru, lengkung emas, dan rangkaian lili putih, serta pengantin chibi berbusana hitam bersulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1A1510",
+        "#F3D98B"
       ],
       "art": true
     },
