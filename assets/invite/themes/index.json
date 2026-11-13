@@ -201,7 +201,13 @@
     "bugis-makassar": "little-bugis",
     "sulawesi": "little-bugis",
     "adat-bugis": "little-bugis",
-    "little-bugis": "little-bugis"
+    "little-bugis": "little-bugis",
+    "beige": "little-beige",
+    "krem": "little-beige",
+    "cream": "little-beige",
+    "beige-gold": "little-beige",
+    "elegan": "little-beige",
+    "little-beige": "little-beige"
   },
   "themes": [
     {
@@ -847,6 +853,21 @@
       "swatch": [
         "#7A1424",
         "#C8961E"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-beige",
+      "name": "Beige Gold Wedding",
+      "description": "Pernikahan elegan krem-emas: panggung lengkung marmer dengan lentera, lily, dan panel emas, serta pengantin chibi berbusana beige.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B4A2B",
+        "#F0D08A"
       ],
       "art": true
     },
