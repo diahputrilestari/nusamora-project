@@ -142,7 +142,7 @@
             var im = '<div class="cgi-im' + (img ? " ph" : "") + '">' + (img || catIll(c[0])) + "</div>";
             if (!n) return '<div class="card cgi off" aria-disabled="true">' + im + '<div class="cgi-bd"><b>' + esc(c[1]) + "</b><span>" + esc(CATD[c[0]]) + '</span><em class="soon"><i aria-hidden="true"></i>Coming Soon<span class="sr"> (belum dapat dipilih)</span></em></div></div>';
             return '<a class="card cgi hov" href="/template?paket=' + pkg + "&kategori=" + c[0] + '">' + im + '<div class="cgi-bd"><b>' + esc(c[1]) + "</b><span>" + esc(CATD[c[0]]) + '</span><em class="cnt">' + n + " template tersedia</em></div></a>";
-          }).join("") + '</div><div class="acts"><a class="btn o" href="/paket?paket=' + pkg + '">Kembali</a></div></div>';
+          }).join("") + '</div><div class="acts"><a class="btn o" href="' + (U ? "/paket?paket=" + pkg : "/#template") + '">Kembali</a></div></div>';
         return;
       }
       loadThemes(T.map(function (t) { return t.slug; })).then(function (TH) { return loadPopularity().then(function (POP) { return loadFlags().then(function (FL) { renderList(T, TH, POP, FL); }); }); });
@@ -836,14 +836,18 @@
   function go() { (PAGES[PAGE] || pagePaket)(); }
   if (!sb) { view.innerHTML = note("Sistem belum dikonfigurasi", "Isi SUPABASE_URL dan SUPABASE_ANON_KEY di assets/config.js."); return; }
   var isDemo = PAGE === "preview" && !!new URLSearchParams(location.search).get("demo");     // contoh template: terbuka tanpa login
+  var isPublic = PAGE === "template";     // katalog template per paket: terbuka tanpa login (hanya baca; login diminta saat memakai template)
   sb.auth.getSession().then(function (r) {
     var s = r.data && r.data.session;
-    if (!s) { if (isDemo) { go(); return; } location.replace("/masuk?next=" + encodeURIComponent(nextUrl())); return; }
+    if (!s) {
+      if (isPublic) { var hr = $(".fh-r"); if (hr) hr.innerHTML = '<a class="btn o sm" href="/masuk?next=' + encodeURIComponent(nextUrl()) + '">Masuk</a>'; go(); return; }
+      if (isDemo) { go(); return; } location.replace("/masuk?next=" + encodeURIComponent(nextUrl())); return;
+    }
     U = s.user; $("#chip-i").textContent = (U.email || "?").charAt(0).toUpperCase();
     return sb.from("profiles").select("status").eq("id", U.id).maybeSingle().then(function (x) {
       if (x && x.data && x.data.status === "suspended") { view.innerHTML = note("Akun ditangguhkan", "Akun Anda sedang ditangguhkan. Hubungi tim NusaMora untuk bantuan."); return; }
       go();
     }, go);
   }, function () { view.innerHTML = note("Tidak bisa terhubung", "Periksa koneksi internet Anda lalu muat ulang."); });
-  sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT" && !isDemo) location.replace("/masuk"); });
+  sb.auth.onAuthStateChange(function (ev) { if (ev === "SIGNED_OUT" && !isDemo && !isPublic) location.replace("/masuk"); });
 })();
