@@ -1,0 +1,21 @@
+/* Little Racing Champion: ukuran ilustrasi & sentuhan merah-emas */
+.th-little-racing .ulos-dec { width: min(150px, 46vw); }
+.th-little-racing .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-racing .gf-amp { width: min(160px, 48vw); }
+.th-little-racing .ws-bk { width: min(150px, 46vw); }
+.th-little-racing .ev-lt { width: 30px; }
+.th-little-racing .rs-lt { width: 54px; top: -30px; }
+.th-little-racing .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-racing .gable .art { height: 26px; }
+.th-little-racing .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-racing .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-racing .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-racing .end-art .eg { filter: drop-shadow(0 18px 28px rgba(35, 12, 16, .4)); }
+.th-little-racing .deep .eb { color: #FFF4D6; }
+.th-little-racing .cv-nm, .th-little-racing .hero-nm, .th-little-racing .end-nm { text-shadow: 0 2px 0 rgba(35, 12, 16, .5), 0 0 18px rgba(255, 214, 120, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-racing .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(35, 12, 16, .58), rgba(35, 12, 16, .3) 62%, rgba(35, 12, 16, .06) 84%), linear-gradient(180deg, rgba(35, 12, 16, .06), rgba(35, 12, 16, .5)); }
+.th-little-racing .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-racing .cv-eb { color: #FFF4D6; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-racing .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(35, 12, 16, .9); }

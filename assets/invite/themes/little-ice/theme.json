@@ -1,0 +1,139 @@
+{
+  "id": "little-ice",
+  "name": "Little Ice Princess",
+  "version": 1,
+  "description": "Pesta ulang tahun putri es: aula salju berhias aurora, istana es, kristal biru, kereta camilan dan gapura bersalju, serta karakter chibi pangeran & putri berbusana biru-perak.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Elsa",
+    "full": "Elsa Aurelia Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#1F3F8F",
+    "deep2": "#3E6FD0",
+    "paper": "#F7FBFF",
+    "soft": "#E6F0FC",
+    "ink": "#1B2F5E",
+    "muted": "#5F7AA8",
+    "accent": "#2F6BC4",
+    "accent2": "#BFE0FF",
+    "petal": "#CFE6FF",
+    "heading": "#1F3F8F"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Frozen Princess Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Putri kecil kami",
+    "profileTitle": "Sang Putri Kecil",
+    "countdownEyebrow": "Pesta es dimulai dalam",
+    "countdownTitle": "Menuju Malam Istimewa",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana Es",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Sang Putri",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Istana Es",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Istana Es, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta putri es kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Istana",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Istana Es",
+    "closingEyebrow": "Sampai jumpa di istana es!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang putri es kecil. Kami tunggu kehadiranmu di pesta istana es!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/ice-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/ice-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rak-camilan.webp",
+    "figureBride": "art/ice-6.webp",
+    "figureGroom": "art/ice-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/ice-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/ice-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/ice-1.webp",
+      "art/ice-2.webp",
+      "art/ice-5.webp",
+      "art/ice-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

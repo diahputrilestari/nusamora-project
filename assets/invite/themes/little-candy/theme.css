@@ -1,0 +1,21 @@
+/* Little Candyland: ukuran ilustrasi & sentuhan permen */
+.th-little-candy .ulos-dec { width: min(150px, 46vw); }
+.th-little-candy .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-candy .gf-amp { width: min(160px, 48vw); }
+.th-little-candy .ws-bk { width: min(150px, 46vw); }
+.th-little-candy .ev-lt { width: 30px; }
+.th-little-candy .rs-lt { width: 54px; top: -30px; }
+.th-little-candy .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-candy .gable .art { height: 26px; }
+.th-little-candy .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-candy .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-candy .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-candy .end-art .eg { filter: drop-shadow(0 18px 28px rgba(110, 20, 70, .4)); }
+.th-little-candy .deep .eb { color: #FFE4F1; }
+.th-little-candy .cv-nm, .th-little-candy .hero-nm, .th-little-candy .end-nm { text-shadow: 0 2px 0 rgba(110, 20, 70, .5), 0 0 18px rgba(255, 200, 225, .5); }
+/* panggung pink terang: gelapkan tengah agar nama terbaca */
+.th-little-candy .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(110, 20, 70, .58), rgba(110, 20, 70, .3) 62%, rgba(110, 20, 70, .06) 84%), linear-gradient(180deg, rgba(110, 20, 70, .06), rgba(110, 20, 70, .5)); }
+.th-little-candy .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-candy .cv-eb { color: #FFE4F1; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-candy .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(110, 20, 70, .9); }

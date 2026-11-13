@@ -1,0 +1,21 @@
+/* Little Chef: ukuran ilustrasi & sentuhan biru-emas */
+.th-little-arab .ulos-dec { width: min(150px, 46vw); }
+.th-little-arab .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-arab .gf-amp { width: min(160px, 48vw); }
+.th-little-arab .ws-bk { width: min(150px, 46vw); }
+.th-little-arab .ev-lt { width: 30px; }
+.th-little-arab .rs-lt { width: 54px; top: -30px; }
+.th-little-arab .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-arab .gable .art { height: 26px; }
+.th-little-arab .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-arab .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-arab .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-arab .end-art .eg { filter: drop-shadow(0 18px 28px rgba(52, 16, 72, .4)); }
+.th-little-arab .deep .eb { color: #FFE2A0; }
+.th-little-arab .cv-nm, .th-little-arab .hero-nm, .th-little-arab .end-nm { text-shadow: 0 2px 0 rgba(52, 16, 72, .5), 0 0 18px rgba(255, 210, 122, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-arab .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(52, 16, 72, .7), rgba(52, 16, 72, .36) 62%, rgba(52, 16, 72, .08) 84%), linear-gradient(180deg, rgba(52, 16, 72, .08), rgba(52, 16, 72, .58)); }
+.th-little-arab .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-arab .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-arab .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(52, 16, 72, .9); }

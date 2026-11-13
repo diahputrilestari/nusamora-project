@@ -1,0 +1,139 @@
+{
+  "id": "little-strawberry",
+  "name": "Little Strawberry Garden",
+  "version": 1,
+  "description": "Pesta ulang tahun kebun strawberry ceria: panggung merah muda berpagar putih, taplak gingham, rumah strawberry, bunga dan keranjang buah, serta karakter chibi bergaun gingham-renda.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Putri Stella",
+    "full": "Stella Berlian Putri",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#B3203E",
+    "deep2": "#D9455F",
+    "paper": "#FFF9F4",
+    "soft": "#FDEBE6",
+    "ink": "#4A2024",
+    "muted": "#8A5A5A",
+    "accent": "#C42B47",
+    "accent2": "#F7C873",
+    "petal": "#FFC9D0",
+    "heading": "#A81F3B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "heart",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Strawberry Garden Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si strawberry kami",
+    "profileTitle": "Si Strawberry Kecil",
+    "countdownEyebrow": "Pesta kebun dimulai dalam",
+    "countdownTitle": "Menuju Hari Manis",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Kebun Strawberry",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Manis",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kebun Strawberry",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Kebun Strawberry, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta kebun strawberry si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Manis",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Kebun",
+    "closingEyebrow": "Sampai jumpa di kebun strawberry!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari manis si kecil. Kami tunggu kehadiranmu di pesta kebun strawberry!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/st-5.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/st-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rak-camilan.webp",
+    "figureBride": "art/st-6.webp",
+    "figureGroom": "art/st-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/st-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/st-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-permen.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/st-1.webp",
+      "art/st-2.webp",
+      "art/st-5.webp",
+      "art/st-6.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

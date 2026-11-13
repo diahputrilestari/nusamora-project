@@ -1,0 +1,139 @@
+{
+  "id": "little-rocket",
+  "name": "Little Rocket Explorer",
+  "version": 1,
+  "description": "Pesta ulang tahun penjelajah roket: panggung podium berlampu dengan peluncuran roket, bulan, dan observatorium di langit berbintang, serta karakter chibi astronot, penjelajah, dan kru antariksa berseragam biru tua-oranye.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Astronot Kecil",
+    "full": "Zayyan Elvano Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#232B7A",
+    "deep2": "#4A56C4",
+    "paper": "#F8F8FF",
+    "soft": "#E7E8FA",
+    "ink": "#1B1F45",
+    "muted": "#5F6590",
+    "accent": "#D9A400",
+    "accent2": "#F4C542",
+    "petal": "#F4C542",
+    "heading": "#232B7A"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Rocket Explorer Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si astronot cilik kami",
+    "profileTitle": "Si Astronot Kecil",
+    "countdownEyebrow": "Roket meluncur dalam",
+    "countdownTitle": "Menuju Peluncuran",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Antariksa",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Astronot",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Antariksa",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Meluncur, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta penjelajah roket si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Antariksa",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Markas",
+    "closingEyebrow": "Sampai jumpa di antariksa!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta penjelajah roket!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/rk-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/rk-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/roket.webp",
+    "figureBride": "art/rk-2.webp",
+    "figureGroom": "art/rk-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/rk-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/rk-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/rk-1.webp",
+      "art/rk-2.webp",
+      "art/rk-5.webp",
+      "art/rk-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

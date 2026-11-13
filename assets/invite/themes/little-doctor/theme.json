@@ -1,0 +1,139 @@
+{
+  "id": "little-doctor",
+  "name": "Little Doctor",
+  "version": 1,
+  "description": "Pesta ulang tahun dokter cilik: panggung klinik biru muda dengan sofa emas, kue detak jantung, balon palang merah, serta karakter chibi dokter dan perawat berjas putih.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Dokter Cilik Rafi",
+    "full": "Rafi Aditya Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#123C78",
+    "deep2": "#2E6FC4",
+    "paper": "#F8FBFF",
+    "soft": "#E4EFFB",
+    "ink": "#14284A",
+    "muted": "#5C6F8E",
+    "accent": "#C8262F",
+    "accent2": "#FFD27A",
+    "petal": "#FF8F96",
+    "heading": "#123C78"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Doctor Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Dokter cilik kami",
+    "profileTitle": "Sang Dokter Cilik",
+    "countdownEyebrow": "Klinik ceria dibuka dalam",
+    "countdownTitle": "Menuju Pesta Klinik",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Klinik",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Riwayat Tumbuh Kembang",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Klinik",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Periksa Kehadiran, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta dokter cilik ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Sehat",
+    "giftLead": "Kehadiranmu sudah jadi obat paling manjur. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Klinik",
+    "closingEyebrow": "Sampai jumpa di klinik!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa sang dokter cilik. Kami tunggu kehadiranmu di pesta klinik!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/dokter-3.webp",
+        "w": 60
+      },
+      {
+        "src": "art/kue-jantung.webp",
+        "w": 84
+      },
+      {
+        "src": "art/dokter-6.webp",
+        "w": 60
+      }
+    ],
+    "introTop": "art/lemari-obat.webp",
+    "figureBride": "art/dokter-4.webp",
+    "figureGroom": "art/dokter-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/dokter-5.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/dokter-7.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/kedai-minuman.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/hadiah-teddy.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura-balon.webp",
+    "closingFigures": [
+      "art/dokter-1.webp",
+      "art/dokter-4.webp",
+      "art/dokter-2.webp",
+      "art/dokter-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

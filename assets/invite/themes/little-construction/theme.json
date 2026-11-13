@@ -1,0 +1,139 @@
+{
+  "id": "little-construction",
+  "name": "Little Construction Zone",
+  "version": 1,
+  "description": "Pesta ulang tahun zona konstruksi: panggung podium berlampu kuning-hitam dengan derek, ekskavator, dan truk, tenda proyek, rambu alat berat, serta karakter chibi pekerja bangunan berhelm dan rompi safety.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Insinyur Kecil",
+    "full": "Bima Reyhan Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#33353B",
+    "deep2": "#5A5D66",
+    "paper": "#FFFBEA",
+    "soft": "#F7EBC2",
+    "ink": "#25252A",
+    "muted": "#6F6A58",
+    "accent": "#E8A800",
+    "accent2": "#FFD21F",
+    "petal": "#FFD21F",
+    "heading": "#33353B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Construction Zone Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si insinyur cilik kami",
+    "profileTitle": "Si Insinyur Kecil",
+    "countdownEyebrow": "Proyek dimulai dalam",
+    "countdownTitle": "Menuju Hari Peresmian",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Lokasi Proyek",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Pembangun",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Proyek",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Membangun, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta zona konstruksi si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Proyek",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Lokasi",
+    "closingEyebrow": "Sampai jumpa di lokasi proyek!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta zona konstruksi!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/kz-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/kz-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/rambu.webp",
+    "figureBride": "art/kz-2.webp",
+    "figureGroom": "art/kz-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/kz-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/kz-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/kz-1.webp",
+      "art/kz-2.webp",
+      "art/kz-5.webp",
+      "art/kz-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
