@@ -36,7 +36,12 @@
   var CAMN = { orbit: "Orbit", dolly: "Dolly maju", crane: "Crane naik", static: "Statis" }, INTN = { fade: "Fade", zoom: "Zoom", flythrough: "Fly-through" }, PARN = { none: "Tanpa efek", petals: "Kelopak bunga", fireflies: "Kunang-kunang" }, GRN = { warm: "Hangat", cool: "Sejuk", soft: "Lembut" };
 
   /* Template dibaca dari DB dan selalu difilter menurut paket. */
-  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: t.thumbnail_url || "", demo: t.preview_url || "/preview?demo=" + encodeURIComponent(t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {}, created: t.created_at || "", themeKey: t.theme_key || "", culture: String(((t.capabilities || {}).culture) || ""), palettes: Array.isArray((t.capabilities || {}).palettes) ? t.capabilities.palettes : [] }; }
+  /* URL aset template di database bisa masih memakai domain hosting lama (*.hostingersite.com), yang kini tidak dapat diakses.
+     Jadikan same-origin (nusamora.com). Mesin demo Essential lama (/assets-essential/invite/index) sudah digantikan oleh /preview?demo=<slug>. */
+  var LEGACY_HOST = /^https?:\/\/[a-z0-9-]+\.hostingersite\.com(?=[\/?#]|$)/i;
+  function localUrl(u) { return typeof u === "string" ? u.replace(LEGACY_HOST, "") : ""; }
+  function demoUrl(u, slug) { u = localUrl(u); return (!u || /^\/assets-essential\/invite\/(index|$)/.test(u)) ? "/preview?demo=" + encodeURIComponent(slug) : u; }
+  function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: localUrl(t.thumbnail_url), demo: demoUrl(t.preview_url, t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {}, created: t.created_at || "", themeKey: t.theme_key || "", culture: String(((t.capabilities || {}).culture) || ""), palettes: Array.isArray((t.capabilities || {}).palettes) ? t.capabilities.palettes : [] }; }
   var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities,created_at,theme_key";
   /* Undangan 2D universal: template Essential dengan capabilities.engine = "universal-2d" dirender oleh /undangan (assets/invite).
      Daftar tema dibaca dari assets/invite/themes/index.json, jadi menambah tema tidak perlu mengubah file ini. */
