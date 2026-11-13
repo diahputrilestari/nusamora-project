@@ -54,6 +54,8 @@
     }));
   }
   function themeId(x) { x = T2D.aliases[x] || x; return x && T2D.ids[x] ? x : ""; }
+  /* Tema mesin 2D untuk sebuah template: theme_key, slug, atau slug tanpa awalan "nusa-" (mis. nusa-dino-adventure -> dino-adventure). */
+  function engTheme(tpl) { return tpl ? (themeId(tpl.themeKey) || themeId(tpl.slug) || themeId(String(tpl.slug || "").replace(/^nusa-/, ""))) : ""; }
   function isEngine(tpl) { return !!(tpl && tpl.caps && tpl.caps.engine === "universal-2d"); }
   function themeThumb(t) { return "/assets/invite/themes/" + t.id + "/" + (t.thumb || "thumb.webp"); }
 
@@ -661,8 +663,9 @@
       (x.tpl && /^\/live/.test(x.tpl.demo || "") ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(x.tpl.demo) + '">Coba demo Live Guest template ini</a>' : "") + '<p class="fine">Denah mengikuti pengaturan Anda. Pengalaman 3D penuh dapat dicoba di demo template.</p></div>';
   }
   function renderStage(x, host) {
-    if (x.pkg === "essential" && isEngine(x.tpl)) {
-      var src = x.inv && x.inv.id ? "/undangan?preview=" + encodeURIComponent(x.inv.id) : "/undangan?demo=1&theme=" + encodeURIComponent(x.tpl.themeKey || x.tpl.slug);
+    var demoEng = x.pkg === "essential" && !(x.inv && x.inv.id) && !!engTheme(x.tpl); /* demo publik: tampilkan template asli, bukan ringkasan generik */
+    if (x.pkg === "essential" && (isEngine(x.tpl) || demoEng)) {
+      var src = x.inv && x.inv.id ? "/undangan?preview=" + encodeURIComponent(x.inv.id) : "/undangan?demo=1&theme=" + encodeURIComponent(engTheme(x.tpl) || x.tpl.themeKey || x.tpl.slug);
       host.innerHTML = '<iframe class="eng-fr" src="' + esc(src) + '" title="Pratinjau undangan" allow="autoplay"></iframe>'; return;
     }
     host.innerHTML = x.pkg === "essential" ? r2d(x) : x.pkg === "signature" ? rCin(x) : rLive(x);
@@ -714,7 +717,7 @@
       if (mode !== "demo" && q.get("publish") === "1" && x.inv.status === "draft") openCheckout(x);
     }
     if (demo) {
-      loadTemplate(demo).then(function (tpl) {
+      Promise.all([loadTemplate(demo), loadThemes2D()]).then(function (z) { var tpl = z[0];
         if (!tpl) { view.innerHTML = note("Template tidak ditemukan", "Template ini tidak tersedia.", '<a class="btn" href="/paket">Pilih Paket</a>'); return; }
         var cat = tpl.cats[0] || "wedding"; loadAvatarOpts(tpl.slug, null).then(function (ao) { shell({ pkg: tpl.pkg, cat: cat, av: { options: ao || [], demo: true }, date: new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10), c: sampleContent(tpl.pkg, tpl), tpl: tpl, caps: tpl.caps, inv: { title: tpl.name } }, "demo"); });
       }); return;
