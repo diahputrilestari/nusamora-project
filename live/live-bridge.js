@@ -35,7 +35,7 @@
       for (var i = AREAS.length - 1; i >= 0; i--) {
         var a = AREAS[i], s = by[a.id];
         if (!s) { if ((v.areas || []).length) AREAS.splice(i, 1); continue; }
-        if (s.name) a.n = s.name; if (s.icon) a.t = s.icon;
+        if (s.name) a.n = s.name; if (s.icon) a.t = s.icon; if (typeof s.label === "string" && s.label.trim()) a.lb = s.label.trim().slice(0, 16);
       }
     }
     var f = c.features || {};
@@ -47,7 +47,12 @@
   var hideMenu = safe(function () {
     if (typeof AREAS === "undefined") return; var LB = { stage: "Panggung", resepsi: "Resepsi", booth: "Booth", galeri: "Galeri", video: "Video", buku: "Buku Tamu", kuliner: "Kuliner", istirahat: "Istirahat" };
     var keep = {}; AREAS.forEach(function (a) { keep[a.id] = 1; });
-    d.querySelectorAll("#ml button").forEach(function (b) { var t = (b.textContent || "").trim(); Object.keys(LB).forEach(function (id) { if (LB[id] === t && !keep[id]) b.style.display = "none"; }); });
+    d.querySelectorAll("#ml button").forEach(function (b) { var t = (b.textContent || "").trim(); Object.keys(LB).forEach(function (id) { if (LB[id] === t && !keep[id]) b.style.setProperty("display", "none", "important"); }); });
+  });
+  /* label pendek tombol menu: venue boleh mengisi "label" per area (mis. acara hackathon: Guest Book, Networking). Tanpa label = teks bawaan halaman. */
+  var relabelMenu = safe(function () {
+    if (typeof AREAS === "undefined") return;
+    AREAS.forEach(function (a) { if (!a.lb) return; var b = d.querySelector('#ml .nv[data-id="' + a.id + '"]'), x = b && b.querySelector(".tx"); if (x) x.textContent = a.lb; });
   });
   function removeArea(id) { for (var i = AREAS.length - 1; i >= 0; i--) if (AREAS[i].id === id) AREAS.splice(i, 1); }
 
@@ -55,7 +60,7 @@
   function join() {
     rpc("live_join", { p_token: TOKEN }).then(function (r) {
       if (!r || !r.ok) { block(MSG[r && r.reason] || "Tidak bisa masuk ke ruangan."); return; }
-      joined = true; setOnline(r.online); stripDemo(); hideMenu(); buildBars(); buildGames();
+      joined = true; setOnline(r.online); stripDemo(); hideMenu(); relabelMenu(); buildBars(); buildGames();
       hb = setInterval(function () { rpc("live_heartbeat", { p_token: TOKEN }).then(function (n) { if (n === -1) { clearInterval(hb); clearInterval(poll); stopSync(); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); } else if (typeof n === "number") setOnline(n); }, function () { }); }, 30000);
       poll = setInterval(pollChat, 3000); pollChat();
       sy = setInterval(syncTick, 1500); syncTick(); raf = requestAnimationFrame(stepPeers);
