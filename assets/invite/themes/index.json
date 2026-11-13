@@ -142,7 +142,14 @@
     "softball": "little-baseball",
     "basebal": "little-baseball",
     "liga-baseball": "little-baseball",
-    "little-baseball": "little-baseball"
+    "little-baseball": "little-baseball",
+    "basketball": "little-basketball",
+    "basket": "little-basketball",
+    "all-star": "little-basketball",
+    "allstar": "little-basketball",
+    "nba": "little-basketball",
+    "basketball-allstar": "little-basketball",
+    "little-basketball": "little-basketball"
   },
   "themes": [
     {
@@ -701,6 +708,20 @@
       "swatch": [
         "#1C2F6B",
         "#C8312B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-basketball",
+      "name": "Basketball All-Star",
+      "description": "Pesta ulang tahun basketball all-star: panggung podium berlampu dengan lencana bola basket, ring, banner bintang, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-oranye.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F2F6B",
+        "#E8741C"
       ],
       "art": true
     }
