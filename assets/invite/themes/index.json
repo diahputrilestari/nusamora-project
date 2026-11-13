@@ -181,7 +181,14 @@
     "japan": "little-sakura",
     "kimono": "little-sakura",
     "hanami": "little-sakura",
-    "little-sakura": "little-sakura"
+    "little-sakura": "little-sakura",
+    "hackathon": "little-hackathon",
+    "hackaton": "little-hackathon",
+    "coding": "little-hackathon",
+    "tech": "little-hackathon",
+    "developer": "little-hackathon",
+    "event-teknologi": "little-hackathon",
+    "little-hackathon": "little-hackathon"
   },
   "themes": [
     {
@@ -812,6 +819,21 @@
       "swatch": [
         "#6E2C86",
         "#F7A8C4"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-hackathon",
+      "name": "Hackathon Night",
+      "description": "Event hackathon bernuansa neon: kota malam ungu dengan gerbang cahaya, panggung bercincin neon, kursi gaming dan booth-booth acara, serta peserta chibi berkode </>.",
+      "categories": [
+        "corporate",
+        "seminar"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2A1270",
+        "#22B8E8"
       ],
       "art": true
     },
