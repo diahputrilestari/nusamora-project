@@ -50,7 +50,8 @@ with t(slug, name, cats, description, sort) as (values
   ('little-wizard', 'Wizard Academy', '{birthday}'::text[],                                  'Pesta ulang tahun akademi penyihir: panggung kastil berlampu dengan topi sihir, panji asrama, jendela bintang, dan kuali ramuan, serta karakter chibi penyihir cilik berjubah ungu-emas.', 74),
   ('little-sakura', 'Sakura Wedding', '{wedding,engagement}'::text[],                    'Pernikahan taman sakura: panggung bunga ceri dengan lentera emas, jembatan merah di tepi danau, serta pengantin chibi berbusana tradisional Jepang.', 75),
   ('little-hackathon', 'Hackathon Night', '{corporate,seminar}'::text[],                    'Event hackathon bernuansa neon: kota malam ungu dengan gerbang cahaya, panggung bercincin neon, kursi gaming dan booth-booth acara, serta peserta chibi berkode </>.', 76),
-  ('little-idol', 'Idol Birthday Event', '{birthday}'::text[],                    'Fan party ulang tahun idol K-pop: panggung konser neon ungu-pink dengan lampu sorot, spanduk mahkota, dan booth fan, serta fans chibi berlightstick.', 77)
+  ('little-idol', 'Idol Birthday Event', '{birthday}'::text[],                    'Fan party ulang tahun idol K-pop: panggung konser neon ungu-pink dengan lampu sorot, spanduk mahkota, dan booth fan, serta fans chibi berlightstick.', 77),
+  ('little-bugis', 'Bugis Makassar Wedding', '{wedding,engagement}'::text[],                    'Pernikahan adat Bugis Makassar: rumah panggung kayu berukir emas dengan tirai merah, payung dan lentera emas, kapal pinisi di tepi laut, serta pengantin chibi berbusana bodo dan baju bella dada.', 78)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

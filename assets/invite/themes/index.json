@@ -195,7 +195,13 @@
     "fan-party": "little-idol",
     "fanmeet": "little-idol",
     "konser": "little-idol",
-    "little-idol": "little-idol"
+    "little-idol": "little-idol",
+    "bugis": "little-bugis",
+    "makassar": "little-bugis",
+    "bugis-makassar": "little-bugis",
+    "sulawesi": "little-bugis",
+    "adat-bugis": "little-bugis",
+    "little-bugis": "little-bugis"
   },
   "themes": [
     {
@@ -826,6 +832,21 @@
       "swatch": [
         "#6E2C86",
         "#F7A8C4"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-bugis",
+      "name": "Bugis Makassar Wedding",
+      "description": "Pernikahan adat Bugis Makassar: rumah panggung kayu berukir emas dengan tirai merah, payung dan lentera emas, kapal pinisi di tepi laut, serta pengantin chibi berbusana bodo dan baju bella dada.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1424",
+        "#C8961E"
       ],
       "art": true
     },
