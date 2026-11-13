@@ -176,7 +176,12 @@
     "sihir": "little-wizard",
     "magic": "little-wizard",
     "akademi-sihir": "little-wizard",
-    "little-wizard": "little-wizard"
+    "little-wizard": "little-wizard",
+    "sakura-wedding": "little-sakura",
+    "japan": "little-sakura",
+    "kimono": "little-sakura",
+    "hanami": "little-sakura",
+    "little-sakura": "little-sakura"
   },
   "themes": [
     {
@@ -792,6 +797,21 @@
       "swatch": [
         "#4A1A66",
         "#FFD27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-sakura",
+      "name": "Sakura Wedding",
+      "description": "Pernikahan taman sakura: panggung bunga ceri dengan lentera emas, jembatan merah di tepi danau, serta pengantin chibi berbusana tradisional Jepang.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6E2C86",
+        "#F7A8C4"
       ],
       "art": true
     },
