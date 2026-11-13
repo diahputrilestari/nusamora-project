@@ -169,7 +169,14 @@
     "arab-wedding": "arabian-knight",
     "arabian-night": "arabian-knight",
     "pernikahan-arab": "arabian-knight",
-    "ksatria-arab": "arabian-knight"
+    "ksatria-arab": "arabian-knight",
+    "wizard": "little-wizard",
+    "wizard-academy": "little-wizard",
+    "penyihir": "little-wizard",
+    "sihir": "little-wizard",
+    "magic": "little-wizard",
+    "akademi-sihir": "little-wizard",
+    "little-wizard": "little-wizard"
   },
   "themes": [
     {
@@ -785,6 +792,20 @@
       "swatch": [
         "#4A1A66",
         "#FFD27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-wizard",
+      "name": "Wizard Academy",
+      "description": "Pesta ulang tahun akademi penyihir: panggung kastil berlampu dengan topi sihir, panji asrama, jendela bintang, dan kuali ramuan, serta karakter chibi penyihir cilik berjubah ungu-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4B1E6B",
+        "#F2C14E"
       ],
       "art": true
     }
