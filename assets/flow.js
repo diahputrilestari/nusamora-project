@@ -26,7 +26,7 @@
   }
   function note(t, p, cta) { return '<div class="fw narrow"><div class="card"><div class="empty"><span class="ico"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span><h3>' + esc(t) + "</h3><p>" + esc(p) + "</p>" + (cta || "") + "</div></div></div>"; }
   function nextUrl() { return location.pathname + location.search; }
-  var ERR = { akun_tidak_aktif: "Akun Anda sedang dinonaktifkan, jadi belum bisa membuat undangan atau membayar. Hubungi tim NusaMora.", avatar_tidak_valid: "Avatar yang dipilih tidak tersedia untuk tema ini. Pilih avatar lain.", slug_digunakan: "URL ini sudah digunakan. Coba yang lain.", slug_dicadangkan: "URL ini dicadangkan sistem. Pilih yang lain.", slug_tidak_valid: "Format URL belum benar.", batas_draft: "Anda sudah memiliki 20 draft. Selesaikan atau hapus draft lama dulu.", akun_ditangguhkan: "Akun Anda sedang ditangguhkan.", template_tidak_valid: "Template tidak tersedia.", kategori_tidak_valid: "Kategori tidak valid.", kategori_tidak_cocok: "Template ini tidak tersedia untuk kategori tersebut.", tidak_ditemukan: "Undangan tidak ditemukan.", tidak_dapat_diubah: "Undangan ini tidak dapat diubah.", foto_tidak_valid: "Foto tidak valid.", konten_tidak_valid: "Isi undangan terlalu besar.", konten_tidak_sesuai_paket: "Isi undangan tidak sesuai dengan paket Anda.", opsi_tidak_didukung: "Pilihan tersebut tidak didukung template ini." };
+  var ERR = { akun_tidak_aktif: "Akun Anda sedang dinonaktifkan, jadi belum bisa membuat undangan atau membayar. Hubungi tim NusaMora.", avatar_tidak_valid: "Avatar yang dipilih tidak tersedia untuk tema ini. Pilih avatar lain.", slug_digunakan: "URL ini sudah digunakan. Coba yang lain.", slug_dicadangkan: "URL ini dicadangkan sistem. Pilih yang lain.", slug_tidak_valid: "Format URL belum benar.", batas_draft: "Anda sudah memiliki 20 draft. Selesaikan atau hapus draft lama dulu.", akun_ditangguhkan: "Akun Anda sedang ditangguhkan.", template_tidak_valid: "Template tidak tersedia.", kategori_tidak_valid: "Kategori tidak valid.", kategori_tidak_cocok: "Template ini tidak tersedia untuk kategori tersebut.", tidak_ditemukan: "Undangan tidak ditemukan.", tidak_dapat_diubah: "Undangan ini tidak dapat diubah.", foto_tidak_valid: "Foto tidak valid.", konten_tidak_valid: "Isi undangan terlalu besar.", konten_tidak_sesuai_paket: "Isi undangan tidak sesuai dengan paket Anda, atau pengaturan paket di basis data belum diperbarui. Hubungi tim NusaMora.", opsi_tidak_didukung: "Pilihan tersebut tidak didukung template ini." };
   function errText(e) { var m = (e && e.message) || ""; return ERR[m] || (/fetch|network/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet." : "Terjadi kendala. Coba lagi."); }
   function ids(a) { return (Array.isArray(a) ? a : []).map(function (x) { return typeof x === "string" ? x : x.id; }); }
   function opts(a) { return (Array.isArray(a) ? a : []).map(function (x) { return typeof x === "string" ? [x, x] : [x.id, x.name || x.id]; }); }
@@ -282,7 +282,7 @@
   var LAB = { wedding: ["Nama mempelai wanita", "Nama mempelai pria"], engagement: ["Nama calon mempelai wanita", "Nama calon mempelai pria"], birthday: ["Nama yang berulang tahun", ""], graduation: ["Nama wisudawan/wisudawati", ""], aqiqah: ["Nama anak", "Nama orang tua"], seminar: ["Nama acara", "Penyelenggara"], corporate: ["Nama acara", "Perusahaan / penyelenggara"], other: ["Nama acara", "Penyelenggara"] };
   var DEF = { names: { a: "", b: "" }, welcome: "", event: { start: "", end: "", tz: "WIB", venue: "", address: "", maps: "" }, photos: { cover: "", gallery: [] }, avatars: { groom: "", bride: "" }, music: { enabled: true, track: "we-are" }, features: { rsvp: true, guestbook: true, countdown: true, gift: false }, gift: { bank: "", number: "", holder: "" } };
   var COMMON_KEYS = ["names", "welcome", "event", "photos", "avatars", "music", "features", "gift"];
-  var PKEYS = { essential: ["design2d", "texts", "sections", "couple", "events", "story", "accounts"], signature: ["scene", "camera", "anim", "cinematic"], luxe: ["scene", "venue", "live"] };
+  var PKEYS = { essential: ["design2d", "texts", "sections", "couple", "events", "story", "accounts"], signature: ["scene", "camera", "anim", "cinematic", "texts", "couple", "events", "story", "accounts"], luxe: ["scene", "venue", "live"] };
   function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); Object.keys(b || {}).forEach(function (k) { if (b[k] && typeof b[k] === "object" && !Array.isArray(b[k]) && o[k] && typeof o[k] === "object" && !Array.isArray(o[k])) o[k] = merge(o[k], b[k]); else if (b[k] != null) o[k] = b[k]; }); return o; }
   function get(o, p) { return p.split(".").reduce(function (x, k) { return x && x[k]; }, o); }
   function set(o, p, v) { var ks = p.split("."), last = ks.pop(), t = ks.reduce(function (x, k) { return x[k] || (x[k] = {}); }, o); t[last] = v; }
@@ -297,7 +297,7 @@
   function pickKeys(pkg, c) { var o = {}; COMMON_KEYS.concat(PKEYS[pkg] || []).forEach(function (k) { if (c[k] !== undefined) o[k] = c[k]; }); return o; }
   function extraChecks(pkg, c) {
     if (pkg === "essential") return [["Tema undangan", !!(get(c, "design2d.theme") || get(c, "design2d.palette"))]];
-    if (pkg === "signature") return [["Scene 3D", !!get(c, "scene.preset")], ["Gerakan kamera", !!get(c, "camera.path")]];
+    if (pkg === "signature") return []; /* scene/kamera/animasi tetap bawaan tema 3D: tidak ada isian wajib */
     if (pkg === "luxe") return [["Scene venue", !!get(c, "scene.preset")], ["Area venue", Object.keys(get(c, "venue.areas") || {}).some(function (k) { return c.venue.areas[k]; })], ["Avatar tamu", (get(c, "live.avatars") || []).length > 0]];
     return [];
   }
@@ -320,13 +320,20 @@
     var caps = (tpl && tpl.caps) || {}, cat = CATN[inv.category] ? inv.category : "other", lab = LAB[cat], C0 = fullContent(pkg, caps, inv.content), date = inv.event_date || "";
     var locked = !(inv.status === "draft" || inv.status === "aktif") || inv.moderation === "takedown", pend = inv.status === "menunggu_pembayaran";
     var plan = plans.filter(function (p) { return p.id === pkg; })[0], GMAX = plan ? plan.gallery_limit : PK[pkg].gal;
-    var ENG = pkg === "essential" && isEngine(tpl), couple2 = cat === "wedding" || cat === "engagement";
+    var ENG = pkg === "essential" && isEngine(tpl), couple2 = cat === "wedding" || cat === "engagement", S3 = pkg === "signature";
+    /* isian tambahan yang dipakai engine 2D (essential) dan film 3D (signature) */
+    function edFill(c) {
+      var z = { event: { name: "" }, photos: { groom: "", bride: "" }, gift: { address: "" }, texts: { quoteSource: "" }, couple: { order: "pria", groom: { full: "", parents: "", ig: "" }, bride: { full: "", parents: "", ig: "" } }, events: [], story: [], accounts: [] };
+      if (ENG) z.design2d = { theme: "" };
+      return merge(z, c);
+    }
+    if (S3) C0 = edFill(C0);
     if (ENG) {
-      C0 = merge({ event: { name: "" }, photos: { groom: "", bride: "" }, gift: { address: "" }, texts: { quoteSource: "" }, design2d: { theme: "" }, couple: { order: "pria", groom: { full: "", parents: "", ig: "" }, bride: { full: "", parents: "", ig: "" } }, events: [], story: [], accounts: [] }, C0);
+      C0 = edFill(C0);
       C0.design2d.theme = themeId(C0.design2d.theme) || themeId(tpl.themeKey) || themeId(tpl.slug) || T2D.def;
     }
     var dirty = false, busy = false, timer = null, retry = 0, state = "ok", restored = false, BK = "nm:draft:" + inv.id, couple = cat === "wedding" || cat === "engagement";
-    try { var bk = JSON.parse(localStorage.getItem(BK) || "null"); if (bk && bk.c && !locked && bk.t > Date.parse(inv.updated_at || 0)) { C0 = fullContent(pkg, caps, bk.c); date = bk.d || ""; restored = true; } } catch (e) {}
+    try { var bk = JSON.parse(localStorage.getItem(BK) || "null"); if (bk && bk.c && !locked && bk.t > Date.parse(inv.updated_at || 0)) { C0 = fullContent(pkg, caps, bk.c); if (S3) C0 = edFill(C0); date = bk.d || ""; restored = true; } } catch (e) {}
     function bkSave() { try { localStorage.setItem(BK, JSON.stringify({ t: Date.now(), c: content(), d: date })); } catch (e) {} }
     function bkClear() { try { localStorage.removeItem(BK); } catch (e) {} }
     function dis() { return locked ? " disabled" : ""; }
@@ -345,11 +352,12 @@
       story: { max: 8, t: "Cerita", add: "Tambah cerita", f: [["date", "Waktu", { max: 40, ph: "Mis. Agustus 2019" }], ["title", "Judul", { max: 80, ph: "Mis. Pertama Bertemu" }], ["text", "Cerita", { ta: 1, full: 1, max: 600 }], ["photo", "Foto (opsional)", { photo: 1 }]] },
       accounts: { max: 4, t: "Rekening", add: "Tambah rekening / e-wallet", f: [["bank", "Bank / e-wallet", { max: 40, ph: "Mis. BCA, GoPay" }], ["number", "Nomor rekening / HP", { max: 40 }], ["holder", "Atas nama", { full: 1, max: 80 }]] }
     };
+    if (S3) { REP.story.max = 4; REP.events.max = 1; } /* film 3D: 4 easel cerita dan 2 kartu acara */
     function repHtml(key) { var R = REP[key], L = C0[key] || []; return L.map(function (it, i) { return '<div class="rep-it"><div class="rep-h"><b>' + R.t + " " + (i + 1) + "</b>" + (locked ? "" : '<button type="button" class="btn o sm" data-del="' + key + '" data-i="' + i + '">Hapus</button>') + '</div><div class="g2f">' + R.f.map(function (f) { var p = key + "." + i + "." + f[0]; return f[2].photo ? engPh(f[1], p) : T(f[1], p, f[2]); }).join("") + "</div></div>"; }).join("") + (locked || L.length >= R.max ? "" : '<button type="button" class="btn o sm rep-add" data-add="' + key + '">+ ' + R.add + "</button>"); }
     function rep(key) { return '<div class="rep" id="rep-' + key + '">' + repHtml(key) + "</div>"; }
-    function engCouple() {
+    function engCouple(noPh) {
       return '<div class="g2f">' + '<div class="f full"><label for="e-couple.order">Urutan nama di undangan</label><select id="e-couple.order" data-p="couple.order"' + dis() + ">" + [["pria", "Mempelai pria lebih dulu"], ["wanita", "Mempelai wanita lebih dulu"]].map(function (o) { return '<option value="' + o[0] + '"' + (C0.couple.order === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + "</select></div></div>" +
-        ["groom", "bride"].map(function (k) { var L = k === "groom" ? "pria" : "wanita"; return '<h3 class="sub-h">Mempelai ' + L + '</h3><div class="g2f">' + T("Nama lengkap & gelar", "couple." + k + ".full", { full: 1, max: 120 }) + T("Keterangan orang tua", "couple." + k + ".parents", { ta: 1, full: 1, max: 200, ph: "Putra/putri ... dari Bapak ... & Ibu ..." }) + T("Instagram (opsional)", "couple." + k + ".ig", { max: 40, ph: "@username" }) + engPh("Foto mempelai " + L, "photos." + k) + "</div>"; }).join("");
+        ["groom", "bride"].map(function (k) { var L = k === "groom" ? "pria" : "wanita"; return '<h3 class="sub-h">Mempelai ' + L + '</h3><div class="g2f">' + T("Nama lengkap & gelar", "couple." + k + ".full", { full: 1, max: 120 }) + T("Keterangan orang tua", "couple." + k + ".parents", { ta: 1, full: 1, max: 200, ph: "Putra/putri ... dari Bapak ... & Ibu ..." }) + T("Instagram (opsional)", "couple." + k + ".ig", { max: 40, ph: "@username" }) + (noPh ? "" : engPh("Foto mempelai " + L, "photos." + k)) + "</div>"; }).join("");
     }
     function engThemes() {
       var list = T2D.list.filter(function (t) { return !t.categories || t.categories.indexOf(cat) > -1; }), cur = C0.design2d.theme;
@@ -409,9 +417,10 @@
       if (couple2) html += S("mempelai", "Mempelai", "Profil lengkap yang tampil di bagian Mempelai.", engCouple());
       else html += S("mempelai", "Profil", "Nama lengkap, keterangan, dan foto yang tampil di bagian Profil.", '<div class="g2f">' + T("Nama lengkap", "couple.bride.full", { full: 1, max: 120 }) + T("Keterangan", "couple.bride.parents", { ta: 1, full: 1, max: 200, ph: cat === "birthday" ? "Mis. Putri kecil Bapak ... & Ibu ..." : "Keterangan singkat" }) + T("Instagram (opsional)", "couple.bride.ig", { max: 40, ph: "@username" }) + '<div class="f full"><label for="e-couple.bride.sex">Ilustrasi profil</label><select id="e-couple.bride.sex" data-p="couple.bride.sex"' + dis() + ">" + [["f", "Perempuan"], ["m", "Laki-laki"]].map(function (o) { return '<option value="' + o[0] + '"' + ((get(C0, "couple.bride.sex") || "f") === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") + '</select><small>Tampil bila foto belum diunggah, pada tema yang punya ilustrasi tokoh.</small></div>' + engPh("Foto", "photos.bride") + "</div>");
     }
+    else if (S3 && couple2) html += S("mempelai", "Mempelai", "Nama lengkap, keterangan orang tua, dan Instagram yang tampil di film 3D." + ((avOpts || []).length ? " Pilih juga karakter avatar mempelai." : ""), engCouple(true) + ((avOpts || []).length ? '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>" : ""));
     else html += S("mempelai", "Mempelai", avSub, '<div class="g2f">' + avSide("groom", "Avatar mempelai pria") + avSide("bride", "Avatar mempelai wanita") + "</div>");
-    html += S("waktu", ENG ? "Acara" : "Waktu & Lokasi", "", '<div class="g2f">' + (ENG ? T("Nama acara utama", "event.name", { full: 1, max: 60, ph: "Mis. Akad Nikah" }) : "") + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>" +
-      (ENG ? '<h3 class="sub-h">Acara lainnya</h3><p class="sub">Mis. resepsi atau ngunduh mantu. Tanggal kosong berarti sama dengan acara utama.</p>' + rep("events") : ""));
+    html += S("waktu", ENG || S3 ? "Acara" : "Waktu & Lokasi", "", '<div class="g2f">' + (ENG || S3 ? T("Nama acara utama", "event.name", { full: 1, max: 60, ph: "Mis. Akad Nikah" }) : "") + T("Tanggal acara", "date", { type: "date" }) + '<div class="f"><label for="e-event.tz">Zona waktu</label><select id="e-event.tz" data-p="event.tz"' + dis() + ">" + ["WIB", "WITA", "WIT"].map(function (z) { return '<option value="' + z + '"' + (C0.event.tz === z ? " selected" : "") + ">" + z + "</option>"; }).join("") + "</select></div>" + T("Jam mulai", "event.start", { type: "time" }) + T("Jam selesai", "event.end", { type: "time" }) + T("Nama lokasi", "event.venue", { full: 1, max: 120, ph: "Mis. Gedung Serbaguna Kenanga" }) + T("Alamat lengkap", "event.address", { ta: 1, full: 1, max: 400 }) + T("Tautan Google Maps", "event.maps", { type: "url", full: 1, max: 500, ph: "https://maps.google.com/..." }) + "</div>" +
+      (ENG || S3 ? '<h3 class="sub-h">Acara lainnya</h3><p class="sub">' + (S3 ? 'Satu acara tambahan, mis. resepsi. Tanggal kosong berarti sama dengan acara utama. Film 3D menampilkan dua acara.' : 'Mis. resepsi atau ngunduh mantu. Tanggal kosong berarti sama dengan acara utama.') + '</p>' + rep("events") : ""));
     html += S("foto", "Galeri", "Foto sampul dan galeri. Format PNG, JPG, atau WebP, maks. 15 MB per foto; dikecilkan otomatis (sisi terpanjang 1600 px, hasil maks. 3 MB).", '<div class="f"><label>Foto sampul</label><div class="cover" id="cv">' + (C0.photos.cover ? '<img src="' + esc(C0.photos.cover) + '" alt="Foto sampul">' : "Belum ada foto sampul") + "</div>" + (locked ? "" : '<label class="drop"><b>Pilih foto sampul</b><span>atau seret ke sini</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-c"></label>') + '<span class="err" id="er-c"></span></div><div class="f"><label>Galeri foto <small>(maks. ' + GMAX + ' foto untuk paket ' + PK[pkg].name + ')</small></label><div class="ph" id="gl"></div>' + (locked ? "" : '<label class="drop"><b>Tambah foto galeri</b><span>Bisa pilih beberapa sekaligus</span><input type="file" accept="image/png,image/jpeg,image/webp" id="up-g" multiple></label>') + '<span class="err" id="er-g"></span></div>');
     function giftBlock() { return SW("features.gift", "Hadiah digital", "Tampilkan rekening untuk hadiah.") + '<div class="g2f" id="giftf"' + (C0.features.gift ? "" : " hidden") + ">" + T("Nama bank / e-wallet", "gift.bank", { max: 40 }) + T("Nomor rekening", "gift.number", { max: 40, inputmode: "numeric" }) + T("Atas nama", "gift.holder", { full: 1, max: 80 }) + "</div>"; }
     function rsvpSel() { var v = Number(get(C0, "live.rsvpMax")) || 2, o = ""; for (var i = 1; i <= 10; i++) o += '<option value="' + i + '"' + (i === v ? " selected" : "") + ">" + i + " orang</option>"; return '<div class="f full"><label for="e-live.rsvpMax">Maksimal jumlah tamu per undangan</label><select id="e-live.rsvpMax" data-p="live.rsvpMax" data-num="1"' + dis() + ">" + o + "</select></div>"; }
@@ -440,12 +449,13 @@
       html += S("musik", "Musik", "Musik latar yang diputar saat tamu membuka undangan.", music);
       html += S("fitur", "Interaksi", "", comp + SW("sections.gallery", "Bagian galeri", "Tampilkan galeri foto di undangan.") + SW("sections.map", "Bagian lokasi & peta", "Tampilkan kartu lokasi dengan tombol peta."));
     } else if (pkg === "signature") {
-      html += S("scene", "Scene & Background", "Latar dan objek 3D yang tersedia di template ini.", '<div class="g2f">' + SEG("Scene", "scene.preset", opts(caps.scenes)) + CH("Objek 3D", "scene.objects", opts(caps.objects), "Objek yang ditampilkan di dalam scene.") + "</div>");
-      html += S("kamera", "Kamera", "Gerakan kamera saat film pembuka diputar.", '<div class="g2f">' + SEG("Gerakan kamera", "camera.path", opts(caps.camera).map(function (x) { return [x[0], CAMN[x[0]] || x[1]]; })) + RNG("Kecepatan kamera", "camera.speed", 1, 10, "1 = sangat pelan, 10 = cepat.") + "</div>");
-      html += S("animasi", "Animasi & Efek", "Pembukaan dan partikel yang menghidupkan scene.", '<div class="g2f">' + SEG("Animasi pembuka", "anim.intro", opts(caps.intro).map(function (x) { return [x[0], INTN[x[0]] || x[1]]; })) + SEG("Efek partikel", "anim.particles", opts(caps.particles).map(function (x) { return [x[0], PARN[x[0]] || x[1]]; })) + RNG("Intensitas efek", "anim.intensity", 1, 10) + "</div>");
-      html += S("sinema", "Teks & Elemen Sinematik", "Judul film pembuka dan tampilan layar lebar.", '<div class="g2f">' + T("Judul sinematik", "cinematic.title", { full: 1, max: 80, ph: "Kosongkan untuk memakai nama acara" }) + T("Subjudul", "cinematic.subtitle", { full: 1, max: 120, ph: "Mis. Sebuah kisah yang dimulai di taman" }) + SEG("Warna sinematik (color grade)", "cinematic.grade", opts(caps.grades).map(function (x) { return [x[0], GRN[x[0]] || x[1]]; })) + '<div class="f full">' + SW("cinematic.letterbox", "Layar lebar (letterbox)", "Bilah hitam atas dan bawah ala film.") + "</div></div>");
-      html += S("musik", "Musik Sinematik", "Musik yang mengiringi film pembuka.", music);
-      html += S("fitur", "Interaksi", "", comp);
+      html += S("teks", "Teks Undangan", "Kalimat pembuka, kutipan, dan penutup yang tampil di film 3D. Kosongkan untuk memakai teks bawaan tema.", '<div class="g2f">' + T("Kalimat pembuka", "texts.opening", { ta: 1, full: 1, max: 300, ph: "Bersama keluarga, kami mengundang Anda untuk hadir..." }) + T("Kutipan / ayat", "texts.quote", { ta: 1, full: 1, max: 500 }) + T("Sumber kutipan", "texts.quoteSource", { max: 80, ph: "Mis. QS. Ar-Rum: 21" }) + T("Kalimat penutup", "texts.closing", { ta: 1, full: 1, max: 600, ph: "Terima kasih atas doa dan kehadiran Anda." }) + "</div>");
+      html += S("kisah", couple2 ? "Love Story" : "Cerita & Momen", "Maksimal 4 bab; setiap bab tampil pada satu easel di film 3D. Bab yang kosong memakai judul bawaan tanpa teks.", rep("story"));
+      html += S("kamera", "Kecepatan Film", "Seberapa lama setiap adegan ditahan sebelum film berpindah otomatis.", RNG("Kecepatan film", "camera.speed", 1, 10, "1 = sangat pelan, 10 = cepat."));
+      html += S("musik", "Musik", "Musik latar yang diputar saat film dimulai.", music);
+      html += S("fitur", "Komponen Undangan", "", comp);
+      html += S("hadiah", "Hadiah Digital", "Rekening tambahan dan alamat kirim kado. Aktifkan juga Hadiah digital di Komponen Undangan.", rep("accounts") + '<div class="g2f">' + T("Alamat kirim kado (opsional)", "gift.address", { ta: 1, full: 1, max: 300 }) + "</div>");
+      html += S("tamu", "Tamu & Ucapan", "Buat link pribadi untuk setiap tamu, lalu pantau RSVP dan ucapan yang masuk.", engGuests());
     } else {
       html += S("venue", "Virtual Venue", "Tampilan venue 3D dan area yang dapat dikunjungi tamu.", '<div class="g2f">' + SEG("Scene venue", "scene.preset", opts(caps.scenes)) + '<div class="f full"><label>Area venue</label>' + ids(caps.areas).map(function (a) { var nm = opts(caps.areas).filter(function (x) { return x[0] === a; })[0][1]; return SW("venue.areas." + a, nm, { resepsi: "Area utama tempat tamu berkumpul dan menyapa.", kuliner: "Area makanan dan minuman virtual.", photobooth: "Tamu berfoto bersama avatar mereka.", galeri: "Foto-foto Anda ditampilkan di venue." }[a] || "Area yang dapat dikunjungi tamu."); }).join("") + "</div>" + CH("Dekorasi", "venue.decorations", opts(caps.decorations), "Dekorasi yang dipasang di venue.") + "</div>");
       html += S("avatar", "Avatar & Karakter", "Karakter yang dapat dipakai tamu di venue. Avatar pengantin diatur di bagian Mempelai.", guestAv(caps) + '<div class="g2f"><div class="f full">' + SW("live.allowSelect", "Tamu boleh memilih karakter", "Jika dimatikan, tamu memakai avatar pertama yang Anda aktifkan.") + "</div>" + limitSel() + T("Pesan sambutan", "live.greeting", { ta: 1, full: 1, max: 160, ph: "Selamat datang di hari bahagia kami!", help: "Disampaikan avatar mempelai saat tamu masuk venue (maks. 160 karakter)." }) + "</div>");
@@ -602,7 +612,7 @@
       if (TEXTP.indexOf(p) > -1) inlineEdit(el, p); else jump(p);
     });
     function lpDraw() {
-      if (ENG) return; /* template engine 2D: tampilan lewat /undangan, bukan renderStage */
+      if (ENG || S3) return; /* engine 2D / film 3D: tampilan lewat iframe, bukan renderStage */
       var h = $("#lpi"), box = $("#lpv"); if (!h || !box || lpEdit) return; var w = lpMode === "m" ? 390 : 900, top = box.scrollTop; h.style.width = w + "px"; h.className = "lpi" + (lpMode === "m" ? " mob" : "");
       var ca = C0.avatars || {}, c2 = C0, dt = date;
       try { if (tpl) { c2 = ovl(sampleContent(pkg, tpl), C0); dt = date || new Date(Date.now() + 120 * 864e5).toISOString().slice(0, 10); } } catch (e) { c2 = C0; }
@@ -616,7 +626,7 @@
     $("#lp-o").addEventListener("click", function () { $("#lpc").classList.add("open"); lpDraw(); }); $("#lp-x").addEventListener("click", function () { $("#lpc").classList.remove("open"); });
     $("#lpn").innerHTML = pkg === "luxe" ? "Klik elemen di preview untuk mengeditnya. Preview venue memakai tampilan ringkas; bagian yang belum diisi memakai contoh." + (tpl && /^\/live/.test(tpl.demo || "") ? ' <a target="_blank" rel="noopener" href="' + esc(tpl.demo) + '">Buka demo 3D template ini</a>' : "") : "Klik teks di preview untuk mengetik langsung, atau klik bagian lain untuk membuka pengaturannya. Bagian yang belum diisi memakai contoh.";
     addEventListener("resize", function () { lp(); });
-    if (ENG) { engBind(); [$("#lpc"), $("#lp-o")].forEach(function (x) { if (x) x.hidden = true; }); }
+    if (ENG || S3) { engBind(); [$("#lpc"), $("#lp-o")].forEach(function (x) { if (x) x.hidden = true; }); }
     progress(); lpDraw();
     (function () { var hm = (location.hash || "").match(/^#s-(\w+)/); if (hm && secIds.indexOf(hm[1]) > -1) { setOpen(hm[1]); return; } var first = secIds.filter(function (k) { var st = secStat(k); return st && st[0] < st[1]; })[0] || secIds[0]; setOpen(first); })();
     if (restored) { save(true); toast("Perubahan terakhir yang belum tersimpan sudah dipulihkan dari perangkat ini."); }
@@ -667,6 +677,10 @@
     if (x.pkg === "essential" && (isEngine(x.tpl) || demoEng)) {
       var src = x.inv && x.inv.id ? "/undangan?preview=" + encodeURIComponent(x.inv.id) : "/undangan?demo=1&theme=" + encodeURIComponent(engTheme(x.tpl) || x.tpl.themeKey || x.tpl.slug);
       host.innerHTML = '<iframe class="eng-fr" src="' + esc(src) + '" title="Pratinjau undangan" allow="autoplay"></iframe>'; return;
+    }
+    if (x.pkg === "signature" && x.tpl && x.tpl.themeKey && /^\/assets-signature\//.test(x.tpl.demo || "")) {
+      var s3 = x.inv && x.inv.id ? "/assets-signature/invite/index?preview=" + encodeURIComponent(x.inv.id) + "&theme=" + encodeURIComponent(x.tpl.themeKey) : x.tpl.demo;
+      host.innerHTML = '<iframe class="eng-fr" src="' + esc(s3) + '" title="Pratinjau undangan 3D" allow="autoplay; fullscreen"></iframe>'; return;
     }
     host.innerHTML = x.pkg === "essential" ? r2d(x) : x.pkg === "signature" ? rCin(x) : rLive(x);
     host.insertAdjacentHTML("beforeend", avatarBlock(x));

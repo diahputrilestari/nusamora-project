@@ -1,4 +1,6 @@
 import { wedding } from '../data/wedding.config.js';
+import { loadRemote } from '../data/remote.js';
+import { mountGuestPanel } from './guest.js';
 import { experienceStore } from '../stores/experience.js';
 import { detectQuality, hasWebGL } from '../utils/quality.js';
 import { mountFallback, mountUI } from './ui.js';
@@ -6,6 +8,9 @@ import { startEngine } from './engine.js';
 import { activeTheme } from '../themes/active.js';
 /** Preview entry: same scenes, camera and audio as the React app, no build step. */
 async function boot() {
+    // customer data (?slug= / ?preview=) is applied to `wedding` before anything reads it
+    if (!(await loadRemote()))
+        return;
     const stage = document.getElementById('stage');
     const overlay = document.getElementById('overlay');
     const store = experienceStore.getState();
@@ -15,6 +20,7 @@ async function boot() {
         return;
     }
     const ui = mountUI(overlay, wedding);
+    mountGuestPanel(overlay);
     // canvas text uses the web fonts, so wait for them before painting textures
     try {
         await Promise.race([

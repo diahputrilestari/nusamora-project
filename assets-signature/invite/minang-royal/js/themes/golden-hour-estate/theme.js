@@ -19,4 +19,5 @@ export default defineTheme({
         ground: { grassA: '#7f8f5f', grassB: '#a3a56d', lawn: '#8f9f62', far: '#9a9a74', bladeBase: '#556a3c', bladeTip: '#a8b56c' },
     },
     world: { kind: 'garden' },
+    characters: { coupleModelUrl: '/assets/themes/golden-hour-estate/couple.glb', height: 1.7 },
 });

@@ -1,5 +1,10 @@
 import betawiHeritage from './betawi-heritage/theme.js';
 import chineseImperial from './chinese-imperial/theme.js';
+import koreanRoyal from './korean-royal/theme.js';
+import baliRoyal from './bali-royal/theme.js';
+import malayRoyal from './malay-royal/theme.js';
+import bugisMakassarRoyal from './bugis-makassar-royal/theme.js';
+import sundaneseRoyal from './sundanese-royal/theme.js';
 import duskFlowerGarden from './dusk-flower-garden/theme.js';
 import goldenHourEstate from './golden-hour-estate/theme.js';
 import keratonJawa from './keraton-jawa/theme.js';
@@ -14,6 +19,11 @@ import minangRoyal from './minang-royal/theme.js';
 export const THEMES = {
     'betawi-heritage': betawiHeritage,
     'chinese-imperial': chineseImperial,
+    'korean-royal': koreanRoyal,
+    'bali-royal': baliRoyal,
+    'malay-royal': malayRoyal,
+    'bugis-makassar-royal': bugisMakassarRoyal,
+    'sundanese-royal': sundaneseRoyal,
     'dusk-flower-garden': duskFlowerGarden,
     'golden-hour-estate': goldenHourEstate,
     'keraton-jawa': keratonJawa,
