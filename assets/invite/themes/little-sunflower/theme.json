@@ -1,0 +1,136 @@
+{
+  "id": "little-sunflower",
+  "name": "Little Sunflower Birthday",
+  "version": 1,
+  "description": "Pesta ulang tahun kebun bunga matahari: panggung kayu hangat dengan tirai gingham kuning, gapura bunga, kincir angin, dan booth bertema sunflower.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Mentari Kecil",
+    "full": "Mentari Putri Kirana",
+    "parents": "Putri Bapak Raka Pradipta & Ibu Sekar Ayu",
+    "age": "4"
+  },
+  "colors": {
+    "deep": "#8A5A12",
+    "deep2": "#C98A1B",
+    "paper": "#FFFBEA",
+    "soft": "#FBEFC4",
+    "ink": "#4A3410",
+    "muted": "#8A7345",
+    "accent": "#E0A417",
+    "accent2": "#F6DC84",
+    "petal": "#F2C230",
+    "heading": "#8A5A12"
+  },
+  "fonts": {
+    "script": "Parisienne",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Sunflower Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si bunga matahari kami",
+    "profileTitle": "Si Matahari Kecil",
+    "countdownEyebrow": "Kebun bunga segera mekar dalam",
+    "countdownTitle": "Menuju Hari Cerah",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Kebun Bunga",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Matahari",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kebun",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Main ke Kebun, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta sunflower si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado Ceria",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Kebun",
+    "closingEyebrow": "Sampai jumpa di kebun!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta sunflower!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/keranjang.webp",
+        "w": 54
+      },
+      {
+        "src": "art/sunflower-girl.webp",
+        "w": 62
+      },
+      {
+        "src": "art/tong.webp",
+        "w": 50
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/sunflower-girl.webp",
+    "figureGroom": "art/sunflower-girl.webp",
+    "countdownRow": [
+      {
+        "src": "art/kincir.webp",
+        "w": 52
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/keranjang.webp",
+        "w": 56
+      }
+    ],
+    "eventBadge": "art/booth-kuliner.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/sunflower-girl.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

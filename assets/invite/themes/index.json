@@ -237,7 +237,12 @@
     "penari": "little-ballerina",
     "little-ballerina": "little-ballerina",
     "ballet": "little-ballerina",
-    "ulang-tahun-balet": "little-ballerina"
+    "ulang-tahun-balet": "little-ballerina",
+    "sunflower": "little-sunflower",
+    "bunga-matahari": "little-sunflower",
+    "matahari": "little-sunflower",
+    "little-sunflower": "little-sunflower",
+    "ulang-tahun-sunflower": "little-sunflower"
   },
   "themes": [
     {
@@ -1014,6 +1019,20 @@
       "swatch": [
         "#A472B5",
         "#F4A9C8"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-sunflower",
+      "name": "Little Sunflower Birthday",
+      "description": "Pesta ulang tahun kebun bunga matahari: panggung kayu hangat dengan tirai gingham kuning, gapura bunga, kincir angin, dan booth bertema sunflower.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#E0A417",
+        "#FBEFC4"
       ],
       "art": true
     }
