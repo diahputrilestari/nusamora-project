@@ -272,6 +272,13 @@
     q.then(function (d) { if (G.inv !== id || G.kind !== kind) return; if (d === false) G.err = true; else G.data = d; if (curRoute() === kind) route(); }, function () { G.err = true; if (curRoute() === kind) route(); });
   }
   function curRoute() { return (location.hash || "#dashboard").slice(1); }
+  /* istilah menu tamu mengikuti jenis acara undangan yang dipilih */
+  function gTone() {
+    var iv = (S.inv || []).filter(function (i) { return i.id === G.inv; })[0] || {}, t = iv.event_type || "";
+    if (/^(seminar|corporate)$/.test(t)) return { who: "peserta", Who: "Peserta", wish: "Pesan", sub: "Pesan dan masukan dari peserta", empty: "Pesan dan masukan dari peserta akan tampil di sini.", stat: "Undangan terkirim, dibuka, dan konfirmasi kehadiran peserta" };
+    if (/^(ulangtahun|wisuda|aqiqah)$/.test(t)) return { who: "tamu", Who: "Tamu", wish: "Ucapan", sub: "Ucapan selamat dari tamu", empty: "Ucapan selamat dari tamu akan tampil di sini.", stat: "Undangan terkirim, dibuka, dan konfirmasi kehadiran" };
+    return { who: "tamu", Who: "Tamu", wish: "Ucapan", sub: "Ucapan dan doa dari tamu", empty: "Ucapan dan doa dari tamu akan tampil di sini.", stat: "Undangan terkirim, dibuka, dan konfirmasi kehadiran" };
+  }
   function gHead(t, sub) { return '<div class="pghead"><div><h1>' + t + '</h1><p class="sub">' + sub + "</p></div></div>"; }
   function gBody(kind, title, sub, render) {
     var p = gPick(kind), h = gHead(title, sub); if (!p.sel) return h + '<div class="card">' + p.html + "</div>";
@@ -284,11 +291,11 @@
   function guestLink(g) { var iv = S.inv.filter(function (i) { return i.id === G.inv; })[0] || {}, u = iv.public_url; if (!u) return ""; if (iv.package_type === "luxe") return location.origin + "/live/?t=" + g.token; return u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + g.token; }
   var RS = { hadir: ["Hadir", "ok"], tidak_hadir: ["Tidak hadir", "bad"], ragu: ["Ragu-ragu", "warn"] };
   V.statistik = function () {
-    return gBody("statistik", "Statistik Tamu", "Undangan terkirim, dibuka, dan konfirmasi kehadiran", function (d) {
-      var s = d.stats || {}, K = [["Tamu", s.total], ["Terkirim", s.terkirim], ["Dibuka", s.dibuka], ["Sudah RSVP", s.rsvp], ["Hadir", s.hadir], ["Tidak hadir", s.tidak_hadir], ["Ragu-ragu", s.ragu], ["Total orang hadir", s.pax_hadir]];
+    return gBody("statistik", "Statistik " + gTone().Who, gTone().stat, function (d) {
+      var s = d.stats || {}, K = [[gTone().Who, s.total], ["Terkirim", s.terkirim], ["Dibuka", s.dibuka], ["Sudah RSVP", s.rsvp], ["Hadir", s.hadir], ["Tidak hadir", s.tidak_hadir], ["Ragu-ragu", s.ragu], ["Total orang hadir", s.pax_hadir]];
       var h = '<div class="grid g4" style="margin-bottom:16px">' + K.map(function (k) { return '<div class="card stat"><div><b>' + Number(k[1] || 0).toLocaleString("id-ID") + "</b><span>" + k[0] + "</span></div></div>"; }).join("") + "</div>";
-      h += '<form class="card form" id="f-gadd" novalidate style="margin-bottom:16px"><h2>Tambah tamu</h2><div class="grid g2"><label class="fld">Nama<input type="text" id="ga-name" maxlength="100"><span class="err" id="e-ga"></span></label><label class="fld">WhatsApp (opsional)<input type="tel" id="ga-ph" placeholder="0812..."></label></div><div class="row-end"><button class="btn" type="submit" id="ga-go">Tambah</button></div></form>';
-      h += '<div class="card"><div class="card-h"><h2>Daftar tamu</h2></div>';
+      h += '<form class="card form" id="f-gadd" novalidate style="margin-bottom:16px"><h2>Tambah ' + gTone().who + '</h2><div class="grid g2"><label class="fld">Nama<input type="text" id="ga-name" maxlength="100"><span class="err" id="e-ga"></span></label><label class="fld">WhatsApp (opsional)<input type="tel" id="ga-ph" placeholder="0812..."></label></div><div class="row-end"><button class="btn" type="submit" id="ga-go">Tambah</button></div></form>';
+      h += '<div class="card"><div class="card-h"><h2>Daftar ' + gTone().who + '</h2></div>';
       if (!d.guests.length) return h + empty("users", "Belum ada tamu", d.eng ? "Konfirmasi dari tamu yang mengisi RSVP di undangan sudah dihitung di atas dan bisa dilihat di menu RSVP. Tambahkan tamu di sini untuk membuat tautan pribadi." : "Tambahkan tamu untuk membuat tautan undangan pribadi dan memantau statusnya.") + "</div>";
       h += '<p class="sub" style="margin-bottom:10px">Bagikan tautan pribadi tiap tamu. Status \"Dibuka\" dan RSVP tercatat otomatis saat tamu membuka undangan.</p><div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th>RSVP</th><th>Aksi</th></tr></thead><tbody>' + d.guests.map(function (g) {
         var r = g.invitation_rsvps && (Array.isArray(g.invitation_rsvps) ? g.invitation_rsvps[0] : g.invitation_rsvps), l = guestLink(g);
@@ -308,9 +315,9 @@
     });
   };
   V.bukutamu = function () {
-    return gBody("bukutamu", "Buku Tamu", "Ucapan dan doa dari tamu", function (d) {
-      var h = '<div class="card"><div class="card-h"><h2>Ucapan (' + d.rows.length + ")</h2></div>";
-      if (!d.rows.length) return h + empty("book", "Belum ada ucapan", "Ucapan dan doa dari tamu akan tampil di sini.") + "</div>";
+    return gBody("bukutamu", "Buku Tamu", gTone().sub, function (d) {
+      var h = '<div class="card"><div class="card-h"><h2>' + gTone().wish + " (" + d.rows.length + ")</h2></div>";
+      if (!d.rows.length) return h + empty("book", "Belum ada " + gTone().wish.toLowerCase(), gTone().empty) + "</div>";
       return h + '<ul class="nt">' + d.rows.map(function (w) { return "<li" + (w.visible ? "" : ' class="muted"') + "><b>" + esc(w.name) + "</b>" + (w.visible ? "" : ' <span class="badge warn">Disembunyikan</span>') + "<p>" + esc(w.message) + "</p><small>" + dt(w.created_at, true) + '</small><div class="acts"><button class="btn o sm" type="button" data-g="wvis"' + (w.eng ? ' data-e="1"' : "") + ' data-id="' + esc(w.id) + '" data-v="' + (w.visible ? "0" : "1") + '">' + (w.visible ? "Sembunyikan" : "Tampilkan") + "</button>" + (w.eng ? "" : '<button class="btn o sm" type="button" data-g="wdel" data-id="' + esc(w.id) + '">Hapus</button>') + "</div></li>"; }).join("") + "</ul></div>";
     });
   };
