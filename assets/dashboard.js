@@ -322,6 +322,7 @@
       return h + '<div class="tbl-w"><table><thead><tr><th>Waktu</th><th>Tamu</th><th>Aktivitas</th><th>Detail</th><th></th></tr></thead><tbody>' + d.rows.map(function (e) { return "<tr><td>" + dt(e.created_at) + "</td><td><b>" + esc(e.guest_name) + "</b></td><td>" + esc(LA[e.action] || e.action) + "</td><td>" + esc(e.detail || "-") + '</td><td><button class="btn o sm" type="button" data-g="edel" data-id="' + esc(e.id) + '">Hapus</button></td></tr>'; }).join("") + "</tbody></table></div></div>";
     });
   };
+  function csvWib(v) { var x = new Date(v); if (!v || isNaN(x)) return ""; var w = new Date(x.getTime() + 7 * 36e5), z = function (n) { return (n < 10 ? "0" : "") + n; }; return w.getUTCFullYear() + "-" + z(w.getUTCMonth() + 1) + "-" + z(w.getUTCDate()) + " " + z(w.getUTCHours()) + ":" + z(w.getUTCMinutes()) + " WIB"; }
   function csvCell(v) { v = String(v == null ? "" : v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; }
   function bindGuests(r) {
     var sel = $("#g-inv"); if (sel) sel.addEventListener("change", function () { G.inv = sel.value; G.data = null; G.err = false; route(); });
@@ -334,8 +335,8 @@
   d.addEventListener("click", function (e) {
     var b = e.target.closest("[data-g]"); if (!b) return; var a = b.dataset.g, id = b.dataset.id, call;
     if (a === "csv") {
-      var rows = (G.data && G.data.rows || []).map(function (r) { return [(r.invitation_guests || {}).name, r.status, r.pax, r.message, r.updated_at].map(csvCell).join(","); });
-      var blob = new Blob(["﻿Nama,Status,Jumlah,Pesan,Diperbarui\n" + rows.join("\n")], { type: "text/csv;charset=utf-8" }), l = d.createElement("a"); l.href = URL.createObjectURL(blob); l.download = "rsvp.csv"; l.click(); setTimeout(function () { URL.revokeObjectURL(l.href); }, 1000); return;
+      var rows = (G.data && G.data.rows || []).map(function (r) { return [(r.invitation_guests || {}).name, (RS[r.status] || [r.status])[0], r.pax, r.message, csvWib(r.updated_at)].map(csvCell).join(","); });
+      var blob = new Blob(["﻿Nama,Status,Jumlah,Pesan,Diperbarui (WIB)\n" + rows.join("\n")], { type: "text/csv;charset=utf-8" }), l = d.createElement("a"); l.href = URL.createObjectURL(blob); l.download = "rsvp.csv"; l.click(); setTimeout(function () { URL.revokeObjectURL(l.href); }, 1000); return;
     }
     if (a === "sent") call = sb.rpc("guest_mark_sent", { p_guest: id, p_sent: b.dataset.v === "1" });
     else if (a === "gdel") { if (!confirm("Hapus tamu ini beserta RSVP-nya?")) return; call = sb.rpc("guest_delete", { p_guest: id }); }
