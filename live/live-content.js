@@ -18,14 +18,60 @@
 
   function setWelcome() { var b = q("#s1 .sub"); if (b && D && D.welcome) b.textContent = String(D.welcome).slice(0, 300); }
 
+  /* istilah menu per jenis acara. Pernikahan memakai bawaan halaman; jenis lain mengganti nama menu, judul popup, dan teks hadiah. */
+  var UI = {
+    engagement: { gift: { h: "Engagement Gift", p: "Bila berkenan berbagi kebahagiaan, hadiah digital dapat dikirim ke:" }, host: "Mempelai" },
+    birthday: {
+      stage: { n: "Panggung Utama", lb: "Panggung" }, resepsi: { n: "Area Pesta", lb: "Pesta", p: "Silakan menikmati pesta dan hidangan. Kehadiran dan doa Anda adalah kado terindah." }, buku: { n: "Buku Ucapan", lb: "Ucapan" },
+      kuliner: { n: "Area Makanan", lb: "Makanan" }, istirahat: { n: "Area Santai", lb: "Santai" }, gift: { h: "Birthday Gift", p: "Bila berkenan memberi kado, dapat dikirim ke:" }, host: "Tuan Rumah"
+    },
+    sweet17: {
+      stage: { n: "Panggung Utama", lb: "Panggung" }, resepsi: { n: "Area Pesta", lb: "Pesta", p: "Silakan menikmati pesta dan hidangan. Kehadiran dan doa Anda adalah kado terindah." }, buku: { n: "Buku Ucapan", lb: "Ucapan" },
+      kuliner: { n: "Area Makanan", lb: "Makanan" }, istirahat: { n: "Area Santai", lb: "Santai" }, gift: { h: "Sweet 17 Gift", p: "Bila berkenan memberi kado, dapat dikirim ke:" }, host: "Tuan Rumah"
+    },
+    corporate: {
+      stage: { n: "Panggung Utama", lb: "Panggung" }, resepsi: { n: "Area Networking", lb: "Networking", p: "Silakan berjejaring dan menikmati sajian. Kehadiran Anda sangat berarti bagi kami." }, buku: { n: "Pesan & Masukan", lb: "Masukan" },
+      kuliner: { n: "Area Katering", lb: "Katering" }, istirahat: { n: "Lounge", lb: "Lounge" }, gift: { h: "Dukungan Digital", p: "Dukungan atau donasi dapat dikirim ke:" }, host: "Penyelenggara"
+    }
+  };
+  UI.seminar = UI.corporate;
+  UI.graduation = Object.assign({}, UI.birthday, { gift: { h: "Graduation Gift", p: "Bila berkenan memberi hadiah, dapat dikirim ke:" } });
+  UI.aqiqah = Object.assign({}, UI.birthday, { gift: { h: "Hadiah Digital", p: "Bila berkenan berbagi kebahagiaan, hadiah dapat dikirim ke:" } });
+  UI.other = Object.assign({}, UI.birthday, { gift: { h: "Hadiah Digital", p: "Bila berkenan memberi hadiah, dapat dikirim ke:" }, host: "Penyelenggara" });
+  function catUI() { var c = D && D.category; return c === "wedding" ? null : (UI[c] || UI.other); }
+  var GEN = /^(Garden Utama|Pendopo Utama|Area Resepsi|Area Ucapan|Buku Tamu|Buku Ucapan|Area Kuliner|Area Ruang Makan|Area Istirahat|Area Relax)$/;
+  function applyMenu() {
+    var C = catUI(); if (!C || typeof AREAS === "undefined") return;
+    AREAS.forEach(function (a) {
+      var o = C[a.id]; if (!o || !o.n || (a.lb && !a.cui)) return;
+      if (!a.cui) { a.cui = 1; a.lb = o.lb; if (GEN.test(a.n)) a.n = o.n; }
+      var b = q("#ml .nv[data-id=\"" + a.id + "\"]"); if (!b) return;
+      var x = b.querySelector(".tx"); if (x) x.textContent = a.lb; b.title = a.n; b.setAttribute("aria-label", a.n);
+    });
+  }
+  function giftHtml(C) {
+    var g = D.gift, qr = (typeof nmQris === "function") ? nmQris() : "", h = C && C.gift ? C.gift.h : "Wedding Gift", t = C && C.gift ? C.gift.p : "Bila berkenan berbagi kebahagiaan, hadiah digital dapat dikirim ke:";
+    return "<h3>" + E(h) + "</h3><p class=\"nm-mute\" style=\"margin:0 0 12px\">" + E(t) + "</p>" + bank(E(g.bank), E(g.number), E(g.holder)) + (g.address ? "<p class=\"nm-mute\" style=\"margin:12px 0 0\">Alamat kirim kado: " + E(g.address) + "</p>" : "") + qr;
+  }
+
   function patchModal() {
     var bxEl = document.getElementById("bx"); if (!bxEl || !D) return;
+    var C = catUI(), hasGift = false;
     bxEl.querySelectorAll(".nm-sec").forEach(function (s) {
-      var h = s.querySelector("h3"); if (!h || !/Wedding Gift/i.test(h.textContent)) return;
+      var h = s.querySelector("h3"); if (!h || !/(Wedding|Engagement|Birthday|Sweet 17|Graduation) Gift|Hadiah Digital|Dukungan Digital/i.test(h.textContent)) return;
       if (!giftOk()) { s.remove(); return; }
-      var g = D.gift, qr = (typeof nmQris === "function") ? nmQris() : "";
-      s.innerHTML = "<h3>Wedding Gift</h3><p class=\"nm-mute\" style=\"margin:0 0 12px\">Bila berkenan berbagi kebahagiaan, hadiah digital dapat dikirim ke:</p>" + bank(E(g.bank), E(g.number), E(g.holder)) + (g.address ? "<p class=\"nm-mute\" style=\"margin:12px 0 0\">Alamat kirim kado: " + E(g.address) + "</p>" : "") + qr;
+      hasGift = true; s.innerHTML = giftHtml(C);
     });
+    if (C) {
+      var tt = bxEl.querySelector("#nm-t"), ttx = tt ? tt.textContent.trim() : "";
+      var isRes = /^Area Resepsi$/.test(ttx), isHad = /^Area Hadiah$/.test(ttx);
+      if (isRes && C.resepsi) { tt.textContent = C.resepsi.n; var pp = bxEl.querySelector(".nm-p"); if (pp && C.resepsi.p) pp.textContent = C.resepsi.p; }
+      if (isHad) { var ph = bxEl.querySelector(".nm-p"); if (ph) ph.textContent = "Kehadiran dan doa Anda sangat berarti bagi kami."; }
+      if ((isRes || isHad) && !hasGift && feat("gift", false) && giftOk()) {
+        var sec = document.createElement("div"); sec.className = "nm-sec"; sec.style.marginTop = "20px"; sec.innerHTML = giftHtml(C);
+        var body = bxEl.querySelector(".nm-b"); if (body) body.appendChild(sec);
+      }
+    }
     var lv = bxEl.querySelector(".nm-live span"); if (lv) { var t = [dateLong(), timeTxt()].filter(Boolean).join(" · "); if (t) lv.textContent = t; }
   }
 
@@ -113,7 +159,8 @@
         var st = document.createElement("style"); st.textContent = "#ml .nv[data-id=\"story\"]{display:none!important}"; document.head.appendChild(st);
       } catch (e) { }
       setWelcome(); setTimeout(setWelcome, 500); setTimeout(setWelcome, 2500);
+      applyMenu(); setTimeout(applyMenu, 800); setTimeout(applyMenu, 3000);
     },
-    greet: function () { if (greeted) return; greeted = true; try { var g = D && D.live && D.live.greeting; if (g && typeof addChat === "function") addChat({ n: (NMID && NMID.pair) || "Mempelai", a: AV.L[0] }, String(g).slice(0, 160)); } catch (e) { } }
+    greet: function () { if (greeted) return; greeted = true; try { var g = D && D.live && D.live.greeting; if (g && typeof addChat === "function") addChat({ n: (catUI() ? ((D.names && D.names.a) || catUI().host) : ((NMID && NMID.pair) || "Mempelai")), a: AV.L[0] }, String(g).slice(0, 160)); } catch (e) { } }
   };
 })();
