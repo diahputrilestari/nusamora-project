@@ -93,7 +93,7 @@
     apply: function (d, ctx) {
       if (done || !d) return; done = true; D = d; T = ctx.token; RPC = ctx.rpc;
       var n = D.names || {}, couple = /^(wedding|engagement)$/.test(D.category || ""), f = {};
-      if (couple) { if (n.a) f.groomName = String(n.a); if (n.b) f.brideName = String(n.b); } else if (n.a) f.hostName = String(n.a);
+      if (couple) { if (n.a) f.brideName = String(n.a); if (n.b) f.groomName = String(n.b); f.nameOrder = "bride"; } else if (n.a) f.hostName = String(n.a);
       try { INVDATA = Object.assign({}, INVDATA || {}, f); applyIdentity(); } catch (e) { }
       try {
         window.loc = loc; window.gallery = gallery; window.lb = lb; window.videos = videos; window.book = book; window.gsub = gsub;

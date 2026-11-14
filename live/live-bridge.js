@@ -62,6 +62,7 @@
   function applyContent(c) {
     if (!c || typeof c !== "object") return; CONTENT = c;
     try { if (window.NMLC) window.NMLC.apply(c, { token: TOKEN, rpc: rpc }); } catch (e) { }
+    try { rpc("guest_open", { p_token: TOKEN }).then(function () { }, function () { }); } catch (e) { }
     if (joined && window.NMLC) setTimeout(function () { window.NMLC.greet(); }, 800);
     var f = c.features || {};
     try {
