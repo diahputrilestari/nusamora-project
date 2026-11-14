@@ -281,10 +281,11 @@
   function errMsg(e) { var m = (e && (e.error || e.message)) || ""; return ERRS[m] || (/fetch|network|Failed/i.test(m) ? "Tidak bisa terhubung. Periksa koneksi internet Anda." : "Terjadi kendala. Coba lagi."); }
 
   var rsvpForm = "";
-  function bindRsvp(vm, again) {
+  function bindRsvp(vm, again, init) {
     var f = $("#rsvp-f"); if (!f) return;
     if (!rsvpForm) rsvpForm = $("#rsvp-box").innerHTML;
-    var key = "nm:rsvp:" + vm.slug, pax = 1, out = $("#pax"), wrap = $("#pax-w");
+    var key = "nm:rsvp:" + vm.slug, pax = init && init.pax > 0 ? init.pax : 1, out = $("#pax"), wrap = $("#pax-w");
+    if (init && init.pax > 0) out.textContent = pax;
     function syncPax() { var a = f.attendance.value; wrap.classList.toggle("off", a === "tidak"); }
     f.addEventListener("change", syncPax);
     wrap.addEventListener("click", function (e) { var b = e.target.closest("[data-st]"); if (!b) return; pax = Math.max(1, Math.min(10, pax + +b.getAttribute("data-st"))); out.textContent = pax; out.classList.remove("tick"); void out.offsetWidth; out.classList.add("tick"); });
@@ -292,8 +293,8 @@
       var lbl = { hadir: "Terima kasih, kami menantikan kehadiran Anda", tidak: "Terima kasih atas konfirmasinya", ragu: "Terima kasih, kabari kami bila sudah pasti" }[r.attendance] || "Terima kasih";
       $("#rsvp-box").innerHTML = '<div class="ok-box"><span class="ok-ic">' + I.check + "</span><h3>" + esc(lbl) + "</h3><p>" + esc(name) + (r.attendance === "tidak" ? " &middot; tidak hadir" : r.attendance === "ragu" ? " &middot; masih ragu" : " &middot; " + r.pax + " orang") + "</p>" + (vm.mode !== "live" ? '<p class="fine">Mode ' + (vm.mode === "demo" ? "demo" : "pratinjau") + ": jawaban tidak disimpan.</p>" : "") + '<button type="button" class="btn ghost sm" id="rsvp-re">Ubah jawaban</button></div>';
       $("#rsvp-re").onclick = function () {
-        $("#rsvp-box").innerHTML = rsvpForm; bindRsvp(vm, true);
-        var nf = $("#rsvp-f"); nf.name.value = name; var r0 = nf.querySelector('input[name=attendance][value="' + r.attendance + '"]'); if (r0) r0.checked = true;
+        $("#rsvp-box").innerHTML = rsvpForm; bindRsvp(vm, true, r);
+        var nf = $("#rsvp-f"); nf.name.value = name; if (r.note) nf.note.value = r.note; var r0 = nf.querySelector('input[name=attendance][value="' + r.attendance + '"]'); if (r0) r0.checked = true;
         nf.dispatchEvent(new Event("change")); nf.name.focus();
       };
     }
@@ -305,7 +306,7 @@
       D.sendRsvp(vm, { name: name, attendance: att, pax: att === "tidak" ? 0 : pax, note: f.note.value.trim() }).then(function (r) {
         btn.disabled = false; btn.classList.remove("busy");
         if (!r || r.ok === false) { er.textContent = errMsg(r); return; }
-        var res = { attendance: att, pax: att === "tidak" ? 0 : pax, name: name }; if (vm.mode === "live") store(key, res); done(res, name);
+        var res = { attendance: att, pax: att === "tidak" ? 0 : pax, name: name, note: f.note.value.trim() }; if (vm.mode === "live") store(key, res); done(res, name);
       }, function (x) { btn.disabled = false; btn.classList.remove("busy"); er.textContent = errMsg(x); });
     });
     syncPax();
