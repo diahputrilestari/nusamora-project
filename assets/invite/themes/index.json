@@ -248,7 +248,14 @@
     "celtic-woodland": "little-celtic",
     "hutan-celtic": "little-celtic",
     "little-celtic": "little-celtic",
-    "lamaran-celtic": "little-celtic"
+    "lamaran-celtic": "little-celtic",
+    "venetian": "little-venetian",
+    "venesia": "little-venetian",
+    "masquerade": "little-venetian",
+    "topeng": "little-venetian",
+    "venetian-masquerade": "little-venetian",
+    "little-venetian": "little-venetian",
+    "pesta-topeng": "little-venetian"
   },
   "themes": [
     {
@@ -1054,6 +1061,21 @@
       "swatch": [
         "#1E4D2B",
         "#F2D98A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-venetian",
+      "name": "Venetian Masquerade Wedding",
+      "description": "Pernikahan/lamaran bergaya pesta topeng Venesia: panggung marmer dengan tirai beludru merah marun dan emas, kanal serta jembatan malam, karangan mawar merah, dan pengantin chibi bertopeng emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B0F1F",
+        "#F4D98A"
       ],
       "art": true
     }
