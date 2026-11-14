@@ -122,7 +122,102 @@
     "angkasa": "little-rocket",
     "space": "little-rocket",
     "penjelajah-roket": "little-rocket",
-    "luar-angkasa": "little-rocket"
+    "luar-angkasa": "little-rocket",
+    "dino-friends": "little-dino",
+    "dinofriends": "little-dino",
+    "dinosaurus-friends": "little-dino",
+    "little-dino": "little-dino",
+    "farm": "little-farm",
+    "farm-friends": "little-farm",
+    "peternakan": "little-farm",
+    "petani": "little-farm",
+    "kebun": "little-farm",
+    "ternak": "little-farm",
+    "lumbung": "little-farm",
+    "sapi": "little-farm",
+    "little-farm": "little-farm",
+    "baseball": "little-baseball",
+    "baseball-league": "little-baseball",
+    "bisbol": "little-baseball",
+    "softball": "little-baseball",
+    "basebal": "little-baseball",
+    "liga-baseball": "little-baseball",
+    "little-baseball": "little-baseball",
+    "basketball": "little-basketball",
+    "basket": "little-basketball",
+    "all-star": "little-basketball",
+    "allstar": "little-basketball",
+    "nba": "little-basketball",
+    "basketball-allstar": "little-basketball",
+    "little-basketball": "little-basketball",
+    "soccer": "little-soccer",
+    "football": "little-soccer",
+    "sepak-bola": "little-soccer",
+    "sepakbola": "little-soccer",
+    "bola": "little-soccer",
+    "futsal": "little-soccer",
+    "soccer-champions": "little-soccer",
+    "little-soccer": "little-soccer",
+    "pirates": "little-pirates",
+    "pirate": "little-pirates",
+    "bajak-laut": "little-pirates",
+    "bajaklaut": "little-pirates",
+    "kapten": "little-pirates",
+    "little-pirates": "little-pirates",
+    "harta-karun": "little-pirates",
+    "arabian-knight": "arabian-knight",
+    "arab-wedding": "arabian-knight",
+    "arabian-night": "arabian-knight",
+    "pernikahan-arab": "arabian-knight",
+    "ksatria-arab": "arabian-knight",
+    "wizard": "little-wizard",
+    "wizard-academy": "little-wizard",
+    "penyihir": "little-wizard",
+    "sihir": "little-wizard",
+    "magic": "little-wizard",
+    "akademi-sihir": "little-wizard",
+    "little-wizard": "little-wizard",
+    "sakura-wedding": "little-sakura",
+    "japan": "little-sakura",
+    "kimono": "little-sakura",
+    "hanami": "little-sakura",
+    "little-sakura": "little-sakura",
+    "hackathon": "little-hackathon",
+    "hackaton": "little-hackathon",
+    "coding": "little-hackathon",
+    "tech": "little-hackathon",
+    "developer": "little-hackathon",
+    "event-teknologi": "little-hackathon",
+    "little-hackathon": "little-hackathon",
+    "idol": "little-idol",
+    "kpop-idol": "little-idol",
+    "idol-birthday": "little-idol",
+    "fan-party": "little-idol",
+    "fanmeet": "little-idol",
+    "konser": "little-idol",
+    "little-idol": "little-idol",
+    "bugis": "little-bugis",
+    "makassar": "little-bugis",
+    "bugis-makassar": "little-bugis",
+    "sulawesi": "little-bugis",
+    "adat-bugis": "little-bugis",
+    "little-bugis": "little-bugis",
+    "beige": "little-beige",
+    "krem": "little-beige",
+    "cream": "little-beige",
+    "beige-gold": "little-beige",
+    "elegan": "little-beige",
+    "little-beige": "little-beige",
+    "luxury": "little-luxury",
+    "luxury-maroon": "little-luxury",
+    "mewah": "little-luxury",
+    "maroon-mewah": "little-luxury",
+    "little-luxury": "little-luxury",
+    "black-gold": "little-blackgold",
+    "blackgold": "little-blackgold",
+    "hitam-emas": "little-blackgold",
+    "luxury-black": "little-blackgold",
+    "little-blackgold": "little-blackgold"
   },
   "themes": [
     {
@@ -639,6 +734,223 @@
       "swatch": [
         "#232B7A",
         "#F4C542"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-dino",
+      "name": "Little Dino Friends",
+      "description": "Pesta ulang tahun dino friends: panggung podium berlampu dengan gerbang batu berselimut sulur, hutan prasejarah, air terjun, dan gunung berapi, serta karakter chibi penjelajah berkostum dino.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3E7A2E",
+        "#F6B84B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-farm",
+      "name": "Little Farm Friends",
+      "description": "Pesta ulang tahun peternakan: panggung lumbung merah berlampu dengan bendera kotak-kotak, jerami, kincir angin, dan padang rumput, serta karakter chibi petani cilik berkostum overall, topi jerami, dan sapi.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#B5322A",
+        "#F3C24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-baseball",
+      "name": "Baseball League",
+      "description": "Pesta ulang tahun baseball league: panggung podium berlampu dengan lencana bola dan tongkat, lapangan, papan skor, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-merah.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1C2F6B",
+        "#C8312B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-basketball",
+      "name": "Basketball All-Star",
+      "description": "Pesta ulang tahun basketball all-star: panggung podium berlampu dengan lencana bola basket, ring, banner bintang, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-oranye.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F2F6B",
+        "#E8741C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-soccer",
+      "name": "Soccer Champions",
+      "description": "Pesta ulang tahun sepak bola: panggung podium berlampu dengan lencana bola dan pita emas, gawang, banner juara, serta lapangan hijau, bersama karakter chibi pemain, pemandu sorak, kiper, dan penonton berseragam biru-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1A3578",
+        "#F2C94C"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-pirates",
+      "name": "Little Pirates",
+      "description": "Pesta ulang tahun bajak laut kecil: panggung kapal kayu berlampu dengan topi bajak laut, kompas, peta harta, kapal layar di lautan, serta karakter chibi kapten, bajak laut, dan pangeran berkostum merah-cokelat.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1F1B",
+        "#F2C14E"
+      ],
+      "art": true
+    },
+    {
+      "id": "arabian-knight",
+      "name": "Arabian Knight Wedding",
+      "description": "Pernikahan malam Arabia: panggung emas berukir dengan lentera, tirai ungu, bulan sabit dan masjid di tepi danau, serta pengantin chibi berbusana ungu-emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A1A66",
+        "#FFD27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-sakura",
+      "name": "Sakura Wedding",
+      "description": "Pernikahan taman sakura: panggung bunga ceri dengan lentera emas, jembatan merah di tepi danau, serta pengantin chibi berbusana tradisional Jepang.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6E2C86",
+        "#F7A8C4"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-bugis",
+      "name": "Bugis Makassar Wedding",
+      "description": "Pernikahan adat Bugis Makassar: rumah panggung kayu berukir emas dengan tirai merah, payung dan lentera emas, kapal pinisi di tepi laut, serta pengantin chibi berbusana bodo dan baju bella dada.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A1424",
+        "#C8961E"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-beige",
+      "name": "Beige Gold Wedding",
+      "description": "Pernikahan elegan krem-emas: panggung lengkung marmer dengan lentera, lily, dan panel emas, serta pengantin chibi berbusana beige.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B4A2B",
+        "#F0D08A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-luxury",
+      "name": "Luxury Maroon Wedding",
+      "description": "Pernikahan mewah maroon-emas: aula marmer berkarpet merah dengan tirai beludru, lampu kristal, dan rangkaian mawar, serta pengantin chibi berbusana maroon bersulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6E0F22",
+        "#F6D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-blackgold",
+      "name": "Luxury Black Gold Wedding",
+      "description": "Pernikahan mewah hitam-emas: aula marmer gelap dengan lampu kristal, tirai beludru, lengkung emas, dan rangkaian lili putih, serta pengantin chibi berbusana hitam bersulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1A1510",
+        "#F3D98B"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-hackathon",
+      "name": "Hackathon Night",
+      "description": "Event hackathon bernuansa neon: kota malam ungu dengan gerbang cahaya, panggung bercincin neon, kursi gaming dan booth-booth acara, serta peserta chibi berkode </>.",
+      "categories": [
+        "corporate",
+        "seminar"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#2A1270",
+        "#22B8E8"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-idol",
+      "name": "Idol Birthday Event",
+      "description": "Fan party ulang tahun idol K-pop: panggung konser neon ungu-pink dengan lampu sorot, spanduk mahkota, dan booth fan, serta fans chibi berlightstick.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4A2A8C",
+        "#E58BDD"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-wizard",
+      "name": "Wizard Academy",
+      "description": "Pesta ulang tahun akademi penyihir: panggung kastil berlampu dengan topi sihir, panji asrama, jendela bintang, dan kuali ramuan, serta karakter chibi penyihir cilik berjubah ungu-emas.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4B1E6B",
+        "#F2C14E"
       ],
       "art": true
     }

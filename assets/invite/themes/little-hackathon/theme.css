@@ -1,0 +1,21 @@
+/* Hackathon: ukuran ilustrasi & sentuhan neon ungu-cyan */
+.th-little-hackathon .ulos-dec { width: min(150px, 46vw); }
+.th-little-hackathon .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-hackathon .gf-amp { width: min(160px, 48vw); }
+.th-little-hackathon .ws-bk { width: min(150px, 46vw); }
+.th-little-hackathon .ev-lt { width: 30px; }
+.th-little-hackathon .rs-lt { width: 54px; top: -30px; }
+.th-little-hackathon .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-hackathon .gable .art { height: 26px; }
+.th-little-hackathon .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-hackathon .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-hackathon .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-hackathon .end-art .eg { filter: drop-shadow(0 18px 28px rgba(20, 8, 70, .4)); }
+.th-little-hackathon .deep .eb { color: #EAF0FF; }
+.th-little-hackathon .cv-nm, .th-little-hackathon .hero-nm, .th-little-hackathon .end-nm { text-shadow: 0 2px 0 rgba(20, 8, 70, .5), 0 0 18px rgba(125, 227, 255, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-hackathon .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(20, 8, 70, .58), rgba(20, 8, 70, .3) 62%, rgba(20, 8, 70, .06) 84%), linear-gradient(180deg, rgba(20, 8, 70, .06), rgba(20, 8, 70, .5)); }
+.th-little-hackathon .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-hackathon .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-hackathon .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(20, 8, 70, .9); }

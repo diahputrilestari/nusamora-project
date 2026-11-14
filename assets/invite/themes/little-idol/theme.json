@@ -1,0 +1,166 @@
+{
+  "id": "little-idol",
+  "name": "Idol Birthday Event",
+  "version": 1,
+  "description": "Fan party ulang tahun idol K-pop: panggung konser neon ungu-pink dengan lampu sorot, spanduk mahkota, dan booth fan, serta fans chibi berlightstick.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Nara",
+    "full": "Nara Aurelia",
+    "parents": "Idol kesayangan semua fans",
+    "age": "21",
+    "eventName": "Fan Party Ulang Tahun Nara",
+    "start": "15:00",
+    "end": "21:00",
+    "venue": "Aurora Concert Hall",
+    "address": "Jl. Panggung Bintang No. 7, Cikarang Utara, Bekasi",
+    "welcome": "Nara genap 21 tahun! Yuk rayakan bersama fans lain: nyanyi bareng, lightstick menyala, dan kejutan spesial di atas panggung.",
+    "quote": "Terima kasih sudah jadi cahaya di setiap panggungku.",
+    "quoteSource": "Nara",
+    "closing": "Terima kasih sudah merayakan hari spesial Nara. Sampai jumpa di depan panggung!",
+    "title": "Ulang Tahun Nara",
+    "story": [
+      {
+        "date": "15.00",
+        "title": "Fan Meet & Greet",
+        "text": "Datang lebih awal, foto bareng, dan tulis pesan di fan letter wall."
+      },
+      {
+        "date": "17.00",
+        "title": "Mini Konser",
+        "text": "Nyanyi bareng lagu-lagu favorit dengan lightstick menyala."
+      },
+      {
+        "date": "20.00",
+        "title": "Tiup Lilin",
+        "text": "Momen puncak: kue, doa, dan kejutan dari seluruh fans."
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#4A2A8C",
+    "deep2": "#8A5CE0",
+    "paper": "#FBF6FF",
+    "soft": "#F1E6FB",
+    "ink": "#2B1A55",
+    "muted": "#7A63A8",
+    "accent": "#E58BDD",
+    "accent2": "#FFD1F4",
+    "petal": "#F7A8E8",
+    "heading": "#4A2A8C"
+  },
+  "fonts": {
+    "script": "Oswald",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Idol Birthday Event",
+    "guestSalute": "Fans tersayang",
+    "profileEyebrow": "Sang idol",
+    "profileTitle": "Happy Birthday!",
+    "countdownEyebrow": "Konser dimulai dalam",
+    "countdownTitle": "Menuju Hari Spesial",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Fan Party",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Alur Acara",
+    "galleryEyebrow": "Momen bersama",
+    "galleryTitle": "Galeri Fans",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Fan Party?",
+    "rsvpLead": "Kabari kami agar panitia bisa menyiapkan kursi, merchandise, dan konsumsi untukmu.",
+    "giftEyebrow": "Tanda cinta",
+    "giftTitle": "Hadiah & Donasi",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terbaik. Bila ingin berdonasi atau mengirim hadiah, bisa melalui:",
+    "wishesEyebrow": "Pesan fans",
+    "wishesTitle": "Fan Letter Wall",
+    "closingEyebrow": "See you at the concert!",
+    "closingText": "Terima kasih sudah merayakan hari spesial ini. Kami tunggu kamu di depan panggung!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/id-1.webp",
+        "w": 66
+      },
+      {
+        "src": "art/guest-book.webp",
+        "w": 112
+      },
+      {
+        "src": "art/id-2.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/id-2.webp",
+    "figureGroom": "art/id-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/id-3.webp",
+        "w": 66
+      },
+      {
+        "src": "art/birthday-corner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/id-4.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/food-drink.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/area-donasi.webp",
+    "wishesTop": "art/fan-letter.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/id-1.webp",
+      "art/id-2.webp",
+      "art/id-5.webp",
+      "art/id-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

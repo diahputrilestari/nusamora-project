@@ -1,0 +1,21 @@
+/* Little Dino Friends: ukuran ilustrasi & sentuhan hijau-oranye */
+.th-little-dino .ulos-dec { width: min(150px, 46vw); }
+.th-little-dino .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-dino .gf-amp { width: min(160px, 48vw); }
+.th-little-dino .ws-bk { width: min(150px, 46vw); }
+.th-little-dino .ev-lt { width: 30px; }
+.th-little-dino .rs-lt { width: 54px; top: -30px; }
+.th-little-dino .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-dino .gable .art { height: 26px; }
+.th-little-dino .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-dino .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-dino .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-dino .end-art .eg { filter: drop-shadow(0 18px 28px rgba(20, 40, 15, .4)); }
+.th-little-dino .deep .eb { color: #EAF0FF; }
+.th-little-dino .cv-nm, .th-little-dino .hero-nm, .th-little-dino .end-nm { text-shadow: 0 2px 0 rgba(20, 40, 15, .5), 0 0 18px rgba(255, 226, 140, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-dino .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(20, 40, 15, .58), rgba(20, 40, 15, .3) 62%, rgba(20, 40, 15, .06) 84%), linear-gradient(180deg, rgba(20, 40, 15, .06), rgba(20, 40, 15, .5)); }
+.th-little-dino .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-dino .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-dino .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(20, 40, 15, .9); }

@@ -1,0 +1,139 @@
+{
+  "id": "little-dino",
+  "name": "Little Dino Friends",
+  "version": 1,
+  "description": "Pesta ulang tahun dino friends: panggung podium berlampu dengan gerbang batu berselimut sulur, hutan prasejarah, air terjun, dan gunung berapi, serta karakter chibi penjelajah berkostum dino.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Dino Kecil",
+    "full": "Rangga Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#3E7A2E",
+    "deep2": "#6BA43A",
+    "paper": "#FFFBEF",
+    "soft": "#F2EBCF",
+    "ink": "#2B2A1B",
+    "muted": "#6E6A4C",
+    "accent": "#E58A1F",
+    "accent2": "#F6B84B",
+    "petal": "#9BD060",
+    "heading": "#3E7A2E"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Dino Friends Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si penjelajah dino kami",
+    "profileTitle": "Si Dino Kecil",
+    "countdownEyebrow": "Petualangan dimulai dalam",
+    "countdownTitle": "Menuju Hari Petualangan",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Hutan Dino",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Dino",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Dino",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Berpetualang, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta dino friends si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Telur Dino",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Hutan",
+    "closingEyebrow": "Sampai jumpa di hutan dino!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta dino friends!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1670
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1670
+    },
+    "coverGround": [
+      {
+        "src": "art/dn-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/dn-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/gunung.webp",
+    "figureBride": "art/dn-2.webp",
+    "figureGroom": "art/dn-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/dn-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/dn-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/dn-1.webp",
+      "art/dn-2.webp",
+      "art/dn-5.webp",
+      "art/dn-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

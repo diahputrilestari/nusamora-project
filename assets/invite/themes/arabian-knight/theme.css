@@ -1,0 +1,21 @@
+/* Arabian Knight Wedding: ukuran ilustrasi & sentuhan ungu-emas */
+.th-arabian-knight .ulos-dec { width: min(150px, 46vw); }
+.th-arabian-knight .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-arabian-knight .gf-amp { width: min(160px, 48vw); }
+.th-arabian-knight .ws-bk { width: min(150px, 46vw); }
+.th-arabian-knight .ev-lt { width: 30px; }
+.th-arabian-knight .rs-lt { width: 54px; top: -30px; }
+.th-arabian-knight .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-arabian-knight .gable .art { height: 26px; }
+.th-arabian-knight .jb-row { gap: 6px; align-items: flex-end; }
+.th-arabian-knight .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-arabian-knight .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-arabian-knight .end-art .eg { filter: drop-shadow(0 18px 28px rgba(52, 16, 72, .4)); }
+.th-arabian-knight .deep .eb { color: #FFE2A0; }
+.th-arabian-knight .cv-nm, .th-arabian-knight .hero-nm, .th-arabian-knight .end-nm { text-shadow: 0 2px 0 rgba(52, 16, 72, .5), 0 0 18px rgba(255, 210, 122, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-arabian-knight .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(52, 16, 72, .7), rgba(52, 16, 72, .36) 62%, rgba(52, 16, 72, .08) 84%), linear-gradient(180deg, rgba(52, 16, 72, .08), rgba(52, 16, 72, .58)); }
+.th-arabian-knight .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-arabian-knight .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-arabian-knight .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(52, 16, 72, .9); }

@@ -124,7 +124,7 @@
     return rpc("submit_wish", { p_slug: vm.slug, p_name: d.name, p_message: d.message, p_attendance: d.attendance || null });
   }
   function wishes(vm, before) {
-    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
+    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : vm.category === "corporate" || vm.category === "seminar" ? DEMO_WISHES_EV : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
     return rpc("list_wishes", { p_slug: vm.slug, p_before: before || null, p_limit: 20 });
   }
 
@@ -139,6 +139,11 @@
     { id: "k2", name: "Kirana (teman TK)", message: "Happy birthday! Sampai ketemu di pesta ya!", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
     { id: "k3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
+  var DEMO_WISHES_EV = [
+    { id: "e1", name: "Tim Pixel Pioneers", message: "Gak sabar! Kami sudah siapkan ide dan kopi seember. Sampai ketemu di arena!", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
+    { id: "e2", name: "Dika (Mentor)", message: "Siap membimbing para peserta. Semoga banyak project keren lahir di sini.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
+    { id: "e3", name: "Salsa", message: "Maaf bentrok jadwal kuliah, semoga sukses acaranya!", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
+  ];
   var DEMO_WISHES_AQ = [
     { id: "q1", name: "Ustadzah Halimah", message: "Barakallahu lakum. Semoga menjadi anak yang salihah, penyejuk mata, dan berbakti kepada orang tua.", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
     { id: "q2", name: "Tante Mira & Om Bayu", message: "Selamat atas kelahiran si kecil! Semoga sehat selalu dan tumbuh penuh kasih sayang.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
@@ -148,7 +153,8 @@
   /* o = theme.json "demo" (opsional): { name, full, parents, age } untuk menyesuaikan data contoh */
   function demoFor(theme, cat, o) {
     if (cat === "aqiqah") return demoAqiqah(theme, o);
-    if (cat !== "birthday") return demoData(theme);
+    var evt = cat === "corporate" || cat === "seminar";
+    if (cat !== "birthday" && !evt) return demoData(theme);
     o = o || {}; var nm = str(o.name, 30) || "Alesha", age = str(o.age, 10) || "5";
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
@@ -156,22 +162,22 @@
       theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
       names: { a: nm },
       couple: { bride: { full: str(o.full, 80) || "Alesha Putri Maharani", parents: str(o.parents, 120) || "Putri kecil Bapak Dimas Pratama & Ibu Rania Larasati" } },
-      welcome: "Hore, " + nm + " genap " + age + " tahun! Kami mengundang keluarga dan teman-teman untuk merayakan pesta ulang tahunnya bersama kami.",
-      quote: { text: "Setiap tahun bersamamu adalah hadiah terindah bagi kami.", source: "Ayah & Bunda" },
+      welcome: str(o.welcome, 1000) || "Hore, " + nm + " genap " + age + " tahun! Kami mengundang keluarga dan teman-teman untuk merayakan pesta ulang tahunnya bersama kami.",
+      quote: { text: str(o.quote, 400) || "Setiap tahun bersamamu adalah hadiah terindah bagi kami.", source: str(o.quoteSource, 80) || "Ayah & Bunda" },
       photos: { cover: u("nm-kid-cover", 900, 1200), bride: u("nm-kid", 600, 800), gallery: ["k1", "k2", "k3", "k4", "k5", "k6"].map(function (s, i) { return u("nm-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
-      event: { name: "Pesta Ulang Tahun ke-" + age, start: "15:00", end: "18:00", tz: "WIB", venue: "Ballroom Taman Ceria", address: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
-      story: [
+      event: { name: str(o.eventName, 60) || "Pesta Ulang Tahun ke-" + age, start: str(o.start, 5) || "15:00", end: str(o.end, 5) || "18:00", tz: "WIB", venue: str(o.venue, 120) || "Ballroom Taman Ceria", address: str(o.address, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      story: Array.isArray(o.story) && o.story.length ? o.story.slice(0, 6).map(function (x, i) { x = x || {}; return { date: str(x.date, 40), title: str(x.title, 80), text: str(x.text, 600), photo: i === 0 ? u("nm-kid-s1", 700, 500) : i === 2 ? u("nm-kid-s3", 700, 500) : "" }; }) : [
         { date: "Maret 2021", title: "Hari Pertama di Dunia", text: nm + " lahir di pagi yang cerah dan langsung jadi pusat dunia kecil kami.", photo: u("nm-kid-s1", 700, 500) },
         { date: "Maret 2022", title: "Langkah Pertama", text: "Di ulang tahun pertamanya, " + nm + " berjalan sendiri menuju kue ulang tahunnya.", photo: "" },
         { date: "Juli 2025", title: "Hari Pertama Sekolah", text: "Dengan tas barunya, " + nm + " berangkat ke TK dengan senyum lebar.", photo: u("nm-kid-s3", 700, 500) }
       ],
       gift: { bank: "BCA", number: "1234567890", holder: "Rania Larasati" },
       giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
-      closing: "Terima kasih sudah menjadi bagian dari hari istimewa " + nm + ". Kami tunggu kehadiranmu di pesta!",
+      closing: str(o.closing, 600) || "Terima kasih sudah menjadi bagian dari hari istimewa " + nm + ". Kami tunggu kehadiranmu di pesta!",
       music: { enabled: true, track: "we-are" },
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
-    return { vm: normalize(content, { slug: "demo", title: "Ulang Tahun " + nm, category: "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
+    return { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || "Ulang Tahun " + nm, category: evt ? cat : "birthday", event_date: iso, mode: "demo" }), template: theme || "" };
   }
   function demoAqiqah(theme, o) {
     o = o || {}; var nm = str(o.name, 30) || "Aisyah";

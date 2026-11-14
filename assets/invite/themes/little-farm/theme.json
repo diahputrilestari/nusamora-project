@@ -1,0 +1,139 @@
+{
+  "id": "little-farm",
+  "name": "Little Farm Friends",
+  "version": 1,
+  "description": "Pesta ulang tahun peternakan: panggung lumbung merah berlampu dengan bendera kotak-kotak, jerami, kincir angin, dan padang rumput, serta karakter chibi petani cilik berkostum overall, topi jerami, dan sapi.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Petani Kecil",
+    "full": "Raka Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "4"
+  },
+  "colors": {
+    "deep": "#B5322A",
+    "deep2": "#D4503F",
+    "paper": "#FFF8EC",
+    "soft": "#F6E7CC",
+    "ink": "#3A2218",
+    "muted": "#7A5A45",
+    "accent": "#E3A21A",
+    "accent2": "#F3C24A",
+    "petal": "#F3C24A",
+    "heading": "#B5322A"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Farm Friends Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si petani cilik kami",
+    "profileTitle": "Si Petani Kecil",
+    "countdownEyebrow": "Pesta dimulai dalam",
+    "countdownTitle": "Menuju Hari Peternakan",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Peternakan",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Kecil",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kebun",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Pesta Kebun, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta peternakan si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah dari Lumbung",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Kebun",
+    "closingEyebrow": "Sampai jumpa di peternakan!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta peternakan!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/fm-6.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/fm-3.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/kincir.webp",
+    "figureBride": "art/fm-2.webp",
+    "figureGroom": "art/fm-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/fm-4.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/fm-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/fm-1.webp",
+      "art/fm-2.webp",
+      "art/fm-5.webp",
+      "art/fm-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

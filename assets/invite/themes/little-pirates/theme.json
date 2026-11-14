@@ -1,0 +1,139 @@
+{
+  "id": "little-pirates",
+  "name": "Little Pirates",
+  "version": 1,
+  "description": "Pesta ulang tahun bajak laut kecil: panggung kapal kayu berlampu dengan topi bajak laut, kompas, peta harta, kapal layar di lautan, serta karakter chibi kapten, bajak laut, dan pangeran berkostum merah-cokelat.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Kapten Kecil",
+    "full": "Arka Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#7A1F1B",
+    "deep2": "#A8382E",
+    "paper": "#FBF3E2",
+    "soft": "#F1E2C4",
+    "ink": "#2E1A12",
+    "muted": "#7A5A46",
+    "accent": "#D9A21B",
+    "accent2": "#F2C14E",
+    "petal": "#F2C14E",
+    "heading": "#7A1F1B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Pirate Party Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si kapten cilik kami",
+    "profileTitle": "Si Kapten Kecil",
+    "countdownEyebrow": "Berlayar dalam",
+    "countdownTitle": "Menuju Berlayar",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Kapal",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Kapten",
+    "galleryEyebrow": "Momen istimewa",
+    "galleryTitle": "Galeri Harta",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Berlayar, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta bajak laut si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Peti Harta",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Kapal",
+    "closingEyebrow": "Sampai jumpa di kapal!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta bajak laut!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/pr-6.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/pr-3.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/papan-hitung.webp",
+    "figureBride": "art/pr-2.webp",
+    "figureGroom": "art/pr-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/pr-4.webp",
+        "w": 66
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/pr-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/pr-1.webp",
+      "art/pr-2.webp",
+      "art/pr-5.webp",
+      "art/pr-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
