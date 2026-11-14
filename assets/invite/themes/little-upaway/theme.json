@@ -1,0 +1,137 @@
+{
+  "id": "little-upaway",
+  "name": "Up Up & Away Birthday",
+  "version": 1,
+  "description": "Pesta ulang tahun balon udara pastel: panggung berawan dengan lengkung lampu dan pita ungu, balon udara, koper vintage, dan pesawat mungil, dengan booth bertema awan.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Aurora Kecil",
+    "full": "Aurora Kirana Pratama",
+    "parents": "Putri Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#6B4FA3",
+    "deep2": "#8B6FC6",
+    "paper": "#FFF8FC",
+    "soft": "#F6E7F4",
+    "ink": "#3A2A57",
+    "muted": "#7B6894",
+    "accent": "#D9A441",
+    "accent2": "#F6D58B",
+    "petal": "#F7B6D2",
+    "heading": "#6B4FA3"
+  },
+  "fonts": {
+    "script": "Pacifico",
+    "serif": "Quicksand",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Up, Up & Away Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si bintang kecil kami",
+    "profileTitle": "Si Penjelajah Kecil",
+    "countdownEyebrow": "Balon siap terbang dalam",
+    "countdownTitle": "Menuju Hari Terbang",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Atas Awan",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Penjelajah",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Awan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Terbang, Ya?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta Up, Up & Away si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado dari Awan",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Awan",
+    "closingEyebrow": "Sampai jumpa di atas awan!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta Up, Up & Away!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/ua-1.webp",
+        "w": 62
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/ua-3.webp",
+        "w": 62
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/ua-1.webp",
+    "figureGroom": "art/ua-2.webp",
+    "countdownRow": [
+      {
+        "src": "art/ua-2.webp",
+        "w": 58
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/ua-3.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/booth-kuliner.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/ua-1.webp",
+      "art/ua-3.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
