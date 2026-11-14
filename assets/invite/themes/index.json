@@ -217,7 +217,13 @@
     "blackgold": "little-blackgold",
     "hitam-emas": "little-blackgold",
     "luxury-black": "little-blackgold",
-    "little-blackgold": "little-blackgold"
+    "little-blackgold": "little-blackgold",
+    "emerald": "little-emerald",
+    "luxury-emerald": "little-emerald",
+    "hijau-zamrud": "little-emerald",
+    "zamrud": "little-emerald",
+    "hijau-mewah": "little-emerald",
+    "little-emerald": "little-emerald"
   },
   "themes": [
     {
@@ -951,6 +957,21 @@
       "swatch": [
         "#4B1E6B",
         "#F2C14E"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-emerald",
+      "name": "Luxury Emerald Wedding",
+      "description": "Pernikahan mewah hijau zamrud-emas: aula marmer dengan tirai beludru emerald, air mancur, lampu kristal, dan rangkaian lili putih, serta pengantin chibi berhijab dan berjas emerald bersulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#0B3D2E",
+        "#F4D77D"
       ],
       "art": true
     }

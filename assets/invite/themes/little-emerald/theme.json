@@ -1,0 +1,115 @@
+{
+  "id": "little-emerald",
+  "name": "Luxury Emerald Wedding",
+  "version": 1,
+  "description": "Pernikahan mewah hijau zamrud-emas: aula marmer dengan tirai beludru emerald, air mancur, lampu kristal, dan rangkaian lili putih, serta pengantin chibi berhijab dan berjas emerald bersulam emas.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#0B3D2E",
+    "deep2": "#14573F",
+    "paper": "#FBF6E6",
+    "soft": "#EDE6C9",
+    "ink": "#10261D",
+    "muted": "#5F7266",
+    "accent": "#C8961E",
+    "accent2": "#F4D77D",
+    "petal": "#1F8A63",
+    "heading": "#0B3D2E"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/em-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/em-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/em-bride.webp",
+    "figureGroom": "art/em-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-emas.webp",
+        "w": 64
+      },
+      {
+        "src": "art/lentera-bunga.webp",
+        "w": 100
+      },
+      {
+        "src": "art/vas-tinggi.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/sangkar-emas.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/em-groom.webp",
+      "art/em-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
