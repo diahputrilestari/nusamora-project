@@ -4,6 +4,7 @@
 with t(slug, name, descr, cats, sort) as (values
  ('luxury-black-gold','Luxury Black Gold Live Guest','Venue 3D hitam dan emas dengan lampu kristal, lengkungan bunga putih, dan avatar tamu berbusana elegan.','{wedding,engagement}'::text[],30),
  ('luxury-emerald','Luxury Emerald Live Guest','Venue 3D zamrud dan emas dengan tirai beludru, bunga lili, air mancur, dan avatar tamu berbusana hijau elegan.','{wedding,engagement}'::text[],35),
+ ('up-up-away','Up Up & Away Live Guest','Venue 3D pastel ungu-pink bertema balon udara, awan, dan koper vintage dengan avatar tamu penjelajah.','{wedding,engagement}'::text[],36),
  ('luxury-maroon','Luxury Maroon Live Guest','Venue 3D marun dan emas yang hangat dengan dekor bunga, avatar tamu, serta area resepsi lengkap.','{wedding,engagement}'::text[],31),
  ('beige-elegant','Beige Elegant Live Guest','Venue 3D bernuansa krem dan emas yang lembut, cocok untuk pernikahan elegan dan minimalis.','{wedding,engagement}'::text[],32),
  ('adat-bugis','Adat Bugis Live Guest','Venue 3D adat Bugis dengan pelaminan, ornamen emas, dan avatar busana adat untuk tamu.','{wedding,engagement}'::text[],33),
