@@ -1,0 +1,136 @@
+{
+  "id": "little-ballerina",
+  "name": "Little Ballerina Birthday",
+  "version": 1,
+  "description": "Pesta ulang tahun little ballerina: panggung istana pastel dengan tirai ungu, jendela lengkung, pemandangan kastil, dan karangan mawar, serta booth bertema balet.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Aurelia Kecil",
+    "full": "Aurelia Putri Maheswari",
+    "parents": "Putri Bapak Dimas Maheswari & Ibu Rania Larasati",
+    "age": "5"
+  },
+  "colors": {
+    "deep": "#7A4A8C",
+    "deep2": "#A472B5",
+    "paper": "#FFF6FA",
+    "soft": "#F8E6F0",
+    "ink": "#4A2650",
+    "muted": "#8A6B93",
+    "accent": "#D6A04A",
+    "accent2": "#F6D9A0",
+    "petal": "#F4A9C8",
+    "heading": "#7A4A8C"
+  },
+  "fonts": {
+    "script": "Parisienne",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Little Ballerina Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si penari kecil kami",
+    "profileTitle": "Si Ballerina Kecil",
+    "countdownEyebrow": "Tirai panggung terbuka dalam",
+    "countdownTitle": "Menuju Hari Pentas",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Panggung Balet",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Penari",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Pentas",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Menari, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta little ballerina si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado Panggung",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Balet",
+    "closingEyebrow": "Sampai jumpa di panggung!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta little ballerina!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/tutu-pink.webp",
+        "w": 54
+      },
+      {
+        "src": "art/ballerina-girl.webp",
+        "w": 62
+      },
+      {
+        "src": "art/tutu-ungu.webp",
+        "w": 58
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/ballerina-girl.webp",
+    "figureGroom": "art/ballerina-girl.webp",
+    "countdownRow": [
+      {
+        "src": "art/ballerina.webp",
+        "w": 52
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/tutu-ungu.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/booth-kuliner.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/ballerina-girl.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
