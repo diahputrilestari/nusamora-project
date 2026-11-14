@@ -50,7 +50,19 @@
     openM("Foto " + (i + 1) + " / " + L.length, "<div style=\"text-align:center\"><img src=\"" + E(L[i]) + "\" alt=\"Foto " + (i + 1) + "\" style=\"max-width:100%;max-height:60vh;border-radius:12px\"></div><div class=\"nm-bar\"><button class=\"nm-ibtn\" type=\"button\" data-go=\"" + (i - 1) + "\" aria-label=\"Sebelumnya\">" + nmI("prev") + "</button><span class=\"nm-cnt\">" + (i + 1) + " / " + L.length + "</span><button class=\"nm-ibtn\" type=\"button\" data-go=\"" + (i + 1) + "\" aria-label=\"Berikutnya\">" + nmI("next") + "</button></div>", { eyebrow: "Foto", back: { label: "Kembali ke galeri", fn: gallery } });
     document.getElementById("bx").querySelectorAll("[data-go]").forEach(function (b) { b.onclick = function () { lb(+b.dataset.go); }; });
   }
-  function videos() { nav("video"); openM("Video Ucapan", "<p class=\"nm-p\">Belum ada video ucapan.</p>", { eyebrow: "Pesan Hangat" }); }
+  /* video ucapan dari pelanggan (live.videoUrl): YouTube (embed tanpa cookie) atau file .mp4/.webm lewat https; selain itu tidak diputar */
+  function videoHtml(u) {
+    u = String(u || "").trim(); var m;
+    if ((m = u.match(/^https:\/\/(?:(?:www|m)\.)?youtube\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})(?:[?&#].*)?$/i)) || (m = u.match(/^https:\/\/youtu\.be\/([A-Za-z0-9_-]{11})(?:[?&#].*)?$/i)))
+      return "<div style=\"position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000\"><iframe src=\"https://www.youtube-nocookie.com/embed/" + m[1] + "?rel=0\" title=\"Video ucapan\" style=\"position:absolute;inset:0;width:100%;height:100%;border:0\" allow=\"encrypted-media; picture-in-picture\" allowfullscreen referrerpolicy=\"strict-origin-when-cross-origin\" loading=\"lazy\"></iframe></div>";
+    if (/^https:\/\/[^\s"'<>]+\.(mp4|webm)(\?[^\s"'<>]*)?$/i.test(u))
+      return "<video src=\"" + E(u) + "\" controls playsinline preload=\"metadata\" style=\"width:100%;max-height:60vh;border-radius:12px;background:#000\"></video>";
+    return "";
+  }
+  function videos() {
+    nav("video"); var h = feat("video", false) ? videoHtml((D.live || {}).videoUrl) : "";
+    openM("Video Ucapan", h || "<p class=\"nm-p\">Belum ada video ucapan.</p>", { eyebrow: "Pesan Hangat" });
+  }
 
   function rsvpBlock() {
     if (!feat("rsvp", true)) return "";

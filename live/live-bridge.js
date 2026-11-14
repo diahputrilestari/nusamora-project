@@ -74,7 +74,7 @@
     try { if (c.music && c.music.enabled === false) muteMusic(); } catch (e) { }
     try {
       if (typeof AREAS !== "undefined") {
-        if (f.photobooth === false) removeArea("booth"); if (f.gallery === false) removeArea("galeri"); if (f.guestbook === false) removeArea("buku"); if (f.video !== true) removeArea("video");
+        if (f.photobooth === false) removeArea("booth"); if (f.gallery === false) removeArea("galeri"); if (f.guestbook === false) removeArea("buku"); if (f.video !== true || !(c.live && c.live.videoUrl)) removeArea("video");
       }
       hideMenu(); relabelMenu();
       if (f.livechat === false) { var ch = $("#chat"); if (ch) ch.style.display = "none"; }
