@@ -231,7 +231,13 @@
     "balon": "little-upaway",
     "awan": "little-upaway",
     "up-up-and-away": "little-upaway",
-    "little-upaway": "little-upaway"
+    "little-upaway": "little-upaway",
+    "ballerina": "little-ballerina",
+    "balet": "little-ballerina",
+    "penari": "little-ballerina",
+    "little-ballerina": "little-ballerina",
+    "ballet": "little-ballerina",
+    "ulang-tahun-balet": "little-ballerina"
   },
   "themes": [
     {
@@ -994,6 +1000,20 @@
       "swatch": [
         "#8B6FC6",
         "#F7B6D2"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-ballerina",
+      "name": "Little Ballerina Birthday",
+      "description": "Pesta ulang tahun little ballerina: panggung istana pastel dengan tirai ungu, jendela lengkung, pemandangan kastil, dan karangan mawar, serta booth bertema balet.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#A472B5",
+        "#F4A9C8"
       ],
       "art": true
     }
