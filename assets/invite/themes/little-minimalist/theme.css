@@ -1,0 +1,21 @@
+/* Minimalist Wedding: ukuran ilustrasi & sentuhan krem-emas */
+.th-little-minimalist .ulos-dec { width: min(150px, 46vw); }
+.th-little-minimalist .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-minimalist .gf-amp { width: min(160px, 48vw); }
+.th-little-minimalist .ws-bk { width: min(150px, 46vw); }
+.th-little-minimalist .ev-lt { width: 30px; }
+.th-little-minimalist .rs-lt { width: 54px; top: -30px; }
+.th-little-minimalist .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-minimalist .gable .art { height: 26px; }
+.th-little-minimalist .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-minimalist .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-minimalist .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-minimalist .end-art .eg { filter: drop-shadow(0 18px 28px rgba(44, 28, 12, .4)); }
+.th-little-minimalist .deep .eb { color: #FFE2A0; }
+.th-little-minimalist .cv-nm, .th-little-minimalist .hero-nm, .th-little-minimalist .end-nm { text-shadow: 0 2px 0 rgba(44, 28, 12, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-minimalist .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(56, 38, 18, .82), rgba(56, 38, 18, .55) 58%, rgba(56, 38, 18, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(56, 38, 18, .5), rgba(56, 38, 18, 0)), linear-gradient(180deg, rgba(56, 38, 18, .1), rgba(56, 38, 18, .3)); }
+.th-little-minimalist .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-minimalist .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-minimalist .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(44, 28, 12, .9); }

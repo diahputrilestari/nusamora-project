@@ -255,7 +255,13 @@
     "topeng": "little-venetian",
     "venetian-masquerade": "little-venetian",
     "little-venetian": "little-venetian",
-    "pesta-topeng": "little-venetian"
+    "pesta-topeng": "little-venetian",
+    "minimalist": "little-minimalist",
+    "minimalis": "little-minimalist",
+    "modern": "little-minimalist",
+    "simple": "little-minimalist",
+    "little-minimalist": "little-minimalist",
+    "krem-emas": "little-minimalist"
   },
   "themes": [
     {
@@ -1076,6 +1082,21 @@
       "swatch": [
         "#6B0F1F",
         "#F4D98A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-minimalist",
+      "name": "Minimalist Wedding",
+      "description": "Pernikahan/lamaran minimalis krem-emas: aula kaca modern dengan panggung marmer, kolam pantul, lentera, dan rangkaian mawar putih, serta pengantin chibi berbusana krem.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A5A36",
+        "#F3DFA2"
       ],
       "art": true
     }
