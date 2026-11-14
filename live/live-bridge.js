@@ -59,12 +59,19 @@
   function removeArea(id) { for (var i = AREAS.length - 1; i >= 0; i--) if (AREAS[i].id === id) AREAS.splice(i, 1); }
 
   /* ---- isi undangan pelanggan (nama, acara, foto, hadiah, RSVP, ucapan, fitur) ---- */
+  /* musik latar dimatikan pelanggan: tombol disembunyikan dan audio dibisukan */
+  function muteMusic() {
+    var st = document.createElement("style"); st.textContent = "#nmmute{display:none!important}"; document.head.appendChild(st);
+    try { if (typeof NMMUS !== "undefined" && NMMUS.audio) { NMMUS.audio.muted = true; NMMUS.audio.pause(); NMMUS.audio.autoplay = false; NMMUS.audio.addEventListener("play", function () { try { NMMUS.audio.pause(); } catch (e) { } }); } } catch (e) { }
+  }
   function applyContent(c) {
     if (!c || typeof c !== "object") return; CONTENT = c;
     try { if (window.NMLC) window.NMLC.apply(c, { token: TOKEN, rpc: rpc }); } catch (e) { }
     try { rpc("guest_open", { p_token: TOKEN }).then(function () { }, function () { }); } catch (e) { }
     if (joined && window.NMLC) setTimeout(function () { window.NMLC.greet(); }, 800);
     var f = c.features || {};
+    avPolicy();
+    try { if (c.music && c.music.enabled === false) muteMusic(); } catch (e) { }
     try {
       if (typeof AREAS !== "undefined") {
         if (f.photobooth === false) removeArea("booth"); if (f.gallery === false) removeArea("galeri"); if (f.guestbook === false) removeArea("buku"); if (f.video !== true) removeArea("video");
@@ -143,6 +150,19 @@
   /* avatar tamu bertema: slot decor av_l1..5 (laki-laki) & av_p1..5 (perempuan) menggantikan pilihan avatar bawaan; nama pilihan dari dc[slot].name */
   /* indeks di luar jumlah avatar tema (bot bawaan memakai i%4) dipetakan melingkar, bukan undefined */
   var wrapAv = function (arr) { return new Proxy(arr, { get: function (t, p) { if (typeof p === "string" && /^\d+$/.test(p) && t.length && !(p in t)) return t[+p % t.length]; return Reflect.get(t, p); } }); };
+  /* kebijakan avatar dari pengaturan pelanggan: live.avatars (jenis tamu), live.allowSelect, live.avatarLimit */
+  var avPolicy = safe(function () {
+    var lv = CONTENT && CONTENT.live; if (!lv || typeof AV === "undefined" || typeof S === "undefined") return;
+    var lim = lv.allowSelect === false ? 1 : (Number(lv.avatarLimit) > 0 ? Number(lv.avatarLimit) : 0);
+    ["L", "P"].forEach(function (g) {
+      if (lim && AV[g] && AV[g].length > lim) { AV[g] = wrapAv(Array.prototype.slice.call(AV[g], 0, lim)); if (typeof NA !== "undefined" && NA[g]) NA[g] = NA[g].slice(0, lim); }
+    });
+    if (Array.isArray(lv.avatars) && lv.avatars.length) {
+      var m = lv.avatars.indexOf("tamu-pria") > -1, w = lv.avatars.indexOf("tamu-wanita") > -1;
+      if (m !== w) { var keep = m ? "L" : "P", gone = m ? "gP" : "gL"; var b = document.getElementById(gone); if (b) b.style.display = "none"; if (S.g !== keep) { S.g = keep; S.i = 0; } }
+    }
+    try { if (typeof rAv === "function") rAv(); } catch (e) { }
+  });
   var applyAvatars = safe(function (dc) {
     var ks = Object.keys(dc || {}).filter(function (k) { return /^av_([lp][1-5]|host)$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
     if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
@@ -187,6 +207,7 @@
         setHost(); var hi = setInterval(setHost, 700); setTimeout(function () { clearInterval(hi); }, 20000);
       }
       if (typeof P === "undefined" || !P) { if (!AV[S.g] || !AV[S.g][S.i]) S.i = 0; try { rAv(); } catch (e) { } }
+      avPolicy();
     });
   });
   var tryDecor = safe(function () {
