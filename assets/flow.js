@@ -296,13 +296,13 @@
   function fullContent(pkg, caps, saved) { return merge(merge(DEF, pkgDefaults(pkg, caps || {})), saved || {}); }
   function pickKeys(pkg, c) { var o = {}; COMMON_KEYS.concat(PKEYS[pkg] || []).forEach(function (k) { if (c[k] !== undefined) o[k] = c[k]; }); return o; }
   function extraChecks(pkg, c) {
-    if (pkg === "essential") return [["Warna undangan", !!get(c, "design2d.palette")]];
+    if (pkg === "essential") return [["Tema undangan", !!(get(c, "design2d.theme") || get(c, "design2d.palette"))]];
     if (pkg === "signature") return [["Scene 3D", !!get(c, "scene.preset")], ["Gerakan kamera", !!get(c, "camera.path")]];
     if (pkg === "luxe") return [["Scene venue", !!get(c, "scene.preset")], ["Area venue", Object.keys(get(c, "venue.areas") || {}).some(function (k) { return c.venue.areas[k]; })], ["Avatar tamu", (get(c, "live.avatars") || []).length > 0]];
     return [];
   }
   function baseChecks(c, date) { return [["Nama acara", !!(c.names.a || "").trim()], ["Tanggal acara", !!date], ["Jam mulai", !!c.event.start], ["Lokasi", !!(c.event.venue || "").trim()], ["Foto sampul", !!c.photos.cover], ["Foto galeri", c.photos.gallery.length > 0]]; }
-  var SEC_OF = { "Nama acara": "info", "Nama pasangan": "info", "Tanggal acara": "waktu", "Jam mulai": "waktu", "Nama lokasi": "waktu", "Foto sampul": "foto", "Warna undangan": "design", "Scene 3D": "scene", "Gerakan kamera": "kamera", "Scene venue": "venue", "Minimal satu area venue": "venue", "Minimal satu pilihan avatar tamu": "avatar", "Avatar mempelai pria": "mempelai", "Avatar mempelai wanita": "mempelai" };
+  var SEC_OF = { "Nama acara": "info", "Nama pasangan": "info", "Tanggal acara": "waktu", "Jam mulai": "waktu", "Nama lokasi": "waktu", "Foto sampul": "foto", "Warna undangan": "design", "Tema undangan": "design", "Scene 3D": "scene", "Gerakan kamera": "kamera", "Scene venue": "venue", "Minimal satu area venue": "venue", "Minimal satu pilihan avatar tamu": "avatar", "Avatar mempelai pria": "mempelai", "Avatar mempelai wanita": "mempelai" };
   function secOf(l) { return /^Galeri/.test(l) ? "foto" : (SEC_OF[l] || "info"); }
 
   function pageEditor() {
@@ -514,7 +514,7 @@
       mempelai: avChecks,
       waktu: function () { return [["Tanggal", !!date], ["Jam mulai", !!C0.event.start], ["Lokasi", !!(C0.event.venue || "").trim()]]; },
       foto: function () { return [["Foto sampul", !!C0.photos.cover], ["Foto galeri", C0.photos.gallery.length > 0]]; },
-      design: function () { return [["Palet", !!get(C0, "design2d.palette")]]; },
+      design: function () { return [[ENG ? "Tema" : "Palet", !!(get(C0, "design2d.theme") || get(C0, "design2d.palette"))]]; },
       scene: function () { return [["Scene", !!get(C0, "scene.preset")]]; },
       kamera: function () { return [["Kamera", !!get(C0, "camera.path")]]; },
       venue: function () { return [["Scene", !!get(C0, "scene.preset")], ["Area", Object.keys(get(C0, "venue.areas") || {}).some(function (k) { return C0.venue.areas[k]; })]]; },

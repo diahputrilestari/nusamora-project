@@ -58,6 +58,7 @@ create or replace function public._clean(p text, n int) returns text
 language sql immutable as $$ select nullif(left(regexp_replace(trim(coalesce(p, '')), '[[:cntrl:]]', ' ', 'g'), n), '') $$;
 
 ----------------------------------------------------------------------------- 4. RSVP (upsert per nama tamu)
+drop function if exists public.submit_rsvp(text,text,text,integer,text);
 create or replace function public.submit_rsvp(p_slug text, p_name text, p_attendance text, p_pax int, p_note text) returns jsonb
 language plpgsql volatile security definer set search_path = public as $$
 declare i public.invitations; nm text := public._clean(p_name, 60); nt text := public._clean(p_note, 300); px int; tot int;
