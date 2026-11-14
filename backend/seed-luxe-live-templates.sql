@@ -41,7 +41,8 @@ with t(slug, name, descr, cats, sort) as (values
  ('little-soccer','Sepakbola Live Guest','Venue 3D pesta ulang tahun bertema Sepakbola dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],69),
  ('little-pirates','Little Pirates Live Guest','Venue 3D pesta ulang tahun bertema Little Pirates dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],70),
  ('little-wizard','Wizard Academy Live Guest','Venue 3D pesta ulang tahun bertema Wizard Academy dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],71),
- ('sakura-wedding','Sakura Live Guest','Venue 3D pernikahan bertema Sakura dengan dekor, stan, dan avatar tamu bernuansa tema.','{wedding}'::text[],72)
+ ('sakura-wedding','Sakura Live Guest','Venue 3D pernikahan bertema Sakura dengan dekor, stan, dan avatar tamu bernuansa tema.','{wedding}'::text[],72),
+ ('minimalist','Minimalist Live Guest','Venue 3D aula kaca modern minimalis krem dan emas dengan kolam, lentera, bunga putih, dan avatar tamu berbusana netral.','{wedding,engagement}'::text[],75)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.webp', '/live/?venue=' || t.slug, 'luxe', t.cats, t.slug, 'published', t.sort,
