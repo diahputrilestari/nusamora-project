@@ -2,8 +2,9 @@
    Tanpa token, halaman berjalan sebagai demo seperti semula (tidak ada panggilan jaringan). Semua hook dibungkus try/catch agar tidak merusak halaman. */
 (function () {
   "use strict";
-  var q = null; try { q = new URLSearchParams(location.search).get("t"); } catch (e) { return; }
-  if (!q || !/^[0-9a-f]{32}$/.test(q)) return;
+  var q = null, DEMO = ""; try { var sp = new URLSearchParams(location.search); q = sp.get("t"); DEMO = sp.get("venue") || ""; } catch (e) { return; }
+  /* mode demo venue: ?venue=<kunci> (tanpa token tamu) hanya menampilkan tema, dekor, dan menu venue aktif. Tidak masuk ruangan, tidak ada chat/sinkronisasi. */
+  if (!q || !/^[0-9a-f]{32}$/.test(q)) { if (!/^[a-z0-9][a-z0-9-]{1,38}$/.test(DEMO)) return; q = ""; } else DEMO = "";
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
   var THEME = null, CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
@@ -328,6 +329,18 @@
   });
 
   /* ---- pasang ---- */
+  if (DEMO) {
+    rpc("live_theme_demo", { p_key: DEMO }).then(function (t) {
+      if (!t) return; THEME = t; applyConfig({ venue: { areas: t.areas || [] }, features: {} }); applyTheme(t);
+      var iv = setInterval(function () {
+        if (typeof P !== "undefined" && P) {
+          clearInterval(iv); try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
+          setTimeout(function () { hideMenu(); relabelMenu(); }, 600);
+        }
+      }, 400);
+    }, function () { });
+    return;
+  }
   rpc("live_config", { p_token: TOKEN }).then(function (c) {
     if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; block(MSG.token_tidak_valid); return; }
     if (!c.enabled) { block(MSG.dimatikan); return; }

@@ -14,7 +14,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('hackathon','Hackathon Live Guest','Venue 3D acara hackathon dengan main stage, area networking, dan avatar peserta.','{corporate}'::text[],50)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
-select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.webp', '/live/?t=' || t.slug, 'luxe', t.cats, t.slug, 'published', t.sort,
+select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.webp', '/live/?venue=' || t.slug, 'luxe', t.cats, t.slug, 'published', t.sort,
        jsonb_build_object('scenes', jsonb_build_array(jsonb_build_object('id', t.slug, 'name', t.name)),
          'areas', '[{"id":"resepsi","name":"Area Resepsi"},{"id":"kuliner","name":"Area Kuliner"},{"id":"photobooth","name":"Photo Booth"},{"id":"galeri","name":"Galeri Foto"}]'::jsonb,
          'avatars', '[{"id":"tamu-wanita","name":"Avatar tamu wanita"},{"id":"tamu-pria","name":"Avatar tamu pria"},{"id":"pengantin","name":"Avatar pengantin"}]'::jsonb,
