@@ -250,10 +250,15 @@
   }
   function gLoad(kind) {
     var id = G.inv, q;
-    if (kind === "statistik") q = Promise.all([sb.rpc("guest_stats", { p_inv: id }), sb.from("invitation_guests").select("id,name,phone,token,sent_at,opened_at,open_count,invitation_rsvps(status,pax)").eq("invitation_id", id).order("created_at", { ascending: true }).limit(1000)]).then(function (r) { return r[0].error || r[1].error ? false : { stats: r[0].data, guests: r[1].data || [] }; });
+    if (kind === "statistik") q = Promise.all([sb.rpc("guest_stats", { p_inv: id }), sb.from("invitation_guests").select("id,name,phone,token,sent_at,opened_at,open_count,invitation_rsvps(status,pax)").eq("invitation_id", id).order("created_at", { ascending: true }).limit(1000), sb.from("rsvps").select("attendance,pax").eq("invitation_id", id).limit(3000)]).then(function (r) {
+      if (r[0].error || r[1].error) return false;
+      var st = Object.assign({}, r[0].data || {}), E = r[2].error ? [] : (r[2].data || []);
+      E.forEach(function (x) { st.rsvp = (st.rsvp || 0) + 1; if (x.attendance === "hadir") { st.hadir = (st.hadir || 0) + 1; st.pax_hadir = (st.pax_hadir || 0) + (x.pax || 0); } else if (x.attendance === "tidak") st.tidak_hadir = (st.tidak_hadir || 0) + 1; else if (x.attendance === "ragu") st.ragu = (st.ragu || 0) + 1; });
+      return { stats: st, guests: r[1].data || [], eng: E.length };
+    });
     else if (kind === "rsvp") q = Promise.all([sb.from("invitation_rsvps").select("status,pax,message,updated_at,invitation_guests(name)").eq("invitation_id", id).order("updated_at", { ascending: false }).limit(1000), sb.from("rsvps").select("guest_name,attendance,pax,note,updated_at").eq("invitation_id", id).order("updated_at", { ascending: false }).limit(1000)]).then(function (r) {
       if (r[0].error && r[1].error) return false;
-      var eng = (r[1].data || []).map(function (x) { return { status: x.attendance, pax: x.pax, message: x.note, updated_at: x.updated_at, invitation_guests: { name: x.guest_name } }; });
+      var eng = (r[1].data || []).map(function (x) { return { status: x.attendance === "tidak" ? "tidak_hadir" : x.attendance, pax: x.pax, message: x.note, updated_at: x.updated_at, invitation_guests: { name: x.guest_name } }; });
       var rows = (r[0].data || []).concat(eng).sort(function (a, b) { return String(b.updated_at).localeCompare(String(a.updated_at)); });
       return { rows: rows };
     });
@@ -284,7 +289,7 @@
       var h = '<div class="grid g4" style="margin-bottom:16px">' + K.map(function (k) { return '<div class="card stat"><div><b>' + Number(k[1] || 0).toLocaleString("id-ID") + "</b><span>" + k[0] + "</span></div></div>"; }).join("") + "</div>";
       h += '<form class="card form" id="f-gadd" novalidate style="margin-bottom:16px"><h2>Tambah tamu</h2><div class="grid g2"><label class="fld">Nama<input type="text" id="ga-name" maxlength="100"><span class="err" id="e-ga"></span></label><label class="fld">WhatsApp (opsional)<input type="tel" id="ga-ph" placeholder="0812..."></label></div><div class="row-end"><button class="btn" type="submit" id="ga-go">Tambah</button></div></form>';
       h += '<div class="card"><div class="card-h"><h2>Daftar tamu</h2></div>';
-      if (!d.guests.length) return h + empty("users", "Belum ada tamu", "Tambahkan tamu untuk membuat tautan undangan pribadi dan memantau statusnya.") + "</div>";
+      if (!d.guests.length) return h + empty("users", "Belum ada tamu", d.eng ? "Konfirmasi dari tamu yang mengisi RSVP di undangan sudah dihitung di atas dan bisa dilihat di menu RSVP. Tambahkan tamu di sini untuk membuat tautan pribadi." : "Tambahkan tamu untuk membuat tautan undangan pribadi dan memantau statusnya.") + "</div>";
       h += '<p class="sub" style="margin-bottom:10px">Bagikan tautan pribadi tiap tamu. Status \"Dibuka\" dan RSVP tercatat otomatis saat tamu membuka undangan.</p><div class="tbl-w"><table><thead><tr><th>Nama</th><th>Status</th><th>RSVP</th><th>Aksi</th></tr></thead><tbody>' + d.guests.map(function (g) {
         var r = g.invitation_rsvps && (Array.isArray(g.invitation_rsvps) ? g.invitation_rsvps[0] : g.invitation_rsvps), l = guestLink(g);
         return "<tr><td><b>" + esc(g.name) + "</b>" + (g.phone ? "<br><small>" + esc(g.phone) + "</small>" : "") + "</td><td>" + (g.opened_at ? '<span class="badge ok">Dibuka ' + g.open_count + "x</span>" : g.sent_at ? '<span class="badge">Terkirim</span>' : '<span class="badge warn">Belum dikirim</span>') + "</td><td>" + (r ? '<span class="badge ' + RS[r.status][1] + '">' + RS[r.status][0] + (r.status === "hadir" ? " (" + r.pax + ")" : "") + "</span>" : "-") + '</td><td class="acts">' +
