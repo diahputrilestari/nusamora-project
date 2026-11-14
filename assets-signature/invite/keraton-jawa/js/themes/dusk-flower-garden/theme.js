@@ -19,4 +19,5 @@ export default defineTheme({
         ground: { grassA: '#6f8f58', grassB: '#98ad66', lawn: '#86a35e', far: '#8f95a0', bladeBase: '#4f7038', bladeTip: '#a3c06a' },
     },
     world: { kind: 'garden' },
+    characters: { coupleModelUrl: '/assets/themes/dusk-flower-garden/couple.glb', height: 1.7 },
 });

@@ -100,16 +100,35 @@
     if (!slug) return Promise.reject(new Error("tidak_tersedia"));
     return rpc("get_public_invitation", { p_slug: slug }).then(function (r) {
       if (!r || r.error) throw new Error(r && r.error || "tidak_tersedia");
-      return { vm: normalize(r.content, { slug: slug, title: r.title, category: r.category, event_date: r.event_date, mode: "live" }), template: r.template_id, experience: r.experience || "2d" };
+      /* paket Signature: tampilkan film 3D (membaca data yang sama dari database), bukan engine 2D */
+      return (r.experience === "3d" ? to3d(r.template_id, { slug: slug }) : Promise.resolve(false)).then(function (moved) {
+        if (moved) return new Promise(function () {});
+        return { vm: normalize(r.content, { slug: slug, title: r.title, category: r.category, event_date: r.event_date, mode: "live" }), template: r.template_id, experience: r.experience || "2d" };
+      });
     });
+  }
+  /* Pengalihan ke build 3D tema template (theme_key + preview_url /assets-signature/...). false = template bukan tema 3D. */
+  function to3d(templateId, who) {
+    if (!templateId) return Promise.resolve(false);
+    return fetch(BASE + "/rest/v1/templates?slug=eq." + encodeURIComponent(templateId) + "&select=theme_key,preview_url", { headers: headers() })
+      .then(function (r) { return r.json(); }).then(function (rows) {
+        var t = Array.isArray(rows) && rows[0];
+        if (!t || !/^[a-z0-9-]{1,40}$/.test(t.theme_key || "") || !/^\/assets-signature\//.test(t.preview_url || "")) return false;
+        var q = new URLSearchParams(); if (who.slug) q.set("slug", who.slug); if (who.preview) q.set("preview", who.preview);
+        q.set("theme", t.theme_key); var g = guestName(); if (g) q.set("to", g);
+        location.replace("/assets-signature/invite/index?" + q.toString()); return true;
+      }).catch(function () { return false; });
   }
   function loadPreview(id) {
     var tk = ownerToken();
     if (!tk) return Promise.reject(new Error("perlu_masuk"));
-    return fetch(BASE + "/rest/v1/invitations?id=eq." + encodeURIComponent(id) + "&select=title,slug,category,template_id,event_date,content", { headers: headers(tk) })
+    return fetch(BASE + "/rest/v1/invitations?id=eq." + encodeURIComponent(id) + "&select=title,slug,category,template_id,package_type,event_date,content", { headers: headers(tk) })
       .then(function (r) { return r.json(); }).then(function (rows) {
         var r = Array.isArray(rows) && rows[0]; if (!r) throw new Error("tidak_tersedia");
-        return { vm: normalize(r.content, { slug: r.slug, title: r.title, category: r.category, event_date: r.event_date, mode: "preview" }), template: r.template_id };
+        return (r.package_type === "signature" ? to3d(r.template_id, { preview: id }) : Promise.resolve(false)).then(function (moved) {
+          if (moved) return new Promise(function () {});
+          return { vm: normalize(r.content, { slug: r.slug, title: r.title, category: r.category, event_date: r.event_date, mode: "preview" }), template: r.template_id };
+        });
       });
   }
 
