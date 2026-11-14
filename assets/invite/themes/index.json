@@ -242,7 +242,13 @@
     "bunga-matahari": "little-sunflower",
     "matahari": "little-sunflower",
     "little-sunflower": "little-sunflower",
-    "ulang-tahun-sunflower": "little-sunflower"
+    "ulang-tahun-sunflower": "little-sunflower",
+    "celtic": "little-celtic",
+    "woodland": "little-celtic",
+    "celtic-woodland": "little-celtic",
+    "hutan-celtic": "little-celtic",
+    "little-celtic": "little-celtic",
+    "lamaran-celtic": "little-celtic"
   },
   "themes": [
     {
@@ -1033,6 +1039,21 @@
       "swatch": [
         "#E0A417",
         "#FBEFC4"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-celtic",
+      "name": "Celtic Woodland Wedding",
+      "description": "Pernikahan/lamaran hutan Celtic: gapura batu berukir triquetra, air terjun dan rusa putih di balik pepohonan, lentera emas, spanduk hijau, serta pengantin chibi berbusana hijau-krem dengan sulam emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1E4D2B",
+        "#F2D98A"
       ],
       "art": true
     }
