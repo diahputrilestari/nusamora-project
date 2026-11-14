@@ -137,7 +137,7 @@
     h += '<div class="card"><div class="card-h"><h2>Langganan</h2>' + (sub ? badge("aktif") : '<span class="badge">Belum aktif</span>') + "</div>";
     h += sub ? '<p class="sub">Paket aktif</p><div class="plan-n">' + esc(PLAN[sub.plan] || sub.plan) + '</div><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(pct) + '" aria-label="Sisa masa aktif"><i style="width:' + pct + '%"></i></div><div class="meta" style="margin-top:8px"><div><span>Berlaku sampai</span><b>' + dt(sub.expires_at, true) + "</b></div><div><span>Sisa masa aktif</span><b>" + left + " hari</b></div></div>" :
       '<p class="sub">Anda belum memiliki paket aktif. Pilih paket saat undangan siap dipublikasikan.</p>';
-    h += '<div class="row-end"><a class="btn' + (sub ? "" : "") + ' sm" href="/#harga">' + ico("crown") + " Upgrade</a></div></div>";
+    h += '<div class="row-end"><a class="btn' + (sub ? "" : "") + ' sm" href="/#harga">' + ico("crown") + (sub ? " Perpanjang" : " Lihat Paket") + "</a></div></div>";
     h += '<div class="card"><div class="card-h"><h2>Saldo Kredit</h2></div><div class="cred"><b>' + Number(S.wallet.credits || 0).toLocaleString("id-ID") + "</b><span>kredit</span></div><p class=\"sub\" style=\"margin-top:6px\">Saldo bonus: " + rp(S.wallet.bonus_balance) + "</p></div>";
     return h + "</div></div>";
   };
@@ -208,7 +208,7 @@
     h += '<div class="grid g2" style="align-items:start"><div class="card"><div class="card-h"><h2>Paket aktif</h2>' + badge("aktif") + '</div><div class="plan-n">' + esc(PLAN[sub.plan] || sub.plan) + '</div>' +
       '<div class="meta"><div><span>Mulai</span><b>' + dt(sub.started_at, true) + '</b></div><div><span>Berakhir</span><b>' + dt(sub.expires_at, true) + '</b></div><div><span>Sisa masa aktif</span><b>' + left + ' hari</b></div></div>' +
       (soon ? '<p class="note" style="margin-top:14px">Masa aktif paket Anda tinggal ' + left + ' hari. Perpanjang agar undangan tetap bisa dibuka tamu.</p>' : "") +
-      '<div class="row-end"><a class="btn" href="/#harga">' + ico("crown") + ' Perpanjang / Upgrade</a></div></div>' +
+      '<div class="row-end"><a class="btn" href="/#harga">' + ico("crown") + ' Perpanjang</a></div></div>' +
       '<div class="card"><h2 style="margin-bottom:8px">Saldo</h2><div class="cred"><b>' + Number(S.wallet.credits || 0).toLocaleString("id-ID") + '</b><span>kredit</span></div></div></div>';
     return h + subHistory();
   };
