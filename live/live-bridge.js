@@ -7,6 +7,7 @@
   if (!q || !/^[0-9a-f]{32}$/.test(q)) { if (!/^[a-z0-9][a-z0-9-]{1,38}$/.test(DEMO)) return; q = ""; } else DEMO = "";
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
+  var CONTENT = null;
   var THEME = null, CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
@@ -57,11 +58,27 @@
   });
   function removeArea(id) { for (var i = AREAS.length - 1; i >= 0; i--) if (AREAS[i].id === id) AREAS.splice(i, 1); }
 
+  /* ---- isi undangan pelanggan (nama, acara, foto, hadiah, RSVP, ucapan, fitur) ---- */
+  function applyContent(c) {
+    if (!c || typeof c !== "object") return; CONTENT = c;
+    try { if (window.NMLC) window.NMLC.apply(c, { token: TOKEN, rpc: rpc }); } catch (e) { }
+    if (joined && window.NMLC) setTimeout(function () { window.NMLC.greet(); }, 800);
+    var f = c.features || {};
+    try {
+      if (typeof AREAS !== "undefined") {
+        if (f.photobooth === false) removeArea("booth"); if (f.gallery === false) removeArea("galeri"); if (f.guestbook === false) removeArea("buku"); if (f.video !== true) removeArea("video");
+      }
+      hideMenu(); relabelMenu();
+      if (f.livechat === false) { var ch = $("#chat"); if (ch) ch.style.display = "none"; }
+    } catch (e) { }
+  }
+  var loadContent = safe(function () { rpc("live_invitation", { p_token: TOKEN }).then(applyContent, function () { }); });
+
   /* ---- masuk ruangan ---- */
   function join() {
     rpc("live_join", { p_token: TOKEN }).then(function (r) {
       if (!r || !r.ok) { block(MSG[r && r.reason] || "Tidak bisa masuk ke ruangan."); return; }
-      joined = true; setOnline(r.online); stripDemo(); hideMenu(); relabelMenu(); buildBars(); buildGames();
+      joined = true; setOnline(r.online); stripDemo(); hideMenu(); relabelMenu(); buildBars(); if (!(CONTENT && CONTENT.features && CONTENT.features.games === false)) buildGames(); if (window.NMLC && CONTENT) setTimeout(function () { window.NMLC.greet(); }, 1800);
       hb = setInterval(function () { rpc("live_heartbeat", { p_token: TOKEN }).then(function (n) { if (n === -1) { clearInterval(hb); clearInterval(poll); stopSync(); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); } else if (typeof n === "number") setOnline(n); }, function () { }); }, 30000);
       poll = setInterval(pollChat, 3000); pollChat();
       sy = setInterval(syncTick, 1500); syncTick(); raf = requestAnimationFrame(stepPeers);
@@ -344,7 +361,7 @@
   rpc("live_config", { p_token: TOKEN }).then(function (c) {
     if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; block(MSG.token_tidak_valid); return; }
     if (!c.enabled) { block(MSG.dimatikan); return; }
-    applyConfig(c);
+    applyConfig(c); loadContent();
     rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {

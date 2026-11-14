@@ -58,7 +58,7 @@
     var uid = S.user.id;
     return Promise.all([
       safe(sb.from("profiles").select("full_name,whatsapp,event_type,template_id,plan,created_at").eq("id", uid).maybeSingle(), {}),
-      safe(sb.from("invitations").select("id,title,event_type,template_id,event_date,status,public_url,guest_count,wish_count,created_at").order("created_at", { ascending: false }).limit(500), []),
+      safe(sb.from("invitations").select("id,title,event_type,template_id,event_date,status,public_url,guest_count,wish_count,created_at,package_type").order("created_at", { ascending: false }).limit(500), []),
       safe(sb.from("subscriptions").select("plan,status,started_at,expires_at").eq("status", "aktif").order("expires_at", { ascending: false }).limit(1), []),
       safe(sb.from("wallets").select("credits,bonus_balance").eq("user_id", uid).maybeSingle(), { credits: 0, bonus_balance: 0 }),
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
@@ -266,7 +266,7 @@
     return h + render(G.data);
   }
   function waLink(g, link) { var ph = (g.phone || "").replace(/^\+/, "").replace(/^0/, "62"); return "https://wa.me/" + ph + "?text=" + encodeURIComponent("Halo " + g.name + ", kami mengundang Anda: " + link); }
-  function guestLink(g) { var u = (S.inv.filter(function (i) { return i.id === G.inv; })[0] || {}).public_url; if (!u) return ""; return u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + g.token; }
+  function guestLink(g) { var iv = S.inv.filter(function (i) { return i.id === G.inv; })[0] || {}, u = iv.public_url; if (!u) return ""; if (iv.package_type === "luxe") return location.origin + "/live/?t=" + g.token; return u + (u.indexOf("?") >= 0 ? "&" : "?") + "t=" + g.token; }
   var RS = { hadir: ["Hadir", "ok"], tidak_hadir: ["Tidak hadir", "bad"], ragu: ["Ragu-ragu", "warn"] };
   V.statistik = function () {
     return gBody("statistik", "Statistik Tamu", "Undangan terkirim, dibuka, dan konfirmasi kehadiran", function (d) {

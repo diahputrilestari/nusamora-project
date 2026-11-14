@@ -100,7 +100,7 @@
     if (!slug) return Promise.reject(new Error("tidak_tersedia"));
     return rpc("get_public_invitation", { p_slug: slug }).then(function (r) {
       if (!r || r.error) throw new Error(r && r.error || "tidak_tersedia");
-      return { vm: normalize(r.content, { slug: slug, title: r.title, category: r.category, event_date: r.event_date, mode: "live" }), template: r.template_id };
+      return { vm: normalize(r.content, { slug: slug, title: r.title, category: r.category, event_date: r.event_date, mode: "live" }), template: r.template_id, experience: r.experience || "2d" };
     });
   }
   function loadPreview(id) {
