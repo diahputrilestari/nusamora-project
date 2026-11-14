@@ -156,7 +156,7 @@
       loadThemes(T.map(function (t) { return t.slug; })).then(function (TH) { return loadPopularity().then(function (POP) { return loadFlags().then(function (FL) { renderList(T, TH, POP, FL); }); }); });
     });
     function renderList(T, TH, POP, FL) {
-      var F = { kat: kat, tema: q.get("f_tema") || "", budaya: q.get("f_budaya") || "", warna: q.get("f_warna") || "" };
+      var PER = 9, PG = Math.max(1, parseInt(q.get("hal"), 10) || 1), F = { kat: kat, tema: q.get("f_tema") || "", budaya: q.get("f_budaya") || "", warna: q.get("f_warna") || "" };
       function uniq(a) { var o = [], seen = {}; a.forEach(function (x) { if (x[0] && !seen[x[0]]) { seen[x[0]] = 1; o.push(x); } }); return o; }
       var OPT = {
         kat: CATS.filter(function (c) { return T.some(function (t) { return t.cats.indexOf(c[0]) > -1; }); }),
@@ -192,16 +192,25 @@
           '<div class="two">' + (t.demo ? '<a class="btn o" target="_blank" rel="noopener" href="' + esc(t.demo) + '">Coba Demo</a>' : '<span class="btn o off" aria-disabled="true">Demo segera hadir</span>') +
           '<a class="btn" data-use="' + esc(t.slug) + '" href="/buat?paket=' + pkg + "&kategori=" + kk + "&template=" + encodeURIComponent(t.slug) + (cur ? "&tema=" + encodeURIComponent(cur.slug) : "") + '">Gunakan Template</a></div></div></article>';
       }
+      function pager(n) {
+        if (n < 2) return "";
+        var w = [], i; for (i = 1; i <= n; i++) if (i === 1 || i === n || Math.abs(i - PG) <= 1) w.push(i); else if (w[w.length - 1] !== "…") w.push("…");
+        return '<nav class="pgn" aria-label="Halaman template"><button type="button" class="btn o sm" data-pg="' + (PG - 1) + '"' + (PG < 2 ? " disabled" : "") + '>Sebelumnya</button>' +
+          w.map(function (x) { return x === "…" ? '<span class="pgd" aria-hidden="true">…</span>' : '<button type="button" class="pgb" data-pg="' + x + '"' + (x === PG ? ' aria-current="page"' : "") + ' data-total="' + n + '" aria-label="Halaman ' + x + '">' + x + "</button>"; }).join("") +
+          '<button type="button" class="btn o sm" data-pg="' + (PG + 1) + '"' + (PG >= n ? " disabled" : "") + ">Berikutnya</button></nav>";
+      }
       function draw() {
-        var list = T.filter(match).sort(function (a, b) { return (((FL[b.slug] || {}).featured ? 2 : 0) + ((FL[b.slug] || {}).recommended ? 1 : 0)) - (((FL[a.slug] || {}).featured ? 2 : 0) + ((FL[a.slug] || {}).recommended ? 1 : 0)); }), any = F.tema || F.budaya || F.warna;
-        try { var u = new URL(location.href); u.searchParams.set("kategori", F.kat || ""); ["tema", "budaya", "warna"].forEach(function (g) { if (F[g]) u.searchParams.set("f_" + g, F[g]); else u.searchParams.delete("f_" + g); }); if (!F.kat) u.searchParams.delete("kategori"); history.replaceState(null, "", u.pathname + u.search); } catch (e) { }
+        var list = T.filter(match).sort(function (a, b) { return (((FL[b.slug] || {}).featured ? 2 : 0) + ((FL[b.slug] || {}).recommended ? 1 : 0)) - (((FL[a.slug] || {}).featured ? 2 : 0) + ((FL[a.slug] || {}).recommended ? 1 : 0)); }), any = F.tema || F.budaya || F.warna, pages = Math.max(1, Math.ceil(list.length / PER)), from, shown;
+        if (PG > pages) PG = pages; from = (PG - 1) * PER; shown = list.slice(from, from + PER);
+        try { var u = new URL(location.href); u.searchParams.set("kategori", F.kat || ""); ["tema", "budaya", "warna"].forEach(function (g) { if (F[g]) u.searchParams.set("f_" + g, F[g]); else u.searchParams.delete("f_" + g); }); if (!F.kat) u.searchParams.delete("kategori"); if (PG > 1) u.searchParams.set("hal", PG); else u.searchParams.delete("hal"); history.replaceState(null, "", u.pathname + u.search); } catch (e) { }
         view.innerHTML = '<div class="fw">' + steps(2, pkg) + '<div class="hd"><h1>Pilih template' + (F.kat ? " " + esc(CATN[F.kat]) : "") + '</h1><p>Template ' + esc(PK[pkg].kind) + ". Coba demo, lalu gunakan yang paling mewakili cerita Anda.</p></div>" +
-          '<div class="fltb card">' + ["kat", "tema", "budaya", "warna"].map(chips).join("") + '<div class="fltn" role="status" aria-live="polite">' + list.length + " template" + (any ? ' &middot; <button type="button" class="lnk" id="flt-reset">Reset filter</button>' : "") + "</div></div>" +
-          (list.length ? '<div class="tg">' + list.map(card).join("") + "</div>" :
+          '<div class="fltb card">' + ["kat", "tema", "budaya", "warna"].map(chips).join("") + '<div class="fltn" role="status" aria-live="polite">' + list.length + " template" + (pages > 1 ? " &middot; menampilkan " + (from + 1) + "&ndash;" + (from + shown.length) : "") + (any ? ' &middot; <button type="button" class="lnk" id="flt-reset">Reset filter</button>' : "") + "</div></div>" +
+          (list.length ? '<div class="tg">' + shown.map(card).join("") + "</div>" + pager(pages) :
             '<div class="card"><div class="empty"><h3>' + (any ? "Tidak ada template yang cocok" : "Template " + esc(CATN[F.kat] || "") + " sedang disiapkan") + "</h3><p>" + (any ? "Coba ubah atau reset filter." : "Belum ada template " + esc(PK[pkg].kind) + " untuk kategori ini.") + "</p></div></div>") +
           '<div class="acts"><a class="btn o" href="/template?paket=' + pkg + '">Kembali ke kategori</a></div></div>';
-        $$("[data-f]").forEach(function (b) { b.addEventListener("click", function () { F[b.dataset.f] = b.dataset.v; draw(); var n = $('[data-f="' + b.dataset.f + '"][data-v="' + b.dataset.v + '"]'); if (n) n.focus(); }); });
-        var rs = $("#flt-reset"); if (rs) rs.addEventListener("click", function () { F.tema = F.budaya = F.warna = ""; draw(); });
+        $$("[data-f]").forEach(function (b) { b.addEventListener("click", function () { F[b.dataset.f] = b.dataset.v; PG = 1; draw(); var n = $('[data-f="' + b.dataset.f + '"][data-v="' + b.dataset.v + '"]'); if (n) n.focus(); }); });
+        var rs = $("#flt-reset"); if (rs) rs.addEventListener("click", function () { F.tema = F.budaya = F.warna = ""; PG = 1; draw(); });
+        $$("[data-pg]").forEach(function (b) { b.addEventListener("click", function () { if (b.disabled) return; PG = Number(b.dataset.pg) || 1; draw(); var h = $(".fltb"); if (h && h.scrollIntoView) h.scrollIntoView({ block: "start" }); }); });
       }
       view.addEventListener("change", function (e) { var r = e.target.closest("input[data-th]"); if (!r) return; var a = $('[data-use="' + r.dataset.th + '"]'); if (a) a.href = a.href.replace(/&tema=[^&]*/, "") + "&tema=" + encodeURIComponent(r.value); var th = (TH[r.dataset.th] || []).filter(function (x) { return x.slug === r.value; })[0], p = $('[data-thd="' + r.dataset.th + '"]'); if (p && th) p.innerHTML = "<b>Tema " + esc(th.name) + ":</b> " + esc(th.description || ""); });
       draw();
