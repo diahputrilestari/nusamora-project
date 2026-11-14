@@ -223,7 +223,15 @@
     "hijau-zamrud": "little-emerald",
     "zamrud": "little-emerald",
     "hijau-mewah": "little-emerald",
-    "little-emerald": "little-emerald"
+    "little-emerald": "little-emerald",
+    "up-up-away": "little-upaway",
+    "upupaway": "little-upaway",
+    "balon-udara": "little-upaway",
+    "hot-air-balloon": "little-upaway",
+    "balon": "little-upaway",
+    "awan": "little-upaway",
+    "up-up-and-away": "little-upaway",
+    "little-upaway": "little-upaway"
   },
   "themes": [
     {
@@ -972,6 +980,20 @@
       "swatch": [
         "#0B3D2E",
         "#F4D77D"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-upaway",
+      "name": "Up Up & Away Birthday",
+      "description": "Pesta ulang tahun balon udara pastel: panggung berawan dengan lengkung lampu dan pita ungu, balon udara, koper vintage, dan pesawat mungil, dengan booth bertema awan.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#8B6FC6",
+        "#F7B6D2"
       ],
       "art": true
     }
