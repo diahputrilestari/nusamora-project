@@ -63,7 +63,8 @@ with t(slug, name, cats, description, sort) as (values
   ('little-venetian', 'Venetian Masquerade Wedding', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran bergaya pesta topeng Venesia: panggung marmer dengan tirai beludru merah marun dan emas, kanal serta jembatan malam, karangan mawar merah, dan pengantin chibi bertopeng emas.', 87),
   ('little-minimalist', 'Minimalist Wedding', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran minimalis krem-emas: aula kaca modern dengan panggung marmer, kolam pantul, lentera, dan rangkaian mawar putih, serta pengantin chibi berbusana krem.', 88),
   ('little-terracotta', 'Terracotta Wedding', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran terakota hangat: aula kaca berpanggung lengkung dengan lampu rotan, kolam pantul, mawar persik, serta pengantin chibi berbusana terakota dan krem.', 89),
-  ('little-lampung', 'Adat Lampung', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.', 90)
+  ('little-lampung', 'Adat Lampung', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.', 90),
+  ('little-betawi', 'Adat Betawi', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Betawi: rumah kebaya berkayu hijau berhias gigi balang emas, atap genteng terakota, kembang kelapa, serta pengantin chibi berbusana none dan abang Betawi.', 91)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,

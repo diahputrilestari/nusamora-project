@@ -272,7 +272,12 @@
     "adat-lampung": "little-lampung",
     "siger": "little-lampung",
     "lampung-wedding": "little-lampung",
-    "little-lampung": "little-lampung"
+    "little-lampung": "little-lampung",
+    "betawi": "little-betawi",
+    "adat-betawi": "little-betawi",
+    "none-abang": "little-betawi",
+    "betawi-wedding": "little-betawi",
+    "little-betawi": "little-betawi"
   },
   "themes": [
     {
@@ -1137,6 +1142,21 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#7B1626",
+        "#F0D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-betawi",
+      "name": "Adat Betawi",
+      "description": "Pernikahan/lamaran adat Betawi: rumah kebaya berkayu hijau berhias gigi balang emas, atap genteng terakota, kembang kelapa, serta pengantin chibi berbusana none dan abang Betawi.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F4A33",
         "#F0D27A"
       ],
       "art": true
