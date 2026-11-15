@@ -158,6 +158,7 @@
   }
   function showList(rows) {
     if (type === "article" && lang !== "en") { showArticles(rows); return; }
+    if (type === "faq" && lang !== "en" && window.NMHelp) { window.NMHelp.render({ view: view, rows: rows, esc: esc, md: md, seo: seo, urlFor: urlFor, type: type, lang: lang }); return; }
     var t = TITLE[type] || "Konten";
     seo({ title: t + " | NusaMora", description: type === "article" ? "Artikel dan tips seputar undangan digital dari NusaMora." : type === "faq" ? "Jawaban atas pertanyaan yang sering diajukan tentang NusaMora." : "Panduan langkah demi langkah menggunakan NusaMora.", canonical: urlFor(type, "", lang), lang: lang });
     var body;
