@@ -1,7 +1,7 @@
 (function(){
 var d=document,$=function(s,r){return(r||d).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||d).querySelectorAll(s))};
 d.documentElement.classList.add('js');
-var APP={signup:'/daftar',login:'/masuk',whatsapp:''}; /* isi saat pendaftaran/login/WhatsApp siap; kosong = dialog informasi */
+var APP={signup:'/daftar',login:'/masuk',email:'support@nusamora.com'}; /* isi saat pendaftaran/login/WhatsApp siap; kosong = dialog informasi */
 var PLAN={essential:['Essential',79000],signature:['Signature',149000],luxe:['Luxe',249000]};
 var EVL={pernikahan:'Pernikahan',ulangtahun:'Ulang Tahun',wisuda:'Wisuda',seminar:'Seminar & Workshop',corporate:'Corporate Event',lainnya:'Lainnya'};
 var TPL={'romantic-garden':'Romantic Garden','jawa-tengah':'Adat Jawa Tengah'};
@@ -39,13 +39,19 @@ function render(){var p=PLAN[plan()],t=fTp.value?TPL[fTp.value]:'Belum memilih';
  store('nm:pilihan',{ev:fEv.value,tpl:fTp.value,plan:plan()});
  var q='?acara='+encodeURIComponent(fEv.value)+'&template='+encodeURIComponent(fTp.value)+'&paket='+plan();
  if(APP.signup){bGo.hidden=false;bGo.href=APP.signup+q;note.hidden=true}else{bGo.hidden=true;note.hidden=false}
- if(APP.whatsapp){bWa.hidden=false;bWa.href='https://wa.me/'+APP.whatsapp+'?text='+encodeURIComponent('Halo NusaMora, saya ingin membuat undangan.\n'+summary())}else bWa.hidden=true}
+ if(bWa){bWa.hidden=false;bWa.textContent='Hubungi via Email';bWa.removeAttribute('target');bWa.removeAttribute('rel');bWa.href='mailto:'+APP.email+'?subject='+encodeURIComponent('Pertanyaan undangan NusaMora')+'&body='+encodeURIComponent('Halo NusaMora, saya ingin membuat undangan.\n'+summary())}}
 function show(mode,o){o=o||{};
  if(mode==='login'&&APP.login){location.href=APP.login;return}
  if(mode==='start'){pS.hidden=false;pI.hidden=true;var s=store('nm:pilihan')||{};fEv.value=o.ev||s.ev||'pernikahan';fTp.value=o.tpl!==undefined?o.tpl:(s.tpl||'');var pl=o.plan||s.plan||'signature',r=$('input[name=plan][value='+pl+']');if(r)r.checked=true;render()}
  else{pS.hidden=true;pI.hidden=false;if(mode==='login'){$('#it').textContent='Masuk ke dashboard';$('#ib').textContent='Login dashboard pelanggan dibuka bersamaan dengan pendaftaran akun, yang sedang kami siapkan. Sementara ini Anda bisa mencoba demo template tanpa login.'}else{$('#it').textContent=o.doc||'Dokumen';$('#ib').textContent=(o.doc||'Dokumen')+' sedang disusun dan akan dipublikasikan sebelum pelanggan pertama menggunakan layanan. Dokumen ini wajib ada karena undangan menyimpan data pribadi tamu.'}}
  if(typeof dlg.showModal==='function'){if(!dlg.open)dlg.showModal()}else dlg.setAttribute('open','')}
-d.addEventListener('click',function(e){var t=e.target.closest('[data-open]');if(!t)return;e.preventDefault();var m=t.dataset.open;show(m,{tpl:t.dataset.tpl,plan:t.dataset.plan,doc:t.dataset.doc,ev:t.closest('.tcard')&&t.dataset.tpl?(TPL_EV[t.dataset.tpl]||undefined):undefined})});
+/* CTA "Buat Undangan" / "Gunakan Template" / "Pilih paket": langsung ke pendaftaran (belum masuk) atau ke pemilihan paket & katalog (sudah masuk), tanpa dialog */
+function loggedIn(){try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sb-.*-auth-token$/.test(k)&&localStorage.getItem(k))return true}}catch(e){}return false}
+function goStart(t){var qs=[];if(t.dataset.tpl)qs.push('template='+encodeURIComponent(t.dataset.tpl));if(t.dataset.plan&&PLAN[t.dataset.plan])qs.push('paket='+encodeURIComponent(t.dataset.plan));
+ location.href=(loggedIn()?'/paket':(APP.signup||'/daftar'))+(qs.length?'?'+qs.join('&'):'')}
+d.addEventListener('click',function(e){var t=e.target.closest('[data-open]');if(!t)return;e.preventDefault();var m=t.dataset.open;
+ if(m==='start'&&!t.closest('.tcard.soon')){goStart(t);return}
+ show(m,{tpl:t.dataset.tpl,plan:t.dataset.plan,doc:t.dataset.doc,ev:t.closest('.tcard')&&t.dataset.tpl?(TPL_EV[t.dataset.tpl]||undefined):undefined})});
 var TPL_EV={'romantic-garden':'pernikahan','jawa-tengah':'pernikahan'};
 [fEv,fTp].forEach(function(x){x.addEventListener('change',render)});$$('input[name=plan]').forEach(function(x){x.addEventListener('change',render)});
 $('#b-close').addEventListener('click',function(){dlg.close()});
@@ -58,32 +64,46 @@ if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion:reduce
  $$('.rv').forEach(function(el){if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}})}
 /* bar CTA mobile disembunyikan saat CTA akhir terlihat */
 var mb=$('#mbar'),fin=$('.fin');if(mb&&fin&&'IntersectionObserver' in window){new IntersectionObserver(function(es){mb.classList.toggle('hide',es[0].isIntersecting)}).observe(fin)}
-/* Katalog template: kartu bawaan tetap ada; template published lain dari database ditambahkan (gagal = katalog bawaan tetap tampil) */
+/* kontak resmi: email bisnis (menggantikan WhatsApp) */
+(function(){var M=APP.email;
+ if(bWa){bWa.textContent='Hubungi via Email';bWa.removeAttribute('target');bWa.removeAttribute('rel');bWa.href='mailto:'+M;bWa.hidden=false}
+ $$('#bantuan p').forEach(function(p){if(/Kanal bantuan resmi/.test(p.textContent)){p.textContent='Pertanyaan di luar daftar ini? Hubungi kami lewat email di ';var a=d.createElement('a');a.href='mailto:'+M;a.textContent=M;p.appendChild(a);p.appendChild(d.createTextNode('.'))}});
+ /* Kebijakan Privasi & Syarat Layanan: tombol modal diganti tautan ke halaman dokumen */
+ $$('[data-open=legal]').forEach(function(b){var doc=b.getAttribute('data-doc')||'',u=/privasi/i.test(doc)?'/kebijakan-privasi':/syarat/i.test(doc)?'/syarat-ketentuan':'';if(!u||b.tagName==='A')return;var a=d.createElement('a');a.href=u;a.textContent=b.textContent;a.className=b.className;b.parentNode.replaceChild(a,b)});
+ /* tautan Artikel di menu atas dan footer */
+ var mn=$('#menu');if(mn&&!$('a[href="/artikel"]',mn)){var aa=d.createElement('a');aa.href='/artikel';aa.textContent='Artikel';var mob=$('.mob-acts',mn);mob?mn.insertBefore(aa,mob):mn.appendChild(aa)}
+ var fp=$('footer nav[aria-label=Produk]');if(fp&&!$('a[href="/artikel"]',fp)){var af=d.createElement('a');af.href='/artikel';af.textContent='Artikel';fp.appendChild(af)}
+ var fn=$('footer nav[aria-label=Bantuan]');if(fn&&!$('a[href^="mailto:"]',fn)){var a2=d.createElement('a');a2.href='mailto:'+M;a2.textContent=M;fn.appendChild(a2)}
+})();
+/* Katalog template di landing: SATU kartu per paket (template unggulan, atau yang urutannya paling atas) + tombol "Lihat Katalog" ke /template?paket=... */
 (function(){var C=window.NM_CONFIG;if(!C||!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY||!window.fetch)return;
 var EVMAP={wedding:'pernikahan',engagement:'pernikahan',birthday:'ulangtahun',graduation:'wisuda',aqiqah:'lainnya',seminar:'seminar',corporate:'corporate',other:'lainnya'},
  CATL={wedding:'Pernikahan',engagement:'Pertunangan',birthday:'Ulang Tahun',graduation:'Wisuda',aqiqah:'Aqiqah',seminar:'Seminar & Workshop',corporate:'Corporate Event',other:'Lainnya'},
- PKN={essential:'Essential 2D',signature:'Signature 3D',luxe:'Luxe Live Guest'};
-var grid=$('#tgrid'),soon=grid&&$('.tcard.soon',grid);if(!grid)return;
+ PKN={essential:'Essential 2D',signature:'Signature 3D',luxe:'Luxe Live Guest'},PKL={essential:'Essential',signature:'Signature',luxe:'Luxe'},
+ PKD={essential:'Undangan website 2D yang cepat, ringan, dan mudah dibagikan.',signature:'Pembuka sinematik 3D dengan kamera dan animasi.',luxe:'Pengalaman Live Guest 3D yang interaktif.'},PKS=['essential','signature','luxe'];
+var grid=$('#tgrid');if(!grid)return;
 function mk(tag,cls,txt){var e=d.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
-function safeUrl(u){u=String(u||'');return /^(https:\/\/|\/)/.test(u)&&u.indexOf('//')!==0?u:''}
-function card(r){var cats=(r.categories&&r.categories.length?r.categories:[]),ev=cats.map(function(c){return EVMAP[c]}).filter(Boolean).filter(function(x,i,a){return a.indexOf(x)===i}).join(' ')||'lainnya';
- var a=mk('article','tcard');a.dataset.ev=ev;a.dataset.id=r.slug;
- var tv=mk('div','tv'),img=safeUrl(r.thumbnail_url);
- if(img){var im=d.createElement('img');im.src=img;im.width=960;im.height=540;im.loading='lazy';im.decoding='async';im.alt='Pratinjau template undangan digital '+r.name;tv.appendChild(im)}else{var ph=mk('div',null,null);ph.style.cssText='aspect-ratio:16/9;display:grid;place-items:center;font:700 15px var(--sans);color:var(--mute);background:linear-gradient(120deg,var(--soft),var(--soft2))';ph.textContent=PKN[r.package_type]||'Template';tv.appendChild(ph)}
- var tb=mk('div','tb'),tg=mk('div','tags');
- tg.appendChild(mk('span','tag',PKN[r.package_type]||r.package_type));
- cats.forEach(function(c){tg.appendChild(mk('span','tag',CATL[c]||c))});
- tb.appendChild(mk('h3',null,r.name));tb.appendChild(tg);if(r.description)tb.appendChild(mk('p',null,r.description));
- var two=mk('div','two'),demo=safeUrl(r.preview_url)||'/preview?demo='+encodeURIComponent(r.slug);
- if(demo){var da=mk('a','btn o','Coba Demo');da.href=demo;da.target='_blank';da.rel='noopener';two.appendChild(da)}else two.appendChild(mk('span'));
- var bt=mk('button','btn','Gunakan Template Ini');bt.type='button';bt.dataset.open='start';bt.dataset.tpl=r.slug;two.appendChild(bt);
- tb.appendChild(two);a.appendChild(tv);a.appendChild(tb);return a}
-var q=C.SUPABASE_URL+'/rest/v1/templates?select=slug,name,description,thumbnail_url,preview_url,package_type,categories&status=eq.published&order=sort.asc,created_at.asc';
-fetch(q,{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:'Bearer '+C.SUPABASE_ANON_KEY}}).then(function(r){return r.ok?r.json():[]}).then(function(rows){
- if(!Array.isArray(rows))return;var have={};$$('.tcard[data-id]',grid).forEach(function(c){have[c.dataset.id]=1});var added=0;
- rows.forEach(function(r){if(!r||!/^[a-z0-9-]{1,60}$/.test(r.slug||'')||have[r.slug])return;have[r.slug]=1;var c=card(r);soon?grid.insertBefore(c,soon):grid.appendChild(c);
-  TPL[r.slug]=r.name;var ek=c.dataset.ev.split(' ')[0];TPL_EV[r.slug]=ek;var o=d.createElement('option');o.value=r.slug;o.textContent=r.name;fTp.appendChild(o);added++});
- if(added){var n=$('#tcount');if(n&&!flt)n.textContent=totalTxt()}
-}).catch(function(){});
+/* alamat lama di database (domain sementara Hostinger, folder assets-essential) dipetakan ke lokasi yang aktif */
+function fixUrl(u){u=String(u||'').replace(/^https?:\/\/[a-z0-9-]+\.hostingersite\.com(?=\/)/i,'').replace(/^\/assets-essential\/invite\//,'/assets/invite/');return /^(https:\/\/|\/)/.test(u)&&u.indexOf('//')!==0?u:''}
+function card(pk,r,list){var cats=[];list.forEach(function(x){(x.categories||[]).forEach(function(c){if(cats.indexOf(c)<0)cats.push(c)})});
+ var ev=cats.map(function(c){return EVMAP[c]}).filter(Boolean).filter(function(x,i,a){return a.indexOf(x)===i}).join(' ')||'lainnya';
+ var a=mk('article','tcard');a.dataset.ev=ev;a.dataset.id=r?r.slug:'paket-'+pk;a.dataset.pkg=pk;
+ var tv=mk('div','tv'),img=r?fixUrl(r.thumbnail_url):'';
+ function ph(){tv.innerHTML='';var p=mk('div',null,PKN[pk]);p.style.cssText='aspect-ratio:16/9;display:grid;place-items:center;font:700 15px var(--sans);color:var(--mute);background:linear-gradient(120deg,var(--soft),var(--soft2))';tv.appendChild(p)}
+ if(img){var im=d.createElement('img');im.width=960;im.height=540;im.loading='lazy';im.decoding='async';im.alt='Pratinjau template undangan digital '+(r.name||'');im.onerror=ph;im.src=img;tv.appendChild(im)}else ph();
+ var tb=mk('div','tb'),tg=mk('div','tags');tg.appendChild(mk('span','tag',PKN[pk]));if(list.length>1)tg.appendChild(mk('span','tag',list.length+' template'));
+ tb.appendChild(mk('h3',null,r?r.name:'Template '+PKL[pk]));tb.appendChild(tg);tb.appendChild(mk('p',null,(r&&r.description)||PKD[pk]));
+ if(r){var two=mk('div','two'),demo=pk==='essential'?'/preview?demo='+encodeURIComponent(r.slug):(fixUrl(r.preview_url)||'/preview?demo='+encodeURIComponent(r.slug));
+  var da=mk('a','btn o','Coba Demo');da.href=demo;da.target='_blank';da.rel='noopener';two.appendChild(da);
+  var bt=mk('button','btn','Gunakan Template Ini');bt.type='button';bt.dataset.open='start';bt.dataset.tpl=r.slug;bt.dataset.plan=pk;two.appendChild(bt);tb.appendChild(two)}
+ var kt=mk('a','btn full'+(r?' o':''),'Lihat Katalog '+PKL[pk]);kt.href='/template?paket='+pk;kt.style.marginTop='10px';tb.appendChild(kt);
+ a.appendChild(tv);a.appendChild(tb);return a}
+function render(rows){var frag=d.createDocumentFragment();
+ PKS.forEach(function(pk){var list=rows.filter(function(r){return r&&r.package_type===pk&&/^[a-z0-9-]{1,60}$/.test(r.slug||'')});var pick=list.filter(function(r){return r.featured})[0]||list[0]||null;frag.appendChild(card(pk,pick,list))});
+ grid.innerHTML='';grid.appendChild(frag);var n=$('#tcount');if(n&&!flt)n.textContent=PKS.length+' paket, masing-masing dengan katalog template';totalTxt=function(){return PKS.length+' paket, masing-masing dengan katalog template'}}
+function load(sel){return fetch(C.SUPABASE_URL+'/rest/v1/templates?select='+sel+'&status=eq.published&order='+(sel.indexOf('featured')>-1?'featured.desc,':'')+'sort.asc,created_at.asc',{headers:{apikey:C.SUPABASE_ANON_KEY,Authorization:'Bearer '+C.SUPABASE_ANON_KEY}}).then(function(r){return r.ok?r.json():null})}
+var BASE='slug,name,description,thumbnail_url,preview_url,package_type,categories';
+/* gagal memuat = kartu bawaan tetap tampil; tombol katalog di bawah dipastikan ada */
+load(BASE+',featured').then(function(rows){return Array.isArray(rows)?rows:load(BASE)}).then(function(rows){if(Array.isArray(rows)&&rows.length)render(rows);else render([])}).catch(function(){render([])});
 })();
 })();
