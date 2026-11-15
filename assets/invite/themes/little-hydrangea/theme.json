@@ -1,0 +1,115 @@
+{
+  "id": "little-hydrangea",
+  "name": "Blue Hydrangea",
+  "version": 1,
+  "description": "Pernikahan/lamaran Blue Hydrangea: aula marmer putih berpilar dengan tirai biru langit, hortensia dan mawar pastel, lampu kristal emas, serta pengantin chibi berbusana biru muda.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#4F6FA3",
+    "deep2": "#6F8FC2",
+    "paper": "#FBF8F2",
+    "soft": "#EAF0FA",
+    "ink": "#26324A",
+    "muted": "#6B7A94",
+    "accent": "#C9A24A",
+    "accent2": "#F0DDA0",
+    "petal": "#E7A9B8",
+    "heading": "#4F6FA3"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/hy-groom.webp",
+        "w": 96
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/hy-bride.webp",
+        "w": 96
+      }
+    ],
+    "introTop": "art/tirai-swag.webp",
+    "figureBride": "art/hy-bride.webp",
+    "figureGroom": "art/hy-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-urn.webp",
+        "w": 64
+      },
+      {
+        "src": "art/bunga-rendah.webp",
+        "w": 110
+      },
+      {
+        "src": "art/vas-emas.webp",
+        "w": 64
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/lentera.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/hy-groom.webp",
+      "art/hy-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
