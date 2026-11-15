@@ -1,0 +1,21 @@
+/* Adat Papua: ukuran ilustrasi & sentuhan merah-emas */
+.th-little-papua .ulos-dec { width: min(150px, 46vw); }
+.th-little-papua .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-papua .gf-amp { width: min(80px, 26vw); }
+.th-little-papua .ws-bk { width: min(140px, 42vw); }
+.th-little-papua .ev-lt { width: 30px; }
+.th-little-papua .rs-lt { width: 54px; top: -30px; }
+.th-little-papua .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-papua .gable .art { height: 26px; }
+.th-little-papua .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-papua .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-papua .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-papua .end-art .eg { filter: drop-shadow(0 18px 28px rgba(46, 16, 6, .4)); }
+.th-little-papua .deep .eb { color: #FFE2A0; }
+.th-little-papua .cv-nm, .th-little-papua .hero-nm, .th-little-papua .end-nm { text-shadow: 0 2px 0 rgba(46, 16, 6, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-papua .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(58, 20, 8, .82), rgba(58, 20, 8, .55) 58%, rgba(58, 20, 8, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(58, 20, 8, .5), rgba(58, 20, 8, 0)), linear-gradient(180deg, rgba(58, 20, 8, .1), rgba(58, 20, 8, .3)); }
+.th-little-papua .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-papua .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-papua .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(46, 16, 6, .9); }

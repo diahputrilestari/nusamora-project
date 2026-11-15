@@ -67,7 +67,8 @@ with t(slug, name, cats, description, sort) as (values
   ('little-lampung', 'Adat Lampung', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.', 90),
   ('little-betawi', 'Adat Betawi', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Betawi: rumah kebaya berkayu hijau berhias gigi balang emas, atap genteng terakota, kembang kelapa, serta pengantin chibi berbusana none dan abang Betawi.', 91),
   ('little-bali', 'Adat Bali', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Bali: bale beratap ijuk dengan ukiran emas, penjor dan payung agung, patung penjaga pura, frangipani, serta pengantin chibi berbusana payas agung Bali.', 92),
-  ('little-hydrangea', 'Blue Hydrangea', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran Blue Hydrangea: aula marmer putih berpilar dengan tirai biru langit, hortensia dan mawar pastel, lampu kristal emas, serta pengantin chibi berbusana biru muda.', 93)
+  ('little-hydrangea', 'Blue Hydrangea', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran Blue Hydrangea: aula marmer putih berpilar dengan tirai biru langit, hortensia dan mawar pastel, lampu kristal emas, serta pengantin chibi berbusana biru muda.', 93),
+  ('little-papua', 'Adat Papua', '{wedding,engagement}'::text[],                    'Pernikahan/lamaran adat Papua: paviliun beratap alang-alang di tepi danau, totem ukir, lentera, hibiscus dan kamboja, bulu cenderawasih, serta pengantin chibi berbusana adat.', 95)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,
