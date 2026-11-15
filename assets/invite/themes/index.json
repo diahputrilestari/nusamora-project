@@ -293,7 +293,14 @@
     "sweet-17": "little-india17",
     "sweet-seventeen": "little-india17",
     "bollywood": "little-india17",
-    "little-india17": "little-india17"
+    "little-india17": "little-india17",
+    "papua": "little-papua",
+    "adat-papua": "little-papua",
+    "cenderawasih": "little-papua",
+    "koteka": "little-papua",
+    "little-papua": "little-papua",
+    "papua-wedding": "little-papua",
+    "noken": "little-papua"
   },
   "themes": [
     {
@@ -1218,6 +1225,21 @@
       "swatch": [
         "#9C1F5B",
         "#F6D58A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-papua",
+      "name": "Adat Papua",
+      "description": "Pernikahan/lamaran adat Papua: paviliun beratap alang-alang di tepi danau, totem ukir, lentera, hibiscus dan kamboja, bulu cenderawasih, serta pengantin chibi berbusana adat.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7B2A14",
+        "#F6D88A"
       ],
       "art": true
     }
