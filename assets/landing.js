@@ -114,4 +114,19 @@ var BASE='slug,name,description,thumbnail_url,preview_url,package_type,categorie
 /* gagal memuat = kartu bawaan tetap tampil; tombol katalog di bawah dipastikan ada */
 load(BASE+',featured').then(function(rows){return Array.isArray(rows)?rows:load(BASE)}).then(function(rows){if(Array.isArray(rows)&&rows.length)render(rows);else render([])}).catch(function(){render([])});
 })();
+/* Testimoni pelanggan nyata: dibaca dari /assets/testimoni.json. Kosong atau tidak ada entri berizin = tampilan "ruang cerita pertama" tetap dipakai.
+   Hanya entri dengan izin:true yang tampil; teks dipasang lewat textContent. */
+(function(){var sec=$('#testimoni'),box=sec&&$('.tms',sec);if(!box||!window.fetch)return;
+fetch('/assets/testimoni.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():[]}).then(function(rows){
+ if(!Array.isArray(rows))return;
+ rows=rows.filter(function(x){return x&&x.izin===true&&typeof x.nama==='string'&&x.nama&&typeof x.kutipan==='string'&&x.kutipan.length>20}).slice(0,6);
+ if(!rows.length)return;
+ box.innerHTML='';
+ rows.forEach(function(x){var f=d.createElement('figure');f.className='tm real';var q=d.createElement('blockquote');q.textContent=x.kutipan;var c=d.createElement('figcaption');c.textContent=x.nama;
+  var meta=[x.peran,x.paket?'Paket '+x.paket:''].filter(Boolean).join(' \u00b7 ');if(meta){var m=d.createElement('small');m.textContent=meta;c.appendChild(m)}
+  f.appendChild(q);f.appendChild(c);box.appendChild(f)});
+ var h=$('#h-tes'),sub=$('.sub',sec);if(h)h.textContent='Kata Pelanggan';if(sub)sub.textContent='Testimoni ini ditulis pelanggan NusaMora dan ditampilkan atas izin mereka.';
+ var b=$('.tcta .btn',sec);if(b&&b.firstChild&&b.firstChild.nodeType===3)b.firstChild.data='Buat Undangan ';
+}).catch(function(){});
+})();
 })();
