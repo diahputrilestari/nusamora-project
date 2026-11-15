@@ -1,0 +1,115 @@
+{
+  "id": "little-bugis",
+  "name": "Bugis Makassar Wedding",
+  "version": 1,
+  "description": "Pernikahan adat Bugis Makassar: rumah panggung kayu berukir emas dengan tirai merah, payung dan lentera emas, kapal pinisi di tepi laut, serta pengantin chibi berbusana bodo dan baju bella dada.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#7A1424",
+    "deep2": "#A82838",
+    "paper": "#FFF8EE",
+    "soft": "#F8E8D6",
+    "ink": "#3A1218",
+    "muted": "#8A6558",
+    "accent": "#C8961E",
+    "accent2": "#F6D27A",
+    "petal": "#E0394B",
+    "heading": "#7A1424"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Bugis Wedding of",
+    "coupleEyebrow": "Pengantin · Adat Bugis Makassar",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Tabe' · Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/bg-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/bg-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/pelaminan.webp",
+    "figureBride": "art/bg-bride.webp",
+    "figureGroom": "art/bg-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-bunga.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kapal-pinisi.webp",
+        "w": 124
+      },
+      {
+        "src": "art/lentera-bunga.webp",
+        "w": 76
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/bakul.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gapura-bunga.webp",
+    "closingFigures": [
+      "art/bg-groom.webp",
+      "art/bg-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

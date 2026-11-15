@@ -1,0 +1,115 @@
+{
+  "id": "little-sakura",
+  "name": "Sakura Wedding",
+  "version": 1,
+  "description": "Pernikahan taman sakura: panggung bunga ceri dengan lentera emas, jembatan merah di tepi danau, serta pengantin chibi berbusana tradisional Jepang.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#6E2C86",
+    "deep2": "#A24BB8",
+    "paper": "#FFF8FA",
+    "soft": "#FBE6EF",
+    "ink": "#3A1F47",
+    "muted": "#8A6A94",
+    "accent": "#C8963E",
+    "accent2": "#F4C06A",
+    "petal": "#F7A8C4",
+    "heading": "#6E2C86"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Sakura Wedding of",
+    "coupleEyebrow": "Pengantin · Taman Sakura",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Arigatou · Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/sk-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/guest-book.webp",
+        "w": 112
+      },
+      {
+        "src": "art/sk-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/pohon-sakura.webp",
+    "figureBride": "art/sk-bride.webp",
+    "figureGroom": "art/sk-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/kado.webp",
+        "w": 84
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 124
+      },
+      {
+        "src": "art/kue.webp",
+        "w": 84
+      }
+    ],
+    "eventBadge": "art/kedai-minum.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/panggung-tirai.webp",
+    "closingFigures": [
+      "art/sk-groom.webp",
+      "art/sk-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

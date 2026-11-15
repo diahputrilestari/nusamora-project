@@ -1,0 +1,21 @@
+/* Venetian Masquerade Wedding: ukuran ilustrasi & sentuhan merah-emas */
+.th-little-venetian .ulos-dec { width: min(150px, 46vw); }
+.th-little-venetian .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-venetian .gf-amp { width: min(160px, 48vw); }
+.th-little-venetian .ws-bk { width: min(150px, 46vw); }
+.th-little-venetian .ev-lt { width: 30px; }
+.th-little-venetian .rs-lt { width: 54px; top: -30px; }
+.th-little-venetian .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-venetian .gable .art { height: 26px; }
+.th-little-venetian .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-venetian .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-venetian .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-venetian .end-art .eg { filter: drop-shadow(0 18px 28px rgba(34, 4, 12, .4)); }
+.th-little-venetian .deep .eb { color: #FFE2A0; }
+.th-little-venetian .cv-nm, .th-little-venetian .hero-nm, .th-little-venetian .end-nm { text-shadow: 0 2px 0 rgba(34, 4, 12, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-venetian .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(34, 4, 12, .82), rgba(34, 4, 12, .55) 58%, rgba(34, 4, 12, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(34, 4, 12, .5), rgba(34, 4, 12, 0)), linear-gradient(180deg, rgba(34, 4, 12, .1), rgba(34, 4, 12, .3)); }
+.th-little-venetian .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-venetian .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-venetian .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(34, 4, 12, .9); }

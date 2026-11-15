@@ -1,0 +1,70 @@
+-- Template paket Luxe (Live Guest) untuk setiap tema venue. Aditif & idempoten (on conflict do update).
+-- Tampil di /template?paket=luxe. Jalankan SETELAH package-schema.sql dan admin-live-theme-*.sql.
+-- Venue (live_venues) harus diaktifkan admin setelah aset diunggah agar pratinjau /live/?t=<key> bisa dibuka.
+with t(slug, name, descr, cats, sort) as (values
+ ('luxury-black-gold','Luxury Black Gold Live Guest','Venue 3D hitam dan emas dengan lampu kristal, lengkungan bunga putih, dan avatar tamu berbusana elegan.','{wedding,engagement}'::text[],30),
+ ('luxury-emerald','Luxury Emerald Live Guest','Venue 3D zamrud dan emas dengan tirai beludru, bunga lili, air mancur, dan avatar tamu berbusana hijau elegan.','{wedding,engagement}'::text[],35),
+ ('up-up-away','Up Up & Away Birthday Live Guest','Venue 3D pesta ulang tahun pastel bertema balon udara, awan, dan koper vintage dengan avatar tamu penjelajah.','{birthday}'::text[],44),
+ ('sunflower','Sunflower Birthday Live Guest','Venue 3D pesta ulang tahun kebun bunga matahari dengan kincir angin, gingham kuning, dan avatar tamu berbusana ceria.','{birthday}'::text[],45),
+ ('little-ballerina','Little Ballerina Birthday Live Guest','Venue 3D pesta ulang tahun balet pastel pink-lilac dengan istana, tutu, dan avatar tamu putri kecil.','{birthday}'::text[],46),
+ ('luxury-maroon','Luxury Maroon Live Guest','Venue 3D marun dan emas yang hangat dengan dekor bunga, avatar tamu, serta area resepsi lengkap.','{wedding,engagement}'::text[],31),
+ ('beige-elegant','Beige Elegant Live Guest','Venue 3D bernuansa krem dan emas yang lembut, cocok untuk pernikahan elegan dan minimalis.','{wedding,engagement}'::text[],32),
+ ('adat-bugis','Adat Bugis Live Guest','Venue 3D adat Bugis dengan pelaminan, ornamen emas, dan avatar busana adat untuk tamu.','{wedding,engagement}'::text[],33),
+ ('arabian-knight','Arabian Knight Live Guest','Venue 3D bertema malam Arabia dengan lentera, karpet, dan avatar tamu berpakaian khas.','{wedding,engagement}'::text[],34),
+ ('little-circus','Little Circus Live Guest','Venue 3D pesta ulang tahun bertema sirkus yang ceria dengan tenda, balon, dan stan permainan.','{birthday}'::text[],40),
+ ('little-samurai','Little Samurai Live Guest','Venue 3D pesta ulang tahun bertema samurai cilik dengan taman jepang dan avatar berseragam.','{birthday}'::text[],41),
+ ('viking-feast','Viking Feast Live Guest','Venue 3D pesta ulang tahun bertema viking dengan aula kayu dan avatar prajurit cilik.','{birthday}'::text[],42),
+ ('kpop-birthday','K-Pop Birthday Live Guest','Venue 3D konser ulang tahun idol K-Pop dengan panggung, lightstick, dan avatar penggemar.','{birthday,corporate}'::text[],43),
+ ('hackathon','Hackathon Live Guest','Venue 3D acara hackathon dengan main stage, area networking, dan avatar peserta.','{corporate}'::text[],50),
+ ('little-prince','Little Prince Live Guest','Venue 3D pesta ulang tahun bertema Little Prince dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],47),
+ ('little-doctor','Little Doctor Live Guest','Venue 3D pesta ulang tahun bertema Little Doctor dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],48),
+ ('little-cinderella','Little Cinderella Live Guest','Venue 3D pesta ulang tahun bertema Little Cinderella dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],49),
+ ('little-swan','Little Putri Swan Live Guest','Venue 3D pesta ulang tahun bertema Little Putri Swan dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],50),
+ ('little-pink','Little Putri Pink Live Guest','Venue 3D pesta ulang tahun bertema Little Putri Pink dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],51),
+ ('little-arab','Little Putri Arab Live Guest','Venue 3D pesta ulang tahun bertema Little Putri Arab dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],52),
+ ('little-ice','Little Putri Es Live Guest','Venue 3D pesta ulang tahun bertema Little Putri Es dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],53),
+ ('little-forest','Little Hutan Ajaib Live Guest','Venue 3D pesta ulang tahun bertema Little Hutan Ajaib dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],54),
+ ('little-candy','Little Candyland Live Guest','Venue 3D pesta ulang tahun bertema Little Candyland dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],55),
+ ('little-straw','Little Strawberry Live Guest','Venue 3D pesta ulang tahun bertema Little Strawberry dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],56),
+ ('little-pearl','Little Mutiara Laut Live Guest','Venue 3D pesta ulang tahun bertema Little Mutiara Laut dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],57),
+ ('little-race','Little Racing Champion Live Guest','Venue 3D pesta ulang tahun bertema Little Racing Champion dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],58),
+ ('little-police','Little Polisi Patroli Live Guest','Venue 3D pesta ulang tahun bertema Little Polisi Patroli dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],59),
+ ('little-konstruksi','Little Zona Konstruksi Live Guest','Venue 3D pesta ulang tahun bertema Little Zona Konstruksi dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],60),
+ ('little-firefighter','Little Firefighter Live Guest','Venue 3D pesta ulang tahun bertema Little Firefighter dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],61),
+ ('little-pilot','Little Pilot Live Guest','Venue 3D pesta ulang tahun bertema Little Pilot dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],62),
+ ('little-kereta','Little Petualangan Kereta Api Live Guest','Venue 3D pesta ulang tahun bertema Little Petualangan Kereta Api dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],63),
+ ('little-roket','Little Penjelajah Roket Live Guest','Venue 3D pesta ulang tahun bertema Little Penjelajah Roket dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],64),
+ ('little-dino','Little Dino Friends Live Guest','Venue 3D pesta ulang tahun bertema Little Dino Friends dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],65),
+ ('little-farm','Little Farm Live Guest','Venue 3D pesta ulang tahun bertema Little Farm dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],66),
+ ('little-baseball','Baseball League Live Guest','Venue 3D pesta ulang tahun bertema Baseball League dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],67),
+ ('little-basketball','Basketball All Star Live Guest','Venue 3D pesta ulang tahun bertema Basketball All Star dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],68),
+ ('little-soccer','Sepakbola Live Guest','Venue 3D pesta ulang tahun bertema Sepakbola dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],69),
+ ('little-pirates','Little Pirates Live Guest','Venue 3D pesta ulang tahun bertema Little Pirates dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],70),
+ ('little-wizard','Wizard Academy Live Guest','Venue 3D pesta ulang tahun bertema Wizard Academy dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],71),
+ ('sakura-wedding','Sakura Live Guest','Venue 3D pernikahan bertema Sakura dengan dekor, stan, dan avatar tamu bernuansa tema.','{wedding}'::text[],72),
+ ('celtic-woodland','Celtic Woodland Live Guest','Venue 3D hutan Celtic dengan lengkungan batu berlumut, lentera emas, spanduk hijau, dan avatar tamu berbusana Celtic.','{wedding,engagement}'::text[],73),
+ ('venetian-masquerade','Venetian Masquerade Live Guest','Venue 3D pesta topeng Venesia merah dan emas dengan kanal, jembatan, mawar, dan avatar tamu berkostum bertopeng.','{wedding,engagement}'::text[],74),
+ ('minimalist','Minimalist Live Guest','Venue 3D aula kaca modern minimalis krem dan emas dengan kolam, lentera, bunga putih, dan avatar tamu berbusana netral.','{wedding,engagement}'::text[],75),
+ ('terracotta','Terracotta Live Guest','Venue 3D aula kaca hangat bernuansa terakota dan krem dengan lampu rotan, bunga persik, dan avatar tamu berbusana terakota.','{wedding,engagement}'::text[],76),
+ ('adat-lampung','Adat Lampung Live Guest','Venue 3D pernikahan adat Lampung dengan rumah panggung bermahkota siger emas, tapis merah, dan avatar tamu berbusana adat.','{wedding,engagement}'::text[],77),
+ ('adat-betawi','Adat Betawi Live Guest','Venue 3D pernikahan adat Betawi dengan rumah gigi balang beratap genteng, ornamen emas, dan avatar tamu berbusana adat.','{wedding,engagement}'::text[],78),
+ ('adat-yogyakarta','Adat Yogyakarta Live Guest','Venue 3D pernikahan adat Yogyakarta dengan pendapa joglo, ornamen emas, dan pengantin berbusana paes ageng.','{wedding,engagement}'::text[],79),
+ ('adat-bali','Adat Bali Live Guest','Venue 3D pernikahan adat Bali dengan bale beratap ijuk, penjor, candi bentar, dan pengantin berbusana payas agung.','{wedding,engagement}'::text[],80),
+ ('blue-elegance','Blue Elegance Live Guest','Venue 3D pernikahan aula putih bernuansa biru lembut dengan pilar, tirai, hidrangea, dan lampu kristal.','{wedding,engagement}'::text[],81),
+ ('sage-garden','Sage Garden Live Guest','Venue 3D pernikahan taman kaca bernuansa hijau sage dengan bunga lili, lampion emas, dan lengkung emas.','{wedding,engagement}'::text[],82),
+ ('india-sweet-17','India Sweet 17 Live Guest','Venue 3D pesta Sweet 17 bertema India dengan istana marmer, lengkung emas, bunga marigold, dan karpet merah muda.','{birthday}'::text[],83),
+ ('aqiqah-pink-castle','Aqiqah Pink Castle Live Guest','Venue 3D syukuran aqiqah istana pink pastel dengan lentera emas, bunga, dan dekorasi bayi yang manis.','{aqiqah}'::text[],84),
+ ('adat-papua','Adat Papua Live Guest','Venue 3D pernikahan adat Papua dengan honai beratap rumbia, tiang totem ukir, bunga tropis, dan burung cenderawasih.','{wedding,engagement}'::text[],85)
+)
+insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
+select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.webp', '/live/?venue=' || t.slug, 'luxe', t.cats, t.slug, 'published', t.sort,
+       jsonb_build_object('scenes', jsonb_build_array(jsonb_build_object('id', t.slug, 'name', t.name)),
+         'areas', '[{"id":"resepsi","name":"Area Resepsi"},{"id":"kuliner","name":"Area Kuliner"},{"id":"photobooth","name":"Photo Booth"},{"id":"galeri","name":"Galeri Foto"}]'::jsonb,
+         'avatars', '[{"id":"tamu-wanita","name":"Avatar tamu wanita"},{"id":"tamu-pria","name":"Avatar tamu pria"},{"id":"pengantin","name":"Avatar pengantin"}]'::jsonb,
+         'decorations', '[{"id":"dekor-utama","name":"Dekor utama"},{"id":"bunga","name":"Rangkaian bunga"}]'::jsonb)
+from t
+on conflict (slug) do update set name = excluded.name, description = excluded.description, thumbnail_url = excluded.thumbnail_url,
+  preview_url = excluded.preview_url, package_type = excluded.package_type, categories = excluded.categories, theme_key = excluded.theme_key, sort = excluded.sort;
+
+-- Romantic Garden Live Guest hanya untuk pernikahan/lamaran (bukan birthday).
+update public.templates set categories = '{wedding,engagement}'::text[] where slug = 'romantic-garden' and categories is distinct from '{wedding,engagement}'::text[];

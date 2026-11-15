@@ -1,0 +1,115 @@
+{
+  "id": "little-papua",
+  "name": "Adat Papua",
+  "version": 1,
+  "description": "Pernikahan/lamaran adat Papua: paviliun beratap alang-alang di tepi danau dan pegunungan, totem ukir, lentera, hibiscus dan kamboja, bulu cenderawasih, serta pengantin chibi berbusana adat.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#7B2A14",
+    "deep2": "#A63A1C",
+    "paper": "#FBF3E2",
+    "soft": "#F6E6C8",
+    "ink": "#3A1A0E",
+    "muted": "#7A5A44",
+    "accent": "#D9A02A",
+    "accent2": "#F6D88A",
+    "petal": "#D9382C",
+    "heading": "#8A2B12"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/pp-groom.webp",
+        "w": 84
+      },
+      {
+        "src": "art/bunga-rendah.webp",
+        "w": 104
+      },
+      {
+        "src": "art/pp-bride.webp",
+        "w": 84
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/pp-bride.webp",
+    "figureGroom": "art/pp-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/djembe.webp",
+        "w": 64
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 124
+      },
+      {
+        "src": "art/tungku.webp",
+        "w": 44
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/kios-kriya.webp",
+    "giftTop": "art/peti.webp",
+    "wishesTop": "art/cenderawasih.webp",
+    "closingScene": "art/paviliun.webp",
+    "closingFigures": [
+      "art/pp-groom.webp",
+      "art/pp-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

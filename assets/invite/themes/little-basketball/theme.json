@@ -1,0 +1,139 @@
+{
+  "id": "little-basketball",
+  "name": "Basketball All-Star",
+  "version": 1,
+  "description": "Pesta ulang tahun basketball all-star: panggung podium berlampu dengan lencana bola basket, ring, banner bintang, dan tribun penonton, serta karakter chibi pemain, pemandu sorak, dan penonton berseragam biru-oranye.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Bintang Kecil",
+    "full": "Dafa Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "7"
+  },
+  "colors": {
+    "deep": "#1F2F6B",
+    "deep2": "#3B57B0",
+    "paper": "#FFF9F0",
+    "soft": "#F2EBDD",
+    "ink": "#151C3D",
+    "muted": "#5B6285",
+    "accent": "#E8741C",
+    "accent2": "#F5B13A",
+    "petal": "#F5B13A",
+    "heading": "#1F2F6B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "All-Star Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si bintang lapangan kami",
+    "profileTitle": "Si Bintang Kecil",
+    "countdownEyebrow": "Tip-off dimulai dalam",
+    "countdownTitle": "Menuju Hari Tip-Off",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Pesta di Arena",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Bintang",
+    "galleryEyebrow": "Momen istimewa",
+    "galleryTitle": "Galeri Arena",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Main, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta all-star si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Sang Bintang",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Arena",
+    "closingEyebrow": "Sampai jumpa di arena!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari istimewa si kecil. Kami tunggu kehadiranmu di pesta basketball all-star!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/bk-6.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/bk-3.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/papan-skor.webp",
+    "figureBride": "art/bk-2.webp",
+    "figureGroom": "art/bk-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/bk-4.webp",
+        "w": 66
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/bk-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-makan.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/bk-1.webp",
+      "art/bk-2.webp",
+      "art/bk-5.webp",
+      "art/bk-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

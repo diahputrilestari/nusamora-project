@@ -49,4 +49,5 @@ export default defineTheme({
         labels: { model: 'Raising the pendopo and dalem', surroundings: 'Weaving the janur kuning' },
     },
     shots: shots,
+    characters: { coupleModelUrl: '/assets/themes/keraton-jawa/couple.glb', height: 1.7 },
 });

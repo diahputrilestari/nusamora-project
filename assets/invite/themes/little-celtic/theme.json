@@ -1,0 +1,115 @@
+{
+  "id": "little-celtic",
+  "name": "Celtic Woodland Wedding",
+  "version": 1,
+  "description": "Pernikahan/lamaran hutan Celtic: gapura batu berukir triquetra, air terjun dan rusa putih di balik pepohonan, lentera emas, spanduk hijau, serta pengantin chibi berbusana hijau-krem dengan sulam emas.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#1E4D2B",
+    "deep2": "#2F6B3A",
+    "paper": "#FBF7E8",
+    "soft": "#EEE8CC",
+    "ink": "#1B2E1F",
+    "muted": "#5E6E5C",
+    "accent": "#C79A2B",
+    "accent2": "#F2D98A",
+    "petal": "#5E9B3E",
+    "heading": "#1E4D2B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/celtic-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/celtic-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/celtic-bride.webp",
+    "figureGroom": "art/celtic-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-urn.webp",
+        "w": 56
+      },
+      {
+        "src": "art/lilin-batang.webp",
+        "w": 100
+      },
+      {
+        "src": "art/vas-tinggi.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/sangkar-emas.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/celtic-groom.webp",
+      "art/celtic-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

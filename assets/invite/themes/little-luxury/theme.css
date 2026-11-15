@@ -1,0 +1,21 @@
+/* Luxury Maroon Wedding: ukuran ilustrasi & sentuhan ungu-emas */
+.th-little-luxury .ulos-dec { width: min(150px, 46vw); }
+.th-little-luxury .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-luxury .gf-amp { width: min(160px, 48vw); }
+.th-little-luxury .ws-bk { width: min(150px, 46vw); }
+.th-little-luxury .ev-lt { width: 30px; }
+.th-little-luxury .rs-lt { width: 54px; top: -30px; }
+.th-little-luxury .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-luxury .gable .art { height: 26px; }
+.th-little-luxury .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-luxury .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-luxury .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-luxury .end-art .eg { filter: drop-shadow(0 18px 28px rgba(50, 6, 14, .4)); }
+.th-little-luxury .deep .eb { color: #FFE2A0; }
+.th-little-luxury .cv-nm, .th-little-luxury .hero-nm, .th-little-luxury .end-nm { text-shadow: 0 2px 0 rgba(50, 6, 14, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-luxury .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(60, 10, 20, .82), rgba(60, 10, 20, .55) 58%, rgba(60, 10, 20, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(60, 10, 20, .5), rgba(60, 10, 20, 0)), linear-gradient(180deg, rgba(60, 10, 20, .1), rgba(60, 10, 20, .3)); }
+.th-little-luxury .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-luxury .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-luxury .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(50, 6, 14, .9); }

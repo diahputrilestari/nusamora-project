@@ -2,10 +2,12 @@
    Tanpa token, halaman berjalan sebagai demo seperti semula (tidak ada panggilan jaringan). Semua hook dibungkus try/catch agar tidak merusak halaman. */
 (function () {
   "use strict";
-  var q = null; try { q = new URLSearchParams(location.search).get("t"); } catch (e) { return; }
-  if (!q || !/^[0-9a-f]{32}$/.test(q)) return;
+  var q = null, DEMO = ""; try { var sp = new URLSearchParams(location.search); q = sp.get("t"); DEMO = sp.get("venue") || ""; } catch (e) { return; }
+  /* mode demo venue: ?venue=<kunci> (tanpa token tamu) hanya menampilkan tema, dekor, dan menu venue aktif. Tidak masuk ruangan, tidak ada chat/sinkronisasi. */
+  if (!q || !/^[0-9a-f]{32}$/.test(q)) { if (!/^[a-z0-9][a-z0-9-]{1,38}$/.test(DEMO)) return; q = ""; } else DEMO = "";
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
+  var CONTENT = null;
   var THEME = null, CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
@@ -35,7 +37,7 @@
       for (var i = AREAS.length - 1; i >= 0; i--) {
         var a = AREAS[i], s = by[a.id];
         if (!s) { if ((v.areas || []).length) AREAS.splice(i, 1); continue; }
-        if (s.name) a.n = s.name; if (s.icon) a.t = s.icon;
+        if (s.name) a.n = s.name; if (s.icon) a.t = s.icon; if (typeof s.label === "string" && s.label.trim()) a.lb = s.label.trim().slice(0, 16);
       }
     }
     var f = c.features || {};
@@ -47,15 +49,44 @@
   var hideMenu = safe(function () {
     if (typeof AREAS === "undefined") return; var LB = { stage: "Panggung", resepsi: "Resepsi", booth: "Booth", galeri: "Galeri", video: "Video", buku: "Buku Tamu", kuliner: "Kuliner", istirahat: "Istirahat" };
     var keep = {}; AREAS.forEach(function (a) { keep[a.id] = 1; });
-    d.querySelectorAll("#ml button").forEach(function (b) { var t = (b.textContent || "").trim(); Object.keys(LB).forEach(function (id) { if (LB[id] === t && !keep[id]) b.style.display = "none"; }); });
+    d.querySelectorAll("#ml button").forEach(function (b) { var t = (b.textContent || "").trim(); Object.keys(LB).forEach(function (id) { if (LB[id] === t && !keep[id]) b.style.setProperty("display", "none", "important"); }); });
+  });
+  /* label pendek tombol menu: venue boleh mengisi "label" per area (mis. acara hackathon: Guest Book, Networking). Tanpa label = teks bawaan halaman. */
+  var relabelMenu = safe(function () {
+    if (typeof AREAS === "undefined") return;
+    AREAS.forEach(function (a) { if (!a.lb) return; var b = d.querySelector('#ml .nv[data-id="' + a.id + '"]'), x = b && b.querySelector(".tx"); if (x) x.textContent = a.lb; });
   });
   function removeArea(id) { for (var i = AREAS.length - 1; i >= 0; i--) if (AREAS[i].id === id) AREAS.splice(i, 1); }
+
+  /* ---- isi undangan pelanggan (nama, acara, foto, hadiah, RSVP, ucapan, fitur) ---- */
+  /* musik latar dimatikan pelanggan: tombol disembunyikan dan audio dibisukan */
+  function muteMusic() {
+    var st = document.createElement("style"); st.textContent = "#nmmute{display:none!important}"; document.head.appendChild(st);
+    try { if (typeof NMMUS !== "undefined" && NMMUS.audio) { NMMUS.audio.muted = true; NMMUS.audio.pause(); NMMUS.audio.autoplay = false; NMMUS.audio.addEventListener("play", function () { try { NMMUS.audio.pause(); } catch (e) { } }); } } catch (e) { }
+  }
+  function applyContent(c) {
+    if (!c || typeof c !== "object") return; CONTENT = c;
+    try { if (window.NMLC) window.NMLC.apply(c, { token: TOKEN, rpc: rpc }); } catch (e) { }
+    try { rpc("guest_open", { p_token: TOKEN }).then(function () { }, function () { }); } catch (e) { }
+    if (joined && window.NMLC) setTimeout(function () { window.NMLC.greet(); }, 800);
+    var f = c.features || {};
+    avPolicy();
+    try { if (c.music && c.music.enabled === false) muteMusic(); } catch (e) { }
+    try {
+      if (typeof AREAS !== "undefined") {
+        if (f.photobooth === false) removeArea("booth"); if (f.gallery === false) removeArea("galeri"); if (f.guestbook === false) removeArea("buku"); if (f.video !== true || !(c.live && c.live.videoUrl)) removeArea("video");
+      }
+      hideMenu(); relabelMenu();
+      if (f.livechat === false) { var ch = $("#chat"); if (ch) ch.style.display = "none"; }
+    } catch (e) { }
+  }
+  var loadContent = safe(function () { rpc("live_invitation", { p_token: TOKEN }).then(applyContent, function () { }); });
 
   /* ---- masuk ruangan ---- */
   function join() {
     rpc("live_join", { p_token: TOKEN }).then(function (r) {
       if (!r || !r.ok) { block(MSG[r && r.reason] || "Tidak bisa masuk ke ruangan."); return; }
-      joined = true; setOnline(r.online); stripDemo(); hideMenu(); buildBars(); buildGames();
+      joined = true; setOnline(r.online); stripDemo(); hideMenu(); relabelMenu(); buildBars(); if (!(CONTENT && CONTENT.features && CONTENT.features.games === false)) buildGames(); if (window.NMLC && CONTENT) setTimeout(function () { window.NMLC.greet(); }, 1800);
       hb = setInterval(function () { rpc("live_heartbeat", { p_token: TOKEN }).then(function (n) { if (n === -1) { clearInterval(hb); clearInterval(poll); stopSync(); block("Anda keluar dari ruangan (ditutup atau diblokir oleh penyelenggara)."); } else if (typeof n === "number") setOnline(n); }, function () { }); }, 30000);
       poll = setInterval(pollChat, 3000); pollChat();
       sy = setInterval(syncTick, 1500); syncTick(); raf = requestAnimationFrame(stepPeers);
@@ -119,6 +150,19 @@
   /* avatar tamu bertema: slot decor av_l1..5 (laki-laki) & av_p1..5 (perempuan) menggantikan pilihan avatar bawaan; nama pilihan dari dc[slot].name */
   /* indeks di luar jumlah avatar tema (bot bawaan memakai i%4) dipetakan melingkar, bukan undefined */
   var wrapAv = function (arr) { return new Proxy(arr, { get: function (t, p) { if (typeof p === "string" && /^\d+$/.test(p) && t.length && !(p in t)) return t[+p % t.length]; return Reflect.get(t, p); } }); };
+  /* kebijakan avatar dari pengaturan pelanggan: live.avatars (jenis tamu), live.allowSelect, live.avatarLimit */
+  var avPolicy = safe(function () {
+    var lv = CONTENT && CONTENT.live; if (!lv || typeof AV === "undefined" || typeof S === "undefined") return;
+    var lim = lv.allowSelect === false ? 1 : (Number(lv.avatarLimit) > 0 ? Number(lv.avatarLimit) : 0);
+    ["L", "P"].forEach(function (g) {
+      if (lim && AV[g] && AV[g].length > lim) { AV[g] = wrapAv(Array.prototype.slice.call(AV[g], 0, lim)); if (typeof NA !== "undefined" && NA[g]) NA[g] = NA[g].slice(0, lim); }
+    });
+    if (Array.isArray(lv.avatars) && lv.avatars.length) {
+      var m = lv.avatars.indexOf("tamu-pria") > -1, w = lv.avatars.indexOf("tamu-wanita") > -1;
+      if (m !== w) { var keep = m ? "L" : "P", gone = m ? "gP" : "gL"; var b = document.getElementById(gone); if (b) b.style.display = "none"; if (S.g !== keep) { S.g = keep; S.i = 0; } }
+    }
+    try { if (typeof rAv === "function") rAv(); } catch (e) { }
+  });
   var applyAvatars = safe(function (dc) {
     var ks = Object.keys(dc || {}).filter(function (k) { return /^av_([lp][1-5]|host)$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
     if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
@@ -139,7 +183,7 @@
       }
       var grp = { L: [], P: [] }, nm = { L: [], P: [] }, host = null;
       ok.forEach(function (r) {
-        if (r.k === "av_host") { var hw = Math.min(320, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
+        if (r.k === "av_host") { var hw = Math.min(512, r.cv.width), hc = document.createElement("canvas"); hc.width = hw; hc.height = Math.max(1, Math.round(hw * r.cv.height / r.cv.width)); hc.getContext("2d").drawImage(r.cv, 0, 0, hc.width, hc.height); host = { img: hc.toDataURL("image/webp", 0.9), id: "tvav_host", ar: r.cv.width / r.cv.height, tv: 1 }; return; }
         var g = r.k.charAt(3) === "l" ? "L" : "P", c = document.createElement("canvas"), w = Math.min(320, r.cv.width); c.width = w; c.height = Math.max(1, Math.round(w * r.cv.height / r.cv.width));
         c.getContext("2d").drawImage(r.cv, 0, 0, c.width, c.height);
         grp[g].push({ img: c.toDataURL("image/webp", 0.9), id: "tv" + r.k, ar: r.cv.width / r.cv.height, tv: 1 });
@@ -149,14 +193,21 @@
       if (host) {
         var setHost = function () {
           try {
-            if (typeof coupleEnts !== "function") return; var e = coupleEnts().filter(function (x) { return x.g.visible; })[0]; if (!e || e.g.userData.nmHost) return;
-            e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1;
+            if (typeof coupleEnts !== "function") return; var ce = coupleEnts(), e = ce.filter(function (x) { return x.g.visible; })[0]; if (!e) return;
+            /* acara pasangan (pernikahan/pertunangan): av_host = foto berdua, tampil di tengah panggung; mempelai pria disembunyikan */
+            var cp = typeof nmEv === "function" && nmEv().kind === "couple";
+            if (!e.g.userData.nmHost) { e.g.children.slice().forEach(function (c) { e.g.remove(c); }); var h = 2.6; e.g.add(spr(chibiC(host), h * host.ar, h, 0, 0, 0)); e.g.userData.nmHost = 1; }
+            if (cp) {
+              e.g.position.x = 0; if (ce[1]) { ce[1].g.visible = false; if (ce[1].el) ce[1].el.classList.add("nm-hid"); }
+              if (e.el) { e.el.dataset.k = "solo"; try { if (NMID.pair) coupleLabel(e, NMID.pair); } catch (x) { } }
+            }
           } catch (x) { }
         };
         if (!window.__nmHostWrap && typeof nmStage === "function") { window.__nmHostWrap = 1; var ns = nmStage; nmStage = function () { ns.apply(this, arguments); setHost(); }; }
         setHost(); var hi = setInterval(setHost, 700); setTimeout(function () { clearInterval(hi); }, 20000);
       }
       if (typeof P === "undefined" || !P) { if (!AV[S.g] || !AV[S.g][S.i]) S.i = 0; try { rAv(); } catch (e) { } }
+      avPolicy();
     });
   });
   var tryDecor = safe(function () {
@@ -174,6 +225,8 @@
       Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
       /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
       var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"] };
+      /* posisi kustom (x,z) di decor: titik area ikut, 2.9 satuan di depan dekornya */
+      Object.keys(AT).forEach(function (id) { var o = dc[AT[id][2]]; if (o && typeof o.x === "number" && typeof o.z === "number") { AT[id][0] = o.x; AT[id][1] = o.z + 2.9; } });
       try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
       sc.add(grp);
     });
@@ -315,10 +368,22 @@
   });
 
   /* ---- pasang ---- */
+  if (DEMO) {
+    rpc("live_theme_demo", { p_key: DEMO }).then(function (t) {
+      if (!t) return; THEME = t; applyConfig({ venue: { areas: t.areas || [] }, features: {} }); applyTheme(t);
+      var iv = setInterval(function () {
+        if (typeof P !== "undefined" && P) {
+          clearInterval(iv); try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
+          setTimeout(function () { hideMenu(); relabelMenu(); }, 600);
+        }
+      }, 400);
+    }, function () { });
+    return;
+  }
   rpc("live_config", { p_token: TOKEN }).then(function (c) {
     if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; block(MSG.token_tidak_valid); return; }
     if (!c.enabled) { block(MSG.dimatikan); return; }
-    applyConfig(c);
+    applyConfig(c); loadContent();
     rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {

@@ -26,6 +26,10 @@ export async function startEngine(container, cfg, q) {
     renderer.shadowMap.enabled = q.shadows;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
+    // a GPU that runs out of memory drops the context and the canvas turns black:
+    // allow restoring, then rebuild the scene instead of staying black
+    renderer.domElement.addEventListener('webglcontextlost', (e) => e.preventDefault());
+    renderer.domElement.addEventListener('webglcontextrestored', () => location.reload());
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(FOG_COLOR);
     scene.fog = new THREE.FogExp2(FOG_COLOR, FOG_DENSITY);
@@ -50,10 +54,26 @@ export async function startEngine(container, cfg, q) {
     composer.setPixelRatio(dpr);
     composer.setSize(container.clientWidth, container.clientHeight);
     composer.addPass(new RenderPass(scene, camera));
+    // NaN/Inf guard: one bad pixel (a zero normal, a blown-out specular) would otherwise be
+    // smeared over the whole frame by the bloom blur and turn the picture black
+    const sanitize = () => new ShaderPass({
+        uniforms: { tDiffuse: { value: null } },
+        vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+        fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+        void main(){
+          vec4 c = texture2D(tDiffuse, vUv);
+          bool bad = !(c.r == c.r) || !(c.g == c.g) || !(c.b == c.b) || !(c.a == c.a);
+          c.rgb = bad ? vec3(0.0) : min(c.rgb, vec3(32.0));
+          c.a = bad ? 1.0 : c.a;
+          gl_FragColor = c;
+        }`,
+    });
+    composer.addPass(sanitize());
     let bokeh = null;
     if (q.dof) {
         bokeh = new BokehPass(scene, camera, { focus: 10, aperture: 0.00011, maxblur: 0.0055 });
         composer.addPass(bokeh);
+        composer.addPass(sanitize());
     }
     const bloomScale = q.mobile ? 0.5 : 1;
     const bloom = new UnrealBloomPass(new THREE.Vector2(container.clientWidth * bloomScale, container.clientHeight * bloomScale), 0.3, 0.55, 1.0);
@@ -89,8 +109,8 @@ export async function startEngine(container, cfg, q) {
     window.addEventListener('pointermove', onPointer);
     window.addEventListener('deviceorientation', onOrient);
     const resize = () => {
-        const w = container.clientWidth;
-        const h = container.clientHeight;
+        const w = Math.max(1, container.clientWidth);
+        const h = Math.max(1, container.clientHeight);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         renderer.setSize(w, h);
@@ -99,6 +119,10 @@ export async function startEngine(container, cfg, q) {
         director.setMobile(q.mobile || h > w);
     };
     window.addEventListener('resize', resize);
+    // the container can change size without a window resize (side panels, iframes,
+    // orientation changes): resync every render target so no part of the frame stays black
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => resize()) : null;
+    ro?.observe(container);
     // fade animation for the opening transition
     let fadeFrom = 0;
     let fadeTo = 0;
@@ -198,6 +222,7 @@ export async function startEngine(container, cfg, q) {
             window.removeEventListener('pointermove', onPointer);
             window.removeEventListener('deviceorientation', onOrient);
             window.removeEventListener('resize', resize);
+            ro?.disconnect();
             document.removeEventListener('visibilitychange', onVis);
             controller.dispose();
             director.dispose();

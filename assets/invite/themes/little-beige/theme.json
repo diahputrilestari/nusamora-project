@@ -1,0 +1,115 @@
+{
+  "id": "little-beige",
+  "name": "Beige Gold Wedding",
+  "version": 1,
+  "description": "Pernikahan elegan krem-emas: panggung lengkung marmer dengan lentera, lily, dan panel emas, serta pengantin chibi berbusana beige.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#6B4A2B",
+    "deep2": "#9C7648",
+    "paper": "#FFFBF3",
+    "soft": "#F6EAD8",
+    "ink": "#3B2A18",
+    "muted": "#8C7456",
+    "accent": "#B98A2E",
+    "accent2": "#F0D08A",
+    "petal": "#E8D2A8",
+    "heading": "#6B4A2B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/be-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/be-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/be-bride.webp",
+    "figureGroom": "art/be-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-emas.webp",
+        "w": 64
+      },
+      {
+        "src": "art/lentera-bunga.webp",
+        "w": 100
+      },
+      {
+        "src": "art/vas-tinggi.webp",
+        "w": 58
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/sangkar-emas.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/be-groom.webp",
+      "art/be-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

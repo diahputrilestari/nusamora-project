@@ -1,0 +1,21 @@
+/* Luxury Black Gold Wedding: ukuran ilustrasi & sentuhan ungu-emas */
+.th-little-blackgold .ulos-dec { width: min(150px, 46vw); }
+.th-little-blackgold .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-blackgold .gf-amp { width: min(160px, 48vw); }
+.th-little-blackgold .ws-bk { width: min(150px, 46vw); }
+.th-little-blackgold .ev-lt { width: 30px; }
+.th-little-blackgold .rs-lt { width: 54px; top: -30px; }
+.th-little-blackgold .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-blackgold .gable .art { height: 26px; }
+.th-little-blackgold .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-blackgold .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-blackgold .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-blackgold .end-art .eg { filter: drop-shadow(0 18px 28px rgba(10, 8, 6, .4)); }
+.th-little-blackgold .deep .eb { color: #FFE2A0; }
+.th-little-blackgold .cv-nm, .th-little-blackgold .hero-nm, .th-little-blackgold .end-nm { text-shadow: 0 2px 0 rgba(10, 8, 6, .5), 0 0 18px rgba(255, 214, 130, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-blackgold .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(10, 8, 6, .5), rgba(10, 8, 6, .3) 58%, rgba(10, 8, 6, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(10, 8, 6, .5), rgba(10, 8, 6, 0)), linear-gradient(180deg, rgba(10, 8, 6, .1), rgba(10, 8, 6, .3)); }
+.th-little-blackgold .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-blackgold .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-blackgold .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(10, 8, 6, .9); }

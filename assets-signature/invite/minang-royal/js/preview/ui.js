@@ -5,6 +5,7 @@ import { coupleNames, monogram } from '../data/wedding.config.js';
 import { calendarUrl, countdownParts } from '../utils/calendar.js';
 import { activeTheme } from '../themes/active.js';
 import { mountThemedOpening } from '../components/ui/themedOpening.js';
+import { remote } from '../data/remote.js';
 /**
  * DOM overlay for the preview build: loader, opening card, cinematic
  * captions per step, navigation, music/autoplay controls, letterbox.
@@ -31,10 +32,24 @@ function eventBlock(ev, cfg) {
       <p class="event__venue">${esc(ev.venue)}</p>
       <p class="event__addr">${esc(ev.address)}</p>
       <div class="event__actions">
-        <a class="chip" href="${esc(ev.mapsUrl)}" target="_blank" rel="noopener">${ICON.pin}<span>${esc(cfg.text.mapButton)}</span></a>
+        ${ev.mapsUrl ? `<a class="chip" href="${esc(ev.mapsUrl)}" target="_blank" rel="noopener">${ICON.pin}<span>${esc(cfg.text.mapButton)}</span></a>` : ''}
         <a class="chip" href="${esc(calendarUrl(ev, cfg))}" target="_blank" rel="noopener">${ICON.cal}<span>${esc(cfg.text.calendarButton)}</span></a>
       </div>
     </article>`;
+}
+/** Parents line: free text from the dashboard (or label + father + mother for the sample data). */
+function parentsHtml(p) {
+    const lines = [p.parentsLabel, p.father, p.mother ? '& ' + p.mother : ''].filter(Boolean);
+    return lines.length ? `<p class="person__parents">${lines.map((l) => esc(l).replace(/\n/g, '<br>')).join('<br>')}</p>` : '';
+}
+function locationHtml(cfg) {
+    const t = [cfg.location.city, cfg.location.region].filter(Boolean).join(' · ');
+    return t ? `<p class="cap-small" data-reveal>${esc(t)}</p>` : '';
+}
+/** One or two event cards; an empty second event (customer has only one) is skipped. */
+function eventsHtml(cfg, rule = true) {
+    const list = [cfg.ceremony, cfg.reception].filter((e) => e.venue || e.title);
+    return list.map((e) => eventBlock(e, cfg)).join(rule ? '<span class="events__rule" aria-hidden="true"></span>' : '');
 }
 /** Caption markup for a given scene/step */
 function caption(cfg, scene, step) {
@@ -51,14 +66,14 @@ function caption(cfg, scene, step) {
                     pos: 'center',
                     html: `<p class="cap-small" data-reveal>${esc(cfg.text.introInvite)}</p>
                    <h2 class="names names--xl" data-split>${esc(a)}<span class="amp">&amp;</span>${esc(b)}</h2>
-                   <p class="cap-small" data-reveal>${esc(cfg.location.city)} · ${esc(cfg.location.region)}</p>`,
+                   ${locationHtml(cfg)}`,
                 };
         case 'couple': {
             const person = (p) => `
         <div class="person" data-reveal>
           <h3 class="names names--md">${esc(p.nickname)}</h3>
           <p class="person__full">${esc(p.fullName)}</p>
-          <p class="person__parents">${esc(p.parentsLabel)}<br>${esc(p.father)}<br>&amp; ${esc(p.mother)}</p>
+          ${parentsHtml(p)}
           ${p.instagram ? `<p class="person__ig">${esc(p.instagram)}</p>` : ''}
         </div>`;
             const first = cfg.nameOrder === 'bride-first' ? cfg.bride : cfg.groom;
@@ -85,13 +100,15 @@ function caption(cfg, scene, step) {
             return {
                 pos: 'bottom',
                 html: `<p class="cap-small cap-small--center" data-reveal>${esc(cfg.text.ceremonyEyebrow)}</p>
-               <div class="events">${eventBlock(cfg.ceremony, cfg)}<span class="events__rule" aria-hidden="true"></span>${eventBlock(cfg.reception, cfg)}</div>
-               <div class="countdown" data-reveal aria-label="${esc(cfg.text.countdownLabel)}">
+               <div class="events">${eventsHtml(cfg)}</div>
+               ${remote.countdown
+                    ? `<div class="countdown" data-reveal aria-label="${esc(cfg.text.countdownLabel)}">
                  <span><b data-cd="days">0</b><i>days</i></span>
                  <span><b data-cd="hours">0</b><i>hours</i></span>
                  <span><b data-cd="minutes">0</b><i>minutes</i></span>
                  <span><b data-cd="seconds">0</b><i>seconds</i></span>
-               </div>`,
+               </div>`
+                    : ''}`,
             };
         case 'closing':
             return step === 0
@@ -350,7 +367,7 @@ export function mountFallback(host, cfg) {
       <h1 class="names names--hero">${esc(a)}<span class="amp">&amp;</span>${esc(b)}</h1>
       <p class="opening__date">${esc(cfg.weddingDateLabel)}</p>
       <p class="verse">${esc(cfg.text.introVerse)}</p>
-      <div class="events">${eventBlock(cfg.ceremony, cfg)}${eventBlock(cfg.reception, cfg)}</div>
+      <div class="events">${eventsHtml(cfg, false)}</div>
       <ol class="fallback__story">${cfg.story.map((s) => `<li><b>${esc(s.year)}</b> ${esc(s.title)}<br><span>${esc(s.text)}</span></li>`).join('')}</ol>
       <h2 class="closing-title">${esc(cfg.text.closingTitle)}</h2>
       <p class="closing-text">${esc(cfg.text.closingText)}</p>

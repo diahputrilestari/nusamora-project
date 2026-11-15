@@ -5,10 +5,11 @@
 
 ----------------------------------------------------------------------------- 1. Kunci konten paket Essential untuk engine 2D universal
 -- Sama dengan versi asset-schema.sql, ditambah couple, events, story, accounts (dibaca engine; juga lolos filter get_public_invitation).
+-- Signature (3D) juga menerima texts, couple, events, story, accounts: dibaca build 3D lewat ?slug= / ?preview= (lihat backend/signature-schema.sql).
 create or replace function public.pkg_keys(p text) returns text[] language sql immutable as $$
   select array['names','welcome','event','photos','music','features','gift','avatars'] || case p
     when 'essential' then array['design2d','texts','sections','couple','events','story','accounts']
-    when 'signature' then array['scene','camera','anim','cinematic']
+    when 'signature' then array['scene','camera','anim','cinematic','texts','couple','events','story','accounts']
     when 'luxe' then array['scene','venue','live'] else array[]::text[] end
 $$;
 
@@ -58,6 +59,7 @@ create or replace function public._clean(p text, n int) returns text
 language sql immutable as $$ select nullif(left(regexp_replace(trim(coalesce(p, '')), '[[:cntrl:]]', ' ', 'g'), n), '') $$;
 
 ----------------------------------------------------------------------------- 4. RSVP (upsert per nama tamu)
+drop function if exists public.submit_rsvp(text,text,text,integer,text);
 create or replace function public.submit_rsvp(p_slug text, p_name text, p_attendance text, p_pax int, p_note text) returns jsonb
 language plpgsql volatile security definer set search_path = public as $$
 declare i public.invitations; nm text := public._clean(p_name, 60); nt text := public._clean(p_note, 300); px int; tot int;

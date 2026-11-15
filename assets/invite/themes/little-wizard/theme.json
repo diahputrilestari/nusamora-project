@@ -1,0 +1,139 @@
+{
+  "id": "little-wizard",
+  "name": "Wizard Academy",
+  "version": 1,
+  "description": "Pesta ulang tahun akademi penyihir: panggung kastil berlampu dengan topi sihir, panji asrama, jendela bintang, dan kuali ramuan, serta karakter chibi penyihir cilik berjubah ungu-emas.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Penyihir Kecil",
+    "full": "Zayn Dwi Pratama",
+    "parents": "Putra Bapak Dimas Pratama & Ibu Rania Larasati",
+    "age": "9"
+  },
+  "colors": {
+    "deep": "#4B1E6B",
+    "deep2": "#7A3A9E",
+    "paper": "#FBF5EA",
+    "soft": "#EFE3F2",
+    "ink": "#2B1840",
+    "muted": "#6F5A85",
+    "accent": "#C9971C",
+    "accent2": "#F2C14E",
+    "petal": "#F2C14E",
+    "heading": "#4B1E6B"
+  },
+  "fonts": {
+    "script": "Chewy",
+    "serif": "Oswald",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Wizard Academy Birthday",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Si penyihir cilik kami",
+    "profileTitle": "Si Penyihir Kecil",
+    "countdownEyebrow": "Pelajaran sihir dimulai dalam",
+    "countdownTitle": "Menuju Hari Sihir",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Akademi",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Si Penyihir",
+    "galleryEyebrow": "Momen ajaib",
+    "galleryTitle": "Galeri Sihir",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Akademi?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di pesta akademi sihir si kecil ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Hadiah Ajaib",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Akademi",
+    "closingEyebrow": "Sampai jumpa di akademi!",
+    "closingText": "Terima kasih sudah menjadi bagian dari hari ajaib si kecil. Kami tunggu kehadiranmu di pesta akademi sihir!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/wz-6.webp",
+        "w": 66
+      },
+      {
+        "src": "art/kado.webp",
+        "w": 100
+      },
+      {
+        "src": "art/wz-3.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/kastil.webp",
+    "figureBride": "art/wz-2.webp",
+    "figureGroom": "art/wz-1.webp",
+    "countdownRow": [
+      {
+        "src": "art/wz-4.webp",
+        "w": 66
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/wz-7.webp",
+        "w": 66
+      }
+    ],
+    "eventBadge": "art/kedai-minum.webp",
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/guest-book.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/wz-1.webp",
+      "art/wz-2.webp",
+      "art/wz-5.webp",
+      "art/wz-7.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

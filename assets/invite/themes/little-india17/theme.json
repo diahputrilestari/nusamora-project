@@ -1,0 +1,132 @@
+{
+  "id": "little-india17",
+  "name": "Sweet 17 India",
+  "version": 1,
+  "description": "Pesta sweet seventeen bertema India: istana marmer putih berkubah dengan tirai magenta, karangan marigold dan bunga pink, lentera emas, kolam teratai, serta booth bernuansa kerawang.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Anindya",
+    "full": "Anindya Putri Maheswari",
+    "parents": "Putri Bapak Dimas Maheswari & Ibu Rania Larasati",
+    "age": "17"
+  },
+  "colors": {
+    "deep": "#9C1F5B",
+    "deep2": "#C23B78",
+    "paper": "#FFF7F0",
+    "soft": "#FBE3EC",
+    "ink": "#4A1230",
+    "muted": "#8F6577",
+    "accent": "#D9A02E",
+    "accent2": "#F6D58A",
+    "petal": "#F06FA3",
+    "heading": "#9C1F5B"
+  },
+  "fonts": {
+    "script": "Parisienne",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Sweet 17 · Malam Bollywood",
+    "guestSalute": "Sahabat & keluarga tersayang",
+    "profileEyebrow": "Sang bintang malam ini",
+    "profileTitle": "Si Cantik Tujuh Belas",
+    "countdownEyebrow": "Pesta dimulai dalam",
+    "countdownTitle": "Menuju Malam Sweet 17",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Pesta di Istana Marmer",
+    "storyEyebrow": "Perjalanan tumbuh kembang",
+    "storyTitle": "Kisah Tujuh Belas Tahun",
+    "galleryEyebrow": "Kenangan istimewa",
+    "galleryTitle": "Galeri Kenangan",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Berpesta, Yuk?",
+    "rsvpLead": "Kabari kami ya, apakah kamu bisa hadir di malam sweet seventeen yang penuh warna ini!",
+    "giftEyebrow": "Tanda sayang",
+    "giftTitle": "Kado Sweet 17",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terindah. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Buku Tamu Sweet 17",
+    "closingEyebrow": "Sampai jumpa di pesta!",
+    "closingText": "Terima kasih sudah menjadi bagian dari malam istimewa ini. Kami tunggu kehadiranmu di pesta sweet seventeen!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/lentera.webp",
+        "w": 30
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/lentera.webp",
+        "w": 30
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-emas.webp",
+        "w": 60
+      },
+      {
+        "src": "art/pouf.webp",
+        "w": 78
+      },
+      {
+        "src": "art/vas-krem.webp",
+        "w": 60
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/kendi.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": []
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

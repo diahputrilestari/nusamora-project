@@ -1,4 +1,4 @@
--- Avatar tamu bertema: slot tambahan di kolom decor (av_l1..av_l5 laki-laki, av_p1..av_p5 perempuan, av_host = tokoh yang berulang tahun di panggung), masing-masing {url, name?}.
+-- Avatar tamu bertema: slot tambahan di kolom decor (av_l1..av_l5 laki-laki, av_p1..av_p5 perempuan, av_host = tokoh yang berulang tahun di panggung; di acara pasangan = foto berdua mempelai), masing-masing {url, name?}.
 -- Dekor juga boleh membawa posisi {x, z, mirror?} agar tiap tema bisa menata sendiri. Aditif: hanya memperluas validator live_decor_ok; kolom, constraint, admin_live_venue_save, dan live_theme tidak berubah.
 -- Jalankan SETELAH admin-live-decor.sql.
 create or replace function public.live_decor_ok(d jsonb) returns boolean language plpgsql immutable as $$

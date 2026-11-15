@@ -1,0 +1,21 @@
+/* Idol Birthday: ukuran ilustrasi & sentuhan neon ungu-pink */
+.th-little-idol .ulos-dec { width: min(150px, 46vw); }
+.th-little-idol .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-idol .gf-amp { width: min(160px, 48vw); }
+.th-little-idol .ws-bk { width: min(150px, 46vw); }
+.th-little-idol .ev-lt { width: 30px; }
+.th-little-idol .rs-lt { width: 54px; top: -30px; }
+.th-little-idol .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-idol .gable .art { height: 26px; }
+.th-little-idol .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-idol .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-idol .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-idol .end-art .eg { filter: drop-shadow(0 18px 28px rgba(40, 16, 90, .4)); }
+.th-little-idol .deep .eb { color: #EAF0FF; }
+.th-little-idol .cv-nm, .th-little-idol .hero-nm, .th-little-idol .end-nm { text-shadow: 0 2px 0 rgba(40, 16, 90, .5), 0 0 18px rgba(255, 190, 240, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-idol .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(40, 16, 90, .58), rgba(40, 16, 90, .3) 62%, rgba(40, 16, 90, .06) 84%), linear-gradient(180deg, rgba(40, 16, 90, .06), rgba(40, 16, 90, .5)); }
+.th-little-idol .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-idol .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-idol .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(40, 16, 90, .9); }

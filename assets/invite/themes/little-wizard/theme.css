@@ -1,0 +1,21 @@
+/* Wizard Academy: ukuran ilustrasi & sentuhan ungu-emas */
+.th-little-wizard .ulos-dec { width: min(150px, 46vw); }
+.th-little-wizard .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-wizard .gf-amp { width: min(160px, 48vw); }
+.th-little-wizard .ws-bk { width: min(150px, 46vw); }
+.th-little-wizard .ev-lt { width: 30px; }
+.th-little-wizard .rs-lt { width: 54px; top: -30px; }
+.th-little-wizard .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-wizard .gable .art { height: 26px; }
+.th-little-wizard .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-wizard .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-wizard .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-wizard .end-art .eg { filter: drop-shadow(0 18px 28px rgba(14, 22, 60, .4)); }
+.th-little-wizard .deep .eb { color: #EAF0FF; }
+.th-little-wizard .cv-nm, .th-little-wizard .hero-nm, .th-little-wizard .end-nm { text-shadow: 0 2px 0 rgba(14, 22, 60, .5), 0 0 18px rgba(255, 226, 140, .5); }
+/* panggung terang: gelapkan tengah agar nama terbaca */
+.th-little-wizard .gate::after { background: radial-gradient(56% 44% at 50% 48%, rgba(14, 22, 60, .58), rgba(14, 22, 60, .3) 62%, rgba(14, 22, 60, .06) 84%), linear-gradient(180deg, rgba(14, 22, 60, .06), rgba(14, 22, 60, .5)); }
+.th-little-wizard .cv-dt { color: #FFFFFF; font-weight: 600; }
+.th-little-wizard .cv-eb { color: #EAF0FF; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-wizard .hero-in .eb { color: #FFFFFF; text-shadow: 0 1px 8px rgba(14, 22, 60, .9); }
