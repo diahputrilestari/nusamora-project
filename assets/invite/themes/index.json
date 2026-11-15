@@ -300,7 +300,15 @@
     "koteka": "little-papua",
     "little-papua": "little-papua",
     "papua-wedding": "little-papua",
-    "noken": "little-papua"
+    "noken": "little-papua",
+    "riau": "little-riau",
+    "melayu": "little-riau",
+    "melayu-riau": "little-riau",
+    "adat-melayu": "little-riau",
+    "pekanbaru": "little-riau",
+    "little-riau": "little-riau",
+    "riau-wedding": "little-riau",
+    "tepak-sirih": "little-riau"
   },
   "themes": [
     {
@@ -1240,6 +1248,21 @@
       "swatch": [
         "#7B2A14",
         "#F6D88A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-riau",
+      "name": "Melayu Riau",
+      "description": "Pernikahan/lamaran adat Melayu Riau: balai berlipat kuning emas beratap hijau di tepi sungai, karangan melati dan bunga kuning, lampu hias, serta pengantin chibi berbusana hijau-emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1B5E3A",
+        "#F3DF8F"
       ],
       "art": true
     }
