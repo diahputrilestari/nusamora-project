@@ -18,7 +18,7 @@ begin
       if v ? 'mirror' and jsonb_typeof(v -> 'mirror') <> 'boolean' then return false; end if;
       if v ? 'mirror' and not (v ? 'x' and v ? 'z') then return false; end if;
       if (v ? 'x') <> (v ? 'z') then return false; end if;
-      if v ? 'x' and (jsonb_typeof(v -> 'x') <> 'number' or jsonb_typeof(v -> 'z') <> 'number' or (v ->> 'x')::numeric not between -19 and 19 or (v ->> 'z')::numeric not between -27.5 and 12) then return false; end if;
+      if v ? 'x' and (jsonb_typeof(v -> 'x') <> 'number' or jsonb_typeof(v -> 'z') <> 'number' or (v ->> 'x')::numeric not between -22 and 22 or (v ->> 'z')::numeric not between -45 and 12) then return false; end if;
     end if;
     if v ? 'name' and (k !~ '^av_' or jsonb_typeof(v -> 'name') <> 'string' or (v ->> 'name') !~ '^[[:alnum:]][[:alnum:] .''-]{0,23}$') then return false; end if;
   end loop;
