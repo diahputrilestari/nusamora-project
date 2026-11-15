@@ -267,7 +267,12 @@
     "terracota": "little-terracotta",
     "bata": "little-terracotta",
     "little-terracotta": "little-terracotta",
-    "lamaran-terakota": "little-terracotta"
+    "lamaran-terakota": "little-terracotta",
+    "lampung": "little-lampung",
+    "adat-lampung": "little-lampung",
+    "siger": "little-lampung",
+    "lampung-wedding": "little-lampung",
+    "little-lampung": "little-lampung"
   },
   "themes": [
     {
@@ -1118,6 +1123,21 @@
       "swatch": [
         "#8B4A2B",
         "#F2CFA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-lampung",
+      "name": "Adat Lampung",
+      "description": "Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7B1626",
+        "#F0D27A"
       ],
       "art": true
     }
