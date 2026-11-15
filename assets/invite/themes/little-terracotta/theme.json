@@ -1,0 +1,115 @@
+{
+  "id": "little-terracotta",
+  "name": "Terracotta Wedding",
+  "version": 1,
+  "description": "Pernikahan/lamaran terakota hangat: aula kaca berpanggung lengkung dengan lampu rotan, kolam pantul, mawar persik, serta pengantin chibi berbusana terakota dan krem.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#8B4A2B",
+    "deep2": "#A8603B",
+    "paper": "#FFF8F0",
+    "soft": "#F6E6D6",
+    "ink": "#3A1F12",
+    "muted": "#8A6A58",
+    "accent": "#C98A3C",
+    "accent2": "#F2CFA0",
+    "petal": "#D9825B",
+    "heading": "#8B4A2B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/tc-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/tc-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/tc-bride.webp",
+    "figureGroom": "art/tc-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-pot.webp",
+        "w": 67
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/vas-emas.webp",
+        "w": 70
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/lentera.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/tc-groom.webp",
+      "art/tc-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

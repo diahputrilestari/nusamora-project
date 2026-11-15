@@ -1,0 +1,115 @@
+{
+  "id": "little-lampung",
+  "name": "Adat Lampung",
+  "version": 1,
+  "description": "Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#7B1626",
+    "deep2": "#9C2438",
+    "paper": "#FFF8EC",
+    "soft": "#F7E9CF",
+    "ink": "#3B0F18",
+    "muted": "#8A6A5A",
+    "accent": "#C99A2E",
+    "accent2": "#F0D27A",
+    "petal": "#B8283C",
+    "heading": "#7B1626"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/hero.webp",
+      "small": "art/hero-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/lp-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/lp-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/lp-bride.webp",
+    "figureGroom": "art/lp-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-pot.webp",
+        "w": 72
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/vas-emas.webp",
+        "w": 64
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/tepak.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/lp-groom.webp",
+      "art/lp-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

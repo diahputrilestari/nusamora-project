@@ -248,7 +248,36 @@
     "celtic-woodland": "little-celtic",
     "hutan-celtic": "little-celtic",
     "little-celtic": "little-celtic",
-    "lamaran-celtic": "little-celtic"
+    "lamaran-celtic": "little-celtic",
+    "venetian": "little-venetian",
+    "venesia": "little-venetian",
+    "masquerade": "little-venetian",
+    "topeng": "little-venetian",
+    "venetian-masquerade": "little-venetian",
+    "little-venetian": "little-venetian",
+    "pesta-topeng": "little-venetian",
+    "minimalist": "little-minimalist",
+    "minimalis": "little-minimalist",
+    "modern": "little-minimalist",
+    "simple": "little-minimalist",
+    "little-minimalist": "little-minimalist",
+    "krem-emas": "little-minimalist",
+    "terracotta": "little-terracotta",
+    "terakota": "little-terracotta",
+    "terracota": "little-terracotta",
+    "bata": "little-terracotta",
+    "little-terracotta": "little-terracotta",
+    "lamaran-terakota": "little-terracotta",
+    "lampung": "little-lampung",
+    "adat-lampung": "little-lampung",
+    "siger": "little-lampung",
+    "lampung-wedding": "little-lampung",
+    "little-lampung": "little-lampung",
+    "betawi": "little-betawi",
+    "adat-betawi": "little-betawi",
+    "none-abang": "little-betawi",
+    "betawi-wedding": "little-betawi",
+    "little-betawi": "little-betawi"
   },
   "themes": [
     {
@@ -1054,6 +1083,81 @@
       "swatch": [
         "#1E4D2B",
         "#F2D98A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-venetian",
+      "name": "Venetian Masquerade Wedding",
+      "description": "Pernikahan/lamaran bergaya pesta topeng Venesia: panggung marmer dengan tirai beludru merah marun dan emas, kanal serta jembatan malam, karangan mawar merah, dan pengantin chibi bertopeng emas.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B0F1F",
+        "#F4D98A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-minimalist",
+      "name": "Minimalist Wedding",
+      "description": "Pernikahan/lamaran minimalis krem-emas: aula kaca modern dengan panggung marmer, kolam pantul, lentera, dan rangkaian mawar putih, serta pengantin chibi berbusana krem.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A5A36",
+        "#F3DFA2"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-terracotta",
+      "name": "Terracotta Wedding",
+      "description": "Pernikahan/lamaran terakota hangat: aula kaca berpanggung lengkung dengan lampu rotan, kolam pantul, mawar persik, serta pengantin chibi berbusana terakota dan krem.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#8B4A2B",
+        "#F2CFA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-lampung",
+      "name": "Adat Lampung",
+      "description": "Pernikahan/lamaran adat Lampung: pelaminan beratap sirap dengan siger emas, permadani tapis merah marun, payung emas, dan pengantin chibi berbusana adat Lampung.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7B1626",
+        "#F0D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-betawi",
+      "name": "Adat Betawi",
+      "description": "Pernikahan/lamaran adat Betawi: rumah kebaya berkayu hijau berhias gigi balang emas, atap genteng terakota, kembang kelapa, serta pengantin chibi berbusana none dan abang Betawi.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F4A33",
+        "#F0D27A"
       ],
       "art": true
     }
