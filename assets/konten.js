@@ -15,7 +15,7 @@
   [].slice.call(d.querySelectorAll(".kt-nav a:not(.btn)")).forEach(function (a) { if (a.getAttribute("href") === "/" + (BASEP[type] || "-")) a.setAttribute("aria-current", "page"); });
   var safeUrl = function (u) { u = String(u || "").trim(); return /^(https:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/.test(u) ? u : ""; };
   /* Gambar bawaan artikel (ilustrasi di /assets/artikel/<slug>.svg), dipakai bila image_url di database kosong. */
-  var ARTIMG = { "tips-membagikan-undangan-digital-lewat-whatsapp": 1, "checklist-isi-undangan-pernikahan-digital": 1, "memilih-paket-undangan-digital": 1, "cara-membuat-undangan-pernikahan-digital": 1 };
+  var ARTIMG = { "tips-membagikan-undangan-digital-lewat-whatsapp": 1, "checklist-isi-undangan-pernikahan-digital": 1, "memilih-paket-undangan-digital": 1, "cara-membuat-undangan-pernikahan-digital": 1, "tren-kua-core-intimate-wedding-pasangan-muda": 1, "cara-sopan-menjelaskan-intimate-wedding-ke-keluarga-besar": 1, "hitung-ulang-biaya-resepsi-500-tamu-vs-intimate-wedding-50-orang": 1, "ide-after-party-dan-brunch-intimate-wedding-tanpa-pelaminan": 1 };
   var artImg = function (c) { return c.image_url || (c.type === "article" || type === "article") && ARTIMG[c.slug] ? (c.image_url || "/assets/artikel/" + c.slug + ".svg") : ""; };
 
   /* Markdown ringan yang aman: judul (#), daftar (-), tebal, miring, tautan, gambar. HTML mentah selalu di-escape. */
@@ -78,7 +78,7 @@
     if (r.category) return String(r.category);
     var t = String(r.title || "").toLowerCase();
     if (/nusamora|paket|essential|signature|luxe|cara membuat|template/.test(t)) return "Panduan NusaMora";
-    if (/pernikahan|nikah|pengantin|akad|resepsi|checklist/.test(t)) return "Persiapan Pernikahan";
+    if (/pernikahan|nikah|pengantin|akad|resepsi|checklist|wedding|pelaminan|kua/.test(t)) return "Persiapan Pernikahan";
     return "Tips Undangan";
   }
   var ORN = '<svg class="kt-orn" viewBox="0 0 200 120" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="100" cy="60" r="34"/><circle cx="100" cy="60" r="22" opacity=".6"/><path d="M100 26c10 8 10 20 0 34-10-14-10-26 0-34zM100 94c10-8 10-20 0-34-10 14-10 26 0 34zM66 60c8-10 20-10 34 0-14 10-26 10-34 0zM134 60c-8 10-20 10-34 0 14-10 26-10 34 0z"/><path d="M20 100c24-4 40-18 52-40M180 20c-24 4-40 18-52 40" opacity=".5"/></g></svg>';
