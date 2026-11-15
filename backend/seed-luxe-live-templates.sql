@@ -65,3 +65,6 @@ select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.we
 from t
 on conflict (slug) do update set name = excluded.name, description = excluded.description, thumbnail_url = excluded.thumbnail_url,
   preview_url = excluded.preview_url, package_type = excluded.package_type, categories = excluded.categories, theme_key = excluded.theme_key, sort = excluded.sort;
+
+-- Romantic Garden Live Guest hanya untuk pernikahan/lamaran (bukan birthday).
+update public.templates set categories = '{wedding,engagement}'::text[] where slug = 'romantic-garden' and categories is distinct from '{wedding,engagement}'::text[];
