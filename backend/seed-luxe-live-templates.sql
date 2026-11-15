@@ -42,6 +42,10 @@ with t(slug, name, descr, cats, sort) as (values
  ('little-pirates','Little Pirates Live Guest','Venue 3D pesta ulang tahun bertema Little Pirates dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],70),
  ('little-wizard','Wizard Academy Live Guest','Venue 3D pesta ulang tahun bertema Wizard Academy dengan dekor, stan permainan, dan avatar tamu bernuansa tema.','{birthday}'::text[],71),
  ('sakura-wedding','Sakura Live Guest','Venue 3D pernikahan bertema Sakura dengan dekor, stan, dan avatar tamu bernuansa tema.','{wedding}'::text[],72),
+ ('celtic-woodland','Celtic Woodland Live Guest','Venue 3D hutan Celtic dengan lengkungan batu berlumut, lentera emas, spanduk hijau, dan avatar tamu berbusana Celtic.','{wedding,engagement}'::text[],73),
+ ('venetian-masquerade','Venetian Masquerade Live Guest','Venue 3D pesta topeng Venesia merah dan emas dengan kanal, jembatan, mawar, dan avatar tamu berkostum bertopeng.','{wedding,engagement}'::text[],74),
+ ('minimalist','Minimalist Live Guest','Venue 3D aula kaca modern minimalis krem dan emas dengan kolam, lentera, bunga putih, dan avatar tamu berbusana netral.','{wedding,engagement}'::text[],75),
+ ('terracotta','Terracotta Live Guest','Venue 3D aula kaca hangat bernuansa terakota dan krem dengan lampu rotan, bunga persik, dan avatar tamu berbusana terakota.','{wedding,engagement}'::text[],76),
  ('adat-lampung','Adat Lampung Live Guest','Venue 3D pernikahan adat Lampung dengan rumah panggung bermahkota siger emas, tapis merah, dan avatar tamu berbusana adat.','{wedding,engagement}'::text[],77)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
