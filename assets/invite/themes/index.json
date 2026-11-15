@@ -277,7 +277,12 @@
     "adat-betawi": "little-betawi",
     "none-abang": "little-betawi",
     "betawi-wedding": "little-betawi",
-    "little-betawi": "little-betawi"
+    "little-betawi": "little-betawi",
+    "bali": "little-bali",
+    "adat-bali": "little-bali",
+    "payas-agung": "little-bali",
+    "bali-wedding": "little-bali",
+    "little-bali": "little-bali"
   },
   "themes": [
     {
@@ -1157,6 +1162,21 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#1F4A33",
+        "#F0D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-bali",
+      "name": "Adat Bali",
+      "description": "Pernikahan/lamaran adat Bali: bale beratap ijuk dengan ukiran emas, penjor dan payung agung, patung penjaga pura, frangipani, serta pengantin chibi berbusana payas agung Bali.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6E2342",
         "#F0D27A"
       ],
       "art": true

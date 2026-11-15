@@ -1,0 +1,115 @@
+{
+  "id": "little-bali",
+  "name": "Adat Bali",
+  "version": 1,
+  "description": "Pernikahan/lamaran adat Bali: bale beratap ijuk dengan ukiran emas, penjor dan payung agung, patung penjaga pura, frangipani, serta pengantin chibi berbusana payas agung Bali.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#6E2342",
+    "deep2": "#8F3A5E",
+    "paper": "#FFF7EA",
+    "soft": "#F5E4C8",
+    "ink": "#2E1A10",
+    "muted": "#7C6450",
+    "accent": "#C99A2E",
+    "accent2": "#F0D27A",
+    "petal": "#C8283A",
+    "heading": "#6E2342"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/bl-groom.webp",
+        "w": 66
+      },
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 108
+      },
+      {
+        "src": "art/bl-bride.webp",
+        "w": 66
+      }
+    ],
+    "introTop": "art/gapura.webp",
+    "figureBride": "art/bl-bride.webp",
+    "figureGroom": "art/bl-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/vas-pot.webp",
+        "w": 62
+      },
+      {
+        "src": "art/taman.webp",
+        "w": 130
+      },
+      {
+        "src": "art/vas-tinggi.webp",
+        "w": 60
+      }
+    ],
+    "eventBadge": "art/area-kuliner.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/pasu-batu.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/bl-groom.webp",
+      "art/bl-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
