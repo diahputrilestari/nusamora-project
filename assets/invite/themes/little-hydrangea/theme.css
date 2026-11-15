@@ -1,0 +1,21 @@
+/* Blue Hydrangea: ukuran ilustrasi & sentuhan biru-emas */
+.th-little-hydrangea .ulos-dec { width: min(150px, 46vw); }
+.th-little-hydrangea .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-hydrangea .gf-amp { width: min(80px, 26vw); }
+.th-little-hydrangea .ws-bk { width: min(140px, 42vw); }
+.th-little-hydrangea .ev-lt { width: 30px; }
+.th-little-hydrangea .rs-lt { width: 54px; top: -30px; }
+.th-little-hydrangea .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-hydrangea .gable .art { height: 26px; }
+.th-little-hydrangea .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-hydrangea .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-hydrangea .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-hydrangea .end-art .eg { filter: drop-shadow(0 18px 28px rgba(22, 38, 72, .4)); }
+.th-little-hydrangea .deep .eb { color: #FFE2A0; }
+.th-little-hydrangea .cv-nm, .th-little-hydrangea .hero-nm, .th-little-hydrangea .end-nm { text-shadow: 0 2px 0 rgba(22, 38, 72, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-hydrangea .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(30, 50, 92, .82), rgba(30, 50, 92, .55) 58%, rgba(30, 50, 92, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(30, 50, 92, .5), rgba(30, 50, 92, 0)), linear-gradient(180deg, rgba(30, 50, 92, .1), rgba(30, 50, 92, .3)); }
+.th-little-hydrangea .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-hydrangea .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-hydrangea .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(22, 38, 72, .9); }

@@ -282,7 +282,12 @@
     "adat-bali": "little-bali",
     "payas-agung": "little-bali",
     "bali-wedding": "little-bali",
-    "little-bali": "little-bali"
+    "little-bali": "little-bali",
+    "hydrangea": "little-hydrangea",
+    "blue-hydrangea": "little-hydrangea",
+    "hortensia": "little-hydrangea",
+    "biru-langit": "little-hydrangea",
+    "little-hydrangea": "little-hydrangea"
   },
   "themes": [
     {
@@ -1178,6 +1183,21 @@
       "swatch": [
         "#6E2342",
         "#F0D27A"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-hydrangea",
+      "name": "Blue Hydrangea",
+      "description": "Pernikahan/lamaran Blue Hydrangea: aula marmer putih berpilar dengan tirai biru langit, hortensia dan mawar pastel, lampu kristal emas, serta pengantin chibi berbusana biru muda.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4F6FA3",
+        "#F0DDA0"
       ],
       "art": true
     }
