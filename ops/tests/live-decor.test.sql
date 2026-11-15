@@ -45,6 +45,7 @@ do $$ declare ok1 boolean; begin
   if not exists (select 1 from public.live_venues where key = 'adat-bali' and event_type = 'wedding' and public.live_theme_ok(nm_theme)) then raise exception 'venue adat-bali tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'blue-elegance' and event_type = 'wedding' and public.live_theme_ok(nm_theme)) then raise exception 'venue blue-elegance tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'sage-garden' and event_type = 'wedding' and public.live_theme_ok(nm_theme)) then raise exception 'venue sage-garden tidak valid'; end if;
+  if not exists (select 1 from public.live_venues where key = 'adat-papua' and event_type = 'wedding' and public.live_theme_ok(nm_theme)) then raise exception 'venue adat-papua tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'india-sweet-17' and event_type = 'sweet17' and public.live_theme_ok(nm_theme)) then raise exception 'venue india-sweet-17 tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'aqiqah-pink-castle' and event_type = 'aqiqah' and public.live_theme_ok(nm_theme)) then raise exception 'venue aqiqah-pink-castle tidak valid'; end if;
   if not exists (select 1 from public.live_venues where key = 'celtic-woodland' and event_type = 'wedding' and public.live_theme_ok(nm_theme)) then raise exception 'venue celtic-woodland tidak valid'; end if;
