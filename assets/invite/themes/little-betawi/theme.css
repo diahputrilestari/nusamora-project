@@ -1,0 +1,21 @@
+/* Adat Betawi: ukuran ilustrasi & sentuhan hijau-emas */
+.th-little-betawi .ulos-dec { width: min(150px, 46vw); }
+.th-little-betawi .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-betawi .gf-amp { width: min(80px, 26vw); }
+.th-little-betawi .ws-bk { width: min(140px, 42vw); }
+.th-little-betawi .ev-lt { width: 30px; }
+.th-little-betawi .rs-lt { width: 54px; top: -30px; }
+.th-little-betawi .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-betawi .gable .art { height: 26px; }
+.th-little-betawi .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-betawi .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-betawi .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-betawi .end-art .eg { filter: drop-shadow(0 18px 28px rgba(10, 30, 18, .4)); }
+.th-little-betawi .deep .eb { color: #FFE2A0; }
+.th-little-betawi .cv-nm, .th-little-betawi .hero-nm, .th-little-betawi .end-nm { text-shadow: 0 2px 0 rgba(10, 30, 18, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-betawi .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(14, 44, 26, .82), rgba(14, 44, 26, .55) 58%, rgba(14, 44, 26, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(14, 44, 26, .5), rgba(14, 44, 26, 0)), linear-gradient(180deg, rgba(14, 44, 26, .1), rgba(14, 44, 26, .3)); }
+.th-little-betawi .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-betawi .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-betawi .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(10, 30, 18, .9); }
