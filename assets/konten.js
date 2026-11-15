@@ -14,6 +14,9 @@
   /* Menu aktif di navbar atas */
   [].slice.call(d.querySelectorAll(".kt-nav a:not(.btn)")).forEach(function (a) { if (a.getAttribute("href") === "/" + (BASEP[type] || "-")) a.setAttribute("aria-current", "page"); });
   var safeUrl = function (u) { u = String(u || "").trim(); return /^(https:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/.test(u) ? u : ""; };
+  /* Gambar bawaan artikel (ilustrasi di /assets/artikel/<slug>.svg), dipakai bila image_url di database kosong. */
+  var ARTIMG = { "tips-membagikan-undangan-digital-lewat-whatsapp": 1, "checklist-isi-undangan-pernikahan-digital": 1, "memilih-paket-undangan-digital": 1, "cara-membuat-undangan-pernikahan-digital": 1 };
+  var artImg = function (c) { return c.image_url || (c.type === "article" || type === "article") && ARTIMG[c.slug] ? (c.image_url || "/assets/artikel/" + c.slug + ".svg") : ""; };
 
   /* Markdown ringan yang aman: judul (#), daftar (-), tebal, miring, tautan, gambar. HTML mentah selalu di-escape. */
   function inline(s) {
@@ -65,7 +68,7 @@
     var sw = (c.alternates || [])[0];
     view.innerHTML = '<article class="kt-w">' + (pv ? '<div class="kt-pv" role="status"><b>Pratinjau</b>: ' + esc(pv) + "</div>" : "") +
       '<header class="kt-h"><h1>' + esc(c.title) + "</h1>" + (c.type === "article" && c.published_at ? '<p class="kt-meta">' + esc(fdate(c.published_at)) + "</p>" : "") + (c.excerpt ? '<p class="kt-lead">' + esc(c.excerpt) + "</p>" : "") + "</header>" +
-      (c.image_url && safeUrl(c.image_url) ? '<img class="kt-cover" src="' + esc(safeUrl(c.image_url)) + '" alt="" decoding="async">' : "") + '<div class="kt-body">' + md(c.body) + "</div>" +
+      (artImg(c) && safeUrl(artImg(c)) ? '<img class="kt-cover" src="' + esc(safeUrl(artImg(c))) + '" alt="" decoding="async">' : "") + '<div class="kt-body">' + md(c.body) + "</div>" +
       (sw ? '<p class="kt-sw"><a href="/' + BASEP[c.type] + "/" + esc(sw.slug) + (sw.lang === "en" ? "?lang=en" : "") + '" hreflang="' + esc(sw.lang) + '">' + (sw.lang === "en" ? "Read this in English" : "Baca dalam Bahasa Indonesia") + "</a></p>" : "") + "</article>";
   }
   /* ---- Daftar artikel: hero, pencarian + filter kategori, artikel unggulan, grid kartu, dan ajakan penutup ---- */
@@ -82,7 +85,7 @@
   var ARR = '<svg class="kt-ar" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   var SRCH = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>';
   function ktCover(r, cat, eager) {
-    var img = safeUrl(r.image_url);
+    var img = safeUrl(artImg(r));
     return '<div class="kt-cv ' + (CAT_CLS[cat] || "c1") + (img ? "" : " ph") + '">' + (img ? '<img src="' + esc(img) + '" alt="" width="640" height="360" loading="' + (eager ? "eager" : "lazy") + '" decoding="async">' : ORN) + "</div>";
   }
   function ktMeta(r) {
