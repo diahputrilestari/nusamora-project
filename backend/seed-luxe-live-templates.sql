@@ -53,7 +53,8 @@ with t(slug, name, descr, cats, sort) as (values
  ('blue-elegance','Blue Elegance Live Guest','Venue 3D pernikahan aula putih bernuansa biru lembut dengan pilar, tirai, hidrangea, dan lampu kristal.','{wedding,engagement}'::text[],81),
  ('sage-garden','Sage Garden Live Guest','Venue 3D pernikahan taman kaca bernuansa hijau sage dengan bunga lili, lampion emas, dan lengkung emas.','{wedding,engagement}'::text[],82),
  ('india-sweet-17','India Sweet 17 Live Guest','Venue 3D pesta Sweet 17 bertema India dengan istana marmer, lengkung emas, bunga marigold, dan karpet merah muda.','{birthday}'::text[],83),
- ('aqiqah-pink-castle','Aqiqah Pink Castle Live Guest','Venue 3D syukuran aqiqah istana pink pastel dengan lentera emas, bunga, dan dekorasi bayi yang manis.','{aqiqah}'::text[],84)
+ ('aqiqah-pink-castle','Aqiqah Pink Castle Live Guest','Venue 3D syukuran aqiqah istana pink pastel dengan lentera emas, bunga, dan dekorasi bayi yang manis.','{aqiqah}'::text[],84),
+ ('adat-papua','Adat Papua Live Guest','Venue 3D pernikahan adat Papua dengan honai beratap rumbia, tiang totem ukir, bunga tropis, dan burung cenderawasih.','{wedding,engagement}'::text[],85)
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select 'live-' || t.slug, t.name, t.descr, '/assets/img/live-' || t.slug || '.webp', '/live/?venue=' || t.slug, 'luxe', t.cats, t.slug, 'published', t.sort,
