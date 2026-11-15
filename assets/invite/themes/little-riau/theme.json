@@ -1,0 +1,115 @@
+{
+  "id": "little-riau",
+  "name": "Melayu Riau",
+  "version": 1,
+  "description": "Pernikahan/lamaran adat Melayu Riau: balai berlipat kuning emas beratap hijau di tepi sungai, karangan melati dan bunga kuning, lampu hias, serta pengantin chibi berbusana hijau-emas.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#1B5E3A",
+    "deep2": "#2E7D52",
+    "paper": "#FBF7E8",
+    "soft": "#EEF3E2",
+    "ink": "#17301F",
+    "muted": "#5B6F5F",
+    "accent": "#C9A227",
+    "accent2": "#F3DF8F",
+    "petal": "#E8C85A",
+    "heading": "#1B5E3A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari H",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1024
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1024
+    },
+    "coverGround": [
+      {
+        "src": "art/rr-groom.webp",
+        "w": 84
+      },
+      {
+        "src": "art/bunga-rendah.webp",
+        "w": 104
+      },
+      {
+        "src": "art/rr-bride.webp",
+        "w": 84
+      }
+    ],
+    "introTop": "art/lampu-hias.webp",
+    "figureBride": "art/rr-bride.webp",
+    "figureGroom": "art/rr-groom.webp",
+    "countdownRow": [
+      {
+        "src": "art/guci.webp",
+        "w": 56
+      },
+      {
+        "src": "art/air-mancur.webp",
+        "w": 100
+      },
+      {
+        "src": "art/guci-b.webp",
+        "w": 56
+      }
+    ],
+    "eventBadge": "art/lentera.webp",
+    "storyTop": "art/area-kuliner.webp",
+    "giftTop": "art/guci.webp",
+    "wishesTop": "art/papan-ucapan.webp",
+    "closingScene": "art/gapura.webp",
+    "closingFigures": [
+      "art/rr-groom.webp",
+      "art/rr-bride.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

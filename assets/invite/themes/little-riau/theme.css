@@ -1,0 +1,23 @@
+/* Melayu Riau: ukuran ilustrasi & sentuhan hijau-emas */
+.th-little-riau .ulos-dec { width: min(150px, 46vw); }
+.th-little-riau .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-little-riau .gf-amp { width: min(80px, 26vw); }
+.th-little-riau .ws-bk { width: min(140px, 42vw); }
+.th-little-riau .ev-lt { width: 30px; }
+.th-little-riau .rs-lt { width: 54px; top: -30px; }
+.th-little-riau .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-little-riau .gable .art { height: 26px; }
+.th-little-riau .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-riau .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-riau .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-little-riau .end-art .eg { filter: drop-shadow(0 18px 28px rgba(8, 34, 20, .4)); }
+.th-little-riau .deep .eb { color: #FFE2A0; }
+.th-little-riau .cv-nm, .th-little-riau .hero-nm, .th-little-riau .end-nm { text-shadow: 0 2px 0 rgba(8, 34, 20, .5), 0 0 18px rgba(255, 200, 110, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-little-riau .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(10, 46, 28, .82), rgba(10, 46, 28, .55) 58%, rgba(10, 46, 28, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(10, 46, 28, .5), rgba(10, 46, 28, 0)), linear-gradient(180deg, rgba(10, 46, 28, .1), rgba(10, 46, 28, .3)); }
+.th-little-riau .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-little-riau .cv-eb { color: #FFE2A0; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-little-riau .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(8, 34, 20, .9); }
+.th-little-riau .ws-bk { width: min(100px, 32vw); }
+.th-little-riau .cv-gi { filter: drop-shadow(0 0 5px rgba(255, 240, 180, .95)) drop-shadow(0 0 12px rgba(255, 225, 140, .55)); }
