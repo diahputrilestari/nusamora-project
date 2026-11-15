@@ -287,7 +287,13 @@
     "blue-hydrangea": "little-hydrangea",
     "hortensia": "little-hydrangea",
     "biru-langit": "little-hydrangea",
-    "little-hydrangea": "little-hydrangea"
+    "little-hydrangea": "little-hydrangea",
+    "india": "little-india17",
+    "sweet17": "little-india17",
+    "sweet-17": "little-india17",
+    "sweet-seventeen": "little-india17",
+    "bollywood": "little-india17",
+    "little-india17": "little-india17"
   },
   "themes": [
     {
@@ -1198,6 +1204,20 @@
       "swatch": [
         "#4F6FA3",
         "#F0DDA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-india17",
+      "name": "Sweet 17 India",
+      "description": "Pesta sweet seventeen bertema India: istana marmer putih berkubah dengan tirai magenta, karangan marigold dan bunga pink, lentera emas, kolam teratai, serta booth bernuansa kerawang.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#9C1F5B",
+        "#F6D58A"
       ],
       "art": true
     }
