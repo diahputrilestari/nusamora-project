@@ -23,9 +23,17 @@ if(!matchMedia('(prefers-reduced-motion:reduce)').matches){var dv=$('.devs');dv.
 /* filter template per jenis acara */
 function totalTxt(){return $$('.tcard:not(.soon)').length+' template tersedia'}
 var tcount=$('#tcount'),treset=$('#treset'),tnote=$('#tnote'),evb=$$('.ev'),flt=null;
+/* chip jenis acara: redupkan kartu paket yang belum punya template untuk acara itu dan jelaskan di bawah judul */
+var PKN2={essential:'Essential',signature:'Signature',luxe:'Luxe'},evm=null;
+function pkcFx(f){var cards=$$('.tcard[data-pkg]');if(!cards.length)return;var ok=[];
+ cards.forEach(function(c){var m=!f||c.dataset.ev.split(' ').indexOf(f)>-1;if(m)ok.push(PKN2[c.dataset.pkg]||c.dataset.pkg);var p=$('.pkc[data-pk="'+c.dataset.pkg+'"]');if(p)p.classList.toggle('dim',!!f&&!m)});
+ if(!evm){var g=$('.pk3');if(!g)return;evm=d.createElement('p');evm.id='evmsg';evm.className='pnote';evm.setAttribute('role','status');evm.hidden=true;g.parentNode.insertBefore(evm,g)}
+ if(!f){evm.hidden=true;return}
+ evm.hidden=false;evm.textContent=ok.length===cards.length?'Template '+EVL[f]+' tersedia di semua paket.':ok.length?'Template '+EVL[f]+' tersedia di paket '+ok.join(' dan ')+'. Paket lain belum punya template khusus acara ini.':'Belum ada template khusus '+EVL[f]+'. Anda tetap bisa memakai template yang ada dan menyesuaikan teksnya.'}
 function filt(id){flt=flt===id?null:id;evb.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.ev===flt)});
  var n=0;$$('.tcard').forEach(function(c){var soon=c.classList.contains('soon'),match=!flt||c.dataset.ev.split(' ').indexOf(flt)>-1;if(!soon){c.classList.toggle('dim',!!flt&&!match);if(!flt||match)n++}else c.classList.remove('dim')});
  tcount.textContent=flt?(n?n+' template untuk '+EVL[flt]:'Belum ada template khusus '+EVL[flt]):totalTxt();
+ pkcFx(flt);
  treset.hidden=!flt;tnote.hidden=!(flt&&!n);if(flt&&!n)tnote.textContent='Template khusus '+EVL[flt]+' sedang disiapkan. Anda tetap bisa memakai template yang ada dan menyesuaikan teksnya, atau beri tahu kami acara yang Anda rencanakan.';
  if(flt)$('#template').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'})}
 evb.forEach(function(b){b.addEventListener('click',function(){filt(b.dataset.ev)})});treset.addEventListener('click',function(){filt(flt)});
