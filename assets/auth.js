@@ -8,9 +8,11 @@
   var TPL = { "romantic-garden": "Romantic Garden", "jawa-tengah": "Adat Jawa Tengah" };
   var PLAN = { essential: "Essential", signature: "Signature", luxe: "Luxe" };
 
-  function msg(text, kind) { var m = $("#msg"); if (!m) return; m.hidden = !text; m.className = "msg " + (kind === "o" ? "o" : "e"); m.textContent = text || ""; }
+  var curMsg = null;
+  function msg(text, kind) { var m = curMsg || $("#msg"); if (!m) return; m.hidden = !text; m.className = (m.classList.contains("msg-slot") ? "msg-slot " : "msg ") + (kind === "o" ? "o" : "e"); m.textContent = text || ""; }
   function fieldErr(id, text) { var e = d.querySelector('[data-for="' + id + '"]'), i = d.getElementById(id); if (e) e.textContent = text || ""; if (i) i.setAttribute("aria-invalid", text ? "true" : "false"); }
-  function busy(on, label) { var b = $("#go"); if (!b) return; b.disabled = on; if (label) b.textContent = on ? "Memproses..." : label; }
+  var curBtn = null;
+  function busy(on, label) { var b = curBtn || $("#go"); if (!b) return; b.disabled = on; b.setAttribute("aria-busy", on ? "true" : "false"); b.classList.toggle("loading", on); var l = b.querySelector(".lbl"); if (l) { if (label) l.textContent = label; } else if (label) b.textContent = on ? "Memproses..." : label; }
   function nextPath() { var n = new URLSearchParams(location.search).get("next"); return n && /^\/(?!\/)[a-z0-9\-\/]*(\?[a-z0-9=&%_.\-]*)?$/i.test(n) ? n : "/akun"; }
   function friendly(err) {
     var m = (err && err.message || "").toLowerCase();
@@ -30,13 +32,14 @@
   function normWa(v) { v = (v || "").replace(/[\s\-().]/g, ""); if (!v) return ""; if (v.indexOf("+") === 0) return v; if (v.indexOf("0") === 0) return "+62" + v.slice(1); if (v.indexOf("62") === 0) return "+" + v; return v; }
 
   // tampilkan/sembunyikan kata sandi + meter
-  d.querySelectorAll("[data-toggle]").forEach(function (b) {
+  d.querySelectorAll("[data-toggle]:not(.eye)").forEach(function (b) {
     b.addEventListener("click", function () { var i = d.getElementById(b.dataset.toggle), s = i.type === "password"; i.type = s ? "text" : "password"; b.textContent = s ? "Sembunyi" : "Lihat"; b.setAttribute("aria-label", s ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"); });
   });
   var meter = $("#meter"), pwi = $("#pw");
   if (meter && pwi) pwi.addEventListener("input", function () { var s = strength(pwi.value); meter.style.width = (s * 25) + "%"; meter.style.background = ["#b3261e", "#b3261e", "#c77a00", "#2e7d32", "#2e7d32"][s]; });
 
-  var form = d.querySelector("form[data-form]"), kind = form && form.dataset.form;
+  var forms = [].slice.call(d.querySelectorAll("form[data-form]")), form = forms[0], kind = form && form.dataset.form;
+  var PFX = { login: "l-", register: "r-" };
 
   // pilihan dari landing page (?acara=&template=&paket=)
   var q = new URLSearchParams(location.search), pick = { ev: q.get("acara"), tpl: q.get("template"), plan: q.get("paket") };
@@ -44,38 +47,44 @@
   var pk = $("#pick");
   if (pk && (pick.ev || pick.tpl || pick.plan)) { pk.hidden = false; pk.innerHTML = "<b>Pilihan Anda</b><br>" + (pick.ev ? "Acara: " + EVL[pick.ev] + "<br>" : "") + (pick.tpl ? "Template: " + TPL[pick.tpl] + "<br>" : "") + (pick.plan ? "Paket: " + PLAN[pick.plan] : ""); }
 
-  if (kind) form.addEventListener("submit", function (e) {
-    e.preventDefault(); msg("");
-    ["name", "email", "wa", "pw", "terms"].forEach(function (k) { fieldErr(k, ""); });
-    var v = function (id) { var i = d.getElementById(id); return i ? i.value.trim() : ""; };
+  forms.forEach(function (fm) { fm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var kind = fm.dataset.form, pf = d.getElementById("l-pw") ? (PFX[kind] || "") : "";
+    var panel = fm.closest("[data-panel]"); curMsg = panel ? panel.querySelector(".msg-slot") : null; curBtn = fm.querySelector("[type=submit]");
+    var I = function (id) { return pf + id; };
+    var pwi = d.getElementById(I("pw")), form = fm;
+    msg("");
+    ["name", "email", "wa", "pw", "terms"].forEach(function (k) { fieldErr(I(k), ""); });
+    var v = function (id) { var i = d.getElementById(I(id)) || d.getElementById(id); return i ? i.value.trim() : ""; };
     if (!sb) return notReady();
+    var LBL = { register: d.getElementById("r-name") ? "Buat Akun" : "Daftar", login: "Masuk" };
     if (kind === "register") {
       var ok = true;
       if (v("website")) return; // honeypot terisi: kemungkinan bot, abaikan diam-diam
-      if (v("name").length < 2) { fieldErr("name", "Isi nama lengkap Anda."); ok = false; }
-      if (!emailRe.test(v("email"))) { fieldErr("email", "Format email belum benar."); ok = false; }
-      var wa = normWa(v("wa")); if (wa && !/^\+[0-9]{8,15}$/.test(wa)) { fieldErr("wa", "Nomor WhatsApp belum benar."); ok = false; }
-      if (!pwOk(pwi.value)) { fieldErr("pw", "Minimal 8 karakter, campur huruf dan angka."); ok = false; }
-      if (!$("#terms").checked) { fieldErr("terms", "Anda perlu menyetujui syarat dan kebijakan."); ok = false; }
-      if (!ok) return;
+      if (v("name").length < 2) { fieldErr(I("name"), "Isi nama lengkap Anda."); ok = false; }
+      if (!emailRe.test(v("email"))) { fieldErr(I("email"), "Format email belum benar."); ok = false; }
+      var wa = normWa(v("wa")); if (wa && !/^\+[0-9]{8,15}$/.test(wa)) { fieldErr(I("wa"), "Nomor WhatsApp belum benar."); ok = false; }
+      if (!pwOk(pwi.value)) { fieldErr(I("pw"), "Minimal 8 karakter, campur huruf dan angka."); ok = false; }
+      if (!d.getElementById(I("terms")).checked) { fieldErr(I("terms"), "Anda perlu menyetujui syarat dan kebijakan."); ok = false; }
+      if (!ok) { var bad = fm.querySelector("[aria-invalid=true]"); if (bad) bad.focus(); return; }
       busy(true);
       sb.auth.signUp({ email: v("email"), password: pwi.value, options: { emailRedirectTo: SITE + "/masuk", data: { full_name: v("name"), whatsapp: wa, event_type: pick.ev, template_id: pick.tpl, plan: pick.plan, terms: "true" } } })
         .then(function (r) {
-          if (r.error) { busy(false, "Daftar"); return msg(friendly(r.error)); }
+          if (r.error) { busy(false, LBL.register); return msg(friendly(r.error)); }
           // email sudah terdaftar: Supabase mengembalikan user tanpa identities (tidak membocorkan keberadaan akun)
           form.hidden = true;
           msg("Pendaftaran hampir selesai. Jika email ini belum terdaftar, kami telah mengirim tautan verifikasi ke " + v("email") + ". Periksa juga folder spam. Jika sudah punya akun, silakan masuk.", "o");
-        }, function (er) { busy(false, "Daftar"); msg(friendly(er)); });
+        }, function (er) { busy(false, LBL.register); msg(friendly(er)); });
     } else if (kind === "login") {
       var ok2 = true;
-      if (!emailRe.test(v("email"))) { fieldErr("email", "Format email belum benar."); ok2 = false; }
-      if (!pwi.value) { fieldErr("pw", "Isi kata sandi."); ok2 = false; }
-      if (!ok2) return;
+      if (!emailRe.test(v("email"))) { fieldErr(I("email"), "Format email belum benar."); ok2 = false; }
+      if (!pwi.value) { fieldErr(I("pw"), "Isi kata sandi."); ok2 = false; }
+      if (!ok2) { var bad2 = fm.querySelector("[aria-invalid=true]"); if (bad2) bad2.focus(); return; }
       busy(true);
       sb.auth.signInWithPassword({ email: v("email"), password: pwi.value }).then(function (r) {
-        if (r.error) { busy(false, "Masuk"); return msg(friendly(r.error)); }
+        if (r.error) { busy(false, LBL.login); return msg(friendly(r.error)); }
         location.href = nextPath();
-      }, function (er) { busy(false, "Masuk"); msg(friendly(er)); });
+      }, function (er) { busy(false, LBL.login); msg(friendly(er)); });
     } else if (kind === "forgot") {
       if (!emailRe.test(v("email"))) return fieldErr("email", "Format email belum benar.");
       busy(true);
@@ -91,6 +100,17 @@
         form.hidden = true; msg("Kata sandi diperbarui. Mengalihkan ke halaman akun...", "o"); setTimeout(function () { location.href = "/akun"; }, 1200);
       }, function (er) { busy(false, "Simpan kata sandi"); msg(friendly(er)); });
     }
+  }); });
+
+  // masuk/daftar dengan Google (tombol hanya tampil bila penyedia aktif; lihat auth2.js)
+  var gbtn = $("#au-g");
+  if (gbtn) gbtn.addEventListener("click", function () {
+    var panel = d.querySelector(".au-panel.on"); curMsg = panel ? panel.querySelector(".msg-slot") : null; msg("");
+    if (!sb) return notReady();
+    gbtn.disabled = true;
+    sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: SITE + nextPath() } }).then(function (r) {
+      if (r && r.error) { gbtn.disabled = false; msg("Masuk dengan Google belum bisa digunakan saat ini. Coba lagi atau gunakan email."); }
+    }, function () { gbtn.disabled = false; msg("Tidak bisa terhubung. Periksa koneksi internet Anda."); });
   });
 
   // halaman akun

@@ -1,26 +1,78 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="id" class="no-js"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Daftar Akun | NusaMora</title><meta name="description" content="Buat akun NusaMora untuk membuat undangan digital interaktif."><meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#6a34b6"><link rel="icon" href="/assets/logo-icon.png?v=1" type="image/png" sizes="256x256"><link rel="apple-touch-icon" href="/assets/logo-icon.png?v=1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"><link rel="stylesheet" href="/assets/landing.css"><link rel="stylesheet" href="/assets/auth.css">
-<link rel="stylesheet" href="/assets/logo.css?v=1"></head><body class="auth">
-<header class="top"><div class="wrap bar"><a class="brand" href="/" aria-label="NusaMora, ke beranda"><img src="/assets/logo-nusamora.png?v=1" alt="NusaMora" width="640" height="312" decoding="async"></a><a class="btn o sm" href="/">Kembali ke beranda</a></div></header>
-<main id="utama"><section class="card-a">
-<h1>Buat akun NusaMora</h1><p class="sub">Daftar gratis untuk menyimpan draft undangan. Anda baru membayar saat siap.</p>
-<div id="pick" class="pick" hidden></div><div id="msg" role="alert" hidden></div>
-<form id="f-reg" novalidate data-form="register">
- <div class="f"><label for="name">Nama lengkap</label><input id="name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="80"><span class="err" data-for="name"></span></div>
- <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required><span class="err" data-for="email"></span></div>
- <div class="f"><label for="wa">Nomor WhatsApp <small>(opsional, untuk bantuan)</small></label><input id="wa" name="wa" type="tel" autocomplete="tel" inputmode="tel" placeholder="08123456789"><span class="err" data-for="wa"></span></div>
- <div class="f"><label for="pw">Kata sandi</label><div class="pw"><input id="pw" name="pw" type="password" autocomplete="new-password" required minlength=8><button type="button" data-toggle="pw" aria-label="Tampilkan kata sandi">Lihat</button></div><div class="meter" aria-hidden="true"><i id="meter"></i></div><small id="pwhint">Minimal 8 karakter, campur huruf dan angka.</small><span class="err" data-for="pw"></span></div>
- <label class="chk"><input id="terms" type="checkbox" required><span>Saya menyetujui Syarat Layanan dan Kebijakan Privasi NusaMora.</span></label><span class="err" data-for="terms"></span>
- <div class="hp" aria-hidden="true"><label>Jangan diisi <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
- <button class="btn full lg" type="submit" id="go">Daftar</button>
-</form>
-<p class="alt">Sudah punya akun? <a href="/masuk">Masuk</a></p></section></main>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"><link rel="stylesheet" href="/assets/landing.css"><link rel="stylesheet" href="/assets/auth.css?v=2"><link rel="stylesheet" href="/assets/auth2.css?v=1">
+<link rel="stylesheet" href="/assets/logo.css?v=1"></head><body class="auth auth2">
+<a class="sr skip" href="#utama">Lewati ke formulir</a>
+<div class="au" data-mode="register">
+<aside class="au-show" aria-label="Keunggulan NusaMora">
+ <div class="au-bg" aria-hidden="true"><i class="au-orb o1"></i><i class="au-orb o2"></i><svg class="au-ring" viewBox="0 0 400 400"><circle cx="200" cy="200" r="190" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 9"/><circle cx="200" cy="200" r="140" fill="none" stroke="currentColor" stroke-width="1"/></svg></div>
+ <div class="au-show-in">
+  <p class="au-kicker">NusaMora</p>
+  <div class="au-stage" aria-hidden="true">
+   <div class="au-layer" data-depth="10"><div class="au-card c-back"><span class="au-mono">N&middot;M</span></div></div>
+   <div class="au-layer" data-depth="26"><div class="au-card c-main"><svg class="au-flor" viewBox="0 0 120 40" aria-hidden="true"><path d="M4 30c20-26 40-26 56-8 16-18 36-18 56 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="60" cy="14" r="3" fill="currentColor"/></svg><small>Undangan Pernikahan</small><b>Rani &amp; Dimas</b><span class="au-date">Sabtu, 14 Februari 2026</span><span class="au-rule"></span><span class="au-btn">Buka Undangan</span></div></div>
+   <div class="au-layer" data-depth="44"><div class="au-chip ch1"><i></i>Tamu hadir sebagai avatar</div></div>
+   <div class="au-layer" data-depth="54"><div class="au-chip ch2"><i></i>RSVP &amp; ucapan langsung masuk</div></div>
+  </div>
+  <div class="au-car" role="region" aria-roledescription="carousel" aria-label="Keunggulan utama">
+   <ul class="au-slides" aria-live="off">
+    <li class="on"><h2>Tamu hadir, meski berjauhan</h2><p>Venue 3D dan avatar membuat tamu dari kota lain tetap merasa ikut hadir di hari bahagia Anda.</p></li>
+    <li><h2>Link pribadi untuk tiap tamu</h2><p>Kode unik per tamu, ucapan dan RSVP hanya dari yang Anda undang, bisa dimoderasi kapan saja.</p></li>
+    <li><h2>Siap dalam hitungan menit</h2><p>Pilih template, isi data, bagikan lewat WhatsApp. Coba demo dulu, bayar saat Anda siap.</p></li>
+   </ul>
+   <div class="au-dots" role="group" aria-label="Pilih keunggulan"><button type="button" class="on" aria-label="Keunggulan 1" aria-current="true"></button><button type="button" aria-label="Keunggulan 2"></button><button type="button" aria-label="Keunggulan 3"></button></div>
+  </div>
+ </div>
+</aside>
+<section class="au-form">
+ <div class="au-glow" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="p p1"></i><i class="p p2"></i><i class="p p3"></i><i class="p p4"></i><i class="p p5"></i></div>
+ <header class="au-top"><a class="brand" href="/" aria-label="NusaMora, ke beranda"><img src="/assets/logo-nusamora.png?v=1" alt="NusaMora" width="640" height="312" decoding="async"></a><a class="btn o sm au-back" href="/"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Kembali ke beranda</a></header>
+ <main id="utama" class="au-main" tabindex="-1">
+  <div class="au-mini" aria-hidden="true">Undangan digital interaktif</div>
+  <div class="au-box">
+   <div class="au-tabs" role="tablist" aria-label="Masuk atau daftar"><i class="au-ind" aria-hidden="true"></i>
+    <a role="tab" id="tab-login" href="/masuk" aria-controls="panel-login" aria-selected="false" data-mode="login" tabindex="-1">Masuk</a>
+    <a role="tab" id="tab-register" href="/daftar" aria-controls="panel-register" aria-selected="true" data-mode="register" tabindex="0">Daftar</a></div>
+   <div class="au-stagep">
+    <section class="au-panel" id="panel-login" role="tabpanel" aria-labelledby="tab-login" data-panel="login">
+     <h1>Selamat Datang Kembali</h1><p class="sub">Lanjutkan mengelola undangan Anda.</p>
+     <div class="msg-slot" role="alert" hidden></div>
+     <form data-form="login" novalidate>
+      <div class="fl"><input id="l-email" name="email" type="email" placeholder=" " autocomplete="email" inputmode="email" required><label for="l-email">Email</label><span class="err" data-for="l-email"></span></div>
+      <div class="fl pwf"><input id="l-pw" name="pw" type="password" placeholder=" " autocomplete="current-password" required><label for="l-pw">Kata sandi</label><button type="button" class="eye" data-toggle="l-pw" aria-label="Tampilkan kata sandi" aria-pressed="false"><svg class="e-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="e-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.4 0-10-7-10-7a17.5 17.5 0 0 1 4.1-4.9M9.9 5.2A9.6 9.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2M1 1l22 22M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button><span class="err" data-for="l-pw"></span></div>
+      <p class="au-fp"><a href="/lupa-password">Lupa kata sandi?</a></p>
+      <button class="btn au-cta full lg" type="submit"><span class="lbl">Masuk</span><i class="spin" aria-hidden="true"></i></button>
+     </form>
+     <p class="alt">Belum punya akun? <a href="/daftar" data-switch="register">Daftar gratis</a></p>
+    </section>
+    <section class="au-panel on" id="panel-register" role="tabpanel" aria-labelledby="tab-register" data-panel="register">
+     <h1>Mulai Rancang Undangan Anda</h1><p class="sub">Daftar gratis untuk menyimpan draft. Anda baru membayar saat siap.</p>
+     <div id="pick" class="pick" hidden></div>
+     <div class="msg-slot" role="alert" hidden></div>
+     <form data-form="register" novalidate>
+      <div class="fl"><input id="r-name" name="name" type="text" placeholder=" " autocomplete="name" required minlength="2" maxlength="80"><label for="r-name">Nama lengkap</label><span class="err" data-for="r-name"></span></div>
+      <div class="fl"><input id="r-email" name="email" type="email" placeholder=" " autocomplete="email" inputmode="email" required><label for="r-email">Email</label><span class="err" data-for="r-email"></span></div>
+      <div class="fl"><input id="r-wa" name="wa" type="tel" placeholder="08123456789" autocomplete="tel" inputmode="tel"><label for="r-wa">Nomor WhatsApp <em>(opsional)</em></label><span class="err" data-for="r-wa"></span></div>
+      <div class="fl pwf"><input id="r-pw" name="pw" type="password" placeholder=" " autocomplete="new-password" required minlength="8"><label for="r-pw">Kata sandi</label><button type="button" class="eye" data-toggle="r-pw" aria-label="Tampilkan kata sandi" aria-pressed="false"><svg class="e-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="e-off" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.4 10.4 0 0 1 12 19c-6.4 0-10-7-10-7a17.5 17.5 0 0 1 4.1-4.9M9.9 5.2A9.6 9.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-2.2 3.2M1 1l22 22M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button><span class="err" data-for="r-pw"></span></div>
+      <div class="pm" data-level="0"><div class="pm-bars" aria-hidden="true"><i></i><i></i><i></i></div><p id="pm-t" role="status" aria-live="polite">Minimal 8 karakter, campur huruf dan angka.</p></div>
+      <label class="chk"><input id="r-terms" type="checkbox" required><span>Saya menyetujui <a href="/syarat-ketentuan" target="_blank" rel="noopener">Syarat Layanan</a> dan <a href="/kebijakan-privasi" target="_blank" rel="noopener">Kebijakan Privasi</a> NusaMora.</span></label><span class="err" data-for="r-terms"></span>
+      <div class="hp" aria-hidden="true"><label>Jangan diisi <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn au-cta full lg" type="submit"><span class="lbl">Buat Akun</span><i class="spin" aria-hidden="true"></i></button>
+     </form>
+     <p class="alt">Sudah punya akun? <a href="/masuk" data-switch="login">Masuk</a></p>
+    </section>
+   </div>
+   <div class="au-or" id="au-or" hidden><span>atau lanjutkan dengan</span></div>
+   <button type="button" class="au-g" id="au-g" hidden><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg><span>Lanjutkan dengan Google</span></button>
+  </div>
+ </main>
+</div>
 <script src="/assets/config.js"></script>
 <script src="/assets/site-settings.js?v=1"></script>
 <script src="/assets/affiliate-ref.js?v=1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
-<script src="/assets/auth.js" defer></script></body></html>
+<script src="/assets/auth.js?v=2" defer></script>
+<script src="/assets/auth2.js?v=1" defer></script></body></html>
