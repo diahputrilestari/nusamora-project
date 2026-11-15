@@ -101,7 +101,19 @@
     var items = rows.map(function (r) { return { r: r, cat: catOf(r), hay: (String(r.title || "") + " " + String(r.excerpt || "")).toLowerCase() }; }), cats = [];
     items.forEach(function (x) { if (cats.indexOf(x.cat) < 0) cats.push(x.cat); });
     cats.sort(function (a, b) { var i = CAT_ORDER.indexOf(a), j = CAT_ORDER.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
-    var st = { q: "", cat: "" };
+    var PER = 9, st = { q: "", cat: "", page: Math.max(1, parseInt((/[?&]hal=(\d+)/.exec(location.search) || [])[1], 10) || 1) };
+    function pager(cur, total) {
+      var n = [], i, last = 0, h = '<nav class="kt-pg" aria-label="Halaman artikel"><ul>';
+      for (i = 1; i <= total; i++) if (i === 1 || i === total || Math.abs(i - cur) <= 1) n.push(i);
+      h += '<li><button type="button" class="kt-pgb kt-pgn" data-p="' + (cur - 1) + '"' + (cur === 1 ? " disabled" : "") + ' aria-label="Halaman sebelumnya"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Sebelumnya</span></button></li>';
+      n.forEach(function (v) {
+        if (last && v - last > 1) h += '<li class="kt-pge" aria-hidden="true">&hellip;</li>';
+        h += '<li class="kt-pgx"><button type="button" class="kt-pgb" data-p="' + v + '"' + (v === cur ? ' aria-current="page"' : "") + ' aria-label="Halaman ' + v + '">' + v + "</button></li>"; last = v;
+      });
+      h += '<li class="kt-pgm" aria-hidden="true">Halaman ' + cur + " dari " + total + '</li>';
+      return h + '<li><button type="button" class="kt-pgb kt-pgn" data-p="' + (cur + 1) + '"' + (cur === total ? " disabled" : "") + ' aria-label="Halaman berikutnya"><span>Berikutnya</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></li></ul></nav>';
+    }
+    function setUrl() { try { var u = location.pathname + (st.page > 1 ? "?hal=" + st.page : "") + location.hash; history.replaceState(null, "", u); } catch (e) {} }
     var tools = items.length ? '<div class="kt-tools"><label class="kt-search">' + SRCH + '<span class="sr">Cari artikel</span><input id="kt-q" type="search" placeholder="Cari artikel, misalnya RSVP atau WhatsApp" autocomplete="off" enterkeyhint="search"></label>' +
       '<div class="kt-chips" role="group" aria-label="Filter kategori"><button type="button" class="kt-chip" data-cat="" aria-pressed="true">Semua</button>' + cats.map(function (c) { return '<button type="button" class="kt-chip" data-cat="' + esc(c) + '" aria-pressed="false">' + esc(c) + "</button>"; }).join("") + "</div></div>" : "";
     view.innerHTML = '<div class="kt-w kt-wide"><header class="kt-hero"><p class="kt-eyebrow">Panduan &amp; Inspirasi</p><h1>Artikel NusaMora</h1>' +
@@ -121,19 +133,25 @@
     }
     function draw() {
       var q = st.q.trim().toLowerCase(), list = items.filter(function (x) { return (!st.cat || x.cat === st.cat) && (!q || x.hay.indexOf(q) > -1); });
-      var f = !st.cat && !q && list.length ? list[0] : null, rest = f ? list.slice(1) : list;
+      var f0 = !st.cat && !q && list.length ? list[0] : null, rest0 = f0 ? list.slice(1) : list;
+      /* Halaman 1: artikel unggulan + PER kartu; halaman berikutnya: PER kartu. */
+      var total = Math.max(1, Math.ceil(rest0.length / PER)); if (st.page > total) st.page = total;
+      var f = st.page === 1 ? f0 : null, rest = rest0.slice((st.page - 1) * PER, st.page * PER);
       if (!items.length) { res.innerHTML = '<div class="card kt-empty">Belum ada artikel. Kunjungi lagi sebentar lagi.</div>'; cnt.textContent = ""; return; }
-      res.innerHTML = list.length ? (f ? feat(f) : "") + (rest.length ? '<div class="kt-grid">' + rest.map(card).join("") + "</div>" : "") :
+      res.innerHTML = list.length ? (f ? feat(f) : "") + (rest.length ? '<div class="kt-grid">' + rest.map(card).join("") + "</div>" : "") + (total > 1 ? pager(st.page, total) : "") :
         '<div class="card kt-empty"><p><b>Tidak ada artikel yang cocok.</b></p><p>Coba kata kunci lain, atau tampilkan semua artikel.</p><p><button type="button" class="btn o kt-reset">Tampilkan semua artikel</button></p></div>';
-      cnt.textContent = (st.cat || q) ? list.length + " dari " + items.length + " artikel" : items.length + " artikel";
+      cnt.textContent = ((st.cat || q) ? list.length + " dari " + items.length + " artikel" : items.length + " artikel") + (total > 1 ? " \u00b7 halaman " + st.page + " dari " + total : "");
+      setUrl();
     }
     var qi = $("#kt-q");
-    if (qi) qi.addEventListener("input", function () { st.q = qi.value; draw(); });
+    if (qi) qi.addEventListener("input", function () { st.q = qi.value; st.page = 1; draw(); });
     [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (b) {
-      b.addEventListener("click", function () { st.cat = b.getAttribute("data-cat"); [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); draw(); });
+      b.addEventListener("click", function () { st.cat = b.getAttribute("data-cat"); st.page = 1; [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); draw(); });
     });
     res.addEventListener("click", function (e) {
-      if (!e.target.closest(".kt-reset")) return; st.q = ""; st.cat = ""; if (qi) qi.value = "";
+      var pb = e.target.closest(".kt-pgb");
+      if (pb && !pb.disabled) { st.page = parseInt(pb.getAttribute("data-p"), 10) || 1; draw(); var top = $(".kt-tools") || res; try { top.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); } catch (x) { top.scrollIntoView(); } var cur = res.querySelector(".kt-pgb[aria-current]"); if (cur) cur.focus({ preventScroll: true }); return; }
+      if (!e.target.closest(".kt-reset")) return; st.q = ""; st.cat = ""; st.page = 1; if (qi) qi.value = "";
       [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-cat") === "" ? "true" : "false"); }); draw();
     });
     draw();
