@@ -1,0 +1,115 @@
+import { defineTheme } from '../types.js';
+import shots from './shots.json.js';
+/**
+ * LUXURY CORPORATE ANNIVERSARY — "Gala 25 Tahun".
+ * Navy and metallic-gold gala: a wide three-level stage with curved stairs, a grand circular backdrop with
+ * geometric gold rays and an illuminated golden 25, LED screens and gold pillars on both sides, luxurious
+ * floral urns, blue and gold balloon arches and a professional lighting rig over a navy plaza with gold
+ * inlay. No people on stage.
+ *
+ * The world is procedural (scripts/generators/gala_world.py → compound.glb), replaceable through
+ * `world.modelUrl` (Y-up, metres, ground y = 0, front +Z, stage at z 6..20).
+ */
+export default defineTheme({
+    id: 'corporate-anniversary-25',
+    label: 'Luxury Corporate Anniversary',
+    description: 'Gala ulang tahun perusahaan ke-25: panggung bertingkat navy dan emas, backdrop melingkar dengan angka 25 menyala, layar LED, bunga mewah, dan balon biru-emas.',
+    palette: {
+        ivory: '#F6F1E4',
+        champagne: '#E9DDBA',
+        gold: '#D4AF37',
+        blush: '#F0CF6A',
+        sage: '#1d3d8f',
+        ink: '#0E1B3D',
+        flowerPalette: ['#F7F3EC', '#3B63C4', '#E3BF55', '#FFFFFF', '#1D3D8F', '#D4AF37'],
+        blossom: ['#F7F3EC', '#E3BF55'],
+        hydrangea: ['#FFFFFF', '#3B63C4', '#F7F3EC', '#E3BF55', '#1D3D8F'],
+        sky: { zenith: '#050b1f', mid: '#0a1840', horizon: '#26397a', sun: '#f0cf6a', fog: '#0a1634' },
+        light: { sun: '#cfd9ff', sky: '#5370c0', ground: '#14214a' },
+        ground: { grassA: '#0b1534', grassB: '#0b1534', lawn: '#0b1534', far: '#08112b', bladeBase: '#0b1534', bladeTip: '#0b1534' },
+    },
+    world: {
+        kind: 'glb',
+        modelUrl: 'assets/themes/corporate-anniversary-25/compound.glb',
+        footprint: { minX: -48, maxX: 48, minZ: -30, maxZ: 72 },
+        sunDirection: [-0.2, 0.9, 0.5],
+        sunIntensity: 0.9,
+        hemiIntensity: 0.9,
+        terrain: { center: [0, 0, 20], flatRadius: 90, hillHeight: 0 },
+        landmark: { type: 'none', position: [0, 0, -400] },
+        distantHills: false,
+        lampMaterial: 'bulb',
+        lampColor: '#ffe9a8',
+        shinyMaterials: ['gold', 'gold_b', 'gold_glow', 'steel', 'floor', 'bal_b', 'bal_g'],
+        interiorLights: [
+            { position: [0, 12, 9], color: '#ffd98a', intensity: 420, distance: 40 },
+            { position: [-24, 10, 16], color: '#9fb8ff', intensity: 260, distance: 36 },
+            { position: [24, 10, 16], color: '#9fb8ff', intensity: 260, distance: 36 },
+            { position: [0, 8, 40], color: '#ffd98a', intensity: 220, distance: 40 },
+            { position: [-31, 8, 12], color: '#7fa0ff', intensity: 180, distance: 28 },
+            { position: [31, 8, 12], color: '#7fa0ff', intensity: 180, distance: 28 },
+        ],
+        petals: ['#F0CF6A', '#FFFFFF', '#3B63C4', '#D4AF37'],
+        labels: { opening: 'Membuka tirai gala', model: 'Menata panggung utama', surroundings: 'Menyalakan lampu dan dekorasi', characters: 'Menyiapkan kursi tamu', ready: 'Siap' },
+    },
+    characters: { none: true },
+    defaults: {
+        locale: 'id',
+        solo: true,
+        nameOrder: 'groom-first',
+        groom: { nickname: 'Nusantara Group', fullName: 'PT Nusantara Group Indonesia', parentsLabel: 'Direksi & Seluruh Keluarga Besar', father: 'Dewan Direksi', mother: '', instagram: '', photo: '' },
+        weddingDateLabel: 'Sabtu · 20 Februari 2027',
+        weddingDateISO: '2027-02-20T18:30:00+07:00',
+        location: { city: 'Jakarta', region: 'DKI Jakarta' },
+        ceremony: {
+            title: 'Seremoni Puncak 25 Tahun',
+            start: '2027-02-20T18:30',
+            end: '2027-02-20T20:30',
+            dateLabel: 'Sabtu, 20 Februari 2027',
+            timeLabel: '18.30 – 20.30 WIB',
+            venue: 'Grand Ballroom Nusantara',
+            address: 'Jl. Jenderal Sudirman No. 25, Jakarta',
+            mapsUrl: '',
+        },
+        reception: {
+            title: 'Gala Dinner & Penampilan Spesial',
+            start: '2027-02-20T20:30',
+            end: '2027-02-20T22:30',
+            dateLabel: 'Sabtu, 20 Februari 2027',
+            timeLabel: '20.30 – 22.30 WIB',
+            venue: 'Grand Ballroom Nusantara',
+            address: 'Jl. Jenderal Sudirman No. 25, Jakarta',
+            mapsUrl: '',
+        },
+        story: [
+            { year: '2002', title: 'Awal Berdiri', text: 'Dari sebuah kantor kecil dan mimpi besar, perjalanan kami dimulai.', image: '' },
+            { year: '2010', title: 'Ekspansi Nasional', text: 'Kepercayaan mitra membawa kami hadir di berbagai kota di Indonesia.', image: '' },
+            { year: '2018', title: 'Transformasi Digital', text: 'Inovasi dan teknologi menjadi fondasi pertumbuhan yang berkelanjutan.', image: '' },
+            { year: '2027', title: 'Seperempat Abad', text: 'Dua puluh lima tahun berkarya, dan kami ingin merayakannya bersama Anda.', image: '' },
+        ],
+        text: {
+            eyebrow: 'Perayaan 25 Tahun',
+            openButton: 'Buka Undangan',
+            guestGreeting: 'Kepada Yth.',
+            defaultGuest: 'Mitra & Tamu Undangan',
+            introVerse: 'Seperempat abad kebersamaan, kepercayaan, dan karya. Terima kasih telah menjadi bagian dari perjalanan kami.',
+            introVerseSource: 'Gala Ulang Tahun ke-25',
+            introInvite: 'Dengan hormat, kami mengundang Anda ke malam perayaan 25 tahun',
+            coupleEyebrow: 'Malam Gala 25 Tahun',
+            storyEyebrow: 'Perjalanan 25 Tahun',
+            ceremonyEyebrow: 'Simpan Tanggalnya',
+            countdownLabel: 'Menuju malam gala',
+            mapButton: 'Buka peta',
+            calendarButton: 'Tambah ke kalender',
+            closingTitle: 'Mari merayakan 25 tahun bersama',
+            closingText: 'Kehadiran Anda akan melengkapi malam istimewa ini. Terima kasih atas kepercayaan dan kerja sama yang telah terjalin.',
+            closingSignoff: 'Hormat kami,',
+            replayButton: 'Tonton lagi',
+            chapterLabel: 'Bab',
+            chapterOf: 'dari',
+            countdownUnits: ['hari', 'jam', 'menit', 'detik'],
+            loadingLabel: 'Menyiapkan panggung gala',
+        },
+    },
+    shots: shots,
+});
