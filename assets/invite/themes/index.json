@@ -350,7 +350,12 @@
     "kemerdekaan": "hari-kemerdekaan",
     "hut-ri": "hari-kemerdekaan",
     "hari-kemerdekaan": "hari-kemerdekaan",
-    "dirgahayu": "hari-kemerdekaan"
+    "dirgahayu": "hari-kemerdekaan",
+    "kartini": "hari-kartini",
+    "hari-kartini": "hari-kartini",
+    "kartini-day": "hari-kartini",
+    "ra-kartini": "hari-kartini",
+    "21-april": "hari-kartini"
   },
   "themes": [
     {
@@ -1403,6 +1408,20 @@
       "swatch": [
         "#A4141E",
         "#F6DEA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "hari-kartini",
+      "name": "Hari Kartini – Kartini Day Celebration",
+      "description": "Perayaan Hari Kartini: panggung kayu berukir dengan potret Kartini, vas bunga, karpet batik maroon-emas, booth buku tamu, photo booth, galeri, kuliner, serta perempuan berkebaya dan bunga melati di sanggul.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#7A2A45",
+        "#F3DDA0"
       ],
       "art": true
     }

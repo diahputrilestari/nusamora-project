@@ -1,0 +1,179 @@
+{
+  "id": "hari-kartini",
+  "name": "Hari Kartini – Kartini Day Celebration",
+  "version": 1,
+  "description": "Perayaan Hari Kartini: panggung kayu berukir dengan potret Kartini, vas bunga, karpet batik maroon-emas, booth buku tamu, photo booth, galeri, kuliner, serta perempuan berkebaya dan bunga melati di sanggul.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Hari Kartini",
+    "full": "Komunitas Perempuan Berdaya",
+    "parents": "Penyelenggara Kartini Day Celebration",
+    "title": "Perayaan Hari Kartini",
+    "eventName": "Kartini Day Celebration",
+    "annual": "04-21",
+    "start": "08:00",
+    "end": "13:00",
+    "venue": "Gedung Wanita Kartini",
+    "address": "Jl. R.A. Kartini No. 21, Bekasi Selatan, Bekasi",
+    "bank": "BNI",
+    "holder": "Panitia Hari Kartini",
+    "giftAddress": "Sekretariat Komunitas Perempuan Berdaya, Jl. R.A. Kartini No. 21, Bekasi 17142",
+    "welcome": "Dengan penuh rasa hormat, kami mengundang Ibu, Bapak, dan Saudara/i untuk hadir di perayaan Hari Kartini. Mari berkebaya, berbagi cerita, dan merayakan semangat perempuan Indonesia yang terus belajar, berkarya, dan menginspirasi.",
+    "quote": "Habis gelap terbitlah terang.",
+    "quoteSource": "R.A. Kartini",
+    "closing": "Terima kasih telah hadir dan ikut merayakan semangat Kartini. Semoga cahaya yang kita nyalakan hari ini menerangi langkah banyak perempuan.",
+    "story": [
+      {
+        "date": "08.00 WIB",
+        "title": "Registrasi & Parade Kebaya",
+        "text": "Peserta disambut di photo booth, lalu berjalan bersama dalam parade kebaya dan busana daerah."
+      },
+      {
+        "date": "09.30 WIB",
+        "title": "Talkshow Perempuan Berdaya",
+        "text": "Cerita inspiratif dari para perempuan hebat tentang pendidikan, usaha, dan kepemimpinan."
+      },
+      {
+        "date": "11.30 WIB",
+        "title": "Bazar & Ramah Tamah",
+        "text": "Menikmati jajanan tradisional, bazar karya UMKM perempuan, dan sesi foto bersama."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Ibu Camat",
+        "message": "Selamat Hari Kartini! Terima kasih sudah mengundang. Semoga acaranya menginspirasi banyak perempuan.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Mbak Sari (Guru SMA)",
+        "message": "Aku sudah siapkan kebaya batik maroon. Sampai ketemu di gedung!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa hadir. Doa terbaik untuk kelancaran acaranya.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#7A2A45",
+    "deep2": "#A24A66",
+    "paper": "#FFF8F0",
+    "ink": "#3A1F26",
+    "muted": "#7A5A60",
+    "accent": "#C99A3A",
+    "accent2": "#F3DDA0",
+    "soft": "#FBEEE8",
+    "petal": "#F0A0B8",
+    "heading": "#7A2A45"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Kartini Day Celebration",
+    "guestSalute": "Perempuan hebat & sahabat tercinta",
+    "guestDefault": "Sahabat & Keluarga",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Penyelenggara",
+    "countdownEyebrow": "Menuju hari Kartini",
+    "countdownTitle": "21 April",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Lokasi Perayaan",
+    "storyEyebrow": "Rangkaian kegiatan",
+    "storyTitle": "Susunan Acara",
+    "galleryEyebrow": "Semangat Kartini",
+    "galleryTitle": "Galeri Kartini",
+    "rsvpEyebrow": "Hadir bersama",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan tempat dan konsumsi dengan baik.",
+    "giftEyebrow": "Berbagi kebaikan",
+    "giftTitle": "Donasi Beasiswa",
+    "giftLead": "Kehadiran Anda sudah menjadi semangat bagi kami. Bila ingin berdonasi untuk beasiswa pendidikan perempuan, bisa melalui:",
+    "wishesEyebrow": "Semangat Kartini",
+    "wishesTitle": "Pesan untuk Perempuan Hebat",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih telah hadir dan ikut merayakan semangat Kartini."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/pita.webp",
+    "introTop": "art/photo-booth.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/gong.webp",
+        "w": 66
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/kipas.webp",
+    "storyTop": "art/potret-kartini.webp",
+    "rsvpHang": "art/lampion.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gapura-kayu.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

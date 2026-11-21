@@ -76,7 +76,9 @@ with t(slug, name, cats, description, sort) as (values
   ('little-wisuda-sma', 'Wisuda SMA', '{graduation}'::text[],                           'Syukuran kelulusan SMA: aula wisuda navy-emas dengan tirai, spanduk, balon, dan lili-hortensia, booth buku tamu, photo booth, galeri foto, serta lulusan chibi berjubah navy membawa gulungan ijazah.', 100,
   ('move-on-celebration', 'Move On Celebration – Live Guest', '{other}'::text[],                           'Pesta move on dan bab baru: panggung marmer ungu-senja bertabur lampu dan bunga sakura, papan Healing-Self Love-Growth, booth buku tamu, photo booth, galeri, fan letter wall, serta si tokoh utama chibi bergaun pink.', 101,
   ('little-babyshower', 'Baby Shower – Menyambut Bayi Pertama', '{other}'::text[],                           'Perayaan virtual menyambut bayi pertama: panggung krem bertirai dengan bunga hortensia biru-pink, balon dan lentera, booth buku tamu, photo booth bulan-beruang, galeri USG, serta sepasang calon ayah-bunda chibi berbaju biru.', 102,
-  ('hari-kemerdekaan', 'Hari Kemerdekaan – 17 Agustus', '{other}'::text[],                           'Perayaan virtual Hari Kemerdekaan 17 Agustus: panggung kayu bergorden merah-putih dengan Garuda, Monas, bendera dan kokarde, booth buku tamu, photo booth, galeri, serta pemuda berpeci pembawa semangat merdeka.', 103)
+  ('hari-kemerdekaan', 'Hari Kemerdekaan – 17 Agustus', '{other}'::text[],                           'Perayaan virtual Hari Kemerdekaan 17 Agustus: panggung kayu bergorden merah-putih dengan Garuda, Monas, bendera dan kokarde, booth buku tamu, photo booth, galeri, serta pemuda berpeci pembawa semangat merdeka.', 103,
+  ('hari-kartini', 'Hari Kartini – Kartini Day Celebration', '{other}'::text[],                           'Perayaan Hari Kartini: panggung kayu berukir dengan potret Kartini, vas bunga, karpet batik maroon-emas, booth buku tamu, photo booth, galeri, kuliner, serta perempuan berkebaya dan bunga melati di sanggul.', 104)
+
 
 
 
