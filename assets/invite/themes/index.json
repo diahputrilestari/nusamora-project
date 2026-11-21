@@ -330,7 +330,14 @@
     "sma": "little-wisuda-sma",
     "kelulusan-sma": "little-wisuda-sma",
     "lulusan": "little-wisuda-sma",
-    "little-wisuda-sma": "little-wisuda-sma"
+    "little-wisuda-sma": "little-wisuda-sma",
+    "move-on": "move-on-celebration",
+    "moveon": "move-on-celebration",
+    "move-on-celebration": "move-on-celebration",
+    "healing": "move-on-celebration",
+    "bab-baru": "move-on-celebration",
+    "new-chapter": "move-on-celebration",
+    "self-love": "move-on-celebration"
   },
   "themes": [
     {
@@ -1341,6 +1348,20 @@
       "swatch": [
         "#1B2F6B",
         "#F6E0A0"
+      ],
+      "art": true
+    },
+    {
+      "id": "move-on-celebration",
+      "name": "Move On Celebration – Live Guest",
+      "description": "Pesta move on dan bab baru: panggung marmer ungu-senja bertabur lampu dan bunga sakura, papan Healing–Self Love–Growth, booth buku tamu, photo booth, galeri, fan letter wall, serta si tokoh utama chibi bergaun pink yang menyambut tamu.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5E2A82",
+        "#F4A6CC"
       ],
       "art": true
     }

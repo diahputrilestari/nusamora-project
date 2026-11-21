@@ -1,0 +1,178 @@
+{
+  "id": "move-on-celebration",
+  "name": "Move On Celebration – Live Guest",
+  "version": 1,
+  "description": "Pesta move on dan bab baru: panggung marmer ungu-senja bertabur lampu dan bunga sakura, papan Healing–Self Love–Growth, booth buku tamu, photo booth, galeri, fan letter wall, serta si tokoh utama chibi bergaun pink yang menyambut tamu.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Alya",
+    "full": "Alya Putri Maharani",
+    "parents": "Si tokoh utama yang siap membuka bab baru",
+    "title": "Move On Celebration Alya",
+    "eventName": "Move On Celebration",
+    "start": "16:00",
+    "end": "20:00",
+    "venue": "Rooftop Café Senja",
+    "address": "Jl. Cikini Raya No. 8, Menteng, Jakarta Pusat",
+    "bank": "BCA",
+    "holder": "Alya Putri Maharani",
+    "giftAddress": "Jl. Cikini Raya No. 8, Menteng, Jakarta Pusat 10330 (u.p. Alya)",
+    "welcome": "Setelah banyak air mata, banyak cerita, dan banyak es krim, aku siap menutup satu bab dan membuka bab yang baru. Yuk rayakan bareng sahabat-sahabat terbaikku. Tidak ada drama, hanya tawa, lampu-lampu cantik, dan harapan baru.",
+    "quote": "Healing. Self Love. Growth. Happiness. New Chapter.",
+    "quoteSource": "Mantra Alya tahun ini",
+    "closing": "Terima kasih sudah jadi bagian dari perjalanan ini. Kehadiran, pelukan, dan tawamu bikin langkah pertama di bab baru terasa jauh lebih ringan.",
+    "story": [
+      {
+        "date": "Bab Lama",
+        "title": "Menutup Buku dengan Lapang",
+        "text": "Ada yang tidak berjalan sesuai rencana, dan itu tidak apa-apa. Aku belajar berterima kasih lalu pamit dengan baik."
+      },
+      {
+        "date": "Healing",
+        "title": "Pelan-pelan Pulih",
+        "text": "Ditemani sahabat, secangkir kopi, dan banyak jalan sore, hati yang patah perlahan tersusun kembali."
+      },
+      {
+        "date": "Bab Baru",
+        "title": "Siap Bahagia Lagi",
+        "text": "Lebih mengenal diri sendiri, lebih sayang pada diri sendiri. Malam ini kita rayakan langkah pertamanya."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Nadia (Bestie)",
+        "message": "Proud of you, Al! Akhirnya kamu kembali jadi kamu. Aku bawa kue dan pelukan.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Kak Rendra",
+        "message": "Bab baru pasti lebih seru. Sampai ketemu di rooftop ya!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa datang. Kamu kuat dan hebat, doa terbaik untukmu.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#5E2A82",
+    "deep2": "#8E4FB8",
+    "paper": "#FFF8FC",
+    "ink": "#3B1F4F",
+    "muted": "#7A5C8C",
+    "accent": "#E3A93B",
+    "accent2": "#FFE3A3",
+    "soft": "#F8EAF6",
+    "petal": "#F4A6CC",
+    "heading": "#5E2A82"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Move On Celebration",
+    "guestSalute": "Sahabat tersayang",
+    "guestDefault": "Sahabat & Keluarga",
+    "profileEyebrow": "Tokoh utama malam ini",
+    "profileTitle": "Si Move On",
+    "countdownEyebrow": "Menuju bab baru",
+    "countdownTitle": "Bab Baru Dimulai",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Rangkaian Acara",
+    "storyEyebrow": "Dari patah hati ke bahagia",
+    "storyTitle": "Perjalanan Move On",
+    "galleryEyebrow": "Kenangan baru",
+    "galleryTitle": "Galeri Bab Baru",
+    "rsvpEyebrow": "Hadir ya, jangan ghosting",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Kabari aku ya, apakah kamu bisa datang merayakan bab baru ini bersama kami.",
+    "giftEyebrow": "Dukungan kecil",
+    "giftTitle": "Kado & Dukungan",
+    "giftLead": "Kehadiranmu sudah lebih dari cukup. Kalau ingin mengirim dukungan atau kado kecil, bisa melalui:",
+    "wishesEyebrow": "Pesan semangat",
+    "wishesTitle": "Pesan untuk Alya",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih sudah merayakan bab baru ini bersamaku. Sampai jumpa di cerita berikutnya."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 92
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/pesawat.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-tulis.webp",
+        "w": 62
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/balon.webp",
+    "storyTop": "art/buku-diary.webp",
+    "rsvpHang": "art/lentera-b.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
