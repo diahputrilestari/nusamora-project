@@ -245,7 +245,7 @@ Bila Anda ingin mengundang orang tua dan tamu dengan rapi, [lihat pilihan paket 
 6. **Video singkat bulanan** yang kelak digabung menjadi satu video tahunan.
 7. **Surat untuk si kecil.** Orang tua menulis surat tentang pencapaian dan harapan, untuk dibaca saat ia besar.
 8. **Perayaan kecil dengan nenek dan kakek,** yang sering menyukai momen seperti ini.
-9. **Ulang tahun pertama sebagai puncak.** Rangkum seluruh momen setahun dalam satu perayaan. Panduannya ada di [First Birthday Party](/artikel/first-birthday-party-15-ide-perayaan-ulang-tahun-pertama-bayi-tidak-terlupakan).
+9. **Ulang tahun pertama sebagai puncak.** Rangkum seluruh momen setahun dalam satu perayaan. Panduannya ada di [First Birthday Party](/artikel/first-birthday-party-15-ide-perayaan-ulang-tahun-pertama-bayi).
 10. **Berbagi kebaikan** atas nama si kecil, misalnya menyumbang buku bayi atau perlengkapan.
 
 ## Pencapaian yang sering dirayakan
