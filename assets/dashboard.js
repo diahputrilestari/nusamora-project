@@ -229,6 +229,44 @@
     if (!S.notif.length) return h + empty("chat", "Belum ada notifikasi", "Pengumuman dan pengingat dari NusaMora akan tampil di sini.") + "</div>";
     return h + "<ul class=\"nt\">" + S.notif.map(function (n) { return '<li' + (n.read ? "" : ' class="unread"') + "><b>" + esc(n.title) + "</b><p>" + esc(n.body) + "</p><small>" + dt(n.created_at, true) + "</small></li>"; }).join("") + "</ul></div>";
   };
+
+  /* ---------- artikel saya: disimpan, aktivitas komentar, preferensi notifikasi ---------- */
+  var AK = { saved: null, notifs: null, prefs: null };
+  var AKT = { reply: "membalas komentarmu", approved: "Komentarmu sudah tayang", reaction: "menyukai komentarmu" };
+  V.artikel = function () {
+    var h = '<div class="pghead"><div><h1>Artikel Saya</h1><p class="sub">Artikel yang kamu simpan dan kabar dari komentarmu</p></div></div>';
+    if (AK.saved === null) { loadArtikel(); return h + '<div class="card"><div class="sk h3"></div></div>'; }
+    h += '<div class="card"><h2 style="margin-top:0">Disimpan</h2>';
+    if (AK.saved === false) h += empty("book", "Daftar simpanan belum bisa dimuat", "Muat ulang halaman, atau coba lagi nanti.");
+    else if (!AK.saved.length) h += empty("book", "Belum ada artikel tersimpan", "Tekan tombol Simpan di artikel yang ingin kamu baca lagi nanti.", '<a class="btn" href="/artikel">Jelajahi artikel</a>');
+    else h += '<ul class="nt">' + AK.saved.map(function (a) { return '<li><b><a href="/artikel/' + encodeURIComponent(a.slug) + (a.lang === "en" ? "?lang=en" : "") + '">' + esc(a.title) + '</a></b><p>' + esc(a.excerpt || "") + "</p><small>" + esc(a.read_min || 1) + " menit baca &middot; disimpan " + dt(a.saved_at) + '</small> <button type="button" class="btn o sm" data-unsave="' + esc(a.slug) + '" data-lang="' + esc(a.lang) + '">Hapus dari simpanan</button></li>'; }).join("") + "</ul>";
+    h += '</div><div class="card" style="margin-top:18px"><h2 style="margin-top:0">Kabar komentar</h2>';
+    if (!AK.notifs || !AK.notifs.items || !AK.notifs.items.length) h += empty("chat", "Belum ada kabar", "Balasan dan persetujuan komentarmu akan muncul di sini.");
+    else h += '<ul class="nt">' + AK.notifs.items.map(function (n) { var t = n.kind === "approved" ? AKT.approved : esc(n.actor || "Seseorang") + " " + AKT[n.kind]; return '<li' + (n.read ? "" : ' class="unread"') + '><b><a href="/artikel/' + encodeURIComponent(n.slug) + '#komentar">' + t + "</a></b><p>" + esc(n.title) + "</p><small>" + dt(n.created_at, true) + "</small></li>"; }).join("") + "</ul>";
+    var P = AK.prefs || { reply: true, approved: true, reaction: true };
+    h += '</div><div class="card" style="margin-top:18px"><h2 style="margin-top:0">Pengaturan notifikasi komentar</h2><form id="ak-pf" class="fgrid" style="display:grid;gap:10px">' +
+      '<label><input type="checkbox" name="reply"' + (P.reply ? " checked" : "") + '> Ada yang membalas komentarku</label><label><input type="checkbox" name="approved"' + (P.approved ? " checked" : "") + '> Komentarku disetujui moderator</label><label><input type="checkbox" name="reaction"' + (P.reaction ? " checked" : "") + '> Ada yang menyukai komentarku</label>' +
+      '<p class="sub">Balasan dan persetujuan juga dikirim lewat email bila pengiriman email sudah aktif.</p><div><button class="btn" type="submit">Simpan pengaturan</button></div></form></div>';
+    return h;
+  };
+  function loadArtikel() {
+    Promise.all([sb.rpc("my_saved_articles", { p_limit: 100, p_offset: 0 }), sb.rpc("my_article_notifs", { p_limit: 30 }), sb.rpc("article_notif_prefs_get")]).then(function (a) {
+      AK.saved = a[0].error ? false : (a[0].data || []); AK.notifs = a[1].error ? null : a[1].data; AK.prefs = a[2].error ? null : a[2].data;
+      if (location.hash === "#artikel") { route(); if (AK.notifs && AK.notifs.unread) sb.rpc("article_notifs_read"); }
+    });
+  }
+  function bindArtikel() {
+    var f = $("#ak-pf"); if (f) f.addEventListener("submit", function (e) {
+      e.preventDefault(); var b = f.querySelector("button"); b.disabled = true;
+      sb.rpc("article_notif_prefs_set", { p_reply: f.reply.checked, p_approved: f.approved.checked, p_reaction: f.reaction.checked }).then(function (r) { b.disabled = false; if (r.error) return toast("Pengaturan belum bisa disimpan.", "bad"); AK.prefs = r.data; toast("Pengaturan tersimpan.", "ok"); });
+    });
+    $$("[data-unsave]").forEach(function (b) { b.addEventListener("click", function () {
+      b.disabled = true; sb.rpc("article_save_set", { p_slug: b.dataset.unsave, p_lang: b.dataset.lang || "id", p_saved: false }).then(function (r) {
+        if (r.error || !r.data || !r.data.ok) { b.disabled = false; return toast("Belum bisa menghapus dari simpanan.", "bad"); }
+        AK.saved = AK.saved.filter(function (a) { return a.slug !== b.dataset.unsave; }); route(); toast("Dihapus dari simpanan.", "ok");
+      });
+    }); });
+  }
   function loadNotif() {
     sb.rpc("my_notifications").then(function (r) { S.notif = r.error ? false : (r.data || []); S.unread = S.notif ? S.notif.filter(function (n) { return !n.read; }).length : 0; if (location.hash === "#notifikasi") route(); });
   }
@@ -432,8 +470,8 @@
     return '<div class="pghead"><div><h1>Edit Profil</h1><p class="sub">Perbarui data akun Anda</p></div></div><div class="grid g2" style="align-items:start"><form class="card form" id="f-prof" novalidate><h2>Data diri</h2><label class="fld">Nama lengkap<input type="text" id="p-name" maxlength="80" value="' + esc(S.profile.full_name || "") + '" autocomplete="name"><span class="err" id="e-name"></span></label><label class="fld">Email<input type="email" value="' + esc(S.user.email) + '" readonly><small>Email tidak dapat diubah di sini.</small></label><label class="fld">Nomor WhatsApp<input type="tel" id="p-wa" value="' + esc(S.profile.whatsapp || "") + '" placeholder="08123456789" autocomplete="tel"><span class="err" id="e-wa"></span></label><div class="row-end"><button class="btn" type="submit" id="p-go">Simpan perubahan</button></div></form>' +
       '<form class="card form" id="f-pw" novalidate><h2>Ganti kata sandi</h2><label class="fld">Kata sandi baru<input type="password" id="w-new" autocomplete="new-password"><small>Minimal 8 karakter, campur huruf dan angka.</small><span class="err" id="e-pw"></span></label><div class="row-end"><button class="btn" type="submit" id="w-go">Perbarui kata sandi</button></div></form></div>';
   };
-  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", statistik: "Statistik Tamu", rsvp: "RSVP", bukutamu: "Buku Tamu", live: "Live Guest", notifikasi: "Notifikasi", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
-  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["statistik", "users", "Statistik Tamu"], ["rsvp", "mail", "RSVP"], ["bukutamu", "book", "Buku Tamu"], ["live", "star", "Live Guest"], ["notifikasi", "chat", "Notifikasi"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
+  var TITLES = { dashboard: "Dashboard", undangan: "Undangan Saya", statistik: "Statistik Tamu", rsvp: "RSVP", bukutamu: "Buku Tamu", live: "Live Guest", notifikasi: "Notifikasi", artikel: "Artikel Saya", invoice: "Invoice", langganan: "Langganan", domain: "Domain", bantuan: "Bantuan & Dukungan", tutorial: "Tutorial", affiliate: "Affiliate", dompet: "Dompet Bonus", profil: "Edit Profil" };
+  var NAV = [["dashboard", "home", "Dashboard"], ["undangan", "mail", "Undangan Saya"], ["statistik", "users", "Statistik Tamu"], ["rsvp", "mail", "RSVP"], ["bukutamu", "book", "Buku Tamu"], ["live", "star", "Live Guest"], ["notifikasi", "chat", "Notifikasi"], ["artikel", "book", "Artikel Saya"], ["invoice", "receipt", "Invoice"], ["langganan", "crown", "Langganan"], ["domain", "layout", "Domain"], ["bantuan", "book", "Bantuan & Dukungan"], ["tutorial", "book", "Tutorial"], ["affiliate", "share", "Affiliate"], ["dompet", "wallet", "Dompet Bonus"], ["profil", "user", "Edit Profil"]];
   function visible(k) { return FEATURES[k] !== false; }
   function buildNav(cur) {
     $("#nav").innerHTML = NAV.filter(function (n) { return visible(n[0]); }).map(function (n) {
@@ -459,6 +497,7 @@
     if (r === "affiliate") bindAff();
     if (r === "bantuan") bindSupport();
     if (r === "notifikasi") markNotifRead();
+    if (r === "artikel") bindArtikel();
     if (["statistik", "rsvp", "bukutamu", "live"].indexOf(r) >= 0) bindGuests(r);
     $$("[data-dtab]").forEach(function (t) { t.addEventListener("click", function () { S.dtab = t.dataset.dtab; route(); }); });
   }

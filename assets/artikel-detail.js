@@ -52,6 +52,8 @@
       '<li><a href="https://wa.me/?text=' + encodeURIComponent(ldText + href) + '" target="_blank" rel="noopener">' + ico("chat", 17) + "<span>WhatsApp</span></a></li>" +
       '<li><a href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(href) + '" target="_blank" rel="noopener"><span>Facebook</span></a></li>' +
       '<li><a href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + "&url=" + encodeURIComponent(href) + '" target="_blank" rel="noopener"><span>X</span></a></li>' +
+      (img ? '<li><a href="https://pinterest.com/pin/create/button/?url=' + encodeURIComponent(href) + "&media=" + encodeURIComponent(new URL(img, location.origin).href) + "&description=" + encodeURIComponent(title) + '" target="_blank" rel="noopener"><span>Pinterest</span></a></li>' : "") +
+      '<li><button type="button" class="ar-native" data-url="' + esc(href) + '" hidden>' + ico("share", 17) + "<span>Bagikan</span></button></li>" +
       '<li><button type="button" class="ar-copy" data-url="' + esc(href) + '">' + ico("link", 17) + "<span>Salin tautan</span></button></li></ul>";
 
     var h = '<div class="ar"><div class="ar-prog" id="ar-prog" role="progressbar" aria-label="Kemajuan membaca" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>';
@@ -59,12 +61,13 @@
     h += '<header class="ar-head"><nav class="ar-bc" aria-label="Breadcrumb"><ol><li><a href="/">Beranda</a></li><li><a href="/artikel">Artikel</a></li><li><a href="/artikel?kat=' + encodeURIComponent(cat) + '">' + esc(cat) + '</a></li><li aria-current="page"><span>' + esc(title) + "</span></li></ol></nav>";
     h += '<a class="ar-cat" href="/artikel?kat=' + encodeURIComponent(cat) + '">' + esc(cat) + "</a><h1>" + esc(title) + "</h1>" + (c.excerpt ? '<p class="ar-lead">' + esc(c.excerpt) + "</p>" : "");
     h += '<div class="ar-by"><div class="ar-who"><span class="ar-av" aria-hidden="true">' + esc(author.charAt(0).toUpperCase()) + '</span><div><p class="ar-au">Oleh <b>' + esc(author) + '</b></p><p class="ar-mt">' + (published ? '<time datetime="' + esc(String(c.published_at).slice(0, 10)) + '">' + esc(published) + "</time>" : "") +
-      (published ? '<i aria-hidden="true"></i>' : "") + "<span>" + ico("clock", 14) + readMin + " menit baca</span>" + (updated ? '<i aria-hidden="true"></i><span>Diperbarui ' + esc(updated) + "</span>" : "") + "</p></div></div>" + share + "</div></header>";
+      (published ? '<i aria-hidden="true"></i>' : "") + "<span>" + ico("clock", 14) + readMin + " menit baca</span>" + (updated ? '<i aria-hidden="true"></i><span>Diperbarui ' + esc(updated) + "</span>" : "") + "</p></div></div>" + share + '</div><p class="ai-stats" id="ai-stats" aria-label="Statistik artikel"></p></header>';
     h += img ? '<figure class="ar-hero">' + ctx.cover(c, cat, true) + "</figure>" : "";
     h += '<div class="ar-grid"><aside class="ar-side" aria-label="Daftar isi">' + (hasToc ? '<nav class="ar-toc" aria-labelledby="ar-th"><p id="ar-th">Daftar Isi</p>' + tocHtml + "</nav>" : "") + "</aside>";
     h += '<div class="ar-main">' + (hasToc ? '<details class="ar-mtoc"><summary>' + ico("list", 18) + '<span>Daftar Isi</span>' + ico("chev", 18) + "</summary>" + tocHtml + "</details>" : "");
     h += '<div class="ar-body kt-body" id="ar-body">' + bodyHtml + "</div>";
     h += '<div class="ar-end"><p class="ar-endl">Bagikan artikel ini</p>' + share + "</div>";
+    h += '<div class="ai-root" id="ai-root"></div>';
     h += '<aside class="ar-promo" aria-labelledby="ar-ph"><div><p class="ar-pe">NusaMora</p><h2 id="ar-ph">Undangan digital yang terasa seperti hari bahagia Anda</h2><p>Pilih template, isi data, dan bagikan link pribadi ke tiap tamu. Coba demo dulu, bayar saat Anda siap.</p></div><div class="ar-pa"><a class="btn lg ar-pb" href="/#template">Jelajahi Undangan Pernikahan</a><a class="ar-pl" href="/live/">Lihat demo Live Guest ' + ico("right", 16) + "</a></div></aside>";
     h += '<div class="ar-nav" id="ar-nav" hidden></div>';
     h += '<nav class="ar-cats" aria-label="Kategori artikel"><p>Jelajahi kategori</p><ul id="ar-cl"></ul></nav></div></div>';
@@ -92,12 +95,16 @@
         var t = d.getElementById(a.getAttribute("href").slice(1)); if (t) { e.preventDefault(); t.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); try { history.replaceState(null, "", "#" + t.id); } catch (x) { /* abaikan */ } var md = a.closest("details"); if (md) md.open = false; }
         return;
       }
+      var nb = e.target.closest(".ar-native"); if (nb) { navigator.share({ title: title, text: ldText, url: nb.getAttribute("data-url") }).catch(function () { /* dibatalkan */ }); return; }
       var cb = e.target.closest(".ar-copy"); if (cb) {
         var u = cb.getAttribute("data-url"), ok = function () { toast("Tautan tersalin."); }, fb = function () { var ta = d.createElement("textarea"); ta.value = u; ta.style.position = "fixed"; ta.style.opacity = "0"; d.body.appendChild(ta); ta.select(); try { d.execCommand("copy"); ok(); } catch (x) { toast("Salin manual: " + u); } ta.remove(); };
-        if (navigator.share && matchMedia("(pointer:coarse)").matches) navigator.share({ title: title, url: u }).catch(function () { /* dibatalkan */ }); else if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(u).then(ok, fb); else fb();
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(u).then(ok, fb); else fb();
       }
     });
     var tt; function toast(m) { var t = $("#ar-toast"); t.textContent = m; t.classList.add("on"); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove("on"); }, 2400); }
+
+    view.querySelectorAll(".ar-native").forEach(function (b) { if (navigator.share) b.hidden = false; });
+    if (sb && !pv && window.NMInteract) window.NMInteract.mount({ root: $("#ai-root"), stats: $("#ai-stats"), byline: $(".ar-au b"), ctx: ctx, toast: toast });
 
     /* ---- artikel lain: terkait, sebelumnya/berikutnya, kategori ---- */
     if (sb && !pv) Promise.resolve(sb.rpc("public_content_list", { p_type: "article", p_lang: c.lang || "id", p_limit: 100 })).then(function (r) {
