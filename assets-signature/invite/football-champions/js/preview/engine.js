@@ -1,3 +1,4 @@
+import { activeTheme } from '../themes/active.js';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -209,7 +210,7 @@ export async function startEngine(container, cfg, q) {
         audio.setSuspended(document.hidden);
     };
     document.addEventListener('visibilitychange', onVis);
-    store.setProgress(1, 'Ready');
+    store.setProgress(1, (activeTheme.world.kind === 'glb' && activeTheme.world.labels?.ready) || 'Ready');
     return {
         audio,
         controller,
