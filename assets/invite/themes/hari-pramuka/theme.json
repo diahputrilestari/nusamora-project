@@ -1,0 +1,179 @@
+{
+  "id": "hari-pramuka",
+  "name": "Hari Pramuka – 14 Agustus",
+  "version": 1,
+  "description": "Perayaan 14 Agustus – Hari Pramuka: panggung perkemahan dengan papan tali, tenda, api unggun, kacu merah-putih dan lencana tunas kelapa, booth buku tamu, photo booth, galeri, kuliner, serta pramuka cilik berseragam coklat.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Hari Pramuka",
+    "full": "Gugus Depan 05.123 – 05.124",
+    "parents": "Kwartir Ranting bersama seluruh anggota Pramuka",
+    "title": "Perayaan Hari Pramuka 14 Agustus",
+    "eventName": "Perayaan Hari Pramuka",
+    "annual": "08-14",
+    "start": "07:00",
+    "end": "14:00",
+    "venue": "Bumi Perkemahan Cibubur",
+    "address": "Jl. Raya Cibubur, Ciracas, Jakarta Timur",
+    "bank": "BRI",
+    "holder": "Panitia Hari Pramuka",
+    "giftAddress": "Sekretariat Kwartir Ranting, Jl. Pramuka No. 14, Bekasi 17530",
+    "welcome": "Salam Pramuka! Dalam rangka memperingati Hari Pramuka 14 Agustus, kami mengundang adik-adik, kakak pembina, dan orang tua untuk hadir di perayaan: upacara, lomba tangkas, api unggun, dan pentas kreasi.",
+    "quote": "Satyaku kudarmakan, darmaku kubaktikan. Bagi Indonesia tanah airku.",
+    "quoteSource": "Dasa Darma & Tri Satya Pramuka",
+    "closing": "Terima kasih atas kehadiran dan semangat kebersamaan Anda. Mari terus menjadi Pramuka yang berbakti bagi bangsa. Salam Pramuka!",
+    "story": [
+      {
+        "date": "07.00 WIB",
+        "title": "Upacara Hari Pramuka",
+        "text": "Apel besar bersama seluruh gugus depan, pembacaan Dasa Darma, dan penghormatan bendera."
+      },
+      {
+        "date": "09.00 WIB",
+        "title": "Lomba Tangkas",
+        "text": "Lomba tali-temali, sandi, peta dan kompas, serta pembuatan tenda dari setiap regu."
+      },
+      {
+        "date": "19.00 WIB",
+        "title": "Api Unggun & Pentas",
+        "text": "Nyala api unggun, yel-yel, lagu daerah, dan pentas kreasi sebagai penutup perayaan."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Kak Dedi (Pembina)",
+        "message": "Selamat Hari Pramuka! Regu Elang siap ikut lomba tangkas. Salam Pramuka!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Bunda Rina (Orang Tua)",
+        "message": "Terima kasih kakak pembina. Kami hadir menemani adik di api unggun.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa hadir. Semangat terus adik-adik Pramuka!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#6B2D7A",
+    "deep2": "#8A4A9A",
+    "paper": "#FFF8EC",
+    "ink": "#3A2216",
+    "muted": "#7A6050",
+    "accent": "#C99A3A",
+    "accent2": "#F3DDA0",
+    "soft": "#F8EDE2",
+    "petal": "#D8333A",
+    "heading": "#6B2D7A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "14 Agustus · Hari Pramuka",
+    "guestSalute": "Kakak, adik & sahabat Pramuka",
+    "guestDefault": "Sahabat Pramuka",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Keluarga Pramuka",
+    "countdownEyebrow": "Menuju hari Pramuka",
+    "countdownTitle": "14 Agustus",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Perayaan Pramuka",
+    "storyEyebrow": "Rangkaian kegiatan",
+    "storyTitle": "Susunan Acara",
+    "galleryEyebrow": "Semangat tunas kelapa",
+    "galleryTitle": "Galeri Pramuka",
+    "rsvpEyebrow": "Siap hadir",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan tempat dan konsumsi dengan baik.",
+    "giftEyebrow": "Berbagi kebaikan",
+    "giftTitle": "Donasi Kegiatan",
+    "giftLead": "Kehadiran Anda sudah menjadi semangat bagi kami. Bila ingin berdonasi untuk perlengkapan kegiatan Pramuka, bisa melalui:",
+    "wishesEyebrow": "Pesan semangat",
+    "wishesTitle": "Pesan untuk Pramuka",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran dan semangat Anda. Salam Pramuka!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/panji.webp",
+    "heading": "art/kacu.webp",
+    "introTop": "art/photo-booth.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/api-unggun.webp",
+        "w": 56
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/lencana.webp",
+    "storyTop": "art/lampu-tali.webp",
+    "rsvpHang": "art/panji.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/tenda.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

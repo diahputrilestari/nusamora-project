@@ -361,7 +361,13 @@
     "pendidikan": "hardiknas",
     "2-mei": "hardiknas",
     "hari-guru": "hardiknas",
-    "tut-wuri-handayani": "hardiknas"
+    "tut-wuri-handayani": "hardiknas",
+    "pramuka": "hari-pramuka",
+    "hari-pramuka": "hari-pramuka",
+    "14-agustus": "hari-pramuka",
+    "tunas-kelapa": "hari-pramuka",
+    "perkemahan": "hari-pramuka",
+    "kemah": "hari-pramuka"
   },
   "themes": [
     {
@@ -1442,6 +1448,20 @@
       "swatch": [
         "#1F3A7A",
         "#F6E0A0"
+      ],
+      "art": true
+    },
+    {
+      "id": "hari-pramuka",
+      "name": "Hari Pramuka – 14 Agustus",
+      "description": "Perayaan 14 Agustus – Hari Pramuka: panggung perkemahan dengan papan tali, tenda, api unggun, kacu merah-putih dan lencana tunas kelapa, booth buku tamu, photo booth, galeri, kuliner, serta pramuka cilik berseragam coklat.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B2D7A",
+        "#C99A3A"
       ],
       "art": true
     }
