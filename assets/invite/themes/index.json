@@ -344,7 +344,13 @@
     "bayi-pertama": "little-babyshower",
     "kehamilan": "little-babyshower",
     "menyambut-bayi": "little-babyshower",
-    "little-babyshower": "little-babyshower"
+    "little-babyshower": "little-babyshower",
+    "17-agustus": "hari-kemerdekaan",
+    "agustusan": "hari-kemerdekaan",
+    "kemerdekaan": "hari-kemerdekaan",
+    "hut-ri": "hari-kemerdekaan",
+    "hari-kemerdekaan": "hari-kemerdekaan",
+    "dirgahayu": "hari-kemerdekaan"
   },
   "themes": [
     {
@@ -1383,6 +1389,20 @@
       "swatch": [
         "#3E6BB0",
         "#F6B7CF"
+      ],
+      "art": true
+    },
+    {
+      "id": "hari-kemerdekaan",
+      "name": "Hari Kemerdekaan – 17 Agustus",
+      "description": "Perayaan virtual Hari Kemerdekaan 17 Agustus: panggung kayu bergorden merah-putih dengan Garuda, Monas, bendera dan kokarde, booth buku tamu, photo booth, galeri, serta pemuda berpeci pembawa semangat merdeka.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#A4141E",
+        "#F6DEA0"
       ],
       "art": true
     }

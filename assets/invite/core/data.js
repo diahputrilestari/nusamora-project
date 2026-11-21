@@ -262,6 +262,7 @@
     o = o || {}; var nm = str(o.name, 40) || "Acara Kita";
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
     var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
+    if (/^\d\d-\d\d$/.test(o.annual || "")) { var yy = new Date().getUTCFullYear(), mo = +o.annual.slice(0, 2), dd = +o.annual.slice(3); if (Date.UTC(yy, mo - 1, dd) < Date.now()) yy++; iso = yy + "-" + o.annual; }
     var content = {
       theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
       names: { a: nm },
