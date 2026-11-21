@@ -9,7 +9,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),{textCon
 .dig[hidden]{display:none}
 @media(max-width:700px){.did{padding:16px}}
 `}));
-const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama sekolah / angkatan',manasik:'Nama anak / sekolah',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
+const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama sekolah / angkatan',manasik:'Nama anak / sekolah',moveon:'Nama kamu',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
 let NMDR=null,NMDRINV=null,NMDIRTY=false;
 const nmDraftId=()=>nmFromFields({eventType:NMDR.e,groomName:NMDR.g,brideName:NMDR.b,nameOrder:NMDR.o,hostName:NMDR.h,stageAvatar:NMDR.s,theme:NMDR.t},'');
 function nmBuildForm(){if($('#didform'))return;const w=$('.dwrap'),body=$('#dbody');if(!w||!body)return;const d=document.createElement('div');d.id='didform';d.className='did';
