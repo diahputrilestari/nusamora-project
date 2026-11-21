@@ -1,4 +1,4 @@
--- Dua artikel undangan digital: membuat sendiri tanpa keahlian desain, dan 10 fitur yang membuat pernikahan lebih praktis.
+-- Tiga artikel undangan digital: membuat sendiri tanpa keahlian desain, 10 fitur praktis, dan tren undangan 3D interaktif.
 -- Langsung published. Aman dijalankan ulang (dilewati bila slug sudah ada). Fitur dibahas secara umum; ketersediaan di tiap paket NusaMora dicek di halaman paket.
 insert into public.contents (type, title, slug, lang, excerpt, body, seo_title, seo_description, status, published_at, sort)
 select v.* from (values
@@ -145,6 +145,70 @@ Di atas semuanya, undangan yang baik **mudah dipahami dalam beberapa detik**. Ta
 
 ## Penutup
 
-Fitur terbaik adalah yang membuat hari-hari persiapan Anda lebih ringan dan tamu Anda merasa disambut. Pilih berdasarkan kebutuhan, uji di beberapa perangkat, dan kirim dengan tulus. Jika Anda sedang membandingkan pilihan, baca juga [undangan digital versus cetak](/artikel/undangan-digital-vs-undangan-cetak-mana-yang-lebih-baik-untuk-pernikahanmu), lalu [lihat demo Live Guest](/live/) atau [pilihan paket NusaMora](/paket).$q$, $q$10 Fitur Undangan Digital yang Membuat Pernikahan Lebih Praktis$q$, $q$Sepuluh fitur undangan digital yang meringankan persiapan: RSVP, tautan pribadi, peta, buku tamu, siaran langsung, dan cara memilih yang Anda butuhkan.$q$, 'published', now(), 0)
+Fitur terbaik adalah yang membuat hari-hari persiapan Anda lebih ringan dan tamu Anda merasa disambut. Pilih berdasarkan kebutuhan, uji di beberapa perangkat, dan kirim dengan tulus. Jika Anda sedang membandingkan pilihan, baca juga [undangan digital versus cetak](/artikel/undangan-digital-vs-undangan-cetak-mana-yang-lebih-baik-untuk-pernikahanmu), lalu [lihat demo Live Guest](/live/) atau [pilihan paket NusaMora](/paket).$q$, $q$10 Fitur Undangan Digital yang Membuat Pernikahan Lebih Praktis$q$, $q$Sepuluh fitur undangan digital yang meringankan persiapan: RSVP, tautan pribadi, peta, buku tamu, siaran langsung, dan cara memilih yang Anda butuhkan.$q$, 'published', now(), 0),
+  ('article', $q$3D Wedding Invitation: Tren Baru Undangan Pernikahan yang Lebih Interaktif$q$, $q$3d-wedding-invitation-tren-undangan-pernikahan-interaktif$q$, 'id', $q$Undangan yang bisa diputar, dijelajahi, dan dibuka seperti amplop sungguhan. Kenali apa itu undangan 3D, kapan cocok dipakai, dan hal yang perlu dijaga agar tetap nyaman bagi semua tamu.$q$, $q$Membuka sebuah undangan lalu merasa seperti melangkah masuk ke dalam cerita: amplop terbuka perlahan, bunga bergerak lembut, dan ruang pelaminan muncul dari layar. Pengalaman semacam ini yang membuat **undangan 3D dan interaktif** semakin banyak dibicarakan.
+
+Sebelum ikut tren, mari pahami dulu apa itu, mengapa terasa memikat, dan kapan sebaiknya Anda berhati-hati.
+
+> Catatan: "tren" berarti sedang banyak dipilih, bukan berarti wajib. Undangan yang baik tetap yang cocok dengan tamu dan cerita Anda. Ketersediaan efek 3D berbeda di tiap layanan, jadi periksa template yang tersedia di [halaman template](/#template) dan [paket NusaMora](/paket).
+
+## Apa itu undangan 3D?
+
+Istilahnya dipakai untuk undangan digital yang menampilkan **kedalaman dan gerak**: efek paralaks saat layar digeser, objek yang tampak melayang, amplop atau pintu yang terbuka, atau ruang yang bisa "dijelajahi". Sebagian memanfaatkan animasi ringan, sebagian lain memakai model tiga dimensi sungguhan. Intinya sama: undangan terasa seperti **pengalaman**, bukan sekadar halaman informasi.
+
+## Mengapa terasa memikat secara psikologis
+
+- **Rasa penasaran.** Gerakan dan kejutan kecil membuat orang ingin menjelajah lebih jauh.
+- **Kesan istimewa.** Tamu merasa diundang ke sesuatu yang dirancang dengan perhatian.
+- **Interaksi memperkuat ingatan.** Hal yang kita sentuh dan jelajahi cenderung lebih diingat daripada yang hanya dibaca.
+- **Antisipasi.** Pengalaman membuka undangan menjadi awal dari suasana acara itu sendiri.
+
+## Kelebihan undangan interaktif
+
+- **Berkesan dan mudah dibagikan.** Tamu cenderung menceritakan atau memamerkannya.
+- **Menyampaikan suasana.** Warna, musik, dan gerak menyampaikan konsep acara sebelum tamu tiba.
+- **Menyimpan banyak informasi tanpa terasa penuh.** Bagian-bagian bisa dibuka bertahap.
+- **Dapat dipadukan dengan fitur lain,** seperti RSVP dan buku tamu. Daftar fiturnya ada di [10 fitur undangan digital](/artikel/10-fitur-undangan-digital-yang-membuat-pernikahan-lebih-praktis).
+
+## Hal yang perlu dipertimbangkan
+
+Tren ini punya sisi yang perlu dijaga:
+
+- **Performa.** Efek berat bisa membuat halaman lambat atau macet di ponsel lama atau sinyal lemah. Ini masalah nyata bagi sebagian tamu.
+- **Keterbacaan.** Informasi penting, seperti tanggal, lokasi, dan RSVP, harus tetap mudah ditemukan dalam beberapa detik.
+- **Kenyamanan tamu sepuh.** Gerakan yang rumit bisa membingungkan. Sediakan tampilan yang sederhana atau tombol yang jelas.
+- **Aksesibilitas.** Orang yang sensitif terhadap gerakan membutuhkan opsi mengurangi animasi, dan musik sebaiknya bisa dimatikan.
+- **Kuota data.** Berkas besar menghabiskan kuota. Pilih desain yang ringan.
+
+## Kapan undangan 3D cocok untuk Anda?
+
+- Tamu Anda banyak yang muda dan akrab dengan gawai.
+- Anda ingin kesan modern dan berbeda.
+- Konsep acara sangat visual, seperti taman bunga, tema adat, atau tema tertentu.
+- Anda siap menguji undangan di beberapa perangkat.
+
+Dan kapan sebaiknya cukup yang sederhana?
+
+- Tamu didominasi orang sepuh atau di daerah dengan sinyal terbatas.
+- Anggaran dan waktu persiapan terbatas, sehingga kejelasan lebih penting.
+- Anda ingin fokus pada pesan, bukan efek. Pertimbangkan juga [undangan digital versus cetak](/artikel/undangan-digital-vs-undangan-cetak-mana-yang-lebih-baik-untuk-pernikahanmu).
+
+## Tips memilih dan menggunakan undangan interaktif
+
+- **Uji di ponsel biasa,** bukan hanya perangkat terbaru, dan di jaringan yang tidak terlalu cepat.
+- **Pastikan informasi inti terlihat segera** setelah undangan terbuka, tanpa harus menjelajah.
+- **Beri tombol "lewati animasi"** atau tampilan ringkas bila tersedia.
+- **Jaga satu pesan utama.** Terlalu banyak efek membuat pesan utama tenggelam.
+- **Kirim dengan pengantar hangat,** bukan hanya tautan. Panduannya ada di [tips membagikan undangan lewat WhatsApp](/artikel/tips-membagikan-undangan-digital-lewat-whatsapp).
+- **Lengkapi data dengan teliti.** Gunakan [checklist isi undangan](/artikel/checklist-isi-undangan-pernikahan-digital).
+- **Pikirkan keamanan tautan,** seperti dibahas di [risiko nama tamu di URL](/artikel/link-undangan-digital-nama-tamu-di-url-berisiko-disalahgunakan).
+
+## Perpaduan yang seimbang
+
+Sebagian pasangan memilih jalan tengah: undangan interaktif untuk tamu yang akrab teknologi, dan versi sederhana atau cetak untuk keluarga sepuh. Dengan cara ini, semua tamu merasa dihargai dan mendapat pengalaman yang nyaman. Untuk panduan membuatnya sendiri, baca [cara membuat undangan digital tanpa keahlian desain](/artikel/cara-membuat-undangan-pernikahan-digital-sendiri-tanpa-keahlian-desain).
+
+## Penutup
+
+Undangan 3D adalah cara menarik untuk membuat tamu merasakan suasana sebelum hari H. Namun kemegahan efek tidak boleh mengalahkan kejelasan dan kenyamanan. Pilih yang sesuai dengan tamu dan cerita Anda, uji dengan teliti, dan biarkan pesan utamanya tetap terang. Siap menjelajah? [Lihat pilihan template](/#template) atau [paket undangan NusaMora](/paket).$q$, $q$3D Wedding Invitation: Tren Undangan Pernikahan yang Lebih Interaktif$q$, $q$Apa itu undangan pernikahan 3D dan interaktif, mengapa memikat, kapan cocok dipakai, serta hal yang perlu dijaga: performa, keterbacaan, dan kenyamanan tamu.$q$, 'published', now(), 0)
 ) as v(type, title, slug, lang, excerpt, body, seo_title, seo_description, status, published_at, sort)
 where not exists (select 1 from public.contents c where c.type = 'article' and c.slug = v.slug and c.lang = v.lang);
