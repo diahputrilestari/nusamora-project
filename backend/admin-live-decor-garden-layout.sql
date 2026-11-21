@@ -29,7 +29,7 @@ set decor = (
 ), updated_at = now()
 where v.decor is not null and jsonb_typeof(v.decor) = 'object' and v.decor <> '{}'::jsonb;
 
--- Hardiknas: ukuran dekor disetel per sprite (posisi tetap bawaan Romantic Garden).
+-- Hardiknas & Kemerdekaan 17 Agustus: ukuran dekor disetel per sprite (posisi tetap bawaan Romantic Garden).
 update public.live_venues v set decor = v.decor
   || jsonb_build_object('easel', (v.decor -> 'easel') || '{"w":2.8,"x":4.6,"z":8.2}'::jsonb)
   || jsonb_build_object('sign', (v.decor -> 'sign') || '{"w":2.0}'::jsonb)
@@ -38,7 +38,7 @@ update public.live_venues v set decor = v.decor
   || jsonb_build_object('stall_drinks', (v.decor -> 'stall_drinks') || '{"w":4.8}'::jsonb)
   || jsonb_build_object('fountain', (v.decor -> 'fountain') || '{"w":5.8}'::jsonb),
   updated_at = now()
-where v.key = 'hardiknas' and v.decor ? 'easel' and v.decor ? 'sign' and v.decor ? 'photobooth' and v.decor ? 'claw' and v.decor ? 'stall_drinks' and v.decor ? 'fountain';
+where v.key in ('hardiknas', 'kemerdekaan-17-agustus') and v.decor ? 'easel' and v.decor ? 'sign' and v.decor ? 'photobooth' and v.decor ? 'claw' and v.decor ? 'stall_drinks' and v.decor ? 'fountain';
 
 -- Rollback (bila perlu):
 -- update public.live_venues v set decor = b.decor, updated_at = now() from public.live_venues_decor_backup b where b.key = v.key;
