@@ -1,0 +1,179 @@
+{
+  "id": "little-babyshower",
+  "name": "Baby Shower – Menyambut Bayi Pertama",
+  "version": 1,
+  "description": "Perayaan virtual menyambut bayi pertama: panggung krem bertirai dengan bunga hortensia biru-pink, balon dan lentera, booth buku tamu, photo booth bulan-beruang, galeri USG, serta sepasang calon ayah-bunda chibi berbaju biru.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Dinda & Raka",
+    "full": "Raka & Dinda",
+    "parents": "Calon ayah & bunda · menanti buah hati pertama",
+    "title": "Baby Shower Dinda & Raka",
+    "eventName": "Menyambut Bayi Pertama",
+    "start": "19:30",
+    "end": "21:00",
+    "venue": "Virtual · Zoom Meeting",
+    "address": "Tautan Zoom dikirim lewat WhatsApp setelah Anda mengonfirmasi hadir.",
+    "maps": "https://zoom.us/join",
+    "bank": "BCA",
+    "holder": "Raka Aditya Pratama",
+    "giftAddress": "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530 (u.p. Raka & Dinda)",
+    "welcome": "Alhamdulillah, dengan penuh syukur kami mengabarkan bahwa kami akan segera menyambut buah hati pertama. Karena jarak memisahkan banyak dari kita, kami mengundang Bapak/Ibu/Saudara/i bergabung di perayaan virtual: ada doa bersama, tebak-tebakan seru, dan sesi ucapan untuk si kecil.",
+    "quote": "Ya Tuhan kami, anugerahkanlah kepada kami pasangan kami dan keturunan kami sebagai penyenang hati (kami).",
+    "quoteSource": "QS. Al-Furqan: 74",
+    "closing": "Terima kasih sudah ikut berbahagia dan mendoakan si kecil. Semoga ia lahir sehat, selamat, dan menjadi anak yang salih/salihah.",
+    "story": [
+      {
+        "date": "Awal pernikahan",
+        "title": "Dua Hati, Satu Rumah",
+        "text": "Kami memulai rumah tangga dengan doa sederhana: segera dikaruniai keturunan yang baik."
+      },
+      {
+        "date": "Dua garis biru",
+        "title": "Kabar yang Dinanti",
+        "text": "Pagi itu, dua garis biru muncul. Kami menangis dan bersujud syukur bersama."
+      },
+      {
+        "date": "Menanti si kecil",
+        "title": "Persiapan Menyambut",
+        "text": "Kamar mungil mulai ditata, doa tak putus dilantunkan, dan hari bertemu si kecil semakin dekat."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Ibu Mertua",
+        "message": "Sehat-sehat ya, Nak. Ibu sudah tidak sabar menimang cucu pertama.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Sahabat SMA",
+        "message": "Selamat calon ayah & bunda! Aku bakal join Zoom sambil bawa tebakan jenis kelamin.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Kak Nabila",
+        "message": "Maaf belum bisa ikut online. Doaku untuk lahiran yang lancar dan si kecil sehat.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#3E6BB0",
+    "deep2": "#6E9AD8",
+    "paper": "#FFFBF3",
+    "ink": "#2B3A5C",
+    "muted": "#6A7A99",
+    "accent": "#E8B84A",
+    "accent2": "#FFE9A8",
+    "soft": "#EAF2FC",
+    "petal": "#F6B7CF",
+    "heading": "#3E6BB0"
+  },
+  "fonts": {
+    "script": "Dancing Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Menyambut Bayi Pertama",
+    "guestSalute": "Keluarga & sahabat tersayang",
+    "guestDefault": "Keluarga & Sahabat",
+    "profileEyebrow": "Calon ayah & bunda",
+    "profileTitle": "Kami Berdua",
+    "countdownEyebrow": "Menuju hari bahagia",
+    "countdownTitle": "Menanti si Kecil",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Perayaan Virtual",
+    "storyEyebrow": "Perjalanan kami",
+    "storyTitle": "Menjadi Orang Tua",
+    "galleryEyebrow": "Momen penantian",
+    "galleryTitle": "Galeri Calon Buah Hati",
+    "rsvpEyebrow": "Gabung di Zoom",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Kabari kami apakah Anda dapat bergabung. Tautan Zoom akan kami kirim setelah konfirmasi.",
+    "giftEyebrow": "Untuk si kecil",
+    "giftTitle": "Hadiah Bayi",
+    "giftLead": "Doa Anda adalah hadiah terbaik. Bila ingin mengirim hadiah untuk si kecil, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Doa untuk si Kecil",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih sudah ikut berbahagia dan mendoakan si kecil."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 190
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/dot-pacifier.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/kereta-bayi.webp",
+        "w": 62
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/bulan-beruang.webp",
+    "storyTop": "art/jemuran-bayi.webp",
+    "rsvpHang": "art/lentera-b.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

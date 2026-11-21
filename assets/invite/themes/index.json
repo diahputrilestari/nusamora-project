@@ -337,7 +337,14 @@
     "healing": "move-on-celebration",
     "bab-baru": "move-on-celebration",
     "new-chapter": "move-on-celebration",
-    "self-love": "move-on-celebration"
+    "self-love": "move-on-celebration",
+    "baby-shower": "little-babyshower",
+    "babyshower": "little-babyshower",
+    "bayi": "little-babyshower",
+    "bayi-pertama": "little-babyshower",
+    "kehamilan": "little-babyshower",
+    "menyambut-bayi": "little-babyshower",
+    "little-babyshower": "little-babyshower"
   },
   "themes": [
     {
@@ -1362,6 +1369,20 @@
       "swatch": [
         "#5E2A82",
         "#F4A6CC"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-babyshower",
+      "name": "Baby Shower – Menyambut Bayi Pertama",
+      "description": "Perayaan virtual menyambut bayi pertama: panggung krem bertirai dengan bunga hortensia biru-pink, balon dan lentera, booth buku tamu, photo booth bulan-beruang, galeri USG, serta sepasang calon ayah-bunda chibi berbaju biru.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3E6BB0",
+        "#F6B7CF"
       ],
       "art": true
     }
