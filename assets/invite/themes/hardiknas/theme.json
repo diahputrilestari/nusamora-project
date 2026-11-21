@@ -1,0 +1,179 @@
+{
+  "id": "hardiknas",
+  "name": "Hari Pendidikan Nasional (Hardiknas)",
+  "version": 1,
+  "description": "Perayaan Hari Pendidikan Nasional: aula kayu bergorden merah-putih dengan papan Hardiknas, toga dan buku, karpet biru-emas, booth buku tamu, photo booth toga, galeri sekolah, serta pelajar berbatik biru-emas.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Hardiknas",
+    "full": "SMA Negeri 1 Cikarang",
+    "parents": "Bersama seluruh guru, siswa, dan orang tua",
+    "title": "Perayaan Hardiknas SMA Negeri 1",
+    "eventName": "Perayaan Hardiknas",
+    "annual": "05-02",
+    "start": "07:30",
+    "end": "12:30",
+    "venue": "Aula SMA Negeri 1 Cikarang",
+    "address": "Jl. Pendidikan No. 12, Cikarang Utara, Bekasi",
+    "bank": "BRI",
+    "holder": "Panitia Hardiknas SMAN 1",
+    "giftAddress": "Tata Usaha SMA Negeri 1 Cikarang, Jl. Pendidikan No. 12, Bekasi 17530",
+    "welcome": "Dalam rangka memperingati Hari Pendidikan Nasional, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam perayaan Hardiknas: upacara, pentas seni, lomba pelajar, dan penghargaan bagi guru serta siswa berprestasi.",
+    "quote": "Ing ngarsa sung tuladha, ing madya mangun karsa, tut wuri handayani.",
+    "quoteSource": "Ki Hajar Dewantara",
+    "closing": "Terima kasih atas kehadiran dan dukungan Anda. Mari terus menyalakan semangat belajar demi Indonesia yang cerdas. Tut Wuri Handayani.",
+    "story": [
+      {
+        "date": "07.30 WIB",
+        "title": "Upacara Hardiknas",
+        "text": "Upacara bendera bersama seluruh guru dan siswa, dilanjutkan pembacaan amanat dan ikrar pelajar."
+      },
+      {
+        "date": "09.00 WIB",
+        "title": "Pentas Seni & Lomba",
+        "text": "Penampilan seni, lomba cerdas cermat, dan pameran karya pelajar di sepanjang aula."
+      },
+      {
+        "date": "11.30 WIB",
+        "title": "Penghargaan & Ramah Tamah",
+        "text": "Penyerahan penghargaan untuk guru dan siswa berprestasi, ditutup dengan makan siang bersama."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Bu Wulan (Kepala Sekolah)",
+        "message": "Selamat Hari Pendidikan Nasional. Terima kasih kepada semua yang telah berjuang untuk pendidikan.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Pak Hendra (Ketua Komite)",
+        "message": "Siap hadir bersama para orang tua. Semoga acaranya lancar dan bermanfaat.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa hadir. Salam semangat untuk adik-adik pelajar!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#1F3A7A",
+    "deep2": "#3A5CA8",
+    "paper": "#FFFAF0",
+    "ink": "#1A2547",
+    "muted": "#5C678A",
+    "accent": "#D4A62E",
+    "accent2": "#F6E0A0",
+    "soft": "#EEF2FA",
+    "petal": "#E04048",
+    "heading": "#1F3A7A"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Hari Pendidikan Nasional",
+    "guestSalute": "Bapak/Ibu guru, orang tua & sahabat",
+    "guestDefault": "Keluarga Besar Sekolah",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Keluarga Sekolah",
+    "countdownEyebrow": "Menuju hari pendidikan",
+    "countdownTitle": "2 Mei",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Perayaan Hardiknas",
+    "storyEyebrow": "Rangkaian kegiatan",
+    "storyTitle": "Susunan Acara",
+    "galleryEyebrow": "Semangat belajar",
+    "galleryTitle": "Galeri Hardiknas",
+    "rsvpEyebrow": "Hadir bersama",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan tempat dan konsumsi dengan baik.",
+    "giftEyebrow": "Berbagi untuk pendidikan",
+    "giftTitle": "Donasi Pendidikan",
+    "giftLead": "Kehadiran Anda sudah menjadi semangat bagi kami. Bila ingin berdonasi untuk beasiswa dan perpustakaan sekolah, bisa melalui:",
+    "wishesEyebrow": "Doa & dukungan",
+    "wishesTitle": "Pesan untuk Dunia Pendidikan",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran dan dukungan Anda. Tut Wuri Handayani."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/toga-buku.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/globe.webp",
+        "w": 50
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/piala.webp",
+    "storyTop": "art/buku-laurel.webp",
+    "rsvpHang": "art/lampu-minyak.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

@@ -355,7 +355,13 @@
     "hari-kartini": "hari-kartini",
     "kartini-day": "hari-kartini",
     "ra-kartini": "hari-kartini",
-    "21-april": "hari-kartini"
+    "21-april": "hari-kartini",
+    "hardiknas": "hardiknas",
+    "hari-pendidikan": "hardiknas",
+    "pendidikan": "hardiknas",
+    "2-mei": "hardiknas",
+    "hari-guru": "hardiknas",
+    "tut-wuri-handayani": "hardiknas"
   },
   "themes": [
     {
@@ -1422,6 +1428,20 @@
       "swatch": [
         "#7A2A45",
         "#F3DDA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "hardiknas",
+      "name": "Hari Pendidikan Nasional (Hardiknas)",
+      "description": "Perayaan Hari Pendidikan Nasional: aula kayu bergorden merah-putih dengan papan Hardiknas, toga dan buku, karpet biru-emas, booth buku tamu, photo booth toga, galeri sekolah, serta pelajar berbatik biru-emas.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3A7A",
+        "#F6E0A0"
       ],
       "art": true
     }
