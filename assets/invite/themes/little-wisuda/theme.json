@@ -1,0 +1,136 @@
+{
+  "id": "little-wisuda",
+  "name": "Wisuda Skripsi",
+  "version": 1,
+  "description": "Syukuran kelulusan skripsi: panggung ungu-emas bertirai dengan toga dan daun laurel, karangan bunga pink, lentera emas, photo booth dan galeri foto, serta wisudawati chibi bertoga membawa skripsi.",
+  "categories": [
+    "graduation"
+  ],
+  "demo": {
+    "name": "Alesha",
+    "full": "Alesha Putri Maharani, S.Pd.",
+    "parents": "Putri pertama Bapak Dimas Pratama & Ibu Rania Larasati"
+  },
+  "colors": {
+    "deep": "#5B2A86",
+    "deep2": "#8A4FB8",
+    "paper": "#FBF6FD",
+    "ink": "#2B1540",
+    "muted": "#7A5E92",
+    "accent": "#D4A23A",
+    "accent2": "#F6DC98",
+    "soft": "#F3E8FA",
+    "petal": "#F4A8CE",
+    "heading": "#5B2A86"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Syukuran Kelulusan",
+    "guestSalute": "Keluarga & sahabat tersayang",
+    "profileEyebrow": "Sang wisudawati",
+    "profileTitle": "Sarjana Kami",
+    "countdownEyebrow": "Menuju hari wisuda",
+    "countdownTitle": "Hari Kelulusan",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Syukuran Wisuda",
+    "storyEyebrow": "Perjuangan bersama",
+    "storyTitle": "Kisah Skripsi",
+    "galleryEyebrow": "Momen berharga",
+    "galleryTitle": "Galeri Wisuda",
+    "rsvpLead": "Mohon kabari kami apakah Bapak/Ibu/Saudara/i dapat hadir merayakan kelulusan ini.",
+    "giftEyebrow": "Tanda kasih",
+    "giftTitle": "Kado Wisuda",
+    "giftLead": "Kehadiran dan doa Anda sudah menjadi hadiah terindah. Bila ingin mengirim tanda kasih, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Ucapan Selamat",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1677
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1677
+    },
+    "coverHang": "art/bohlam.webp",
+    "coverGround": [
+      {
+        "src": "art/vas-bunga.webp",
+        "w": 62
+      },
+      {
+        "src": "art/wisudawati.webp",
+        "w": 104
+      },
+      {
+        "src": "art/vas-bunga.webp",
+        "w": 62
+      }
+    ],
+    "heading": "art/toga.webp",
+    "introTop": "art/buku-toga.webp",
+    "figureBride": "art/wisudawati.webp",
+    "countdownRow": [
+      {
+        "src": "art/pilar-bunga.webp",
+        "w": 46
+      },
+      {
+        "src": "art/pouf.webp",
+        "w": 104
+      },
+      {
+        "src": "art/pilar-bunga-b.webp",
+        "w": 46
+      }
+    ],
+    "eventBadge": "art/lentera.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "rsvpHang": "art/bohlam-2.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/wisudawati.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

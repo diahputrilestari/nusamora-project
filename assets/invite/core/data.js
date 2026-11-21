@@ -143,7 +143,7 @@
     return rpc("submit_wish", { p_slug: vm.slug, p_name: d.name, p_message: d.message, p_attendance: d.attendance || null });
   }
   function wishes(vm, before) {
-    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : vm.category === "corporate" || vm.category === "seminar" ? DEMO_WISHES_EV : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
+    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : vm.category === "graduation" ? DEMO_WISHES_GR : vm.category === "corporate" || vm.category === "seminar" ? DEMO_WISHES_EV : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
     return rpc("list_wishes", { p_slug: vm.slug, p_before: before || null, p_limit: 20 });
   }
 
@@ -168,10 +168,16 @@
     { id: "q2", name: "Tante Mira & Om Bayu", message: "Selamat atas kelahiran si kecil! Semoga sehat selalu dan tumbuh penuh kasih sayang.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
     { id: "q3", name: "Eyang Putri", message: "Doa terbaik untuk cucu tersayang. Maaf Eyang belum bisa datang, insyaAllah segera berkunjung.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
   ];
+  var DEMO_WISHES_GR = [
+    { id: "w1", name: "Prof. Hendra (Dosen Pembimbing)", message: "Selamat atas kelulusannya! Semoga ilmunya bermanfaat dan sukses di langkah berikutnya.", attendance: "hadir", created_at: "2026-11-01T09:12:00+07:00" },
+    { id: "w2", name: "Tante Mira & Om Bayu", message: "Bangga banget! Selamat ya, sarjana baru. Semoga cepat dapat kerja impian.", attendance: "hadir", created_at: "2026-10-30T19:40:00+07:00" },
+    { id: "w3", name: "Kak Dinda (Teman Seperjuangan)", message: "Maaf belum bisa hadir, selamat wisuda! Traktirannya nanti ya.", attendance: "tidak", created_at: "2026-10-28T08:05:00+07:00" }
+  ];
   /* demo per kategori acara: tema ulang tahun memakai data contoh ulang tahun */
   /* o = theme.json "demo" (opsional): { name, full, parents, age } untuk menyesuaikan data contoh */
   function demoFor(theme, cat, o) {
     if (cat === "aqiqah") return demoAqiqah(theme, o);
+    if (cat === "graduation") return demoGraduation(theme, o);
     var evt = cat === "corporate" || cat === "seminar";
     if (cat !== "birthday" && !evt) return demoData(theme);
     o = o || {}; var nm = str(o.name, 30) || "Alesha", age = str(o.age, 10) || "5";
@@ -222,6 +228,31 @@
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
     return { vm: normalize(content, { slug: "demo", title: "Aqiqah " + nm, category: "aqiqah", event_date: iso, mode: "demo" }), template: theme || "" };
+  }
+  function demoGraduation(theme, o) {
+    o = o || {}; var nm = str(o.name, 30) || "Alesha";
+    var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
+    var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
+    var content = {
+      theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
+      names: { a: nm },
+      couple: { bride: { full: str(o.full, 80) || "Alesha Putri Maharani, S.Pd.", parents: str(o.parents, 120) || "Putri pertama Bapak Dimas Pratama & Ibu Rania Larasati" } },
+      welcome: str(o.welcome, 1000) || "Alhamdulillah, setelah perjalanan panjang penuh doa, begadang, dan revisi, " + nm + " resmi menyelesaikan studinya. Kami mengundang Bapak/Ibu/Saudara/i untuk berbagi kebahagiaan di syukuran kelulusan ini.",
+      quote: { text: str(o.quote, 400) || "Sesungguhnya bersama kesulitan ada kemudahan.", source: str(o.quoteSource, 80) || "QS. Al-Insyirah: 6" },
+      photos: { cover: u("nm-grad-cover", 900, 1200), bride: u("nm-grad", 600, 800), gallery: ["g1", "g2", "g3", "g4", "g5", "g6"].map(function (s, i) { return u("nm-grad-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
+      event: { name: str(o.eventName, 60) || "Syukuran Wisuda", start: str(o.start, 5) || "11:00", end: str(o.end, 5) || "14:00", tz: "WIB", venue: str(o.venue, 120) || "Aula Gedung Serbaguna", address: str(o.address, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      story: Array.isArray(o.story) && o.story.length ? o.story.slice(0, 6).map(function (x, i) { x = x || {}; return { date: str(x.date, 40), title: str(x.title, 80), text: str(x.text, 600), photo: i === 1 ? u("nm-grad-s2", 700, 500) : "" }; }) : [
+        { date: "Agustus 2022", title: "Hari Pertama Kuliah", text: "Dengan almamater baru dan tekad besar, " + nm + " memulai perjalanan menuju gelar sarjana.", photo: "" },
+        { date: "Juni 2026", title: "Sidang Skripsi", text: "Setelah berbulan-bulan revisi dan begadang, skripsi " + nm + " dinyatakan lulus dengan nilai memuaskan.", photo: u("nm-grad-s2", 700, 500) },
+        { date: "Januari 2027", title: "Hari Wisuda", text: "Toga dikenakan, topi dilempar ke udara. Satu bab selesai, bab berikutnya segera dimulai.", photo: "" }
+      ],
+      gift: { bank: "BCA", number: "1234567890", holder: "Rania Larasati" },
+      giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+      closing: str(o.closing, 600) || "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini. Semoga kebahagiaan ini juga menjadi milik kita semua.",
+      music: { enabled: true, track: "we-are" },
+      features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
+    };
+    return { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || "Wisuda " + nm, category: "graduation", event_date: iso, mode: "demo" }), template: theme || "" };
   }
   function demoData(theme) {
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
