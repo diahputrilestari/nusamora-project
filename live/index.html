@@ -139,7 +139,7 @@ function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),.
 let ix=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+joy.x,iy=(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)+joy.y;const L=Math.hypot(ix,iy);
 if(L>.1){if(L>1){ix/=L;iy/=L}auto=null;move(P,-Math.sin(yaw)*iy+Math.cos(yaw)*ix,-Math.cos(yaw)*iy-Math.sin(yaw)*ix,5*dt)}
 else if(auto){const dx=auto.x-P.g.position.x,dz=auto.z-P.g.position.z,d=Math.hypot(dx,dz);if(d<.4){const i=auto.id;auto=null;arrive(i)}else move(P,dx/d,dz/d,4.5*dt)}
-bots.forEach(b=>{const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*28;b.tz=Math.random()*20-8}}else move(b,dx/d,dz/d,1.5*dt)});
+bots.forEach(b=>{if(b.fix){b.g.position.x=b.fx;b.g.position.z=b.fz;return}const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*28;b.tz=Math.random()*20-8}}else move(b,dx/d,dz/d,1.5*dt)});
 if(yawT!==null)yaw+=(yawT-yaw)*.04;
 ents.forEach(e=>{const l=e.g.userData.legs;if(l&&l.length){const w=e.mv?Math.sin(t*10+(e.s||0))*.6:0;l[0].rotation.x+=(w-l[0].rotation.x)*.3;l[1].rotation.x+=(-w-l[1].rotation.x)*.3}e.g.position.y=.1+(e.mv?Math.abs(Math.sin(t*10))*.08:Math.sin(t*2+(e.s||0))*.03);e.mv=0;
 if(e.el){const v=new THREE.Vector3(e.g.position.x,2.5,e.g.position.z).project(cam);e.el.style.display=v.z>1?'none':'block';e.el.style.transform=`translate(${(v.x*.5+.5)*W}px,${(-v.y*.5+.5)*H}px) translate(-50%,-100%)`}});
@@ -369,7 +369,7 @@ function camSetup(){cam.fov=48;cam.aspect=BGW/BGH;cam.near=5;cam.far=140;cam.pos
 function scr(x,y,z){const v=new THREE.Vector3(x,y,z).project(cam);return[(v.x*.5+.5)*BGW,(-v.y*.5+.5)*BGH]}
 function xlim(z){const a=scr(0,0,z)[0],b=scr(1,0,z)[0],cpu=b-a;if(!(cpu>0))return 15;const m=Math.min((a-(VIS.x0+22))/cpu,((VIS.x1-22)-a)/cpu);return Math.max(3,Math.min(32,m))}
 function calcBounds(){let z=12;while(z>-8&&scr(0,0,z)[1]>VIS.y1-34)z-=.25;ZMAX=Math.max(z,-7)}
-function clampAll(){ents.forEach(e=>{if(e.static||!e.g)return;const z=Math.min(e.g.position.z,ZMAX),xl=xlim(z);e.g.position.z=z;e.g.position.x=Math.max(-xl,Math.min(xl,e.g.position.x))})}
+function clampAll(){ents.forEach(e=>{if(e.static||e.fix||!e.g)return;const z=Math.min(e.g.position.z,ZMAX),xl=xlim(z);e.g.position.z=z;e.g.position.x=Math.max(-xl,Math.min(xl,e.g.position.x))})}
 function rs(){if(!R)return;const p=port(),vw=p?innerHeight:innerWidth,vh=p?innerWidth:innerHeight,k=Math.max(vw/BGW,vh/BGH),Wc=BGW*k,Hc=BGH*k;
 CX=(vw-Wc)*.5;CY=(vh-Hc)*.5;W=Wc;H=Hc;R.setPixelRatio(Math.min(devicePixelRatio||1,2,3200/Wc));R.setSize(Wc,Hc,false);
 $('#cv').style.cssText='position:absolute;display:block;left:'+CX+'px;top:'+CY+'px;width:'+Wc+'px;height:'+Hc+'px';
@@ -382,7 +382,7 @@ function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),.
 let ix=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+joy.x,iy=(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)+joy.y;const L=Math.hypot(ix,iy);
 if(L>.1){if(L>1){ix/=L;iy/=L}auto=null;move(P,ix,-iy,5*dt)}
 else if(auto){const dx=auto.x-P.g.position.x,dz=auto.z-P.g.position.z,d=Math.hypot(dx,dz);auto.t+=dt;if(d<.4||auto.t>9){const i=auto.id;auto=null;arrive(i)}else move(P,dx/d,dz/d,4.5*dt)}
-bots.forEach(b=>{const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*28;b.tz=Math.random()*18-8}}else move(b,dx/d,dz/d,1.5*dt)});
+bots.forEach(b=>{if(b.fix){b.g.position.x=b.fx;b.g.position.z=b.fz;return}const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*28;b.tz=Math.random()*18-8}}else move(b,dx/d,dz/d,1.5*dt)});
 ents.forEach(e=>{const l=e.g.userData.legs;if(l&&l.length){const w=e.mv?Math.sin(t*10+(e.s||0))*.6:0;l[0].rotation.x+=(w-l[0].rotation.x)*.3;l[1].rotation.x+=(-w-l[1].rotation.x)*.3}e.g.position.y=.1+(e.mv?Math.abs(Math.sin(t*10))*.08:Math.sin(t*2+(e.s||0))*.03);e.mv=0;
 if(e.el){const v=new THREE.Vector3(e.g.position.x,e.ly||2.5,e.g.position.z).project(cam);e.el.style.display=v.z>1?'none':'block';e.el.style.transform=`translate(${(v.x*.5+.5)*W+CX}px,${(-v.y*.5+.5)*H+CY}px) translate(-50%,-100%)`}});
 trees.forEach((tr,i)=>tr.rotation.z=Math.sin(t+i)*.02);R.render(sc,cam)}
@@ -531,9 +531,9 @@ if(keys.q)yaw+=1.6*dt;if(keys.e)yaw-=1.6*dt;
 let ix=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+joy.x,iy=(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)+joy.y;const L=Math.hypot(ix,iy);
 if(L>.1){if(L>1){ix/=L;iy/=L}auto=null;move(P,-Math.sin(yaw)*iy+Math.cos(yaw)*ix,-Math.cos(yaw)*iy-Math.sin(yaw)*ix,5*dt)}
 else if(auto){const dx=auto.x-P.g.position.x,dz=auto.z-P.g.position.z,d=Math.hypot(dx,dz);auto.t+=dt;if(d<.4||auto.t>12){const i=auto.id;auto=null;arrive(i)}else move(P,dx/d,dz/d,5*dt)}
-bots.forEach(b=>{const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*30;b.tz=Math.random()*20-8}}else move(b,dx/d,dz/d,1.5*dt)});
+bots.forEach(b=>{if(b.fix){b.g.position.x=b.fx;b.g.position.z=b.fz;return}const dx=b.tx-b.g.position.x,dz=b.tz-b.g.position.z,d=Math.hypot(dx,dz);if(d<.4){if(Math.random()<.01){b.tx=(Math.random()-.5)*30;b.tz=Math.random()*20-8}}else move(b,dx/d,dz/d,1.5*dt)});
 if(yawT!==null)yaw+=(yawT-yaw)*.04;
-ents.forEach(e=>{const l=e.g.userData.legs;if(l&&l.length){const w=e.mv?Math.sin(t*10+(e.s||0))*.6:0;l[0].rotation.x+=(w-l[0].rotation.x)*.3;l[1].rotation.x+=(-w-l[1].rotation.x)*.3}if(!e.static)e.g.position.y=.1+(e.mv?Math.abs(Math.sin(t*10))*.08:Math.sin(t*2+(e.s||0))*.03);e.mv=0;
+ents.forEach(e=>{const l=e.g.userData.legs;if(l&&l.length){const w=e.mv?Math.sin(t*10+(e.s||0))*.6:0;l[0].rotation.x+=(w-l[0].rotation.x)*.3;l[1].rotation.x+=(-w-l[1].rotation.x)*.3}if(!e.static&&!e.fix)e.g.position.y=.1+(e.mv?Math.abs(Math.sin(t*10))*.08:Math.sin(t*2+(e.s||0))*.03);e.mv=0;
 if(e.el){const v=new THREE.Vector3(e.g.position.x,e.g.position.y+(e.ly||2.5),e.g.position.z).project(cam);e.el.style.display=v.z>1?'none':'block';e.el.style.transform=`translate(${(v.x*.5+.5)*W}px,${(-v.y*.5+.5)*H}px) translate(-50%,-100%)`}});
 const p=P.g.position,h=2.4+dist*.22;cam.position.lerp(new THREE.Vector3(p.x+Math.sin(yaw)*dist,h,p.z+Math.cos(yaw)*dist),.12);cam.lookAt(p.x,3.4,p.z);
 R.render(sc,cam)}
@@ -660,6 +660,96 @@ const NM_EVENTS={
   story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Perayaan',items:[['Welcome & Registrasi','10.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Tiup Lilin','12.00','Nyanyi bersama dan potong kue.'],['Makan Bersama','13.00','Hidangan spesial dari tuan rumah.'],['Games & Foto Bersama','14.30','Seru-seruan dan sesi foto bersama.']]},
   dress:{title:'Colorful & Fun',sub:'pesta santai, ceria',eb:'Dress Code',palette:[['#FFD166','Kuning'],['#F0566A','Coral'],['#2BB3A3','Tosca'],['#6C5CE7','Ungu'],['#FFFFFF','Putih']],
    men:{rec:['Kemeja atau kaos polo warna cerah','Chino atau jeans rapi','Sneakers bersih'],avoid:['Pakaian terlalu formal','Warna serba gelap']},women:{rec:['Dress atau set warna ceria','Aksesori playful','Flat shoes atau sneakers'],avoid:['Pakaian terlalu formal','Warna serba gelap']},note:'Datang dengan warna favoritmu dan siap bersenang-senang.'}},
+ kemerdekaan:{label:'Hari Kemerdekaan',kind:'single',eyebrow:'Dirgahayu Indonesia',conn:'·',defaultTheme:'birthday-confetti',tag:'Merdeka',hostLabel:'Nama Acara',full:true,monoWords:2,stageDefault:'none',
+  s1:'🇮🇩 {n} · Perayaan 17 Agustus',welcome:'Rayakan Hari Kemerdekaan Indonesia bersama {n} di perayaan virtual ini',
+  roles:{host:'Panitia 17 Agustus'},gift:false,
+  book:{ph:'Tulis pesan kemerdekaan untuk {n}…',eb:'Pesan Merdeka'},live:{eb:'Upacara & Perayaan',tx:'Perayaan Hari Kemerdekaan {n} disiarkan langsung. Ikuti upacara, lomba, dan kirim semangat merdekamu lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Kemerdekaan',items:[['Upacara Bendera Virtual','08.00','Pengibaran Sang Saka Merah Putih dan menyanyikan Indonesia Raya.'],['Teks Proklamasi & Doa','08.45','Mengenang perjuangan para pahlawan bangsa.'],['Lomba 17-an Virtual','09.30','Kuis kemerdekaan, tebak lagu daerah, dan lomba foto kostum.'],['Makan Bersama & Hiburan','11.30','Tumpeng, jajanan tradisional, dan hiburan musik daerah.']]},
+  tx:{labels:{stage:'Upacara',resepsi:'Lomba',booth:'Photo Booth',galeri:'Galeri',video:'Video',buku:'Buku Tamu',kuliner:'Kuliner',istirahat:'Saung',lokasi:'Lokasi'},
+   names:{stage:'Panggung Upacara',resepsi:'Arena Lomba 17-an',booth:'Photo Booth Merdeka',galeri:'Galeri Merdeka',video:'Video Ucapan Merdeka',buku:'Buku Tamu',kuliner:'Warung Nusantara',istirahat:'Saung Santai'},
+   greet:['Dirgahayu Republik Indonesia! 🇮🇩','Merdeka! Semangat 17 Agustus ❤️🤍'],
+   bots:['Merdeka! 🇮🇩','Dirgahayu Republik Indonesia! ❤️🤍','Bangga jadi anak Indonesia 🇮🇩','Ayo ikut lomba panjat pinang virtual! 🎉','Tumpengnya menggoda banget 😋','Semangat para pahlawan tak pernah padam ✨','Foto bareng di photo booth Monas yuk 📸'],
+   vd:[['Ketua RW','Dirgahayu Indonesia! Mari jaga persatuan dan gotong royong.'],['Para Veteran','Isilah kemerdekaan dengan semangat membangun negeri.'],['Anak-anak Sekolah','Kami bangga menjadi generasi penerus bangsa 🇮🇩'],['Warga Perantauan','Jauh di mata, dekat di hati. Merdeka dari rantau! ❤️🤍']],
+   cats:['Semua','Upacara','Lomba 17-an','Nusantara'],
+   gb:[['Pak RW','Dirgahayu Indonesia! Semoga kita selalu rukun dan bersatu 🇮🇩','17 Agu 2026'],['Bu Ratna','Terima kasih atas semangat gotong royongnya. Merdeka! ❤️🤍','17 Agu 2026'],['Dimas','Seru banget perayaannya, sampai ketemu di lomba berikutnya!','17 Agu 2026'],['Nenek Sari','Semoga anak cucu selalu mencintai negeri ini 🙏','18 Agu 2026']],gbH:'Pesan Merdeka',gbBtn:'Kirim Pesan',gbOk:'Terima kasih, pesan merdeka Anda telah terkirim.',
+   gal:'Galeri Merdeka',vid:'Video Ucapan Merdeka',vidEb:'Pesan Kemerdekaan',locEb:'Lokasi Upacara',
+   info:{stage:{t:'Panggung Upacara',e:'Upacara Virtual',p:'Upacara dan perayaan {n} disiarkan langsung dari panggung utama. Kirim semangat merdekamu lewat chat.'},
+    resepsi:{t:'Arena Lomba 17-an',e:'Lomba Seru',p:'Panjat pinang, balap karung, dan lomba khas 17-an dalam versi virtual. Ajak teman dan kumpulkan poin kemerdekaan.'},
+    kuliner:{t:'Warung Nusantara',e:'Kuliner Nusantara',p:'Hidangan tradisional tersedia mulai pukul <b>11.30 WIB</b>.',menu:[['utensils','Tumpeng Merdeka','Nasi kuning dan lauk lengkap'],['cup','Es Sirup Merah Putih','Minuman segar'],['gift','Kue Lapis & Lemper','Jajanan pasar tradisional']]},
+    booth:{t:'Photo Booth Merdeka',e:'Abadikan Momen',p:'Berfoto dengan latar Monas dan properti merah putih. Ambil fotomu dan bagikan dengan tagar berikut.'},
+    hadiah:{t:'Area Gotong Royong',e:'Gotong Royong',p:'Kehadiran dan semangat gotong royong Anda adalah hadiah terbaik.'},
+    taman:{t:'Taman Merdeka',e:'Bersantai',p:'Taman hijau dengan lentera hangat, tempat santai dan berfoto bersama.'},
+    istirahat:{t:'Saung Santai',e:'Bersantai',p:'Tempat duduk teduh untuk beristirahat sejenak setelah lomba sambil mengobrol dengan warga dan sahabat.'}}},
+  dress:{title:'Merah Putih & Pakaian Adat',sub:'upacara dan perayaan 17 Agustus',eb:'Dress Code',palette:[['#C8102E','Merah'],['#FFFFFF','Putih'],['#D9A441','Emas'],['#7A4A21','Cokelat Batik'],['#1A1A1A','Hitam Peci']],
+   men:{rec:['Kemeja putih atau batik merah','Peci hitam atau udeng','Celana bahan hitam'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Kebaya atau batik merah-putih','Hijab merah atau putih','Aksesori bunga atau bros bendera'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Merah putih atau pakaian adat daerah, semarak menyambut Hari Kemerdekaan.'}},
+
+ kartini:{label:'Hari Kartini',kind:'single',eyebrow:'Habis Gelap Terbitlah Terang',conn:'·',defaultTheme:'birthday-confetti',tag:'Kartini',hostLabel:'Nama Acara',full:true,monoWords:2,stageDefault:'none',
+  s1:'🌸 {n} · Perayaan Hari Kartini',welcome:'Rayakan Hari Kartini bersama {n} di perayaan virtual ini',
+  roles:{host:'Panitia Hari Kartini'},gift:false,
+  book:{ph:'Tulis pesan inspiratif untuk {n}…',eb:'Pesan Kartini'},live:{eb:'Peringatan & Perayaan',tx:'Perayaan Hari Kartini {n} disiarkan langsung. Ikuti peragaan kebaya, talk inspiratif, dan kirim semangatmu lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Kartini',items:[['Pembukaan & Doa','08.00','Menyanyikan Ibu Kita Kartini dan doa bersama.'],['Peragaan Busana Kebaya','09.00','Parade kebaya dan pakaian adat dari berbagai daerah.'],['Talk Inspirasi Perempuan','10.00','Kisah perjuangan Kartini dan perempuan inspiratif masa kini.'],['Ngeteh & Jajanan Pasar','11.30','Teh hangat, kue tradisional, dan foto bersama.']]},
+  tx:{labels:{stage:'Panggung',resepsi:'Peragaan',booth:'Photo Booth',galeri:'Galeri',video:'Video',buku:'Buku Tamu',kuliner:'Kuliner',istirahat:'Paviliun',lokasi:'Lokasi'},
+   names:{stage:'Panggung Kartini',resepsi:'Peragaan Kebaya',booth:'Photo Booth Kartini',galeri:'Galeri Kartini',video:'Video Ucapan Kartini',buku:'Buku Tamu',kuliner:'Booth Kuliner Nusantara',istirahat:'Paviliun Teh'},
+   greet:['Selamat Hari Kartini! 🌸','Habis gelap terbitlah terang ✨'],
+   bots:['Selamat Hari Kartini! 🌸','Habis gelap terbitlah terang ✨','Kebayanya cantik-cantik sekali 😍','Perempuan Indonesia hebat! 💪','Terima kasih Ibu Kartini 🤍','Foto bareng di photo booth yuk 📸','Jajanan pasarnya enak banget 😋'],
+   vd:[['Ibu Kepala Sekolah','Selamat Hari Kartini! Teruslah belajar dan berkarya, putri-putri bangsa.'],['Para Guru','Semangat Kartini hidup dalam setiap langkah kalian 🌸'],['Alumni Perempuan','Bangga menjadi bagian dari generasi penerus Kartini.'],['Keluarga & Sahabat','Terima kasih untuk semua perempuan hebat di hidup kami 🤍']],
+   cats:['Semua','Kebaya','Inspirasi','Momen Kartini'],
+   gb:[['Bu Ratna','Selamat Hari Kartini! Semoga semangat emansipasi terus menyala 🌸','21 Apr 2026'],['Pak Dimas','Perempuan hebat lahir dari keluarga yang saling mendukung.','21 Apr 2026'],['Nadia','Kebayanya cantik semua, acaranya inspiratif banget!','21 Apr 2026'],['Nenek Sari','Semoga cucu-cucu perempuan kami selalu berani bermimpi 🤍','22 Apr 2026']],gbH:'Pesan Kartini',gbBtn:'Kirim Pesan',gbOk:'Terima kasih, pesan Kartini Anda telah terkirim.',
+   gal:'Galeri Kartini',vid:'Video Ucapan Kartini',vidEb:'Pesan Inspiratif',locEb:'Lokasi Acara',
+   info:{stage:{t:'Panggung Kartini',e:'Peringatan Hari Kartini',p:'Perayaan {n} disiarkan langsung dari panggung utama. Kirim semangat dan doa terbaikmu lewat chat.'},
+    resepsi:{t:'Peragaan Kebaya',e:'Parade Busana Adat',p:'Parade kebaya dan pakaian adat dari berbagai daerah. Ikut memeriahkan dengan mengenakan kebaya atau batik terbaikmu.'},
+    kuliner:{t:'Booth Kuliner Nusantara',e:'Jajanan Pasar',p:'Hidangan tradisional tersedia mulai pukul <b>11.30 WIB</b>.',menu:[['utensils','Kue Lapis & Klepon','Jajanan pasar tradisional'],['cup','Teh Melati Hangat','Minuman khas ngeteh sore'],['gift','Lemper & Onde-onde','Camilan manis gurih']]},
+    booth:{t:'Photo Booth Kartini',e:'Abadikan Momen',p:'Berfoto dengan latar paviliun klasik dan siluet Kartini. Ambil fotomu dan bagikan dengan tagar berikut.'},
+    hadiah:{t:'Area Apresiasi',e:'Apresiasi',p:'Kehadiran dan dukungan Anda adalah penghargaan terbaik bagi perempuan Indonesia.'},
+    taman:{t:'Taman Melati',e:'Bersantai',p:'Taman bunga melati dengan lentera hangat, tempat santai dan berfoto bersama.'},
+    istirahat:{t:'Paviliun Teh',e:'Ngeteh Santai',p:'Tempat duduk klasik untuk beristirahat sejenak sambil menikmati teh hangat dan berbincang bersama sahabat.'}}},
+  dress:{title:'Kebaya & Pakaian Adat',sub:'peringatan Hari Kartini',eb:'Dress Code',palette:[['#8E2B4F','Marun'],['#F6E3D6','Krem'],['#D4A24C','Emas'],['#E7A1B0','Merah Muda'],['#7A4A21','Cokelat Batik']],
+   men:{rec:['Beskap atau batik lengan panjang','Blangkon atau udeng','Kain batik atau celana bahan gelap'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Kebaya dan kain batik','Hijab atau sanggul bunga melati','Aksesori bros emas'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Kebaya atau pakaian adat daerah, menghormati semangat R.A. Kartini.'}},
+
+ hardiknas:{label:'Hari Pendidikan Nasional',kind:'single',eyebrow:'Peringatan Hardiknas',conn:'·',defaultTheme:'birthday-confetti',tag:'Hardiknas',hostLabel:'Nama Acara',full:true,monoWords:2,stageDefault:'none',
+  s1:'📚 {n} · Perayaan Hardiknas',welcome:'Rayakan Hari Pendidikan Nasional bersama {n} di perayaan virtual ini',
+  roles:{host:'Panitia Hardiknas'},gift:false,
+  book:{ph:'Tulis pesan semangat belajar untuk {n}…',eb:'Pesan Pendidikan'},live:{eb:'Upacara & Perayaan',tx:'Perayaan Hardiknas {n} disiarkan langsung. Ikuti upacara, penghargaan, dan kirim semangat belajarmu lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hardiknas',items:[['Upacara Hardiknas','08.00','Pengibaran bendera, Indonesia Raya, dan amanat peringatan Hari Pendidikan Nasional.'],['Penghargaan Guru & Siswa','09.00','Apresiasi bagi guru dan siswa berprestasi.'],['Talk Pendidikan','10.00','Diskusi inspiratif tentang masa depan belajar dan merdeka belajar.'],['Pameran Karya & Ramah Tamah','11.30','Pameran karya siswa, jajanan tradisional, dan foto bersama.']]},
+  tx:{labels:{stage:'Upacara',resepsi:'Penghargaan',booth:'Photo Booth',galeri:'Galeri',video:'Video',buku:'Buku Tamu',kuliner:'Kuliner',istirahat:'Taman Baca',lokasi:'Lokasi'},
+   names:{stage:'Panggung Hardiknas',resepsi:'Panggung Penghargaan',booth:'Photo Booth Hardiknas',galeri:'Galeri Pendidikan',video:'Video Ucapan Hardiknas',buku:'Buku Tamu',kuliner:'Booth Kuliner Sekolah',istirahat:'Taman Baca'},
+   greet:['Selamat Hari Pendidikan Nasional! 📚','Mari terus belajar dan berkarya ✨'],
+   bots:['Selamat Hari Pendidikan Nasional! 📚','Mari terus belajar dan berkarya ✨','Terima kasih para guru hebat 🙏','Bangga jadi bagian sekolah ini 🎓','Foto bareng di photo booth yuk 📸','Jajanannya enak banget 😋','Merdeka belajar! 💙'],
+   vd:[['Kepala Sekolah','Selamat Hardiknas! Terus semangat mencerdaskan kehidupan bangsa.'],['Para Guru','Terima kasih telah menjadi sahabat belajar anak-anak kami 📚'],['Siswa-siswi','Kami berjanji belajar lebih giat dan berprestasi 🎓'],['Alumni','Sekolah ini adalah rumah pertama mimpi-mimpi kami 💙']],
+   cats:['Semua','Upacara','Prestasi','Momen Sekolah'],
+   gb:[['Bu Ratna','Selamat Hardiknas! Terima kasih kepada seluruh guru yang berdedikasi 📚','2 Mei 2026'],['Pak Dimas','Pendidikan adalah bekal terbaik untuk masa depan anak-anak kita.','2 Mei 2026'],['Nadia','Seru banget perayaannya, bangga jadi siswa sini!','2 Mei 2026'],['Bu Sari','Semoga semangat belajar tak pernah padam 💙','3 Mei 2026']],gbH:'Pesan Pendidikan',gbBtn:'Kirim Pesan',gbOk:'Terima kasih, pesan Anda telah terkirim.',
+   gal:'Galeri Pendidikan',vid:'Video Ucapan Hardiknas',vidEb:'Pesan Inspiratif',locEb:'Lokasi Acara',
+   info:{stage:{t:'Panggung Hardiknas',e:'Peringatan Hardiknas',p:'Perayaan {n} disiarkan langsung dari panggung utama. Kirim semangat belajarmu lewat chat.'},
+    resepsi:{t:'Panggung Penghargaan',e:'Apresiasi Prestasi',p:'Penyerahan penghargaan bagi guru dan siswa berprestasi. Beri tepuk tangan dan ucapan selamat lewat chat.'},
+    kuliner:{t:'Booth Kuliner Sekolah',e:'Jajanan & Minuman',p:'Hidangan dan minuman segar tersedia mulai pukul <b>11.30 WIB</b>.',menu:[['cup','Es Lemon & Sirup Merah','Minuman segar'],['utensils','Kue Lapis & Jajan Pasar','Jajanan tradisional sekolah'],['gift','Kue Cubit & Camilan','Camilan manis gurih']]},
+    booth:{t:'Photo Booth Hardiknas',e:'Abadikan Momen',p:'Berfoto dengan latar langit cerah, buku, dan topi toga. Ambil fotomu dan bagikan dengan tagar berikut.'},
+    hadiah:{t:'Area Apresiasi',e:'Apresiasi',p:'Kehadiran dan dukungan Anda adalah penghargaan terbaik bagi dunia pendidikan.'},
+    taman:{t:'Taman Sekolah',e:'Bersantai',p:'Taman hijau dengan bangku dan lentera hangat, tempat santai dan berfoto bersama.'},
+    istirahat:{t:'Taman Baca',e:'Rehat & Membaca',p:'Sudut tenang dengan bangku taman untuk beristirahat sejenak, membaca, dan berbincang bersama teman dan guru.'}}},
+  dress:{title:'Seragam & Batik',sub:'peringatan Hari Pendidikan Nasional',eb:'Dress Code',palette:[['#1E3A8A','Biru Navy'],['#FFFFFF','Putih'],['#D4A017','Emas'],['#C8102E','Merah'],['#7A4A21','Cokelat Batik']],
+   men:{rec:['Seragam sekolah atau batik','Celana bahan gelap','Sepatu pantofel'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Seragam sekolah, kebaya, atau batik','Hijab biru navy atau krem','Aksesori bros emas'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Seragam, batik, atau pakaian adat daerah, menyambut Hari Pendidikan Nasional.'}},
+ moveon:{label:'Move On Celebration',kind:'single',eyebrow:'Move On Celebration',conn:'·',defaultTheme:'birthday-confetti',tag:'MoveOn',hostLabel:'Nama Kamu',full:false,stageDefault:'bride',
+  s1:'💜 {n} · Move On Celebration',welcome:'Rayakan babak baru {n} bersama sahabat di pesta virtual ini',
+  roles:{host:'Bintang Move On'},gift:false,
+  book:{ph:'Tulis semangat dan doa untuk {n}…',eb:'Pesan Semangat'},live:{eb:'Move On Celebration',tx:'Perayaan babak baru {n} disiarkan langsung. Kirim semangat dan tawa lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Babak Baru',items:[['Welcome & Healing Corner','18.00','Sambutan hangat, welcome drink, dan sudut healing.'],['Self Love Talk','19.00','Cerita dan pesan tentang mencintai diri sendiri.'],['Tulis & Lepas Surat','20.00','Menulis surat untuk masa lalu, lalu melepasnya bersama.'],['Pesta Babak Baru','21.00','Musik, tawa, dan foto bersama menyambut New Chapter.']]},
+  tx:{labels:{stage:'Panggung',resepsi:'Healing',booth:'Photo Booth',galeri:'Momen',video:'Video',buku:'Buku Tamu',kuliner:'Kuliner',istirahat:'Lounge',lokasi:'Lokasi'},
+   names:{stage:'Panggung Babak Baru',resepsi:'Healing Corner',booth:'Photo Booth',galeri:'Galeri Momen',video:'Video Semangat',buku:'Buku Tamu',kuliner:'Area Kuliner',istirahat:'Lounge Self Love'},
+   greet:['Selamat move on! Kamu keren banget 💜','Babak baru dimulai, semangat ya! ✨'],
+   bots:['Proud of you! Babak baru dimulai 💜','Kamu pantas bahagia, serius ✨','Self love dulu, yang lain nanti 🌸','Move on is the new glow up 🌟','Peluk jauh buat kamu 🤗','Yang lalu biarlah berlalu, kita mulai lagi! 🎉','Aku bangga banget sama kamu 🥹'],
+   vd:[['Sahabat Karib','Kamu kuat banget. Kami selalu ada buat kamu 💜'],['Keluarga','Babak baru, harapan baru. Kami bangga padamu.'],['Teman Kantor','Selamat move on! Saatnya fokus ke diri sendiri ✨'],['Kamu di Masa Depan','Terima kasih sudah bertahan. Semuanya baik-baik saja 🌸']],
+   cats:['Semua','Healing','Self Love','New Chapter'],
+   gb:[['Sasha','Kamu hebat sudah sampai di titik ini. Peluk erat 🤗','25 Okt 2026'],['Rina','Bahagiamu sekarang tanggung jawabmu sendiri. Nikmati! 💜','26 Okt 2026'],['Dika','Selamat move on! Next chapter pasti lebih indah ✨','26 Okt 2026'],['Mama','Mama bangga sama kamu, Nak 🌸','27 Okt 2026']],gbH:'Pesan Semangat',gbBtn:'Kirim Semangat',gbOk:'Terima kasih, semangat Anda telah terkirim.',
+   gal:'Galeri Momen',vid:'Video Semangat',vidEb:'Pesan Hangat',locEb:'Hari Babak Baru',
+   info:{stage:{t:'Panggung Babak Baru',e:'Live',p:'Perayaan move on {n} disiarkan langsung dari panggung utama. Kirim semangat dan tawa lewat chat.'},
+    resepsi:{t:'Healing Corner',e:'Self Love',p:'Sudut santai untuk bercerita, menarik napas, dan saling menguatkan. Tidak ada yang dihakimi di sini.'},
+    kuliner:{t:'Area Kuliner',e:'Comfort Food',p:'Camilan manis dan minuman segar tersedia mulai pukul <b>18.30 WIB</b>.',menu:[['utensils','Cupcake Strawberry','Manis penyemangat'],['cup','Lemonade & Pink Punch','Minuman segar'],['gift','Roti & Buah Segar','Camilan ringan']]},
+    booth:{t:'Photo Booth',e:'Abadikan Momen',p:'Foto dengan properti hati dan pesawat kertas. Ambil fotomu dan bagikan dengan tagar berikut.'},
+    hadiah:{t:'Area Dukungan',e:'Doa & Kasih',p:'Kehadiran dan semangat Anda adalah hadiah terbaik untuk babak baru ini.'},
+    taman:{t:'Area Taman',e:'Bersantai',p:'Taman bunga dengan lampu hangat, tempat santai dan berfoto bersama sahabat.'},
+    istirahat:{t:'Lounge Self Love',e:'Bersantai',p:'Sofa empuk dan lampu hangat untuk beristirahat sejenak bersama sahabat.'}}},
+  dress:{title:'Soft Purple & Pink',sub:'pesta self love, manis dan nyaman',eb:'Dress Code',palette:[['#B58AD6','Lavender'],['#F7C6DA','Soft Pink'],['#8A3FA8','Ungu'],['#D9A441','Emas'],['#FFF7EA','Krem']],
+   men:{rec:['Hoodie atau kemeja warna lavender','Celana cargo atau chino krem','Sneakers bersih'],avoid:['Pakaian serba hitam','Warna terlalu gelap']},women:{rec:['Dress atau set warna pink dan lavender','Hijab senada','Aksesori bunga atau hati'],avoid:['Warna terlalu gelap','Pakaian terlalu formal']},note:'Nuansa ungu-pink lembut untuk menyambut babak baru.'}},
  manasik:{label:'Manasik Haji',kind:'single',eyebrow:'Manasik Haji Cilik',conn:'·',defaultTheme:'birthday-confetti',tag:'Manasik',hostLabel:'Jamaah Cilik',stageDefault:'none',
   s1:'🕋 {n} · Undangan Manasik Haji',welcome:'Ikut menyaksikan {n} belajar manasik haji di acara virtual ini',
   roles:{host:'Jamaah Cilik'},gift:false,
@@ -682,13 +772,28 @@ const NM_EVENTS={
     istirahat:{t:'Area Istirahat',e:'Rehat Sejenak',p:"Tenda dan kursi santai untuk beristirahat, minum, dan berkumpul bersama keluarga setelah thawaf dan sa'i."}}},
   dress:{title:'Putih Ihram',sub:'manasik haji, serba putih dan sopan',eb:'Dress Code',palette:[['#FFFFFF','Putih'],['#F5EBD3','Krem'],['#1E6B3C','Hijau'],['#D9A441','Emas'],['#1A1A1A','Hitam']],
    men:{rec:['Kain ihram putih','Sandal putih','Tanda pengenal peserta'],avoid:['Pakaian berwarna mencolok','Sepatu tertutup']},women:{rec:['Gamis dan hijab putih','Topi atau peci putih','Tas selempang kecil'],avoid:['Pakaian berwarna mencolok','Pakaian ketat']},note:'Anak-anak belajar rukun haji dengan pakaian ihram sederhana.'}},
- graduation:{label:'Graduation',kind:'single',eyebrow:'Selamat Wisuda',conn:'·',defaultTheme:'birthday-confetti',tag:'Graduation',hostLabel:'Sang Wisudawan',stageDefault:'bride',
-  s1:'🎓 {n} · Undangan Wisuda',welcome:'Rayakan kelulusan {n} bersama di acara wisuda virtual ini',
+ graduation:{label:'Graduation',kind:'single',eyebrow:'Selamat Wisuda',conn:'·',defaultTheme:'birthday-confetti',tag:'Graduation',hostLabel:'Nama Sekolah',full:true,monoWords:2,stageDefault:'bride',
+  s1:'🎓 {n} · Undangan Wisuda',welcome:'Rayakan kelulusan bersama {n} di acara wisuda virtual ini',
   roles:{host:'Sang Wisudawan'},gift:false,
   book:{ph:'Tulis ucapan selamat untuk {n}…',eb:'Ucapan Selamat'},live:{eb:'Perayaan Wisuda',tx:'Perayaan kelulusan {n} disiarkan langsung. Ikut memberi selamat dan kirim ucapanmu lewat chat.'},
-  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Kelulusan',items:[['Registrasi & Welcome','09.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Prosesi Wisuda','10.00','Pemindahan tali toga dan penyerahan ijazah.'],['Foto Bersama & Ucapan','11.30','Sesi foto bersama keluarga, sahabat, dan dosen.'],['Makan Bersama','12.30','Hidangan spesial untuk merayakan kelulusan.']]},
-  dress:{title:'Smart Formal Purple',sub:'acara kelulusan, rapi dan sopan',eb:'Dress Code',palette:[['#5B2A86','Ungu Tua'],['#B58AD6','Lavender'],['#F7C6DA','Soft Pink'],['#D9A441','Emas'],['#FFF7EA','Krem']],
-   men:{rec:['Kemeja atau batik rapi','Blazer atau rompi senada','Celana bahan dan sepatu pantofel'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Dress, kebaya, atau gamis sopan warna ungu/pastel','Hijab senada','Aksesori sederhana'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Nuansa ungu dan emas menyambut kelulusan sang wisudawan.'}},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Kelulusan',items:[['Registrasi & Welcome','09.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Prosesi Wisuda','10.00','Pemindahan tali toga dan penyerahan ijazah.'],['Foto Bersama & Ucapan','11.30','Sesi foto bersama keluarga, sahabat, dan para guru.'],['Makan Bersama','12.30','Hidangan spesial untuk merayakan kelulusan.']]},
+  tx:{crowd:true,labels:{stage:'Panggung',resepsi:'Selebrasi',booth:'Photo Booth',galeri:'Kenangan',video:'Video',buku:'Buku Tamu',kuliner:'Kuliner',istirahat:'Lounge',lokasi:'Lokasi'},
+   names:{stage:'Panggung Wisuda',resepsi:'Area Selebrasi',booth:'Photo Booth',galeri:'Galeri Kenangan',video:'Video Ucapan',buku:'Buku Tamu',kuliner:'Area Kuliner',istirahat:'Lounge Santai'},
+   greet:['Selamat lulus! Bangga banget sama angkatan kita 🎓','Sukses terus ya, sampai ketemu di jenjang berikutnya ✨'],
+   bots:['Selamat lulus! Toganya keren banget 🎓','Sukses terus untuk langkah selanjutnya ✨','Kenangan di sekolah nggak akan terlupakan 🥹','Congrats, angkatan terbaik! 👏','Bangga banget lihat kamu wisuda 🤍','Semoga cita-citanya tercapai ya! 🌟','Ayo foto bareng di photo booth 📸'],
+   vd:[['Wali Kelas','Selamat lulus! Kami bangga dengan perjuangan kalian.'],['Sahabat Sekelas','Akhirnya lulus bareng! Jangan lupa reuni ya.'],['Orang Tua','Doa terbaik untuk langkah barumu, Nak 🤍'],['Adik Kelas','Makasih sudah jadi inspirasi. Sukses terus, Kak!']],
+   cats:['Semua','Prosesi','Bersama Teman','Kenangan'],
+   gb:[['Bu Dewi (Wali Kelas)','Selamat lulus! Teruslah belajar dan raih cita-citamu 🎓','25 Okt 2026'],['Rafi','Akhirnya lulus bareng! Sukses terus, bro!','26 Okt 2026'],['Mama','Bangga sekali dengan kamu, Nak. Doa kami menyertaimu 🤍','26 Okt 2026'],['Nadia','Kenangan tiga tahun ini nggak akan pernah kulupakan 🥹','27 Okt 2026']],gbH:'Ucapan Selamat',gbBtn:'Kirim Ucapan',gbOk:'Terima kasih, ucapan selamat Anda telah terkirim.',
+   gal:'Galeri Kenangan',vid:'Video Ucapan',vidEb:'Pesan Hangat',locEb:'Hari Kelulusan',
+   info:{stage:{t:'Panggung Wisuda',e:'Prosesi',p:'Prosesi wisuda {n} disiarkan langsung dari panggung utama. Ikut memberi selamat dan kirim ucapanmu lewat chat.'},
+    resepsi:{t:'Area Selebrasi',e:'Bersama Teman',p:'Tempat berkumpul merayakan kelulusan: lempar toga, bagi kabar gembira, dan berfoto bersama keluarga serta sahabat.'},
+    kuliner:{t:'Area Kuliner',e:'Hidangan',p:'Hidangan dan minuman segar tersedia mulai pukul <b>11.30 WIB</b> untuk merayakan kelulusan.',menu:[['utensils','Prasmanan Spesial','Menu merayakan kelulusan'],['cup','Mocktail Segar','Minuman dingin'],['gift','Cupcake & Kue Kecil','Camilan manis']]},
+    booth:{t:'Photo Booth',e:'Abadikan Momen',p:'Foto dengan toga dan properti wisuda tersedia sepanjang acara. Ambil fotomu dan bagikan dengan tagar berikut.'},
+    hadiah:{t:'Area Hadiah',e:'Doa & Kasih',p:'Kehadiran dan doa Anda adalah hadiah terbaik bagi sang wisudawan.'},
+    taman:{t:'Area Taman',e:'Bersantai',p:'Taman dengan bunga dan lentera hangat, tempat santai dan berfoto bersama.'},
+    istirahat:{t:'Lounge Santai',e:'Bersantai',p:'Sofa dan kursi santai untuk beristirahat sejenak bersama keluarga dan sahabat.'}}},
+  dress:{title:'Smart Formal',sub:'acara kelulusan, rapi dan sopan',eb:'Dress Code',palette:[['#1F2A5A','Navy'],['#5B2A86','Ungu Tua'],['#B58AD6','Lavender'],['#D9A441','Emas'],['#FFF7EA','Krem']],
+   men:{rec:['Kemeja atau batik rapi','Blazer atau rompi senada','Celana bahan dan sepatu pantofel'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Dress, kebaya, atau gamis sopan warna navy/pastel','Hijab senada','Aksesori sederhana'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Nuansa elegan dengan sentuhan emas menyambut kelulusan sang wisudawan.'}},
  aqiqah:{label:'Aqiqah',kind:'single',eyebrow:'Syukuran Aqiqah',conn:'·',defaultTheme:'birthday-confetti',tag:'Aqiqah',hostLabel:'Si Kecil',stageDefault:'bride',
   s1:'🌙 {n} · Undangan Aqiqah',welcome:'Ikut berbagi kebahagiaan atas kelahiran {n} di acara aqiqah virtual ini',
   roles:{host:'Si Kecil'},gift:false,
@@ -1050,7 +1155,7 @@ const NMTH={s:null,on:0,g:0};
 function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[data-id]');
  if(!NMTH.s)NMTH.s={a:AREAS.map(a=>[a,a.n]),bm:BM.slice(),vd:VD.map(v=>v.slice()),cats:CATS.slice(),lab:Array.from(N).map(b=>[b,b.querySelector('.tx').textContent,b.title])};
  const s=NMTH.s;
- if(!x){if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
+ if(!x){if(NMTH.ex&&typeof bots!=='undefined'){NMTH.ex.forEach(e=>{sc.remove(e.g);if(e.el)e.el.remove();const a=ents.indexOf(e);if(a>=0)ents.splice(a,1);const b=bots.indexOf(e);if(b>=0)bots.splice(b,1)});NMTH.ex=0}if(NMTH.cr&&typeof bots!=='undefined'){bots.forEach(b=>{b.fix=0;b.g.scale.setScalar(1);b.ly=undefined});NMTH.cr=0}if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
   s.lab.forEach(([b,t,ti])=>{const e=b.querySelector('.tx');if(e&&b.dataset.id!='story')e.textContent=t;if(b.dataset.id!='story')b.title=b.ariaLabel=ti});return}
  NMTH.on=1;
  if(x.names)AREAS.forEach(a=>{if(x.names[a.id])a.n=x.names[a.id]});
@@ -1058,6 +1163,8 @@ function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[da
  if(x.bots)BM.splice(0,BM.length,...x.bots);
  if(x.vd)VD.splice(0,VD.length,...x.vd.map(v=>v.slice()));
  if(x.cats){CATS.splice(0,CATS.length,...x.cats);GI.forEach((g,i)=>g.c=CATS[1+i%(CATS.length-1)]);GC='Semua'}
+ const sp=2.6,n=Math.min(bots.length,7);if(x.crowd&&n){bots.slice(0,n).forEach((b,i)=>{const o=i-(n-1)/2;b.fix=1;b.fx=o*sp;b.fz=-35.8+Math.abs(o)*.2;b.g.scale.setScalar(2.2);b.g.position.set(b.fx,1.35,b.fz);b.ly=6.0});NMTH.cr=1}
+ if(x.crowd&&!NMTH.ex&&typeof ent==='function'){NMTH.ex=['Rafi','Salsa','Dewi','Hendra','Maya','Yoga','Tari','Fajar','Lina','Bayu','Kirana','Dion'].map((n,i)=>{const g=i%2?'P':'L',A=AV[g];const e=ent(n,A[Math.floor(i/2)%A.length],(Math.random()-.5)*26,Math.random()*14-6);bots.push(e);return e})}
  if(x.greet&&!NMTH.g&&typeof bots!=='undefined'&&bots.length>1){NMTH.g=1;const l=$('#log');if(l)l.innerHTML='';addChat(bots[0],x.greet[0]);addChat(bots[1],x.greet[1])}
 }catch(e){console.warn('theme',e)}}
 function nmTexts(){const ev=nmEv(),p=NMID.pair;document.title=(p?p+' · ':'')+ev.label+' Live Guest';
@@ -1067,7 +1174,7 @@ function nmTexts(){const ev=nmEv(),p=NMID.pair;document.title=(p?p+' · ':'')+ev
 /* jarak pengantin: setengah jarak antar-pusat (satuan dunia); label dinaikkan bergantian agar tidak bertumpuk */
 const NMCOUPLE={gap:.58};
 document.head.appendChild(Object.assign(document.createElement('style'),{textContent:'.lb[data-k=bride] .nm{transform:translateY(-26px)}.lb[data-k=groom] .nm{transform:translateY(0)}'}));
-function nmStage(){if(typeof ents==='undefined'||typeof coupleEnts!=='function')return;const ce=coupleEnts();if(ce.length<2)return;const ev=nmEv(),E={bride:ce[0],groom:ce[1]},want=ev.kind=='couple'?['bride','groom']:(NMID.stageAvatar=='none'?[]:[NMID.stageAvatar]);
+function nmStage(){if(typeof ents==='undefined'||typeof coupleEnts!=='function')return;const ce=coupleEnts();if(ce.length<2)return;const ev=nmEv(),E={bride:ce[0],groom:ce[1]},want=ev.kind=='couple'?['bride','groom']:((NMID.stageAvatar=='none'||(ev.tx&&ev.tx.crowd))?[]:[NMID.stageAvatar]);
  ['bride','groom'].forEach(k=>{const e=E[k],on=want.includes(k);let t=k=='bride'?nmN('bride')+' · '+ev.roles.bride:nmN('groom')+' · '+ev.roles.groom;
   if(ev.kind!='couple')t=(NMID.host||ev.label)+' · '+ev.roles.host;
   if(on)coupleLabel(e,t);e.g.visible=on;if(e.el)e.el.classList.toggle('nm-hid',!on);e.g.position.x=want.length==1?0:(k=='groom'?NMCOUPLE.gap:-NMCOUPLE.gap);if(e.el){e.el.dataset.k=want.length==1?'solo':k}})}
@@ -1085,7 +1192,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),{textCon
 .dig[hidden]{display:none}
 @media(max-width:700px){.did{padding:16px}}
 `}));
-const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama wisudawan/wisudawati',manasik:'Nama anak / sekolah',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
+const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama sekolah / angkatan',manasik:'Nama anak / sekolah',moveon:'Nama kamu',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
 let NMDR=null,NMDRINV=null,NMDIRTY=false;
 const nmDraftId=()=>nmFromFields({eventType:NMDR.e,groomName:NMDR.g,brideName:NMDR.b,nameOrder:NMDR.o,hostName:NMDR.h,stageAvatar:NMDR.s,theme:NMDR.t},'');
 function nmBuildForm(){if($('#didform'))return;const w=$('.dwrap'),body=$('#dbody');if(!w||!body)return;const d=document.createElement('div');d.id='didform';d.className='did';
