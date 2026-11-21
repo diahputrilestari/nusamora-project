@@ -58,7 +58,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('kemerdekaan-17-agustus','Kemerdekaan 17 Agustus Live Guest','Venue 3D perayaan virtual Hari Kemerdekaan dengan panggung kayu merah putih, Garuda, Monas, dan avatar tamu berbusana adat.','{other}'::text[],92),
  ('move-on-celebration','Move On Celebration Live Guest','Venue 3D pesta move on bertema self love dengan panggung bunga ungu-pink, lampu hangat, Fan Letter Wall, dan avatar tamu berbusana lavender.','{other}'::text[],91),
  ('wisuda-sma-navy-gold','Wisuda SMA Navy Gold Live Guest','Venue 3D kelulusan SMA dengan panggung navy-emas, toga, bunga lili, dan avatar tamu berjubah wisuda.','{graduation}'::text[],90),
- ('manasik-haji-tk','Manasik Haji TK Live Guest','Venue 3D infografis manasik haji anak TK dengan Ka''bah mini, papan rukun haji, sumur zamzam, dan avatar anak berpakaian ihram.','{manasik}'::text[],89),
+ ('manasik-haji-tk','Manasik Haji TK Live Guest','Venue 3D infografis manasik haji anak TK dengan Ka''bah mini, papan rukun haji, sumur zamzam, dan avatar anak berpakaian ihram.','{other}'::text[],89),
  ('wisuda-purple-gold','Wisuda Purple Gold Live Guest','Venue 3D kelulusan skripsi dengan panggung ungu-emas, toga, bunga merah muda, dan avatar tamu berbusana ungu.','{graduation}'::text[],88),
  ('aqiqah-pink-castle','Aqiqah Pink Castle Live Guest','Venue 3D syukuran aqiqah istana pink pastel dengan lentera emas, bunga, dan dekorasi bayi yang manis.','{aqiqah}'::text[],84),
  ('adat-papua','Adat Papua Live Guest','Venue 3D pernikahan adat Papua dengan honai beratap rumbia, tiang totem ukir, bunga tropis, dan burung cenderawasih.','{wedding,engagement}'::text[],85),
