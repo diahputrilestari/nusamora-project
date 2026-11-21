@@ -31,7 +31,7 @@ const NM_EVENTS={
   story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Perayaan',items:[['Welcome & Registrasi','10.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Tiup Lilin','12.00','Nyanyi bersama dan potong kue.'],['Makan Bersama','13.00','Hidangan spesial dari tuan rumah.'],['Games & Foto Bersama','14.30','Seru-seruan dan sesi foto bersama.']]},
   dress:{title:'Colorful & Fun',sub:'pesta santai, ceria',eb:'Dress Code',palette:[['#FFD166','Kuning'],['#F0566A','Coral'],['#2BB3A3','Tosca'],['#6C5CE7','Ungu'],['#FFFFFF','Putih']],
    men:{rec:['Kemeja atau kaos polo warna cerah','Chino atau jeans rapi','Sneakers bersih'],avoid:['Pakaian terlalu formal','Warna serba gelap']},women:{rec:['Dress atau set warna ceria','Aksesori playful','Flat shoes atau sneakers'],avoid:['Pakaian terlalu formal','Warna serba gelap']},note:'Datang dengan warna favoritmu dan siap bersenang-senang.'}},
- manasik:{label:'Manasik Haji',kind:'single',eyebrow:'Manasik Haji Cilik',conn:'·',defaultTheme:'birthday-confetti',tag:'Manasik',hostLabel:'Jamaah Cilik',stageDefault:'bride',
+ manasik:{label:'Manasik Haji',kind:'single',eyebrow:'Manasik Haji Cilik',conn:'·',defaultTheme:'birthday-confetti',tag:'Manasik',hostLabel:'Jamaah Cilik',stageDefault:'none',
   s1:'🕋 {n} · Undangan Manasik Haji',welcome:'Ikut menyaksikan {n} belajar manasik haji di acara virtual ini',
   roles:{host:'Jamaah Cilik'},gift:false,
   book:{ph:'Tulis doa dan ucapan untuk {n}…',eb:'Doa & Ucapan'},live:{eb:'Manasik Haji',tx:'Manasik haji {n} disiarkan langsung. Ikut mendoakan dan kirim ucapanmu lewat chat.'},
