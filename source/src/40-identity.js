@@ -75,11 +75,29 @@ function nmHeader(){let h=$('#idh');if(!h){h=document.createElement('div');h.id=
  const t=nmTitleOf();h.querySelector('small').textContent=NMID.pair?ev.eyebrow:'Live Guest';h.querySelector('b').textContent=t;
  h.title=ev.kind=='couple'?(NMID.order=='bride'?[NMID.brideFull,NMID.groomFull]:[NMID.groomFull,NMID.brideFull]).filter(Boolean).join(' & '):NMID.hostFull;h.dataset.len=t.length>30?'xl':t.length>20?'l':'';
  h.setAttribute('aria-label',(NMID.pair?ev.eyebrow+' ':'')+t);const x=h.querySelector('canvas').getContext('2d');x.clearRect(0,0,88,88);nmDrawMono(x,88,th,NMID.mono,ev.conn)}
+const nmT=(k,d)=>{const t=(nmEv().tx||{})[k];return t==null?d:t};
+function nmInfoTx(id,d){const o=((nmEv().tx||{}).info||{})[id];if(!o||!d)return d;let h=d.h;const p='<p class="nm-p">'+nmFmt(o.p)+'</p>';h=/<p class="nm-p">/.test(h)?h.replace(/<p class="nm-p">[\s\S]*?<\/p>/,p):p+h;
+ if(o.menu)h=h.replace(/<ul class="nm-menu">[\s\S]*?<\/ul>/,'<ul class="nm-menu">'+o.menu.map(m=>'<li>'+nmI(m[0],20)+'<div><b>'+esc(m[1]).replace(/&amp;amp;/g,'&amp;')+'</b><span>'+esc(m[2])+'</span></div></li>').join('')+'</ul>');
+ return Object.assign({},d,{t:nmFmt(o.t),e:o.e,h})}
+const NMTH={s:null,on:0,g:0};
+function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[data-id]');
+ if(!NMTH.s)NMTH.s={a:AREAS.map(a=>[a,a.n]),bm:BM.slice(),vd:VD.map(v=>v.slice()),cats:CATS.slice(),lab:Array.from(N).map(b=>[b,b.querySelector('.tx').textContent,b.title])};
+ const s=NMTH.s;
+ if(!x){if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
+  s.lab.forEach(([b,t,ti])=>{const e=b.querySelector('.tx');if(e&&b.dataset.id!='story')e.textContent=t;if(b.dataset.id!='story')b.title=b.ariaLabel=ti});return}
+ NMTH.on=1;
+ if(x.names)AREAS.forEach(a=>{if(x.names[a.id])a.n=x.names[a.id]});
+ N.forEach(b=>{const id=b.dataset.id;if(id=='story')return;const e=b.querySelector('.tx');if(x.labels&&x.labels[id]&&e)e.textContent=x.labels[id];if(x.names&&x.names[id])b.title=b.ariaLabel=x.names[id]});
+ if(x.bots)BM.splice(0,BM.length,...x.bots);
+ if(x.vd)VD.splice(0,VD.length,...x.vd.map(v=>v.slice()));
+ if(x.cats){CATS.splice(0,CATS.length,...x.cats);GI.forEach((g,i)=>g.c=CATS[1+i%(CATS.length-1)]);GC='Semua'}
+ if(x.greet&&!NMTH.g&&typeof bots!=='undefined'&&bots.length>1){NMTH.g=1;const l=$('#log');if(l)l.innerHTML='';addChat(bots[0],x.greet[0]);addChat(bots[1],x.greet[1])}
+}catch(e){console.warn('theme',e)}}
 function nmTexts(){const ev=nmEv(),p=NMID.pair;{const th=NM.themes[NMID.themeId]||{},cp=th.copy||{},h=$('#s2 h1'),sb=$('#s2 .sub');if(h){if(h.dataset.d0==null)h.dataset.d0=h.textContent;h.textContent=cp.s2h||h.dataset.d0}if(sb){if(sb.dataset.d0==null)sb.dataset.d0=sb.textContent;sb.textContent=cp.s2s||sb.dataset.d0}}
  document.title=(p?p+' · ':'')+ev.label+' Live Guest';
  const a=$('#s1 .serif'),b=$('#s1 .sub');if(a)a.textContent=p?nmFmt(ev.s1):'💍 Undangan Digital Interaktif';if(b)b.textContent=p?nmFmt(ev.welcome):'Masuk ke acara virtual sebagai tamu spesial';
  const sn=document.querySelector('#ml .nv[data-id=story]');if(sn){const tx=sn.querySelector('.tx');if(tx)tx.textContent=ev.story.nav;sn.title=sn.ariaLabel=nmFmt(ev.story.title)}
- nmStage()}
+ nmTheme();nmStage()}
 /* jarak pengantin: setengah jarak antar-pusat (satuan dunia); label dinaikkan bergantian agar tidak bertumpuk */
 const NMCOUPLE={gap:.58};
 document.head.appendChild(Object.assign(document.createElement('style'),{textContent:'.lb[data-k=bride] .nm{transform:translateY(-26px)}.lb[data-k=groom] .nm{transform:translateY(0)}'}));
