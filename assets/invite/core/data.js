@@ -143,7 +143,7 @@
     return rpc("submit_wish", { p_slug: vm.slug, p_name: d.name, p_message: d.message, p_attendance: d.attendance || null });
   }
   function wishes(vm, before) {
-    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : vm.category === "graduation" ? DEMO_WISHES_GR : vm.category === "corporate" || vm.category === "seminar" ? DEMO_WISHES_EV : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
+    if (vm.mode !== "live") { var all = (vm.mode === "demo" ? (vm.demoWishes ? vm.demoWishes : vm.isCouple ? DEMO_WISHES : vm.category === "aqiqah" ? DEMO_WISHES_AQ : vm.category === "graduation" ? DEMO_WISHES_GR : vm.category === "corporate" || vm.category === "seminar" ? DEMO_WISHES_EV : DEMO_WISHES_KID) : []).concat([]); all = local.wishes.concat(all); return Promise.resolve({ total: all.length, items: all }); }
     return rpc("list_wishes", { p_slug: vm.slug, p_before: before || null, p_limit: 20 });
   }
 
@@ -178,6 +178,7 @@
   function demoFor(theme, cat, o) {
     if (cat === "aqiqah") return demoAqiqah(theme, o);
     if (cat === "graduation") return demoGraduation(theme, o);
+    if (cat === "other") return demoOther(theme, o);
     var evt = cat === "corporate" || cat === "seminar";
     if (cat !== "birthday" && !evt) return demoData(theme);
     o = o || {}; var nm = str(o.name, 30) || "Alesha", age = str(o.age, 10) || "5";
@@ -253,6 +254,30 @@
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
     return { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || "Wisuda " + nm, category: "graduation", event_date: iso, mode: "demo" }), template: theme || "" };
+  }
+  /* kategori "other" (acara lain, mis. manasik haji TK): seluruh isi demo dibaca dari theme.json "demo" */
+  function demoOther(theme, o) {
+    o = o || {}; var nm = str(o.name, 40) || "Acara Kita";
+    var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };
+    var d = new Date(Date.now() + 47 * 864e5), iso = d.toISOString().slice(0, 10);
+    var content = {
+      theme: /^[a-z0-9-]{1,40}$/.test(theme || "") ? theme : "",
+      names: { a: nm },
+      couple: { bride: { full: str(o.full, 80) || nm, parents: str(o.parents, 120) } },
+      welcome: str(o.welcome, 1000) || "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan berbagi kebahagiaan di acara kami.",
+      quote: { text: str(o.quote, 400), source: str(o.quoteSource, 80) },
+      photos: { cover: u("nm-oth-cover", 900, 1200), bride: u("nm-oth", 600, 800), gallery: ["g1", "g2", "g3", "g4", "g5", "g6"].map(function (s, i) { return u("nm-oth-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
+      event: { name: str(o.eventName, 60) || "Acara", start: str(o.start, 5) || "09:00", end: str(o.end, 5) || "12:00", tz: "WIB", venue: str(o.venue, 120) || "Aula Serbaguna", address: str(o.address, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      story: Array.isArray(o.story) ? o.story.slice(0, 6).map(function (x, i) { x = x || {}; return { date: str(x.date, 40), title: str(x.title, 80), text: str(x.text, 600), photo: i === 1 ? u("nm-oth-s2", 700, 500) : "" }; }) : [],
+      gift: { bank: str(o.bank, 40) || "BSI", number: "7123456789", holder: str(o.holder, 80) || "Panitia Acara" },
+      giftAddress: str(o.giftAddress, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+      closing: str(o.closing, 600) || "Terima kasih atas kehadiran dan doa Bapak/Ibu/Saudara/i.",
+      music: { enabled: true, track: "we-are" },
+      features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
+    };
+    var r = { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || nm, category: "other", event_date: iso, mode: "demo" }), template: theme || "" };
+    if (Array.isArray(o.wishes)) r.vm.demoWishes = o.wishes.slice(0, 6).map(function (x, i) { x = x || {}; return { id: "o" + i, name: str(x.name, 60), message: str(x.message, 300), attendance: x.attendance || null, created_at: new Date(Date.now() - (i + 1) * 864e5 * 4).toISOString() }; });
+    return r;
   }
   function demoData(theme) {
     var u = function (seed, w, h) { return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h; };

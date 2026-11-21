@@ -1,0 +1,182 @@
+{
+  "id": "little-manasik",
+  "name": "Manasik Haji Cilik",
+  "version": 1,
+  "description": "Manasik haji anak TK: panggung putih-emas bermenara dengan karpet hijau, Ka'bah mungil, papan arah Sa'i dan Wukuf, booth bernuansa hijau-emas, serta dua anak berpakaian ihram.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "TK Al-Ikhlas",
+    "full": "TK Islam Al-Ikhlas",
+    "parents": "Bersama ananda kelompok A & B",
+    "title": "Manasik Haji Cilik TK Al-Ikhlas",
+    "eventName": "Manasik Haji Cilik",
+    "start": "08:00",
+    "end": "11:00",
+    "venue": "Halaman TK Islam Al-Ikhlas",
+    "address": "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi",
+    "bank": "BSI",
+    "holder": "TK Islam Al-Ikhlas",
+    "giftAddress": "TK Islam Al-Ikhlas, Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+    "welcome": "Assalamu'alaikum warahmatullahi wabarakatuh. Bapak/Ibu wali murid yang kami muliakan, kami mengundang Bapak/Ibu mendampingi ananda dalam kegiatan Manasik Haji Cilik, belajar tawaf, sa'i, wukuf, hingga lempar jumrah dengan cara yang menyenangkan.",
+    "quote": "Dan serukanlah kepada manusia untuk mengerjakan haji, niscaya mereka akan datang kepadamu.",
+    "quoteSource": "QS. Al-Hajj: 27",
+    "closing": "Atas kehadiran dan dukungan Bapak/Ibu, kami ucapkan jazakumullahu khairan. Semoga ananda kelak menjadi tamu Allah di Baitullah. Wassalamu'alaikum warahmatullahi wabarakatuh.",
+    "story": [
+      {
+        "date": "Pukul 08.00",
+        "title": "Berkumpul & Berihram",
+        "text": "Ananda memakai pakaian ihram dan kalung tanda peserta, lalu berbaris rapi bersama ustadzah."
+      },
+      {
+        "date": "Pukul 08.30",
+        "title": "Tawaf & Sa'i",
+        "text": "Mengelilingi Ka'bah mungil dan berjalan antara Safa dan Marwah sambil melafalkan doa."
+      },
+      {
+        "date": "Pukul 09.30",
+        "title": "Wukuf & Lempar Jumrah",
+        "text": "Belajar wukuf di Arafah, mengumpulkan kerikil, dan melempar jumrah dengan riang."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Ustadzah Salma (Wali Kelas)",
+        "message": "Barakallahu fiikum. Terima kasih sudah mendampingi ananda belajar manasik. Semoga kelak jadi haji mabrur.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Bunda Rina (Wali Murid)",
+        "message": "Seru sekali! Anak saya sudah hafal doa tawaf. Siap hadir mendampingi.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Kakek Hasan",
+        "message": "Maaf kakek belum bisa datang. Doa kakek menyertai cucu-cucu yang lucu ini.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#1E6B45",
+    "deep2": "#2F8F5E",
+    "paper": "#FFFBEF",
+    "ink": "#17301F",
+    "muted": "#5F7A66",
+    "accent": "#D3A02E",
+    "accent2": "#F7E2A0",
+    "soft": "#F1F5E2",
+    "petal": "#F7E2A0",
+    "heading": "#1E6B45"
+  },
+  "fonts": {
+    "script": "Dancing Script",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Undangan Manasik Haji",
+    "guestSalute": "Bapak/Ibu wali murid",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Keluarga Besar TK",
+    "countdownEyebrow": "Menuju hari manasik",
+    "countdownTitle": "Berangkat ke Tanah Suci",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Manasik Haji Cilik",
+    "storyEyebrow": "Rangkaian kegiatan",
+    "storyTitle": "Langkah Manasik",
+    "galleryEyebrow": "Kenangan kecil",
+    "galleryTitle": "Galeri Manasik",
+    "rsvpLead": "Mohon konfirmasi kehadiran ananda dan pendamping agar kegiatan berjalan lancar.",
+    "giftEyebrow": "Infak kegiatan",
+    "giftTitle": "Infak Manasik",
+    "giftLead": "Bila Bapak/Ibu berkenan berinfak untuk kelancaran kegiatan, dapat melalui:",
+    "wishesEyebrow": "Doa & dukungan",
+    "wishesTitle": "Doa untuk Ananda",
+    "closingEyebrow": "Jazakumullahu khairan",
+    "closingText": "Terima kasih atas doa, dukungan, dan kehadiran Bapak/Ibu. Semoga ananda kelak menjadi tamu Allah di Baitullah."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1677
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1677
+    },
+    "coverGround": [
+      {
+        "src": "art/anak-lk.webp",
+        "w": 86
+      },
+      {
+        "src": "art/kabah.webp",
+        "w": 78
+      },
+      {
+        "src": "art/anak-pr.webp",
+        "w": 86
+      }
+    ],
+    "heading": "art/kabah.webp",
+    "introTop": "art/quran.webp",
+    "figureBride": "art/anak-lk.webp",
+    "countdownRow": [
+      {
+        "src": "art/tanaman.webp",
+        "w": 48
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 126
+      },
+      {
+        "src": "art/tanaman-b.webp",
+        "w": 48
+      }
+    ],
+    "eventBadge": "art/bendera.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/kado.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/papan-kabah.webp",
+    "closingFigures": [
+      "art/anak-lk.webp",
+      "art/anak-pr.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

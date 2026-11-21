@@ -319,7 +319,13 @@
     "graduation": "little-wisuda",
     "little-wisuda": "little-wisuda",
     "toga": "little-wisuda",
-    "sarjana": "little-wisuda"
+    "sarjana": "little-wisuda",
+    "manasik": "little-manasik",
+    "manasik-haji": "little-manasik",
+    "haji": "little-manasik",
+    "haji-cilik": "little-manasik",
+    "umrah": "little-manasik",
+    "little-manasik": "little-manasik"
   },
   "themes": [
     {
@@ -1302,6 +1308,20 @@
       "swatch": [
         "#5B2A86",
         "#F6DC98"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-manasik",
+      "name": "Manasik Haji Cilik",
+      "description": "Manasik haji anak TK: panggung putih-emas bermenara dengan karpet hijau, Ka'bah mungil, papan arah Sa'i dan Wukuf, booth hijau-emas, serta dua anak berpakaian ihram.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1E6B45",
+        "#F7E2A0"
       ],
       "art": true
     }
