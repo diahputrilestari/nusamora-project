@@ -9,9 +9,9 @@
   "demo": {
     "name": "Rafi",
     "full": "Muhammad Rafi Pratama",
-    "parents": "Putra pertama Bapak Dimas Pratama & Ibu Rania Larasati",
+    "parents": "Lulusan SMA Negeri 1 Cikarang · Putra pertama Bapak Dimas Pratama & Ibu Rania Larasati",
     "title": "Wisuda SMA Rafi",
-    "eventName": "Syukuran Kelulusan SMA",
+    "eventName": "Syukuran Kelulusan",
     "start": "10:00",
     "end": "13:00",
     "venue": "Aula SMA Negeri 1",
@@ -22,19 +22,19 @@
     "closing": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini. Semoga ilmu yang didapat membawa manfaat dan kebaikan.",
     "story": [
       {
-        "date": "Juli 2023",
+        "date": "Kelas X",
         "title": "Hari Pertama di SMA",
-        "text": "Berseragam putih abu-abu untuk pertama kalinya, ananda memulai tiga tahun penuh cerita."
+        "text": "Berseragam putih abu-abu untuk pertama kalinya, ananda mengenal teman baru, guru baru, dan masa MPLS yang tak terlupakan."
       },
       {
-        "date": "Maret 2026",
-        "title": "Ujian Akhir",
-        "text": "Berbulan-bulan belajar bersama dan saling menyemangati, hingga ujian terakhir akhirnya selesai."
+        "date": "Kelas XI",
+        "title": "Organisasi & Prestasi",
+        "text": "Aktif di OSIS dan ekstrakurikuler, belajar memimpin, bekerja sama, dan tidak takut mencoba hal baru."
       },
       {
-        "date": "Mei 2026",
-        "title": "Pengumuman Kelulusan",
-        "text": "Dengan mengucap syukur, ananda dinyatakan lulus. Toga siap dikenakan, topi siap dilempar."
+        "date": "Kelas XII",
+        "title": "Ujian & Kelulusan",
+        "text": "Berbulan-bulan belajar bersama dan saling menyemangati, hingga ananda dinyatakan lulus. Toga siap dikenakan, topi siap dilempar."
       }
     ],
     "wishes": [
@@ -44,7 +44,7 @@
         "attendance": "hadir"
       },
       {
-        "name": "Dimas & Geng XII IPA 2",
+        "name": "Sahabat XII IPA 2",
         "message": "Akhirnya lulus bareng! Jangan lupa reuni ya, traktir bakso dulu.",
         "attendance": "hadir"
       },
@@ -53,7 +53,10 @@
         "message": "Maaf belum bisa hadir. Selamat ya, anak pintar. Doa terbaik untukmu.",
         "attendance": "tidak"
       }
-    ]
+    ],
+    "bank": "BRI",
+    "holder": "Dimas Pratama",
+    "giftAddress": "Jl. Pendidikan No. 12, Cikarang Utara, Bekasi 17530 (u.p. Rafi Pratama)"
   },
   "colors": {
     "deep": "#1B2F6B",
@@ -93,14 +96,14 @@
   "css": "theme.css",
   "copy": {
     "coverEyebrowEvent": "Syukuran Kelulusan SMA",
-    "guestSalute": "Keluarga & sahabat tersayang",
+    "guestSalute": "Guru, keluarga & sahabat tersayang",
     "profileEyebrow": "Sang lulusan",
     "profileTitle": "Lulusan Kami",
     "countdownEyebrow": "Menuju hari kelulusan",
     "countdownTitle": "Hari Kelulusan",
     "eventsEyebrow": "Waktu & tempat",
-    "eventsTitle": "Syukuran Kelulusan",
-    "storyEyebrow": "Tiga tahun bersama",
+    "eventsTitle": "Rangkaian Acara",
+    "storyEyebrow": "Tiga tahun putih abu-abu",
     "storyTitle": "Kisah Putih Abu-abu",
     "galleryEyebrow": "Momen berharga",
     "galleryTitle": "Galeri Kelulusan",
@@ -111,7 +114,10 @@
     "wishesEyebrow": "Doa & harapan",
     "wishesTitle": "Ucapan Selamat",
     "closingEyebrow": "Terima kasih",
-    "closingText": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini."
+    "closingText": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini.",
+    "guestDefault": "Sahabat & Keluarga",
+    "rsvpEyebrow": "Hadir di hari kelulusan",
+    "rsvpTitle": "Konfirmasi Hadir"
   },
   "art": {
     "backdrop": {

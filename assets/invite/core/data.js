@@ -247,8 +247,8 @@
         { date: "Juni 2026", title: "Sidang Skripsi", text: "Setelah berbulan-bulan revisi dan begadang, skripsi " + nm + " dinyatakan lulus dengan nilai memuaskan.", photo: u("nm-grad-s2", 700, 500) },
         { date: "Januari 2027", title: "Hari Wisuda", text: "Toga dikenakan, topi dilempar ke udara. Satu bab selesai, bab berikutnya segera dimulai.", photo: "" }
       ],
-      gift: { bank: "BCA", number: "1234567890", holder: "Rania Larasati" },
-      giftAddress: "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+      gift: { bank: str(o.bank, 40) || "BCA", number: "1234567890", holder: str(o.holder, 80) || "Rania Larasati" },
+      giftAddress: str(o.giftAddress, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
       closing: str(o.closing, 600) || "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini. Semoga kebahagiaan ini juga menjadi milik kita semua.",
       music: { enabled: true, track: "we-are" },
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
