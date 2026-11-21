@@ -86,7 +86,7 @@
   function catOf(r) {
     if (r.category) return String(r.category);
     var t = String(r.title || "").toLowerCase();
-    if (/ulang tahun|birthday|baby shower|gender reveal|tasyakuran|family gathering|graduation|hadiah wisuda|kelulusan|wisuda|perpisahan|pentas seni|seminar|workshop|webinar|konferensi|business summit|company|corporate|pelatihan|anniversary|event organizer|gathering|town hall|virtual|appreciation|networking|exhibition|trade show|product launching|grand opening|gala dinner|awarding|farewell|retirement|corporate|class meeting|graduation ceremony|pengajian|khitan|sunat|aqiqah|goodie|sweet seventeen|bridal shower|bachelorette|lamaran|engagement|proposal|games ulang/.test(t)) return "Acara Spesial";
+    if (/ulang tahun|birthday|baby shower|gender reveal|tasyakuran|family gathering|graduation|hadiah wisuda|kelulusan|wisuda|perpisahan|pentas seni|seminar|workshop|webinar|konferensi|business summit|company|corporate|pelatihan|anniversary|event organizer|gathering|tamu vip|town hall|virtual|appreciation|networking|exhibition|trade show|product launching|grand opening|gala dinner|awarding|farewell|retirement|corporate|class meeting|graduation ceremony|pengajian|khitan|sunat|aqiqah|goodie|sweet seventeen|bridal shower|bachelorette|lamaran|engagement|proposal|games ulang/.test(t)) return "Acara Spesial";
     if (/nusamora|paket|essential|signature|luxe|cara membuat|template/.test(t)) return "Panduan NusaMora";
     if (/link undangan|whatsapp|rsvp|buku tamu|virtual venue|daftar tamu/.test(t)) return "Tips Undangan";
     if (/pernikahan|nikah|pengantin|akad|resepsi|checklist|wedding|pelaminan|kua|perkawinan|bimwin|vendor|kontrak|privasi|adat|tema|marriage|keluarga|tradisi|red flag|pasangan/.test(t)) return "Persiapan Pernikahan";
