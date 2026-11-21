@@ -38,7 +38,7 @@ begin
   if v.id is null or v.nm_theme is null then return null; end if;
   select left(title, 60), event_type into ttl, ev from public.invitations where id = c.inv;
   if v.event_type is not null then ev := v.event_type; end if;
-  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'corporate') then ev := null; end if;
+  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'corporate') then ev := null; end if;
   return jsonb_build_object('id', 'v-' || v.key, 'name', v.name, 'event', ev, 'host', ttl, 'painting', v.background_url, 'pos', v.bg_pos, 'theme', v.nm_theme, 'decor', v.decor);
 end $$;
 

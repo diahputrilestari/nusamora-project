@@ -53,6 +53,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('blue-elegance','Blue Elegance Live Guest','Venue 3D pernikahan aula putih bernuansa biru lembut dengan pilar, tirai, hidrangea, dan lampu kristal.','{wedding,engagement}'::text[],81),
  ('sage-garden','Sage Garden Live Guest','Venue 3D pernikahan taman kaca bernuansa hijau sage dengan bunga lili, lampion emas, dan lengkung emas.','{wedding,engagement}'::text[],82),
  ('india-sweet-17','India Sweet 17 Live Guest','Venue 3D pesta Sweet 17 bertema India dengan istana marmer, lengkung emas, bunga marigold, dan karpet merah muda.','{birthday}'::text[],83),
+ ('kemerdekaan-17-agustus','Kemerdekaan 17 Agustus Live Guest','Venue 3D perayaan virtual Hari Kemerdekaan dengan panggung kayu merah putih, Garuda, Monas, dan avatar tamu berbusana adat.','{other}'::text[],92),
  ('move-on-celebration','Move On Celebration Live Guest','Venue 3D pesta move on bertema self love dengan panggung bunga ungu-pink, lampu hangat, Fan Letter Wall, dan avatar tamu berbusana lavender.','{other}'::text[],91),
  ('wisuda-sma-navy-gold','Wisuda SMA Navy Gold Live Guest','Venue 3D kelulusan SMA dengan panggung navy-emas, toga, bunga lili, dan avatar tamu berjubah wisuda.','{graduation}'::text[],90),
  ('manasik-haji-tk','Manasik Haji TK Live Guest','Venue 3D infografis manasik haji anak TK dengan Ka''bah mini, papan rukun haji, sumur zamzam, dan avatar anak berpakaian ihram.','{manasik}'::text[],89),
