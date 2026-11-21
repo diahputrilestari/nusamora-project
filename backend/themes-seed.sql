@@ -73,7 +73,9 @@ with t(slug, name, cats, description, sort) as (values
   ('aqiqah-istana-biru', 'Aqiqah Istana Biru', '{aqiqah}'::text[],                              'Tasyakuran aqiqah bernuansa istana biru-krem: lengkung mozaik biru dan emas, lentera emas, kolam teratai, kubah masjid, domba kecil, bulan sabit, serta ilustrasi bayi laki-laki berkopiah.', 97),
   ('little-wisuda', 'Wisuda Skripsi', '{graduation}'::text[],                           'Syukuran kelulusan skripsi: panggung ungu-emas bertirai dengan toga dan daun laurel, karangan bunga pink, lentera emas, photo booth dan galeri foto, serta wisudawati chibi bertoga membawa skripsi.', 98),
   ('little-manasik', 'Manasik Haji Cilik', '{other}'::text[],                           'Manasik haji anak TK: panggung putih-emas bermenara dengan karpet hijau, Ka''bah mungil, papan arah Sa''i dan Wukuf, booth hijau-emas, serta dua anak berpakaian ihram.', 99),
-  ('little-wisuda-sma', 'Wisuda SMA', '{graduation}'::text[],                           'Syukuran kelulusan SMA: aula wisuda navy-emas dengan tirai, spanduk, balon, dan lili-hortensia, booth buku tamu, photo booth, galeri foto, serta lulusan chibi berjubah navy membawa gulungan ijazah.', 100)
+  ('little-wisuda-sma', 'Wisuda SMA', '{graduation}'::text[],                           'Syukuran kelulusan SMA: aula wisuda navy-emas dengan tirai, spanduk, balon, dan lili-hortensia, booth buku tamu, photo booth, galeri foto, serta lulusan chibi berjubah navy membawa gulungan ijazah.', 100,
+  ('move-on-celebration', 'Move On Celebration – Live Guest', '{other}'::text[],                           'Pesta move on dan bab baru: panggung marmer ungu-senja bertabur lampu dan bunga sakura, papan Healing-Self Love-Growth, booth buku tamu, photo booth, galeri, fan letter wall, serta si tokoh utama chibi bergaun pink.', 101)
+
 )
 insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, theme_key, status, sort, capabilities)
 select t.slug, t.name, t.description, '/assets/invite/themes/' || t.slug || '/thumb.webp', '/preview?demo=' || t.slug,
