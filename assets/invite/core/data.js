@@ -269,7 +269,7 @@
       welcome: str(o.welcome, 1000) || "Dengan hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan berbagi kebahagiaan di acara kami.",
       quote: { text: str(o.quote, 400), source: str(o.quoteSource, 80) },
       photos: { cover: u("nm-oth-cover", 900, 1200), bride: u("nm-oth", 600, 800), gallery: ["g1", "g2", "g3", "g4", "g5", "g6"].map(function (s, i) { return u("nm-oth-" + s, i % 3 === 0 ? 800 : 900, i % 3 === 0 ? 1100 : 700); }) },
-      event: { name: str(o.eventName, 60) || "Acara", start: str(o.start, 5) || "09:00", end: str(o.end, 5) || "12:00", tz: "WIB", venue: str(o.venue, 120) || "Aula Serbaguna", address: str(o.address, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: "https://maps.google.com/?q=Cikarang" },
+      event: { name: str(o.eventName, 60) || "Acara", start: str(o.start, 5) || "09:00", end: str(o.end, 5) || "12:00", tz: "WIB", venue: str(o.venue, 120) || "Aula Serbaguna", address: str(o.address, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi", maps: str(o.maps, 300) || "https://maps.google.com/?q=Cikarang" },
       story: Array.isArray(o.story) ? o.story.slice(0, 6).map(function (x, i) { x = x || {}; return { date: str(x.date, 40), title: str(x.title, 80), text: str(x.text, 600), photo: i === 1 ? u("nm-oth-s2", 700, 500) : "" }; }) : [],
       gift: { bank: str(o.bank, 40) || "BSI", number: "7123456789", holder: str(o.holder, 80) || "Panitia Acara" },
       giftAddress: str(o.giftAddress, 300) || "Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
