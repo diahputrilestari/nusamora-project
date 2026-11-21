@@ -1,4 +1,4 @@
--- Tiga artikel undangan digital: membuat sendiri tanpa keahlian desain, 10 fitur praktis, dan tren undangan 3D interaktif.
+-- Empat artikel undangan digital: membuat sendiri tanpa keahlian desain, 10 fitur praktis, tren undangan 3D interaktif, dan waktu terbaik membagikan undangan.
 -- Langsung published. Aman dijalankan ulang (dilewati bila slug sudah ada). Fitur dibahas secara umum; ketersediaan di tiap paket NusaMora dicek di halaman paket.
 insert into public.contents (type, title, slug, lang, excerpt, body, seo_title, seo_description, status, published_at, sort)
 select v.* from (values
@@ -209,6 +209,80 @@ Sebagian pasangan memilih jalan tengah: undangan interaktif untuk tamu yang akra
 
 ## Penutup
 
-Undangan 3D adalah cara menarik untuk membuat tamu merasakan suasana sebelum hari H. Namun kemegahan efek tidak boleh mengalahkan kejelasan dan kenyamanan. Pilih yang sesuai dengan tamu dan cerita Anda, uji dengan teliti, dan biarkan pesan utamanya tetap terang. Siap menjelajah? [Lihat pilihan template](/#template) atau [paket undangan NusaMora](/paket).$q$, $q$3D Wedding Invitation: Tren Undangan Pernikahan yang Lebih Interaktif$q$, $q$Apa itu undangan pernikahan 3D dan interaktif, mengapa memikat, kapan cocok dipakai, serta hal yang perlu dijaga: performa, keterbacaan, dan kenyamanan tamu.$q$, 'published', now(), 0)
+Undangan 3D adalah cara menarik untuk membuat tamu merasakan suasana sebelum hari H. Namun kemegahan efek tidak boleh mengalahkan kejelasan dan kenyamanan. Pilih yang sesuai dengan tamu dan cerita Anda, uji dengan teliti, dan biarkan pesan utamanya tetap terang. Siap menjelajah? [Lihat pilihan template](/#template) atau [paket undangan NusaMora](/paket).$q$, $q$3D Wedding Invitation: Tren Undangan Pernikahan yang Lebih Interaktif$q$, $q$Apa itu undangan pernikahan 3D dan interaktif, mengapa memikat, kapan cocok dipakai, serta hal yang perlu dijaga: performa, keterbacaan, dan kenyamanan tamu.$q$, 'published', now(), 0),
+  ('article', $q$Kapan Waktu Terbaik Membagikan Undangan Pernikahan kepada Tamu?$q$, $q$kapan-waktu-terbaik-membagikan-undangan-pernikahan-kepada-tamu$q$, 'id', $q$Terlalu awal mudah terlupa, terlalu mepet membuat tamu kesulitan. Ini panduan waktu yang menghormati jadwal tamu, lengkap dengan pengingat dan batas RSVP yang sopan.$q$, $q$Mengirim undangan terdengar sepele, tetapi waktunya ternyata memengaruhi banyak hal: berapa orang yang hadir, seberapa cepat mereka menjawab, dan seberapa dihargai perasaan mereka. Ada dasar psikologisnya. Kabar yang datang terlalu awal cenderung tertimbun dan terlupa, sedangkan yang datang terlalu mepet terasa seperti "tamu cadangan".
+
+Tujuan Anda adalah sampai pada waktu ketika tamu **masih sempat mengatur jadwal, tetapi belum sempat lupa**.
+
+> Catatan: waktu di bawah adalah panduan umum. Sesuaikan dengan adat keluarga, musim, dan kondisi tamu Anda.
+
+## Gambaran umum waktu terbaik
+
+- **Pemberitahuan awal (save the date):** sekitar 2 sampai 3 bulan sebelum, terutama untuk tamu luar kota atau yang perlu cuti.
+- **Undangan resmi:** sekitar 3 sampai 6 minggu sebelum hari H.
+- **Tamu dari luar kota atau luar negeri:** 6 sampai 8 minggu sebelum, agar sempat mengatur tiket dan penginapan.
+- **Batas RSVP:** sekitar 1 sampai 2 minggu sebelum, mengikuti batas konfirmasi jumlah tamu ke catering.
+- **Pengingat:** sekitar 1 minggu sebelum dan sehari sebelum acara.
+
+## Mengapa tidak terlalu awal?
+
+Undangan yang dikirim terlalu jauh sebelum acara sering terlupa. Tamu menjawab "iya, insya Allah hadir" lalu rencananya bergeser. Jika ingin memberi kabar lebih awal, cukup kirim **pemberitahuan tanggal** yang singkat, lalu susul dengan undangan lengkap mendekati hari H.
+
+## Mengapa tidak terlalu mepet?
+
+Undangan yang datang beberapa hari sebelum acara mengirim pesan tersirat: "kamu bukan prioritas". Ini bisa menyinggung tamu penting, apalagi keluarga dan kerabat. Selain itu, mereka kesulitan mengatur cuti, perjalanan, dan busana.
+
+## Atur waktu berdasarkan kelompok tamu
+
+Tidak semua tamu perlu dikirimi bersamaan.
+
+- **Keluarga inti dan kerabat sepuh:** lebih awal, dan sebaiknya disampaikan langsung atau lewat telepon sebelum tautan dikirim. Ini bentuk penghormatan.
+- **Tamu luar kota:** 6 sampai 8 minggu sebelum.
+- **Sahabat dekat:** boleh lebih awal, bahkan sebelum undangan resmi, karena mereka sering menjadi bagian dari persiapan.
+- **Rekan kerja dan kenalan:** 3 sampai 4 minggu sebelum.
+
+## Pilih hari dan jam pengiriman
+
+Perhatian orang berbeda sepanjang hari. Beberapa pertimbangan umum:
+
+- Kirim pada **waktu yang santai**, misalnya sore menjelang malam, bukan dini hari atau jam sibuk kerja.
+- Hindari hari yang padat atau menjelang hari besar yang membuat orang kewalahan.
+- Pertimbangkan zona waktu bila tamu berada di luar negeri.
+- Kirim dalam gelombang kecil sehingga Anda bisa membalas pertanyaan dengan cepat.
+
+## Perhatikan kalender di sekitar acara
+
+Periksa libur nasional, cuti bersama, musim mudik, bulan puasa, atau musim ujian yang bisa memengaruhi ketersediaan tamu. Jika acara jatuh dekat periode padat, kirim lebih awal dari biasanya.
+
+## Cara mengirim agar tidak tertimbun
+
+- **Pesan pengantar hangat.** Sapa tamu dengan nama dan satu kalimat personal. Contohnya ada di [tips membagikan undangan lewat WhatsApp](/artikel/tips-membagikan-undangan-digital-lewat-whatsapp).
+- **Satu pesan, satu tujuan.** Jelaskan apa yang Anda harapkan: konfirmasi hadir sebelum tanggal tertentu.
+- **Tautan yang jelas dan aman.** Pertimbangkan [risiko nama tamu di URL](/artikel/link-undangan-digital-nama-tamu-di-url-berisiko-disalahgunakan).
+- **Catat siapa yang sudah menerima.** Gunakan [daftar tamu yang rapi](/artikel/cara-praktis-mengatur-daftar-tamu-dan-undangan-whatsapp-tidak-terlewat) agar tidak ada yang terlewat.
+
+## Pengingat yang sopan, bukan menekan
+
+- Kirim pengingat sekali, sekitar satu minggu sebelum batas RSVP, dengan nada ringan: "Kami menunggu kabar baiknya ya."
+- Untuk yang belum menjawab, hubungi secara personal setelah batas lewat, bukan berulang-ulang.
+- Hormati jawaban "tidak bisa hadir" tanpa meminta alasan.
+
+Panduan etika konfirmasinya ada di [etika hadir era digital](/artikel/etika-hadir-pernikahan-era-digital-rsvp-plus-one-amplop-cashless).
+
+## Pastikan data sudah final sebelum dikirim
+
+Mengirim undangan lalu mengubah tanggal atau lokasi menimbulkan kebingungan. Periksa dulu kelengkapan data dengan [checklist isi undangan](/artikel/checklist-isi-undangan-pernikahan-digital). Undangan digital memang mudah diperbarui, tetapi tamu yang sudah memberi jawaban perlu diberi tahu bila ada perubahan penting.
+
+## Bagaimana dengan undangan cetak?
+
+Undangan cetak umumnya memerlukan waktu pengantaran lebih panjang, jadi mulailah lebih awal dibanding undangan digital. Jika Anda menggabungkan keduanya, lihat [undangan digital versus cetak](/artikel/undangan-digital-vs-undangan-cetak-mana-yang-lebih-baik-untuk-pernikahanmu).
+
+## Menyatukan dengan jadwal persiapan
+
+Pengiriman undangan adalah satu bagian dari rangkaian persiapan. Lihat posisinya dalam [checklist 12 bulan](/artikel/checklist-persiapan-pernikahan-lengkap-12-bulan-sebelum-hingga-hari-h) dan [wedding timeline](/artikel/wedding-timeline-kapan-booking-venue-mua-catering-fotografer).
+
+## Penutup
+
+Waktu terbaik adalah saat tamu masih punya cukup ruang untuk berencana, dan Anda masih punya cukup waktu untuk menerima kabar mereka. Kirim lebih awal bagi yang perlu perjalanan, pilih hari yang tenang, sapa dengan hangat, dan ingatkan dengan sopan. Untuk mulai menyiapkan undangannya, [lihat pilihan paket NusaMora](/paket).$q$, $q$Kapan Waktu Terbaik Membagikan Undangan Pernikahan kepada Tamu?$q$, $q$Panduan waktu terbaik membagikan undangan pernikahan: kapan save the date, undangan resmi, batas RSVP, dan pengingat untuk tiap kelompok tamu.$q$, 'published', now(), 0)
 ) as v(type, title, slug, lang, excerpt, body, seo_title, seo_description, status, published_at, sort)
 where not exists (select 1 from public.contents c where c.type = 'article' and c.slug = v.slug and c.lang = v.lang);
