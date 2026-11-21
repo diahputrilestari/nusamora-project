@@ -16,7 +16,7 @@
  const _ill=illustrate;
  illustrate=function(){const r=_ill.apply(this,arguments);
   try{// pengaturan area lain menimpa AREAS/layout saat illustrate -> pasang lagi
-   NMLM.forEach(L=>{const a=AREAS.find(a=>a.id==L.area);if(a){a.x=L.ax;a.z=L.az;a.n=L.name}});
+   NMLM.forEach(L=>{const a=AREAS.find(a=>a.id==L.area);if(a){a.x=L.ax;a.z=L.az;a.n=L.name}});try{nmTheme()}catch(e){}
    {const a=AREAS.find(a=>a.id=='video');if(a){a.x=VIDEO.x;a.z=VIDEO.z}}
    if(VS['screen0'])relayout('screen0',SCREEN.x,SCREEN.z);
    const keep=new Set();

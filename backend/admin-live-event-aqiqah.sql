@@ -1,6 +1,6 @@
--- Jenis acara venue Live Guest: tambah 'aqiqah' dan 'graduation'. Aditif & idempoten; jalankan SETELAH live-luxe-content.sql.
+-- Jenis acara venue Live Guest: tambah 'aqiqah', 'graduation', dan 'manasik'. Aditif & idempoten; jalankan SETELAH live-luxe-content.sql.
 alter table public.live_venues drop constraint if exists live_venues_event_type_chk;
-alter table public.live_venues add constraint live_venues_event_type_chk check (event_type is null or event_type in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'corporate'));
+alter table public.live_venues add constraint live_venues_event_type_chk check (event_type is null or event_type in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'corporate'));
 
 create or replace function public.admin_live_venue_save(p jsonb) returns uuid language plpgsql security definer set search_path = public as $$
 declare v_id uuid := nullif(p ->> 'id', '')::uuid; th jsonb := nullif(p -> 'nm_theme', 'null'::jsonb); dc jsonb := nullif(p -> 'decor', 'null'::jsonb);
@@ -11,7 +11,7 @@ begin
   if coalesce(p ->> 'key', '') !~ '^[a-z0-9][a-z0-9-]{1,38}$' then raise exception 'kunci_tidak_valid'; end if;
   if coalesce((p ->> 'max_guests')::int, 300) not between 1 and 5000 then raise exception 'kapasitas_tidak_valid'; end if;
   if p ->> 'background_url' is not null and p ->> 'background_url' !~ '^(https://|/)' then raise exception 'url_tidak_valid'; end if;
-  if nullif(p ->> 'event_type', '') is not null and (p ->> 'event_type') not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'corporate') then raise exception 'jenis_acara_tidak_valid'; end if;
+  if nullif(p ->> 'event_type', '') is not null and (p ->> 'event_type') not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'corporate') then raise exception 'jenis_acara_tidak_valid'; end if;
   if nullif(p ->> 'bg_pos', '') is not null and (p ->> 'bg_pos') !~ '^[a-z0-9 %.-]{3,30}$' then raise exception 'posisi_tidak_valid'; end if;
   if not public.live_theme_ok(th) then raise exception 'tema_tidak_valid'; end if;
   if not public.live_decor_ok(dc) then raise exception 'dekor_tidak_valid'; end if;
@@ -43,7 +43,7 @@ begin
   if v.id is null or v.nm_theme is null then return null; end if;
   select left(title, 60), event_type into ttl, ev from public.invitations where id = c.inv;
   if v.event_type is not null then ev := v.event_type; end if;
-  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'corporate') then ev := null; end if;
+  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'corporate') then ev := null; end if;
   return jsonb_build_object('id', 'v-' || v.key, 'name', v.name, 'event', ev, 'host', ttl, 'painting', v.background_url, 'pos', v.bg_pos, 'theme', v.nm_theme, 'decor', v.decor);
 end $$;
 

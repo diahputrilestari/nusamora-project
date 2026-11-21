@@ -291,7 +291,6 @@ VD.splice(0,VD.length,['Keluarga Besar','Selamat menempuh hidup baru, semoga sel
 CATS[1]='Prewedding';CATS[2]='Engagement';GI.forEach((g,i)=>{g.c=CATS[1+i%3];g.e=['💍','🌸','💐','📷','🥂','💕'][i%6];g.bg=`linear-gradient(135deg,hsl(${340+i*6},70%,86%),hsl(${20+i*5},70%,88%))`});
 function story(){const s=[['🌿 Pertemuan Pertama','2019 — Bertemu di acara kampus; obrolan singkat tentang kopi berubah jadi cerita panjang.'],['☕ Semakin Dekat','2021 — Berbagi tawa, mimpi, dan perjalanan kecil yang membuat yakin.'],['💍 Lamaran','2025 — Di bawah lampu temaram, Raka melamar Sinta dengan restu keluarga.'],['💒 Hari Pernikahan','12 Desember 2026 — Awal perjalanan baru bersama, dan Anda bagian dari kisahnya.']];openM('💞 Story Cinta',`<div class="tl">${s.map((x,i)=>`<div style="animation-delay:${i*.25}s"><b>${x[0]}</b><br>${x[1]}</div>`).join('')}</div>`)}
 function loc(){openM('📍 Lokasi Acara','<p><b>Rumah Joglo Taman Asri</b><br>Jl. Melati Indah No. 12, Cikarang, Bekasi, Jawa Barat 17530<br>Sabtu, 12 Desember 2026 · 10.00 WIB</p><a class="btn" style="display:inline-block;text-decoration:none" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Cikarang+Bekasi">Buka Navigasi Google Maps</a>')}
-if(!LS('gb'))LS('gb',[{n:'Salsa',m:'Selamat menempuh hidup baru! Semoga selalu bahagia ❤️',t:'25 Okt 2026',a:AV.P[0]},{n:'Farhan',m:'Acara yang sangat indah!',t:'26 Okt 2026',a:AV.L[0]}]);
 $('#nav').innerHTML='<button class=gb onclick=gallery()>📷 Galeri Foto</button><button class=gb onclick=book()>📖 Buku Tamu</button><button class=gb onclick=loc()>📍 Lokasi Acara</button><button class=gb onclick=story()>❤️ Story Cinta</button>';
 $('#s1 .serif').textContent='💍 Raka & Sinta · Undangan Digital Interaktif';$('#s2 h1').textContent='Selamat Datang!';$('#go').textContent='Masuk ke Undangan';
 document.head.appendChild(Object.assign(document.createElement('style'),{textContent:'#map,#rxs,#bar{background:rgba(70,45,48,.88)!important;border:1px solid rgba(255,255,255,.15)!important}#mt{background:transparent!important;border:0!important;color:#fff!important}#bar{padding:6px 8px;border-radius:99px}#bar input{background:#fffdf9}#rxs button{color:#fff!important}#rxs span{color:#ffd0dc!important}.pill{background:rgba(70,45,48,.9)!important;color:#fff!important;border:0!important}#cnt{color:#fff!important}#joy{background:rgba(255,200,215,.35)!important;border-color:rgba(255,255,255,.7)!important}#eb{background:transparent!important;border:0!important;color:#fff}.scr{background:radial-gradient(circle at 50% 0,rgba(244,169,192,.45),transparent 55%),linear-gradient(180deg,#fbe4ee,var(--bg) 60%)!important}'}));
@@ -661,6 +660,28 @@ const NM_EVENTS={
   story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Perayaan',items:[['Welcome & Registrasi','10.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Tiup Lilin','12.00','Nyanyi bersama dan potong kue.'],['Makan Bersama','13.00','Hidangan spesial dari tuan rumah.'],['Games & Foto Bersama','14.30','Seru-seruan dan sesi foto bersama.']]},
   dress:{title:'Colorful & Fun',sub:'pesta santai, ceria',eb:'Dress Code',palette:[['#FFD166','Kuning'],['#F0566A','Coral'],['#2BB3A3','Tosca'],['#6C5CE7','Ungu'],['#FFFFFF','Putih']],
    men:{rec:['Kemeja atau kaos polo warna cerah','Chino atau jeans rapi','Sneakers bersih'],avoid:['Pakaian terlalu formal','Warna serba gelap']},women:{rec:['Dress atau set warna ceria','Aksesori playful','Flat shoes atau sneakers'],avoid:['Pakaian terlalu formal','Warna serba gelap']},note:'Datang dengan warna favoritmu dan siap bersenang-senang.'}},
+ manasik:{label:'Manasik Haji',kind:'single',eyebrow:'Manasik Haji Cilik',conn:'·',defaultTheme:'birthday-confetti',tag:'Manasik',hostLabel:'Jamaah Cilik',stageDefault:'none',
+  s1:'🕋 {n} · Undangan Manasik Haji',welcome:'Ikut menyaksikan {n} belajar manasik haji di acara virtual ini',
+  roles:{host:'Jamaah Cilik'},gift:false,
+  book:{ph:'Tulis doa dan ucapan untuk {n}…',eb:'Doa & Ucapan'},live:{eb:'Manasik Haji',tx:'Manasik haji {n} disiarkan langsung. Ikut mendoakan dan kirim ucapanmu lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Manasik',items:[['Registrasi & Pemakaian Ihram','08.00','Anak-anak mengenakan pakaian ihram dan tanda pengenal.'],['Thawaf & Sa\'i','09.00','Berkeliling Ka\'bah dan berjalan Shafa-Marwah secara simulasi.'],['Wukuf & Lempar Jumrah','10.00','Belajar wukuf di Arafah dan melempar jumrah.'],['Makan Bersama & Foto','11.30','Hidangan sehat dan foto bersama guru dan orang tua.']]},
+  tx:{labels:{stage:"Ka'bah",resepsi:"Sa'i",booth:'Games',galeri:'Galeri',video:'Video',buku:'Buku Tamu',kuliner:'Kantin',istirahat:'Istirahat',lokasi:'Lokasi'},
+   names:{stage:"Ka'bah · Thawaf",resepsi:"Area Sa'i",booth:'Mini Games',galeri:'Galeri Manasik',video:'Video Doa',buku:'Buku Tamu',kuliner:'Kantin Jamaah',istirahat:'Area Istirahat'},
+   greet:['Masya Allah, jamaah ciliknya lucu-lucu banget 🕋','Semoga kelak bisa berhaji ke Baitullah, aamiin 🤲'],
+   bots:['Masya Allah, lucu sekali jamaah ciliknya! 🕋','Semoga jadi anak sholeh dan sholehah 🤍','Aamiin, semoga kelak bisa berhaji ke Tanah Suci 🌙','Labbaik Allahumma labbaik! ✨','Semangat thawafnya, adik-adik! 👏','Barakallah, acaranya seru dan penuh berkah 🌟','Doa terbaik untuk semua jamaah cilik 🤲'],
+   vd:[['Ustadzah & Guru TK','Barakallah, semangat belajar manasik, anak-anak sholeh dan sholehah!'],['Orang Tua Murid','Bangga melihat putra-putri kita belajar rukun haji sejak dini.'],['Kakak Kelas','Semoga adik-adik kelak bisa ke Tanah Suci beneran, aamiin!'],['Keluarga Besar','Doa terbaik dari kami semua 🤲']],
+   cats:['Semua','Thawaf',"Sa'i",'Momen Manasik'],
+   gb:[['Ustadzah Rina','Barakallah, semoga jamaah cilik kelak menjadi haji mabrur 🤲','25 Okt 2026'],['Pak Farhan','Masya Allah, anak-anak lucu sekali memakai ihram!','26 Okt 2026'],['Bunda Salsa','Semangat belajar manasiknya ya sayang, semoga jadi anak sholeh/sholehah 🕋','26 Okt 2026'],['Kakek Hasan','Aamiin, semoga kelak bisa ke Tanah Suci bersama Kakek 🤲','27 Okt 2026']],gbH:'Doa dari Tamu',gbBtn:'Kirim Doa',gbOk:'Terima kasih, doa Anda telah terkirim.',
+   gal:'Galeri Manasik',vid:'Video Doa',vidEb:'Doa & Pesan',locEb:'Hari Manasik',
+   info:{stage:{t:"Ka'bah Miniatur",e:'Thawaf',p:"Manasik haji {n} disiarkan langsung dari Ka'bah miniatur. Ikut mendoakan jamaah cilik yang sedang thawaf, dan kirim ucapanmu lewat chat."},
+    resepsi:{t:"Area Sa'i",e:'Safa & Marwa',p:'Jamaah cilik berjalan bolak-balik antara bukit Safa dan Marwa sebanyak tujuh kali, mengenang perjuangan Siti Hajar mencari air untuk Nabi Ismail.'},
+    kuliner:{t:'Kantin Jamaah',e:'Bekal Sehat',p:'Bekal sehat dan minuman segar tersedia mulai pukul <b>11.30 WIB</b> setelah rangkaian manasik selesai.',menu:[['utensils','Nasi Kotak Jamaah','Bekal sehat untuk anak'],['cup','Air Zamzam Mini','Minuman segar'],['gift','Kurma & Camilan','Camilan manis berkah']]},
+    booth:{t:'Mini Games',e:'Belajar Sambil Bermain',p:'Permainan edukasi seputar rukun haji dan doa-doa manasik. Ayo kumpulkan bintang sebanyak-banyaknya, lalu bagikan foto serumu dengan tagar berikut.'},
+    hadiah:{t:'Area Doa',e:'Doa & Kasih',p:'Kehadiran dan doa Anda adalah hadiah terbaik bagi jamaah cilik kami.'},
+    taman:{t:'Area Taman',e:'Bersantai',p:'Taman hijau tempat jamaah cilik belajar melempar jumrah dan berfoto bersama.'},
+    istirahat:{t:'Area Istirahat',e:'Rehat Sejenak',p:"Tenda dan kursi santai untuk beristirahat, minum, dan berkumpul bersama keluarga setelah thawaf dan sa'i."}}},
+  dress:{title:'Putih Ihram',sub:'manasik haji, serba putih dan sopan',eb:'Dress Code',palette:[['#FFFFFF','Putih'],['#F5EBD3','Krem'],['#1E6B3C','Hijau'],['#D9A441','Emas'],['#1A1A1A','Hitam']],
+   men:{rec:['Kain ihram putih','Sandal putih','Tanda pengenal peserta'],avoid:['Pakaian berwarna mencolok','Sepatu tertutup']},women:{rec:['Gamis dan hijab putih','Topi atau peci putih','Tas selempang kecil'],avoid:['Pakaian berwarna mencolok','Pakaian ketat']},note:'Anak-anak belajar rukun haji dengan pakaian ihram sederhana.'}},
  graduation:{label:'Graduation',kind:'single',eyebrow:'Selamat Wisuda',conn:'·',defaultTheme:'birthday-confetti',tag:'Graduation',hostLabel:'Sang Wisudawan',stageDefault:'bride',
   s1:'🎓 {n} · Undangan Wisuda',welcome:'Rayakan kelulusan {n} bersama di acara wisuda virtual ini',
   roles:{host:'Sang Wisudawan'},gift:false,
@@ -893,29 +914,30 @@ addEventListener('keydown',e=>{const mo=$('#mo');if(e.key=='Escape'){if(mo.class
 const nav=id=>window.setNavActive&&setNavActive(id),GICON=['image','heart','camera','star'];
 // ---- Galeri Foto ----
 gallery=function(){nav('galeri');GL=null;const L=GI.filter(g=>GC=='Semua'||g.c==GC);
- openM('Galeri Foto',`<div class="nm-tabs" role="tablist" aria-label="Kategori foto">${CATS.map(c=>`<button class="nm-tab" type="button" role="tab" aria-selected="${c==GC}" data-gc="${esc(c)}">${esc(c)}</button>`).join('')}</div><div class="nm-gal">${L.map(g=>{const i=GI.indexOf(g);return `<button class="nm-tile t${i%3}" type="button" data-i="${i}" aria-label="${esc(g.cap+', '+g.c)}">${nmI(GICON[i%4],26)}<span>${esc(g.cap)}</span></button>`}).join('')}</div><p class="nm-hint">${L.length} foto · ketuk untuk memperbesar</p>`,{eyebrow:'Momen Kita'});
+ openM(nmT('gal','Galeri Foto'),`<div class="nm-tabs" role="tablist" aria-label="Kategori foto">${CATS.map(c=>`<button class="nm-tab" type="button" role="tab" aria-selected="${c==GC}" data-gc="${esc(c)}">${esc(c)}</button>`).join('')}</div><div class="nm-gal">${L.map(g=>{const i=GI.indexOf(g);return `<button class="nm-tile t${i%3}" type="button" data-i="${i}" aria-label="${esc(g.cap+', '+g.c)}">${nmI(GICON[i%4],26)}<span>${esc(g.cap)}</span></button>`}).join('')}</div><p class="nm-hint">${L.length} foto · ketuk untuk memperbesar</p>`,{eyebrow:'Momen Kita'});
  bx.querySelectorAll('[data-gc]').forEach(b=>b.onclick=()=>{GC=b.dataset.gc;gallery()});bx.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>lb(+b.dataset.i))};
 lb=function(i){const l=GI.filter(g=>GC=='Semua'||g.c==GC),n=GI.indexOf(l[(l.indexOf(GI[i])+l.length)%l.length]),g=GI[n],p=l.indexOf(g),pv=GI.indexOf(l[(p-1+l.length)%l.length]),nx=GI.indexOf(l[(p+1)%l.length]);
  openM(g.cap+' · '+g.c,`<div class="nm-stage t${n%3}" id="nm-lbi">${nmI(GICON[n%4],56)}</div><div class="nm-bar"><button class="nm-ibtn" type="button" data-go="${pv}" aria-label="Sebelumnya">${nmI('prev')}</button><span class="nm-cnt">${p+1} / ${l.length}</span><button class="nm-ibtn" type="button" data-fs aria-label="Layar penuh">${nmI('full')}</button><button class="nm-ibtn" type="button" data-go="${nx}" aria-label="Berikutnya">${nmI('next')}</button></div>`,{eyebrow:'Foto',back:{label:'Kembali ke galeri',fn:gallery}});
  GL=n;bx.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>lb(+b.dataset.go));const fs=bx.querySelector('[data-fs]');fs.onclick=()=>{const s=$('#nm-lbi');s.requestFullscreen&&s.requestFullscreen()}};
 // ---- Video Ucapan ----
-videos=function(){nav('video');openM('Video Ucapan',`<div class="nm-vgrid">${VD.map((v,i)=>`<button class="nm-vcard" type="button" data-v="${i}"><span class="nm-thumb t${i%3}">${nmI('play',30)}</span><b>${esc(v[0])}</b><span>${esc(v[1])}</span></button>`).join('')}</div>`,{eyebrow:'Pesan Hangat'});bx.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>vid(+b.dataset.v))};
-vid=function(i){openM(VD[i][0],`<div class="nm-player t${i%3}" id="vp"></div><div class="nm-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="vb"></div></div><blockquote class="nm-q">“${esc(VD[i][1])}”</blockquote><div class="nm-row"><button class="nm-btn" type="button" data-play>${nmI('play')}<span>Putar / Jeda</span></button></div>`,{eyebrow:'Video Ucapan',back:{label:'Kembali ke daftar video',fn:videos}});bx.querySelector('[data-play]').onclick=()=>vplay();vplay()};
+videos=function(){nav('video');openM(nmT('vid','Video Ucapan'),`<div class="nm-vgrid">${VD.map((v,i)=>`<button class="nm-vcard" type="button" data-v="${i}"><span class="nm-thumb t${i%3}">${nmI('play',30)}</span><b>${esc(v[0])}</b><span>${esc(v[1])}</span></button>`).join('')}</div>`,{eyebrow:nmT('vidEb','Pesan Hangat')});bx.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>vid(+b.dataset.v))};
+vid=function(i){openM(VD[i][0],`<div class="nm-player t${i%3}" id="vp"></div><div class="nm-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="vb"></div></div><blockquote class="nm-q">“${esc(VD[i][1])}”</blockquote><div class="nm-row"><button class="nm-btn" type="button" data-play>${nmI('play')}<span>Putar / Jeda</span></button></div>`,{eyebrow:nmT('vid','Video Ucapan'),back:{label:'Kembali ke daftar video',fn:videos}});bx.querySelector('[data-play]').onclick=()=>vplay();vplay()};
 vplay=function(){const set=on=>{const v=$('#vp');if(v)v.innerHTML=nmI(on?'pause':'play',40)};if(vt){clearInterval(vt);vt=0;set(0);return}set(1);let w=parseFloat($('#vb').style.width)||0;vt=setInterval(()=>{if(!$('#vb')){clearInterval(vt);vt=0;return}w=(w+1)%101;$('#vb').style.width=w+'%';$('#vb').parentNode.setAttribute('aria-valuenow',Math.round(w))},150)};
 // ---- Buku Tamu ----
-const GBSEED=()=>[{n:'Salsa',m:'Selamat menempuh hidup baru! Semoga selalu bahagia ❤️',t:'25 Okt 2026',a:AV.P[0]},{n:'Farhan',m:'Acara yang sangat indah!',t:'26 Okt 2026',a:AV.L[0]}];
-book=function(){nav('buku');const l=LS('gb')||GBSEED();
- openM('Buku Tamu',`<form class="nm-form" id="nm-gf" novalidate><div class="nm-fld"><label class="nm-lb" for="gn">Nama</label><input class="nm-in" id="gn" value="${esc(S.name||'')}" placeholder="Nama Anda" maxlength="40" autocomplete="name"></div><div class="nm-fld"><label class="nm-lb" for="gm">Ucapan &amp; doa</label><textarea class="nm-ta" id="gm" rows="3" maxlength="300" placeholder="${esc(nmFmt(nmEv().book.ph))}"></textarea><div class="nm-cnt2"><span class="nm-err" id="ge" role="alert"></span><span id="gc">0 / 300</span></div></div><button class="nm-btn" type="submit" id="gs">${nmI('send')}<span class="nm-bl">Kirim Ucapan</span></button></form><div class="nm-sec"><h3>Ucapan dari Tamu <em>${l.length}</em></h3>${l.map(x=>`<article class="nm-msg"><span class="nm-av">${svg(x.a,30)}</span><div><div class="nm-mh"><b>${esc(x.n)}</b><time>${esc(x.t)}</time></div><p>${esc(x.m)}</p></div></article>`).join('')}</div>`,{eyebrow:nmEv().book.eb,focus:'#gm'});
+const nmGb=()=>{const l=LS('gb');if(!l)return GBSEED();return (nmEv().tx||{}).gb?l.filter(x=>!(x.n=='Salsa'&&/hidup baru/.test(x.m))&&!(x.n=='Farhan'&&/sangat indah/.test(x.m))):l};
+const GBSEED=()=>{const s=(nmEv().tx||{}).gb;return s?s.map((x,i)=>({n:x[0],m:x[1],t:x[2],a:i%2?AV.L[0]:AV.P[0]})):[{n:'Salsa',m:'Selamat menempuh hidup baru! Semoga selalu bahagia ❤️',t:'25 Okt 2026',a:AV.P[0]},{n:'Farhan',m:'Acara yang sangat indah!',t:'26 Okt 2026',a:AV.L[0]}]};
+book=function(){nav('buku');const l=nmGb();
+ openM('Buku Tamu',`<form class="nm-form" id="nm-gf" novalidate><div class="nm-fld"><label class="nm-lb" for="gn">Nama</label><input class="nm-in" id="gn" value="${esc(S.name||'')}" placeholder="Nama Anda" maxlength="40" autocomplete="name"></div><div class="nm-fld"><label class="nm-lb" for="gm">Ucapan &amp; doa</label><textarea class="nm-ta" id="gm" rows="3" maxlength="300" placeholder="${esc(nmFmt(nmEv().book.ph))}"></textarea><div class="nm-cnt2"><span class="nm-err" id="ge" role="alert"></span><span id="gc">0 / 300</span></div></div><button class="nm-btn" type="submit" id="gs">${nmI('send')}<span class="nm-bl">${nmT('gbBtn','Kirim Ucapan')}</span></button></form><div class="nm-sec"><h3>${nmT('gbH','Ucapan dari Tamu')} <em>${l.length}</em></h3>${l.map(x=>`<article class="nm-msg"><span class="nm-av">${svg(x.a,30)}</span><div><div class="nm-mh"><b>${esc(x.n)}</b><time>${esc(x.t)}</time></div><p>${esc(x.m)}</p></div></article>`).join('')}</div>`,{eyebrow:nmEv().book.eb,focus:'#gm'});
  const g=$('#gm');g.oninput=()=>{$('#gc').textContent=g.value.length+' / 300';g.removeAttribute('aria-invalid');$('#ge').textContent=''};$('#gn').oninput=e=>{e.target.removeAttribute('aria-invalid');$('#ge').textContent=''};$('#nm-gf').onsubmit=e=>{e.preventDefault();gsub()}};
 gsub=function(){const n=$('#gn').value.trim(),m=$('#gm').value.trim(),er=$('#ge');if(!n||!m){er.textContent='Nama dan ucapan wajib diisi.';const f=!n?$('#gn'):$('#gm');f.setAttribute('aria-invalid','true');f.focus();return}
  const b=$('#gs');b.disabled=true;b.dataset.loading=1;b.querySelector('.nm-bl').textContent='Mengirim…';
- setTimeout(()=>{const l=LS('gb')||GBSEED();l.unshift({n,m,t:new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}),a:AV[S.g][S.i]});LS('gb',l);nmToastMsg='Terima kasih, ucapan Anda telah terkirim.';book()},450)};
+ setTimeout(()=>{const l=nmGb();l.unshift({n,m,t:new Date().toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}),a:AV[S.g][S.i]});LS('gb',l);nmToastMsg=nmT('gbOk','Terima kasih, ucapan Anda telah terkirim.');book()},450)};
 // ---- Lokasi Acara ----
 const NMADDR='Rumah Joglo Taman Asri, Jl. Melati Indah No. 12, Cikarang, Bekasi, Jawa Barat 17530';
 loc=function(){nav('lokasi');openM('Lokasi Acara',`<div class="nm-map" aria-hidden="true"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#DDD3EE" stroke-width="10" stroke-linecap="round"><path d="M-10 110C80 90 120 40 210 60s120 50 220 10"/><path d="M60 -10C80 50 70 100 110 160"/><path d="M290 -10c-20 60 10 100-10 170" stroke-width="6"/><path d="M-10 40h120M240 110h170" stroke-width="5"/></svg><svg viewBox="0 0 400 150" style="color:#6A5A8C"><g transform="translate(188 52)" fill="#6A5A8C" stroke="none"><path d="M12 46S-4 31 -4 18a16 16 0 0 1 32 0c0 13-16 28-16 28z"/><circle cx="12" cy="18" r="6" fill="#FBF8F2"/></g></svg></div>
  <div class="nm-venue"><h3>Rumah Joglo Taman Asri</h3><p>Jl. Melati Indah No. 12, Cikarang, Bekasi, Jawa Barat 17530</p></div>
  <dl class="nm-meta"><div>${nmI('calendar')}<dt>Tanggal</dt><dd>Sabtu, 12 Desember 2026</dd></div><div>${nmI('clock')}<dt>Waktu</dt><dd>10.00 WIB</dd></div></dl>
- <div class="nm-row"><a class="nm-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Cikarang+Bekasi">${nmI('pin')}<span>Buka Google Maps</span></a><button class="nm-btn sec" type="button" data-act="copy" data-v="${esc(NMADDR)}"><span class="nm-bi">${nmI('copy')}</span><span class="nm-bl">Salin Alamat</span></button></div>`,{eyebrow:'Hari Bahagia'})};
+ <div class="nm-row"><a class="nm-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Cikarang+Bekasi">${nmI('pin')}<span>Buka Google Maps</span></a><button class="nm-btn sec" type="button" data-act="copy" data-v="${esc(NMADDR)}"><span class="nm-bi">${nmI('copy')}</span><span class="nm-bl">Salin Alamat</span></button></div>`,{eyebrow:nmT('locEb','Hari Bahagia')})};
 // ---- Story Cinta ----
 story=function(){nav('story');const ev=nmEv(),st=ev.story,src=(Array.isArray(NMID.items)&&NMID.items.length)?NMID.items:st.items,it=src.map(x=>[nmFmt(x[0]),String(x[1]||''),nmFmt(x[2])]);
  const yr=s=>{const m=s.match(/^(\d+ \w+) (\d{4})$/);return m?`<small>${esc(m[1])}</small><b>${esc(m[2])}</b>`:`<b>${esc(s)}</b>`};
@@ -930,7 +952,7 @@ const NMINFO=()=>({stage:{t:'Garden Utama',e:nmEv().live.eb,h:`<div class="nm-li
  hadiah:{t:'Area Hadiah',e:'Doa & Kasih',h:`<p class="nm-p">Kehadiran dan doa Anda adalah hadiah terbaik bagi kami.</p>${nmGift()}`},
  taman:{t:'Area Taman',e:'Bersantai',h:`<p class="nm-p">Taman asri dengan lentera hangat, tempat santai dan berfoto bersama.</p>`},
  istirahat:{t:'Area Istirahat',e:'Bersantai',h:`<p class="nm-p">Sofa dan kursi santai di bawah pohon rindang untuk beristirahat sejenak bersama keluarga dan sahabat.</p>`}});
-info=function(id){const d=NMINFO()[id];if(d)return openM(d.t,d.h,{eyebrow:d.e});const[t,h]=INFO2[id]||INFO[id];openM(t,`<p class="nm-p">${h}</p>`)};
+info=function(id){const d=nmInfoTx(id,NMINFO()[id]);if(d)return openM(d.t,d.h,{eyebrow:d.e});const[t,h]=INFO2[id]||INFO[id];openM(t,`<p class="nm-p">${h}</p>`)};
 // ---- Profil tamu (popup kecil) ----
 prof=function(en){const p=$('#prof');p.style.display='block';
  p.innerHTML=`<span class="nm-av">${svg(en.a,30)}</span><h3>${esc(en.n)}</h3><div class="nm-st">Online</div><div class="nm-pa"><button class="nm-btn sm" type="button" id="pw">${nmI('hand',16)}<span>Sapa</span></button><button class="nm-btn sm sec" type="button" id="pl">${nmI('heart',16)}<span>Kirim Love</span></button><button class="nm-ibtn" type="button" id="pc" aria-label="Tutup" style="width:38px;height:38px">${nmI('close',16)}</button></div>`;
@@ -1020,10 +1042,28 @@ function nmHeader(){let h=$('#idh');if(!h){h=document.createElement('div');h.id=
  const t=nmTitleOf();h.querySelector('small').textContent=NMID.pair?ev.eyebrow:'Live Guest';h.querySelector('b').textContent=t;
  h.title=ev.kind=='couple'?(NMID.order=='bride'?[NMID.brideFull,NMID.groomFull]:[NMID.groomFull,NMID.brideFull]).filter(Boolean).join(' & '):NMID.hostFull;h.dataset.len=t.length>30?'xl':t.length>20?'l':'';
  h.setAttribute('aria-label',(NMID.pair?ev.eyebrow+' ':'')+t);const x=h.querySelector('canvas').getContext('2d');x.clearRect(0,0,88,88);nmDrawMono(x,88,th,NMID.mono,ev.conn)}
+const nmT=(k,d)=>{const t=(nmEv().tx||{})[k];return t==null?d:t};
+function nmInfoTx(id,d){const o=((nmEv().tx||{}).info||{})[id];if(!o||!d)return d;let h=d.h;const p='<p class="nm-p">'+nmFmt(o.p)+'</p>';h=/<p class="nm-p">/.test(h)?h.replace(/<p class="nm-p">[\s\S]*?<\/p>/,p):p+h;
+ if(o.menu)h=h.replace(/<ul class="nm-menu">[\s\S]*?<\/ul>/,'<ul class="nm-menu">'+o.menu.map(m=>'<li>'+nmI(m[0],20)+'<div><b>'+esc(m[1]).replace(/&amp;amp;/g,'&amp;')+'</b><span>'+esc(m[2])+'</span></div></li>').join('')+'</ul>');
+ return Object.assign({},d,{t:nmFmt(o.t),e:o.e,h})}
+const NMTH={s:null,on:0,g:0};
+function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[data-id]');
+ if(!NMTH.s)NMTH.s={a:AREAS.map(a=>[a,a.n]),bm:BM.slice(),vd:VD.map(v=>v.slice()),cats:CATS.slice(),lab:Array.from(N).map(b=>[b,b.querySelector('.tx').textContent,b.title])};
+ const s=NMTH.s;
+ if(!x){if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
+  s.lab.forEach(([b,t,ti])=>{const e=b.querySelector('.tx');if(e&&b.dataset.id!='story')e.textContent=t;if(b.dataset.id!='story')b.title=b.ariaLabel=ti});return}
+ NMTH.on=1;
+ if(x.names)AREAS.forEach(a=>{if(x.names[a.id])a.n=x.names[a.id]});
+ N.forEach(b=>{const id=b.dataset.id;if(id=='story')return;const e=b.querySelector('.tx');if(x.labels&&x.labels[id]&&e)e.textContent=x.labels[id];if(x.names&&x.names[id])b.title=b.ariaLabel=x.names[id]});
+ if(x.bots)BM.splice(0,BM.length,...x.bots);
+ if(x.vd)VD.splice(0,VD.length,...x.vd.map(v=>v.slice()));
+ if(x.cats){CATS.splice(0,CATS.length,...x.cats);GI.forEach((g,i)=>g.c=CATS[1+i%(CATS.length-1)]);GC='Semua'}
+ if(x.greet&&!NMTH.g&&typeof bots!=='undefined'&&bots.length>1){NMTH.g=1;const l=$('#log');if(l)l.innerHTML='';addChat(bots[0],x.greet[0]);addChat(bots[1],x.greet[1])}
+}catch(e){console.warn('theme',e)}}
 function nmTexts(){const ev=nmEv(),p=NMID.pair;document.title=(p?p+' · ':'')+ev.label+' Live Guest';
  const a=$('#s1 .serif'),b=$('#s1 .sub');if(a)a.textContent=p?nmFmt(ev.s1):'💍 Undangan Digital Interaktif';if(b)b.textContent=p?nmFmt(ev.welcome):'Masuk ke acara virtual sebagai tamu spesial';
  const sn=document.querySelector('#ml .nv[data-id=story]');if(sn){const tx=sn.querySelector('.tx');if(tx)tx.textContent=ev.story.nav;sn.title=sn.ariaLabel=nmFmt(ev.story.title)}
- nmStage()}
+ nmTheme();nmStage()}
 /* jarak pengantin: setengah jarak antar-pusat (satuan dunia); label dinaikkan bergantian agar tidak bertumpuk */
 const NMCOUPLE={gap:.58};
 document.head.appendChild(Object.assign(document.createElement('style'),{textContent:'.lb[data-k=bride] .nm{transform:translateY(-26px)}.lb[data-k=groom] .nm{transform:translateY(0)}'}));
@@ -1045,7 +1085,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),{textCon
 .dig[hidden]{display:none}
 @media(max-width:700px){.did{padding:16px}}
 `}));
-const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama wisudawan/wisudawati',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
+const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama wisudawan/wisudawati',manasik:'Nama anak / sekolah',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
 let NMDR=null,NMDRINV=null,NMDIRTY=false;
 const nmDraftId=()=>nmFromFields({eventType:NMDR.e,groomName:NMDR.g,brideName:NMDR.b,nameOrder:NMDR.o,hostName:NMDR.h,stageAvatar:NMDR.s,theme:NMDR.t},'');
 function nmBuildForm(){if($('#didform'))return;const w=$('.dwrap'),body=$('#dbody');if(!w||!body)return;const d=document.createElement('div');d.id='didform';d.className='did';
@@ -1194,7 +1234,7 @@ rAv();
  const _ill=illustrate;
  illustrate=function(){const r=_ill.apply(this,arguments);
   try{// pengaturan area lain menimpa AREAS/layout saat illustrate -> pasang lagi
-   NMLM.forEach(L=>{const a=AREAS.find(a=>a.id==L.area);if(a){a.x=L.ax;a.z=L.az;a.n=L.name}});
+   NMLM.forEach(L=>{const a=AREAS.find(a=>a.id==L.area);if(a){a.x=L.ax;a.z=L.az;a.n=L.name}});try{nmTheme()}catch(e){}
    {const a=AREAS.find(a=>a.id=='video');if(a){a.x=VIDEO.x;a.z=VIDEO.z}}
    if(VS['screen0'])relayout('screen0',SCREEN.x,SCREEN.z);
    const keep=new Set();
