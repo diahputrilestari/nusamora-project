@@ -83,7 +83,7 @@ const NMTH={s:null,on:0,g:0};
 function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[data-id]');
  if(!NMTH.s)NMTH.s={a:AREAS.map(a=>[a,a.n]),bm:BM.slice(),vd:VD.map(v=>v.slice()),cats:CATS.slice(),lab:Array.from(N).map(b=>[b,b.querySelector('.tx').textContent,b.title])};
  const s=NMTH.s;
- if(!x){if(NMTH.cr&&typeof bots!=='undefined'){bots.forEach(b=>{b.fix=0;b.g.scale.setScalar(1);b.ly=undefined});NMTH.cr=0}if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
+ if(!x){if(NMTH.ex&&typeof bots!=='undefined'){NMTH.ex.forEach(e=>{sc.remove(e.g);if(e.el)e.el.remove();const a=ents.indexOf(e);if(a>=0)ents.splice(a,1);const b=bots.indexOf(e);if(b>=0)bots.splice(b,1)});NMTH.ex=0}if(NMTH.cr&&typeof bots!=='undefined'){bots.forEach(b=>{b.fix=0;b.g.scale.setScalar(1);b.ly=undefined});NMTH.cr=0}if(!NMTH.on)return;NMTH.on=0;s.a.forEach(([a,n])=>a.n=n);BM.splice(0,BM.length,...s.bm);VD.splice(0,VD.length,...s.vd.map(v=>v.slice()));CATS.splice(0,CATS.length,...s.cats);GI.forEach((g,i)=>g.c=CATS[1+i%3]);GC='Semua';
   s.lab.forEach(([b,t,ti])=>{const e=b.querySelector('.tx');if(e&&b.dataset.id!='story')e.textContent=t;if(b.dataset.id!='story')b.title=b.ariaLabel=ti});return}
  NMTH.on=1;
  if(x.names)AREAS.forEach(a=>{if(x.names[a.id])a.n=x.names[a.id]});
@@ -91,7 +91,8 @@ function nmTheme(){try{const x=nmEv().tx,N=document.querySelectorAll('#ml .nv[da
  if(x.bots)BM.splice(0,BM.length,...x.bots);
  if(x.vd)VD.splice(0,VD.length,...x.vd.map(v=>v.slice()));
  if(x.cats){CATS.splice(0,CATS.length,...x.cats);GI.forEach((g,i)=>g.c=CATS[1+i%(CATS.length-1)]);GC='Semua'}
- const sp=3.3,n=Math.min(bots.length,7);if(x.crowd&&n){bots.slice(0,n).forEach((b,i)=>{const o=i-(n-1)/2;b.fix=1;b.fx=o*sp;b.fz=-35.8+Math.abs(o)*.2;b.g.scale.setScalar(3.4);b.g.position.set(b.fx,1.35,b.fz);b.ly=9.0});NMTH.cr=1}
+ const sp=2.6,n=Math.min(bots.length,7);if(x.crowd&&n){bots.slice(0,n).forEach((b,i)=>{const o=i-(n-1)/2;b.fix=1;b.fx=o*sp;b.fz=-35.8+Math.abs(o)*.2;b.g.scale.setScalar(2.2);b.g.position.set(b.fx,1.35,b.fz);b.ly=6.0});NMTH.cr=1}
+ if(x.crowd&&!NMTH.ex&&typeof ent==='function'){NMTH.ex=['Rafi','Salsa','Dewi','Hendra','Maya','Yoga','Tari','Fajar','Lina','Bayu','Kirana','Dion'].map((n,i)=>{const g=i%2?'P':'L',A=AV[g];const e=ent(n,A[Math.floor(i/2)%A.length],(Math.random()-.5)*26,Math.random()*14-6);bots.push(e);return e})}
  if(x.greet&&!NMTH.g&&typeof bots!=='undefined'&&bots.length>1){NMTH.g=1;const l=$('#log');if(l)l.innerHTML='';addChat(bots[0],x.greet[0]);addChat(bots[1],x.greet[1])}
 }catch(e){console.warn('theme',e)}}
 function nmTexts(){const ev=nmEv(),p=NMID.pair;{const th=NM.themes[NMID.themeId]||{},cp=th.copy||{},h=$('#s2 h1'),sb=$('#s2 .sub');if(h){if(h.dataset.d0==null)h.dataset.d0=h.textContent;h.textContent=cp.s2h||h.dataset.d0}if(sb){if(sb.dataset.d0==null)sb.dataset.d0=sb.textContent;sb.textContent=cp.s2s||sb.dataset.d0}}
