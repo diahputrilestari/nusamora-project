@@ -31,6 +31,7 @@
       var lines = b.split("\n").filter(function (l) { return l.trim() !== ""; }); if (!lines.length) return;
       var h = /^(#{1,3})\s+(.+)$/.exec(lines[0]);
       if (h && lines.length === 1) { var n = h[1].length + 1; out.push("<h" + n + ">" + inline(h[2]) + "</h" + n + ">"); return; }
+      if (lines.every(function (l) { return /^>\s?/.test(l); })) { out.push("<blockquote>" + lines.map(function (l) { return inline(l.replace(/^>\s?/, "")); }).join("<br>") + "</blockquote>"); return; }
       if (lines.every(function (l) { return /^\s*[-*]\s+/.test(l); })) { out.push("<ul>" + lines.map(function (l) { return "<li>" + inline(l.replace(/^\s*[-*]\s+/, "")) + "</li>"; }).join("") + "</ul>"); return; }
       out.push("<p>" + lines.map(inline).join("<br>") + "</p>");
     });
@@ -65,6 +66,14 @@
     var alts = [{ lang: c.lang, href: urlFor(c.type, c.slug, c.lang) }].concat((c.alternates || []).map(function (a) { return { lang: a.lang, href: urlFor(c.type, a.slug, a.lang) }; }));
     seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: safeUrl(img), lang: c.lang, og: c.type === "article" ? "article" : "website", alternates: alts.length > 1 ? alts : [],
       ld: c.type === "article" && !pv ? { "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: safeUrl(img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora" } } : null });
+    if (c.type === "article" && c.lang !== "en" && window.NMArticle) {
+      var info = window.NMArticle.render({ c: c, pv: pv, view: view, sb: sb, esc: esc, md: md, safeUrl: safeUrl, artImg: artImg, catOf: catOf, catOrder: CAT_ORDER, fdate: fdate, canon: canon, cover: ktCover, meta: ktMeta, href: ktHref });
+      var au = { "@type": "Organization", name: String(c.author || "NusaMora") };
+      seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: safeUrl(img), lang: c.lang, og: "article", alternates: alts.length > 1 ? alts : [],
+        ld: pv ? null : [{ "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: safeUrl(img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at || c.published_at, articleSection: info.cat, wordCount: info.words, author: au, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora", logo: { "@type": "ImageObject", url: origin + "/assets/logo-nusamora.png" } } },
+          { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: origin + "/" }, { "@type": "ListItem", position: 2, name: "Artikel", item: origin + "/artikel" }, { "@type": "ListItem", position: 3, name: info.cat, item: origin + "/artikel?kat=" + encodeURIComponent(info.cat) }, { "@type": "ListItem", position: 4, name: c.title, item: canon }] }] });
+      return;
+    }
     var sw = (c.alternates || [])[0];
     view.innerHTML = '<article class="kt-w">' + (pv ? '<div class="kt-pv" role="status"><b>Pratinjau</b>: ' + esc(pv) + "</div>" : "") +
       '<header class="kt-h"><h1>' + esc(c.title) + "</h1>" + (c.type === "article" && c.published_at ? '<p class="kt-meta">' + esc(fdate(c.published_at)) + "</p>" : "") + (c.excerpt ? '<p class="kt-lead">' + esc(c.excerpt) + "</p>" : "") + "</header>" +
@@ -113,7 +122,7 @@
       h += '<li class="kt-pgm" aria-hidden="true">Halaman ' + cur + " dari " + total + '</li>';
       return h + '<li><button type="button" class="kt-pgb kt-pgn" data-p="' + (cur + 1) + '"' + (cur === total ? " disabled" : "") + ' aria-label="Halaman berikutnya"><span>Berikutnya</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></li></ul></nav>';
     }
-    function setUrl() { try { var u = location.pathname + (st.page > 1 ? "?hal=" + st.page : "") + location.hash; history.replaceState(null, "", u); } catch (e) {} }
+    function setUrl() { try { var qs = []; if (st.cat) qs.push("kat=" + encodeURIComponent(st.cat)); if (st.page > 1) qs.push("hal=" + st.page); var u = location.pathname + (qs.length ? "?" + qs.join("&") : "") + location.hash; history.replaceState(null, "", u); } catch (e) {} }
     var tools = items.length ? '<div class="kt-tools"><label class="kt-search">' + SRCH + '<span class="sr">Cari artikel</span><input id="kt-q" type="search" placeholder="Cari artikel, misalnya RSVP atau WhatsApp" autocomplete="off" enterkeyhint="search"></label>' +
       '<div class="kt-chips" role="group" aria-label="Filter kategori"><button type="button" class="kt-chip" data-cat="" aria-pressed="true">Semua</button>' + cats.map(function (c) { return '<button type="button" class="kt-chip" data-cat="' + esc(c) + '" aria-pressed="false">' + esc(c) + "</button>"; }).join("") + "</div></div>" : "";
     view.innerHTML = '<div class="kt-w kt-wide"><header class="kt-hero"><p class="kt-eyebrow">Panduan &amp; Inspirasi</p><h1>Artikel NusaMora</h1>' +
@@ -143,6 +152,8 @@
       cnt.textContent = ((st.cat || q) ? list.length + " dari " + items.length + " artikel" : items.length + " artikel") + (total > 1 ? " \u00b7 halaman " + st.page + " dari " + total : "");
       setUrl();
     }
+    var kq = (/[?&]kat=([^&]+)/.exec(location.search) || [])[1]; try { kq = kq ? decodeURIComponent(kq.replace(/\+/g, " ")) : ""; } catch (e) { kq = ""; }
+    if (kq && cats.indexOf(kq) > -1) { st.cat = kq; [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-cat") === kq ? "true" : "false"); }); }
     var qi = $("#kt-q");
     if (qi) qi.addEventListener("input", function () { st.q = qi.value; st.page = 1; draw(); });
     [].slice.call(d.querySelectorAll(".kt-chip")).forEach(function (b) {
