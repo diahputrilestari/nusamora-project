@@ -206,7 +206,7 @@
     if (slug) {
       Promise.resolve(sb.rpc("public_content", { p_type: type, p_slug: slug, p_lang: lang })).then(function (r) { var c = r && r.data; if (!c) { if (lang === "en") { lang = "id"; q.delete("lang"); } notFound(); return; } showOne(c, ""); }, notFound);
     } else {
-      Promise.resolve(sb.rpc("public_content_list", { p_type: type, p_lang: lang, p_limit: 100 })).then(function (r) { showList((r && r.data) || []); }, function () { showList([]); });
+      Promise.resolve(sb.rpc("public_content_list", { p_type: type, p_lang: lang, p_limit: 200 })).then(function (r) { showList((r && r.data) || []); }, function () { showList([]); });
     }
   }
   var site = window.NM_SITE && window.NM_SITE.ready ? window.NM_SITE.ready : Promise.resolve();
