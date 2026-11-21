@@ -1,0 +1,180 @@
+{
+  "id": "hari-kemerdekaan",
+  "name": "Hari Kemerdekaan – 17 Agustus",
+  "version": 1,
+  "description": "Perayaan virtual Hari Kemerdekaan 17 Agustus: panggung kayu bergorden merah-putih dengan Garuda, Monas, bendera dan kokarde, booth buku tamu, photo booth, galeri, serta pemuda berpeci pembawa semangat merdeka.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Merdeka",
+    "full": "Karang Taruna RW 05",
+    "parents": "Panitia peringatan Hari Kemerdekaan Republik Indonesia",
+    "title": "Perayaan Virtual 17 Agustus",
+    "eventName": "Merdeka Bersama",
+    "annual": "08-17",
+    "start": "09:00",
+    "end": "12:00",
+    "venue": "Virtual · Zoom Meeting",
+    "address": "Tautan Zoom dikirim lewat WhatsApp setelah Anda mengonfirmasi hadir.",
+    "maps": "https://zoom.us/join",
+    "bank": "BRI",
+    "holder": "Panitia 17 Agustus RW 05",
+    "giftAddress": "Sekretariat Karang Taruna RW 05, Jl. Melati Raya No. 21, Cikarang Utara, Bekasi 17530",
+    "welcome": "Merdeka! Dalam rangka memperingati Hari Kemerdekaan Republik Indonesia, kami mengundang Bapak/Ibu/Saudara/i mengikuti perayaan virtual: upacara bendera, lomba seru, dan doa bersama untuk negeri tercinta.",
+    "quote": "Atas berkat rahmat Allah Yang Maha Kuasa dan dengan didorongkan oleh keinginan luhur, supaya berkehidupan kebangsaan yang bebas, maka rakyat Indonesia menyatakan dengan ini kemerdekaannya.",
+    "quoteSource": "Pembukaan UUD 1945, alinea ketiga",
+    "closing": "Terima kasih telah ikut merayakan kemerdekaan bersama kami. Mari terus mengisi kemerdekaan dengan persatuan dan karya. Merdeka!",
+    "story": [
+      {
+        "date": "09.00 WIB",
+        "title": "Upacara Bendera Virtual",
+        "text": "Mengheningkan cipta, menyanyikan Indonesia Raya, dan mengibarkan bendera bersama dari rumah masing-masing."
+      },
+      {
+        "date": "10.00 WIB",
+        "title": "Lomba Seru Online",
+        "text": "Cerdas cermat kemerdekaan, tebak lagu perjuangan, dan lomba foto kostum terbaik dengan hadiah menarik."
+      },
+      {
+        "date": "11.30 WIB",
+        "title": "Doa & Foto Bersama",
+        "text": "Ditutup dengan doa untuk negeri dan sesi foto bersama satu layar penuh merah putih."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Pak RW 05",
+        "message": "Dirgahayu Republik Indonesia! Terima kasih panitia, semoga acaranya lancar dan guyub.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Kak Dimas (Ketua Karang Taruna)",
+        "message": "Siap bergabung bareng keluarga, pakai kostum pahlawan. Merdeka!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa ikut online, tapi bendera sudah terpasang di depan rumah. Merdeka!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#A4141E",
+    "deep2": "#C8323C",
+    "paper": "#FFF8EF",
+    "ink": "#3A1A14",
+    "muted": "#7A5A50",
+    "accent": "#D9A02A",
+    "accent2": "#F6DEA0",
+    "soft": "#FBEBE3",
+    "petal": "#E8404A",
+    "heading": "#A4141E"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Dirgahayu Kemerdekaan RI",
+    "guestSalute": "Warga & sahabat tercinta",
+    "guestDefault": "Warga & Sahabat",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Panitia Kami",
+    "countdownEyebrow": "Menuju hari merdeka",
+    "countdownTitle": "17 Agustus",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Perayaan Virtual",
+    "storyEyebrow": "Rangkaian kegiatan",
+    "storyTitle": "Susunan Acara",
+    "galleryEyebrow": "Semangat merah putih",
+    "galleryTitle": "Galeri Kemerdekaan",
+    "rsvpEyebrow": "Gabung di Zoom",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Kabari kami apakah Anda dapat bergabung. Tautan Zoom akan kami kirim setelah konfirmasi.",
+    "giftEyebrow": "Hadiah & donasi",
+    "giftTitle": "Dukungan Lomba",
+    "giftLead": "Kehadiran Anda sudah menjadi semangat bagi kami. Bila ingin berdonasi untuk hadiah lomba, bisa melalui:",
+    "wishesEyebrow": "Semangat merdeka",
+    "wishesTitle": "Pesan Kemerdekaan",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih telah ikut merayakan kemerdekaan bersama kami."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/kokarde.webp",
+    "introTop": "art/photo-booth.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/panjat-pinang.webp",
+        "w": 62
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/balon.webp",
+    "storyTop": "art/banner-17.webp",
+    "rsvpHang": "art/lentera.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gapura-bunga.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
