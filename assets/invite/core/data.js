@@ -253,7 +253,9 @@
       music: { enabled: true, track: "we-are" },
       features: { countdown: true, rsvp: true, guestbook: true, gift: true, story: true }
     };
-    return { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || "Wisuda " + nm, category: "graduation", event_date: iso, mode: "demo" }), template: theme || "" };
+    var r = { vm: normalize(content, { slug: "demo", title: str(o.title, 80) || "Wisuda " + nm, category: "graduation", event_date: iso, mode: "demo" }), template: theme || "" };
+    if (Array.isArray(o.wishes)) r.vm.demoWishes = o.wishes.slice(0, 6).map(function (x, i) { x = x || {}; return { id: "g" + i, name: str(x.name, 60), message: str(x.message, 300), attendance: x.attendance || null, created_at: new Date(Date.now() - (i + 1) * 864e5 * 4).toISOString() }; });
+    return r;
   }
   /* kategori "other" (acara lain, mis. manasik haji TK): seluruh isi demo dibaca dari theme.json "demo" */
   function demoOther(theme, o) {
