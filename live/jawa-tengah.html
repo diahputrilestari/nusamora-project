@@ -661,6 +661,13 @@ const NM_EVENTS={
   story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Perayaan',items:[['Welcome & Registrasi','10.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Tiup Lilin','12.00','Nyanyi bersama dan potong kue.'],['Makan Bersama','13.00','Hidangan spesial dari tuan rumah.'],['Games & Foto Bersama','14.30','Seru-seruan dan sesi foto bersama.']]},
   dress:{title:'Colorful & Fun',sub:'pesta santai, ceria',eb:'Dress Code',palette:[['#FFD166','Kuning'],['#F0566A','Coral'],['#2BB3A3','Tosca'],['#6C5CE7','Ungu'],['#FFFFFF','Putih']],
    men:{rec:['Kemeja atau kaos polo warna cerah','Chino atau jeans rapi','Sneakers bersih'],avoid:['Pakaian terlalu formal','Warna serba gelap']},women:{rec:['Dress atau set warna ceria','Aksesori playful','Flat shoes atau sneakers'],avoid:['Pakaian terlalu formal','Warna serba gelap']},note:'Datang dengan warna favoritmu dan siap bersenang-senang.'}},
+ graduation:{label:'Graduation',kind:'single',eyebrow:'Selamat Wisuda',conn:'·',defaultTheme:'birthday-confetti',tag:'Graduation',hostLabel:'Sang Wisudawan',stageDefault:'bride',
+  s1:'🎓 {n} · Undangan Wisuda',welcome:'Rayakan kelulusan {n} bersama di acara wisuda virtual ini',
+  roles:{host:'Sang Wisudawan'},gift:false,
+  book:{ph:'Tulis ucapan selamat untuk {n}…',eb:'Ucapan Selamat'},live:{eb:'Perayaan Wisuda',tx:'Perayaan kelulusan {n} disiarkan langsung. Ikut memberi selamat dan kirim ucapanmu lewat chat.'},
+  story:{nav:'Rundown',title:'Rangkaian Acara',eb:'Hari Kelulusan',items:[['Registrasi & Welcome','09.00','Sambutan hangat dan welcome drink untuk semua tamu.'],['Prosesi Wisuda','10.00','Pemindahan tali toga dan penyerahan ijazah.'],['Foto Bersama & Ucapan','11.30','Sesi foto bersama keluarga, sahabat, dan dosen.'],['Makan Bersama','12.30','Hidangan spesial untuk merayakan kelulusan.']]},
+  dress:{title:'Smart Formal Purple',sub:'acara kelulusan, rapi dan sopan',eb:'Dress Code',palette:[['#5B2A86','Ungu Tua'],['#B58AD6','Lavender'],['#F7C6DA','Soft Pink'],['#D9A441','Emas'],['#FFF7EA','Krem']],
+   men:{rec:['Kemeja atau batik rapi','Blazer atau rompi senada','Celana bahan dan sepatu pantofel'],avoid:['Kaos oblong','Sandal jepit']},women:{rec:['Dress, kebaya, atau gamis sopan warna ungu/pastel','Hijab senada','Aksesori sederhana'],avoid:['Pakaian terlalu mencolok','Pakaian ketat']},note:'Nuansa ungu dan emas menyambut kelulusan sang wisudawan.'}},
  aqiqah:{label:'Aqiqah',kind:'single',eyebrow:'Syukuran Aqiqah',conn:'·',defaultTheme:'birthday-confetti',tag:'Aqiqah',hostLabel:'Si Kecil',stageDefault:'bride',
   s1:'🌙 {n} · Undangan Aqiqah',welcome:'Ikut berbagi kebahagiaan atas kelahiran {n} di acara aqiqah virtual ini',
   roles:{host:'Si Kecil'},gift:false,
@@ -1067,7 +1074,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),{textCon
 .dig[hidden]{display:none}
 @media(max-width:700px){.did{padding:16px}}
 `}));
-const NMHOSTLB={birthday:'Nama yang berulang tahun',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
+const NMHOSTLB={birthday:'Nama yang berulang tahun',graduation:'Nama wisudawan/wisudawati',aqiqah:'Nama si kecil',sweet17:'Nama yang berulang tahun',corporate:'Nama acara / perusahaan'};
 let NMDR=null,NMDRINV=null,NMDIRTY=false;
 const nmDraftId=()=>nmFromFields({eventType:NMDR.e,groomName:NMDR.g,brideName:NMDR.b,nameOrder:NMDR.o,hostName:NMDR.h,stageAvatar:NMDR.s,theme:NMDR.t},'');
 function nmBuildForm(){if($('#didform'))return;const w=$('.dwrap'),body=$('#dbody');if(!w||!body)return;const d=document.createElement('div');d.id='didform';d.className='did';
