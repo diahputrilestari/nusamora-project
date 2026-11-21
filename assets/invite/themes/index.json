@@ -312,7 +312,14 @@
     "aqiqah-biru": "aqiqah-istana-biru",
     "aqiqah-boy": "aqiqah-istana-biru",
     "aqiqah-laki": "aqiqah-istana-biru",
-    "aqiqah-istana-biru": "aqiqah-istana-biru"
+    "aqiqah-istana-biru": "aqiqah-istana-biru",
+    "wisuda": "little-wisuda",
+    "skripsi": "little-wisuda",
+    "kelulusan": "little-wisuda",
+    "graduation": "little-wisuda",
+    "little-wisuda": "little-wisuda",
+    "toga": "little-wisuda",
+    "sarjana": "little-wisuda"
   },
   "themes": [
     {
@@ -1281,6 +1288,20 @@
       "swatch": [
         "#1F4E8C",
         "#F4DDA0"
+      ],
+      "art": true
+    },
+    {
+      "id": "little-wisuda",
+      "name": "Wisuda Skripsi",
+      "description": "Syukuran kelulusan skripsi: panggung ungu-emas bertirai dengan toga dan daun laurel, karangan bunga pink, lentera emas, photo booth dan galeri foto, serta wisudawati chibi bertoga membawa skripsi.",
+      "categories": [
+        "graduation"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5B2A86",
+        "#F6DC98"
       ],
       "art": true
     }

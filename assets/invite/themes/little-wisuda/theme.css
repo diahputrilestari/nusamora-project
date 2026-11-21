@@ -1,0 +1,24 @@
+/* Wisuda Skripsi: ukuran ilustrasi per slot */
+.th-little-wisuda .ulos-dec { width: min(130px, 40vw); }
+.th-little-wisuda .st-kf { width: min(190px, 56vw); margin-top: -6px; }
+.th-little-wisuda .gf-amp { width: min(170px, 50vw); }
+.th-little-wisuda .ws-bk { width: min(180px, 54vw); }
+.th-little-wisuda .ev-lt { width: 24px; }
+.th-little-wisuda .rs-lt { width: 34px; top: -26px; animation-name: bob2; }
+.th-little-wisuda .cv-lt, .th-little-wisuda .rs-lt { filter: drop-shadow(0 0 12px rgba(255, 210, 122, .7)); }
+.th-little-wisuda .gable .art { height: 30px; }
+.th-little-wisuda .jb-row { gap: 6px; align-items: flex-end; }
+.th-little-wisuda .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-little-wisuda .pf-ph.fig .art { object-position: 50% 30%; }
+/* penutup: si kecil duduk di bawah gazebo bertirai */
+.th-little-wisuda .end-art { width: min(300px, 80%); margin-bottom: 26px; }
+.th-little-wisuda .end-art .eg { filter: drop-shadow(0 18px 30px rgba(36, 10, 64, .3)); }
+.th-little-wisuda .end-art .cp { bottom: 6%; }
+.th-little-wisuda .end-art .cp .art, .th-little-wisuda .end-art .cp .art:first-child { height: clamp(96px, 30vw, 128px); }
+@keyframes bob2 { from { translate: 0 -4px; rotate: -3deg; } to { translate: 0 4px; rotate: 3deg; } }
+.th-little-wisuda .gate::after { background: radial-gradient(64% 50% at 50% 46%, rgba(52, 18, 86, .5), rgba(52, 18, 86, .14) 72%), linear-gradient(180deg, rgba(52, 18, 86, .08), rgba(52, 18, 86, .55)); }
+.th-little-wisuda .cv-nm, .th-little-wisuda .hero-nm, .th-little-wisuda .end-nm { text-shadow: 0 2px 0 rgba(36, 10, 64, .55), 0 0 18px rgba(255, 215, 140, .5); }
+.th-little-wisuda .cv-dt, .th-little-wisuda .cv-eb { color: #FFF0C8; font-weight: 600; }
+.th-little-wisuda .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(36, 10, 64, .9); }
+.th-little-wisuda .cv-gi { filter: drop-shadow(0 0 5px rgba(255, 240, 200, .9)) drop-shadow(0 0 12px rgba(246, 220, 152, .5)); }
+.th-little-wisuda .end-art .cp .art, .th-little-wisuda .end-art .cp .art:first-child { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .75)); }
