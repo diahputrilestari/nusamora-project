@@ -1,0 +1,168 @@
+{
+  "id": "little-wisuda-sma",
+  "name": "Wisuda SMA",
+  "version": 1,
+  "description": "Syukuran kelulusan SMA: aula wisuda navy-emas dengan tirai, spanduk, balon, dan lili-hortensia, booth buku tamu, photo booth, galeri foto, serta lulusan chibi berjubah navy membawa gulungan ijazah.",
+  "categories": [
+    "graduation"
+  ],
+  "demo": {
+    "name": "Rafi",
+    "full": "Muhammad Rafi Pratama",
+    "parents": "Putra pertama Bapak Dimas Pratama & Ibu Rania Larasati",
+    "title": "Wisuda SMA Rafi",
+    "eventName": "Syukuran Kelulusan SMA",
+    "start": "10:00",
+    "end": "13:00",
+    "venue": "Aula SMA Negeri 1",
+    "address": "Jl. Pendidikan No. 12, Cikarang Utara, Bekasi",
+    "welcome": "Alhamdulillah, setelah tiga tahun penuh tawa, ujian, dan persahabatan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di syukuran kelulusan SMA ananda. Semoga kebersamaan ini menjadi doa untuk langkah besar berikutnya.",
+    "quote": "Barang siapa menempuh jalan untuk mencari ilmu, Allah mudahkan baginya jalan menuju surga.",
+    "quoteSource": "HR. Muslim",
+    "closing": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini. Semoga ilmu yang didapat membawa manfaat dan kebaikan.",
+    "story": [
+      {
+        "date": "Juli 2023",
+        "title": "Hari Pertama di SMA",
+        "text": "Berseragam putih abu-abu untuk pertama kalinya, ananda memulai tiga tahun penuh cerita."
+      },
+      {
+        "date": "Maret 2026",
+        "title": "Ujian Akhir",
+        "text": "Berbulan-bulan belajar bersama dan saling menyemangati, hingga ujian terakhir akhirnya selesai."
+      },
+      {
+        "date": "Mei 2026",
+        "title": "Pengumuman Kelulusan",
+        "text": "Dengan mengucap syukur, ananda dinyatakan lulus. Toga siap dikenakan, topi siap dilempar."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Bu Wulan (Wali Kelas)",
+        "message": "Selamat lulus, Rafi! Ibu bangga. Semoga sukses di kampus impianmu.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Dimas & Geng XII IPA 2",
+        "message": "Akhirnya lulus bareng! Jangan lupa reuni ya, traktir bakso dulu.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Tante Mira",
+        "message": "Maaf belum bisa hadir. Selamat ya, anak pintar. Doa terbaik untukmu.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#1B2F6B",
+    "deep2": "#2F4FA0",
+    "paper": "#FBF9F3",
+    "ink": "#14213D",
+    "muted": "#5C6A8A",
+    "accent": "#D4A62E",
+    "accent2": "#F6E0A0",
+    "soft": "#EAF0FA",
+    "petal": "#9FB8E8",
+    "heading": "#1B2F6B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 10
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Syukuran Kelulusan SMA",
+    "guestSalute": "Keluarga & sahabat tersayang",
+    "profileEyebrow": "Sang lulusan",
+    "profileTitle": "Lulusan Kami",
+    "countdownEyebrow": "Menuju hari kelulusan",
+    "countdownTitle": "Hari Kelulusan",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Syukuran Kelulusan",
+    "storyEyebrow": "Tiga tahun bersama",
+    "storyTitle": "Kisah Putih Abu-abu",
+    "galleryEyebrow": "Momen berharga",
+    "galleryTitle": "Galeri Kelulusan",
+    "rsvpLead": "Mohon kabari kami apakah Bapak/Ibu/Saudara/i dapat hadir merayakan kelulusan ini.",
+    "giftEyebrow": "Tanda kasih",
+    "giftTitle": "Kado Kelulusan",
+    "giftLead": "Kehadiran dan doa Anda sudah menjadi hadiah terindah. Bila ingin mengirim tanda kasih, bisa melalui:",
+    "wishesEyebrow": "Doa & harapan",
+    "wishesTitle": "Ucapan Selamat",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas doa, dukungan, dan kehadiran Anda di hari kelulusan ini."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/lulusan.webp",
+        "w": 74
+      }
+    ],
+    "introTop": "art/photo-booth.webp",
+    "figureBride": "art/lulusan.webp",
+    "countdownRow": [
+      {
+        "src": "art/buku-tamu.webp",
+        "w": 78
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "storyTop": "art/photo-gallery.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/lulusan.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
