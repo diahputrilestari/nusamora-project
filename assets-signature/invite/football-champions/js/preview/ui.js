@@ -194,6 +194,15 @@ export function mountUI(host, cfg) {
   `);
     const $ = (id) => host.querySelector('#' + id);
     const loader = $('loader');
+    if (cfg.solo) {
+        // birthday theme: loader in the theme colours (navy + gold) instead of the wedding ivory
+        const pal = activeTheme.palette;
+        loader.style.background = `radial-gradient(120% 90% at 50% 40%, ${pal.sky.horizon} 0%, ${pal.ink} 62%, #070f26 100%)`;
+        loader.style.setProperty('--gold-deep', pal.blush);
+        loader.style.setProperty('--ink-soft', pal.champagne);
+        loader.style.color = pal.ivory;
+        document.title = `${coupleNames(cfg)[0]} · Undangan Ulang Tahun`;
+    }
     const opening = $('opening');
     const captions = $('captions');
     const hud = $('hud');
