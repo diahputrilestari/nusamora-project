@@ -308,7 +308,11 @@
     "pekanbaru": "little-riau",
     "little-riau": "little-riau",
     "riau-wedding": "little-riau",
-    "tepak-sirih": "little-riau"
+    "tepak-sirih": "little-riau",
+    "aqiqah-biru": "aqiqah-istana-biru",
+    "aqiqah-boy": "aqiqah-istana-biru",
+    "aqiqah-laki": "aqiqah-istana-biru",
+    "aqiqah-istana-biru": "aqiqah-istana-biru"
   },
   "themes": [
     {
@@ -1263,6 +1267,20 @@
       "swatch": [
         "#1B5E3A",
         "#F3DF8F"
+      ],
+      "art": true
+    },
+    {
+      "id": "aqiqah-istana-biru",
+      "name": "Aqiqah Istana Biru",
+      "description": "Tasyakuran aqiqah bernuansa istana biru-krem: lengkung mozaik biru dan emas, lentera emas, kolam teratai, kubah masjid, domba kecil, bulan sabit, serta ilustrasi bayi laki-laki berkopiah.",
+      "categories": [
+        "aqiqah"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F4E8C",
+        "#F4DDA0"
       ],
       "art": true
     }
