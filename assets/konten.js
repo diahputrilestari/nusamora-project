@@ -88,7 +88,7 @@
     var t = String(r.title || "").toLowerCase();
     if (/nusamora|paket|essential|signature|luxe|cara membuat|template/.test(t)) return "Panduan NusaMora";
     if (/link undangan|whatsapp|rsvp|buku tamu|virtual venue|daftar tamu/.test(t)) return "Tips Undangan";
-    if (/pernikahan|nikah|pengantin|akad|resepsi|checklist|wedding|pelaminan|kua|perkawinan|bimwin|vendor|kontrak|privasi|adat|tema|marriage/.test(t)) return "Persiapan Pernikahan";
+    if (/pernikahan|nikah|pengantin|akad|resepsi|checklist|wedding|pelaminan|kua|perkawinan|bimwin|vendor|kontrak|privasi|adat|tema|marriage|keluarga|tradisi|red flag|pasangan/.test(t)) return "Persiapan Pernikahan";
     return "Tips Undangan";
   }
   var ORN = '<svg class="kt-orn" viewBox="0 0 200 120" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="100" cy="60" r="34"/><circle cx="100" cy="60" r="22" opacity=".6"/><path d="M100 26c10 8 10 20 0 34-10-14-10-26 0-34zM100 94c10-8 10-20 0-34-10 14-10 26 0 34zM66 60c8-10 20-10 34 0-14 10-26 10-34 0zM134 60c-8 10-20 10-34 0 14-10 26-10 34 0z"/><path d="M20 100c24-4 40-18 52-40M180 20c-24 4-40 18-52 40" opacity=".5"/></g></svg>';
