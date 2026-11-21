@@ -81,11 +81,12 @@
       (sw ? '<p class="kt-sw"><a href="/' + BASEP[c.type] + "/" + esc(sw.slug) + (sw.lang === "en" ? "?lang=en" : "") + '" hreflang="' + esc(sw.lang) + '">' + (sw.lang === "en" ? "Read this in English" : "Baca dalam Bahasa Indonesia") + "</a></p>" : "") + "</article>";
   }
   /* ---- Daftar artikel: hero, pencarian + filter kategori, artikel unggulan, grid kartu, dan ajakan penutup ---- */
-  var CAT_ORDER = ["Tips Undangan", "Persiapan Pernikahan", "Panduan NusaMora"], CAT_CLS = { "Tips Undangan": "c1", "Persiapan Pernikahan": "c2", "Panduan NusaMora": "c3" };
+  var CAT_ORDER = ["Tips Undangan", "Persiapan Pernikahan", "Acara Spesial", "Panduan NusaMora"], CAT_CLS = { "Tips Undangan": "c1", "Persiapan Pernikahan": "c2", "Acara Spesial": "c1", "Panduan NusaMora": "c3" };
   /* Belum ada kolom kategori di database: dipakai r.category bila suatu saat ada, selain itu diturunkan dari judul. */
   function catOf(r) {
     if (r.category) return String(r.category);
     var t = String(r.title || "").toLowerCase();
+    if (/ulang tahun|birthday|aqiqah|goodie|sweet seventeen|bridal shower|bachelorette|lamaran|engagement|proposal|games ulang/.test(t)) return "Acara Spesial";
     if (/nusamora|paket|essential|signature|luxe|cara membuat|template/.test(t)) return "Panduan NusaMora";
     if (/link undangan|whatsapp|rsvp|buku tamu|virtual venue|daftar tamu/.test(t)) return "Tips Undangan";
     if (/pernikahan|nikah|pengantin|akad|resepsi|checklist|wedding|pelaminan|kua|perkawinan|bimwin|vendor|kontrak|privasi|adat|tema|marriage|keluarga|tradisi|red flag|pasangan/.test(t)) return "Persiapan Pernikahan";
