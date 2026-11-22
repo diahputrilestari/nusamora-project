@@ -367,7 +367,12 @@
     "14-agustus": "hari-pramuka",
     "tunas-kelapa": "hari-pramuka",
     "perkemahan": "hari-pramuka",
-    "kemah": "hari-pramuka"
+    "kemah": "hari-pramuka",
+    "rups": "rups-agm",
+    "agm": "rups-agm",
+    "rapat-umum-pemegang-saham": "rups-agm",
+    "annual-general-meeting": "rups-agm",
+    "rapat-pemegang-saham": "rups-agm"
   },
   "themes": [
     {
@@ -1462,6 +1467,20 @@
       "swatch": [
         "#6B2D7A",
         "#C99A3A"
+      ],
+      "art": true
+    },
+    {
+      "id": "rups-agm",
+      "name": "RUPS / Annual General Meeting (AGM)",
+      "description": "RUPS / Annual General Meeting: aula korporat marmer putih berpanel emas dengan dua layar presentasi, podium dan bunga ungu, booth buku tamu, photo booth, galeri, kuliner, meja pemegang saham, serta profesional berjas ungu.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5B2E91",
+        "#C9A24A"
       ],
       "art": true
     }
