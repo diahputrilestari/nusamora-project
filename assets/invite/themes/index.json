@@ -372,7 +372,13 @@
     "agm": "rups-agm",
     "rapat-umum-pemegang-saham": "rups-agm",
     "annual-general-meeting": "rups-agm",
-    "rapat-pemegang-saham": "rups-agm"
+    "rapat-pemegang-saham": "rups-agm",
+    "grand-opening": "grand-opening",
+    "peresmian": "grand-opening",
+    "peresmian-kantor": "grand-opening",
+    "cabang-baru": "grand-opening",
+    "opening": "grand-opening",
+    "soft-opening": "grand-opening"
   },
   "themes": [
     {
@@ -1474,6 +1480,20 @@
       "id": "rups-agm",
       "name": "RUPS / Annual General Meeting (AGM)",
       "description": "RUPS / Annual General Meeting: aula korporat marmer putih berpanel emas dengan dua layar presentasi, podium dan bunga ungu, booth buku tamu, photo booth, galeri, kuliner, meja pemegang saham, serta profesional berjas ungu.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5B2E91",
+        "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "grand-opening",
+      "name": "Grand Opening – Peresmian Kantor / Cabang Baru",
+      "description": "Grand Opening – Peresmian Kantor/Cabang Baru: aula ungu-emas bertabur balon dan karangan bunga, pita peresmian dengan gunting, dua layar gedung baru, booth buku tamu, photo booth, galeri kantor, kuliner, serta tim profesional berjas ungu.",
       "categories": [
         "other"
       ],

@@ -1,0 +1,178 @@
+{
+  "id": "grand-opening",
+  "name": "Grand Opening – Peresmian Kantor / Cabang Baru",
+  "version": 1,
+  "description": "Grand Opening – Peresmian Kantor/Cabang Baru: aula ungu-emas bertabur balon dan karangan bunga, pita peresmian dengan gunting, dua layar gedung baru, booth buku tamu, photo booth, galeri kantor, kuliner, serta tim profesional berjas ungu.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Grand Opening",
+    "full": "PT Nusantara Maju Bersama",
+    "parents": "Peresmian Kantor Cabang Surabaya",
+    "title": "Grand Opening Kantor Cabang Surabaya",
+    "eventName": "Grand Opening Kantor Cabang",
+    "start": "10:00",
+    "end": "13:00",
+    "venue": "Kantor Cabang Surabaya",
+    "address": "Jl. Basuki Rahmat No. 88, Genteng, Surabaya 60262",
+    "bank": "BCA",
+    "holder": "PT Nusantara Maju Bersama",
+    "giftAddress": "Kantor Cabang Surabaya, Jl. Basuki Rahmat No. 88, Surabaya 60262",
+    "welcome": "Dengan penuh rasa syukur, kami mengundang Bapak/Ibu untuk menghadiri peresmian Kantor Cabang Surabaya. Mari bersama menyaksikan pemotongan pita, berkeliling kantor baru, dan menikmati jamuan bersama tim kami.",
+    "quote": "Setiap langkah baru adalah janji untuk melayani lebih dekat.",
+    "quoteSource": "Manajemen PT Nusantara Maju Bersama",
+    "closing": "Terima kasih atas kehadiran dan dukungan Bapak/Ibu. Semoga kantor baru ini menjadi awal kerja sama yang semakin erat.",
+    "story": [
+      {
+        "date": "10.00 WIB",
+        "title": "Registrasi & Sambutan",
+        "text": "Tamu disambut di meja registrasi, dilanjutkan sambutan dari Direksi dan perwakilan mitra."
+      },
+      {
+        "date": "11.00 WIB",
+        "title": "Pemotongan Pita",
+        "text": "Seremoni pemotongan pita, penandatanganan prasasti peresmian, dan foto bersama di photo booth."
+      },
+      {
+        "date": "11.45 WIB",
+        "title": "Tur Kantor & Ramah Tamah",
+        "text": "Berkeliling kantor baru, bertemu tim cabang, dan menikmati jamuan makan siang."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Bapak Hartono (Mitra)",
+        "message": "Selamat atas peresmian kantor baru. Semoga makin sukses dan berkembang!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Ibu Sinta (Klien)",
+        "message": "Kami hadir mewakili perusahaan. Sampai jumpa di Surabaya.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Pak Dedi (Kolega)",
+        "message": "Mohon maaf belum bisa hadir. Selamat dan sukses selalu!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#5B2E91",
+    "deep2": "#8A5BC0",
+    "paper": "#FFFAF4",
+    "ink": "#2E1B45",
+    "muted": "#6E5F86",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#F3EDF9",
+    "petal": "#B58AD6",
+    "heading": "#5B2E91"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Peresmian Kantor Cabang Baru",
+    "guestSalute": "Yth. Mitra & sahabat",
+    "guestDefault": "Mitra & Sahabat",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Manajemen",
+    "countdownEyebrow": "Menuju peresmian",
+    "countdownTitle": "Hitung Mundur",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Lokasi Peresmian",
+    "storyEyebrow": "Susunan acara",
+    "storyTitle": "Rangkaian Acara",
+    "galleryEyebrow": "Kantor baru kami",
+    "galleryTitle": "Galeri Kantor",
+    "rsvpEyebrow": "Registrasi tamu",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan tempat dan jamuan dengan baik.",
+    "giftEyebrow": "Informasi & kontak",
+    "giftTitle": "Alamat Kantor Baru",
+    "giftLead": "Untuk karangan bunga atau bingkisan ucapan selamat, silakan dikirim ke alamat berikut:",
+    "wishesEyebrow": "Ucapan selamat",
+    "wishesTitle": "Ucapan & Doa",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran dan dukungan Bapak/Ibu."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/roll-banner.webp",
+    "heading": "art/kado.webp",
+    "introTop": "art/podium-grand-opening.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-petunjuk.webp",
+        "w": 50
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/pita-gunting.webp",
+    "storyTop": "art/papan-plakat.webp",
+    "rsvpHang": "art/roll-banner.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gapura-balon.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
