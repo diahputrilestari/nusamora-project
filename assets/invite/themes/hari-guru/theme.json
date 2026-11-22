@@ -1,0 +1,179 @@
+{
+  "id": "hari-guru",
+  "name": "Hari Guru Nasional – 25 November",
+  "version": 1,
+  "description": "Hari Guru Nasional 25 November: panggung kayu ungu-krem dengan papan Ki Hajar Dewantara dan papan tulis ucapan, booth buku tamu, photo booth toga, galeri foto, kuliner, serta guru berbusana batik dan seragam ungu.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Hari Guru",
+    "full": "Peringatan Hari Guru Nasional",
+    "parents": "SMA Negeri 1 Nusantara",
+    "title": "Peringatan Hari Guru Nasional",
+    "eventName": "Peringatan Hari Guru Nasional",
+    "start": "08:00",
+    "end": "11:30",
+    "venue": "Aula SMA Negeri 1 Nusantara",
+    "address": "Jl. Pendidikan No. 17, Coblong, Bandung 40132",
+    "annual": "11-25",
+    "bank": "BNI",
+    "holder": "Panitia Hari Guru SMAN 1 Nusantara",
+    "giftAddress": "Ruang Tata Usaha SMA Negeri 1 Nusantara, Jl. Pendidikan No. 17, Bandung 40132",
+    "welcome": "Dengan penuh rasa hormat, kami mengundang Bapak/Ibu untuk hadir dalam peringatan Hari Guru Nasional. Mari bersama memberikan apresiasi dan ucapan terima kasih kepada para guru yang telah mendidik dengan tulus.",
+    "quote": "Ing ngarsa sung tuladha, ing madya mangun karsa, tut wuri handayani.",
+    "quoteSource": "Ki Hajar Dewantara",
+    "closing": "Terima kasih atas kehadiran dan dukungan Bapak/Ibu. Semoga jasa para guru terus menjadi cahaya bagi generasi bangsa.",
+    "story": [
+      {
+        "date": "08.00 WIB",
+        "title": "Upacara & Sambutan",
+        "text": "Upacara peringatan Hari Guru Nasional dan sambutan Kepala Sekolah."
+      },
+      {
+        "date": "09.00 WIB",
+        "title": "Apresiasi Guru",
+        "text": "Penyerahan penghargaan guru teladan dan persembahan dari para siswa."
+      },
+      {
+        "date": "10.30 WIB",
+        "title": "Ramah Tamah",
+        "text": "Foto bersama, menulis surat terima kasih, dan menikmati jamuan ringan."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Rina (Siswi XII)",
+        "message": "Terima kasih Bu Guru atas ilmu dan kesabarannya. Selamat Hari Guru!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Pak Dimas (Alumni)",
+        "message": "Hari Guru Nasional, terima kasih untuk semua guruku. Sehat selalu.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Ibu Wati (Wali Murid)",
+        "message": "Mohon maaf belum bisa hadir. Terima kasih atas dedikasi para guru.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#6B2E9A",
+    "deep2": "#9B6BC8",
+    "paper": "#FFF9F0",
+    "ink": "#33194D",
+    "muted": "#6E5F86",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#F4EDF9",
+    "petal": "#B58AD6",
+    "heading": "#5B2E91"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Peringatan 25 November",
+    "guestSalute": "Yth. Bapak/Ibu",
+    "guestDefault": "Tamu Undangan",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Penyelenggara",
+    "countdownEyebrow": "Menuju peringatan",
+    "countdownTitle": "Hitung Mundur",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Lokasi Acara",
+    "storyEyebrow": "Susunan acara",
+    "storyTitle": "Rangkaian Acara",
+    "galleryEyebrow": "Kenangan bersama guru",
+    "galleryTitle": "Galeri Foto",
+    "rsvpEyebrow": "Registrasi tamu",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran agar panitia dapat menyiapkan tempat dan jamuan.",
+    "giftEyebrow": "Dukungan & apresiasi",
+    "giftTitle": "Apresiasi untuk Guru",
+    "giftLead": "Dukungan untuk kegiatan dan bingkisan apresiasi guru dapat disalurkan melalui rekening atau alamat berikut:",
+    "wishesEyebrow": "Surat terima kasih",
+    "wishesTitle": "Terima Kasih, Guru",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran dan dukungan Bapak/Ibu. Selamat Hari Guru Nasional!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1671
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/papan-tulis.webp",
+    "heading": "art/buku-toga.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/tempat-pensil.webp",
+        "w": 50
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 112
+      },
+      {
+        "src": "art/galeri-foto.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/piala.webp",
+    "storyTop": "art/kalender.webp",
+    "rsvpHang": "art/papan-tulis.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/buket.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
