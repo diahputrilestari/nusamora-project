@@ -157,3 +157,5 @@ dialog{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overfl
 @media(max-width:620px){.pk3{margin-bottom:44px}.pkc{flex-direction:column}.pkc-v{flex:none;aspect-ratio:16/11;min-height:0}.pkc-b{padding:20px}.pkc-h h3{font-size:27px}.tpl-sub{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.pkc,.pkc-a .btn .ic{transition:none}.pkc:hover,.pkc:focus-within{transform:none}}
 .tm.real{border:1px solid var(--soft2);border-style:solid;background:#fff;gap:16px}.tm.real blockquote{margin:0;font-size:15.5px;line-height:1.7;color:var(--ink)}
+
+.pv-vid{background:#120726}.pv-vid .tv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}

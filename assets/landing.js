@@ -130,3 +130,9 @@ fetch('/assets/testimoni.json',{cache:'no-cache'}).then(function(r){return r.ok?
 }).catch(function(){});
 })();
 })();
+
+/* Video cuplikan template di kartu paket: dimuat dan diputar hanya saat terlihat; poster tetap tampil bila gerakan dikurangi. */
+(function(){var vs=[].slice.call(document.querySelectorAll('.pkc-v video.tv'));if(!vs.length||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+var ld=function(v){if(v.dataset.ld)return;v.dataset.ld='1';[].forEach.call(v.querySelectorAll('source[data-src]'),function(s){s.src=s.dataset.src});v.load()};
+var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){ld(v);var p=v.play();if(p&&p.catch)p.catch(function(){})}else{v.pause()}})},{threshold:.25});
+vs.forEach(function(v){io.observe(v)})})();
