@@ -378,7 +378,12 @@
     "peresmian-kantor": "grand-opening",
     "cabang-baru": "grand-opening",
     "opening": "grand-opening",
-    "soft-opening": "grand-opening"
+    "soft-opening": "grand-opening",
+    "sumpah-pemuda": "sumpah-pemuda",
+    "hari-sumpah-pemuda": "sumpah-pemuda",
+    "28-oktober": "sumpah-pemuda",
+    "sumpah": "sumpah-pemuda",
+    "pemuda": "sumpah-pemuda"
   },
   "themes": [
     {
@@ -1500,6 +1505,20 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#5B2E91",
+        "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "sumpah-pemuda",
+      "name": "Hari Sumpah Pemuda – 28 Oktober",
+      "description": "Hari Sumpah Pemuda 28 Oktober: panggung kayu bertirai merah putih dengan papan Sumpah Pemuda, foto Kongres Pemuda, karpet peta Nusantara, booth buku tamu, photo booth, galeri sejarah, kuliner Nusantara, serta pemuda berseragam perjuangan.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#A3141E",
         "#C9A24A"
       ],
       "art": true
