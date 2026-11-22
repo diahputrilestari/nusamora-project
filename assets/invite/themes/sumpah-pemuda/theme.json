@@ -1,0 +1,179 @@
+{
+  "id": "sumpah-pemuda",
+  "name": "Hari Sumpah Pemuda – 28 Oktober",
+  "version": 1,
+  "description": "Hari Sumpah Pemuda 28 Oktober: panggung kayu bertirai merah putih dengan papan Sumpah Pemuda, foto Kongres Pemuda, karpet peta Nusantara, booth buku tamu, photo booth, galeri sejarah, kuliner Nusantara, serta pemuda berseragam perjuangan.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Sumpah Pemuda",
+    "full": "Peringatan Hari Sumpah Pemuda ke-98",
+    "parents": "Karang Taruna Nusantara",
+    "title": "Peringatan Hari Sumpah Pemuda",
+    "eventName": "Peringatan Sumpah Pemuda",
+    "start": "08:00",
+    "end": "12:00",
+    "venue": "Gedung Pemuda Nusantara",
+    "address": "Jl. Kramat Raya No. 106, Senen, Jakarta Pusat 10450",
+    "annual": "10-28",
+    "bank": "BRI",
+    "holder": "Karang Taruna Nusantara",
+    "giftAddress": "Sekretariat Karang Taruna Nusantara, Jl. Kramat Raya No. 106, Jakarta Pusat 10450",
+    "welcome": "Dengan semangat persatuan, kami mengundang Saudara/i untuk hadir dalam peringatan Hari Sumpah Pemuda. Mari bersama mengikrarkan kembali satu tanah air, satu bangsa, dan satu bahasa: Indonesia.",
+    "quote": "Satu nusa, satu bangsa, satu bahasa: Indonesia.",
+    "quoteSource": "Sumpah Pemuda, 28 Oktober 1928",
+    "closing": "Terima kasih atas kehadiran Saudara/i. Semoga semangat Sumpah Pemuda terus menyala dalam setiap langkah kita.",
+    "story": [
+      {
+        "date": "08.00 WIB",
+        "title": "Upacara & Ikrar",
+        "text": "Pengibaran bendera, pembacaan teks Sumpah Pemuda, dan menyanyikan Indonesia Raya."
+      },
+      {
+        "date": "09.30 WIB",
+        "title": "Pameran & Talkshow",
+        "text": "Menyusuri galeri sejarah Kongres Pemuda dan dialog bersama tokoh pemuda."
+      },
+      {
+        "date": "11.00 WIB",
+        "title": "Ramah Tamah",
+        "text": "Menikmati kuliner Nusantara dan berfoto di photo booth bersama sahabat."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Rani (Karang Taruna)",
+        "message": "Selamat memperingati Sumpah Pemuda! Pemuda bersatu, Indonesia maju.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Bima (Mahasiswa)",
+        "message": "Siap hadir dan ikut mengikrarkan semangat persatuan.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Pak Hendra",
+        "message": "Mohon maaf belum bisa hadir. Salam semangat untuk semua pemuda.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#A3141E",
+    "deep2": "#C8323C",
+    "paper": "#FFF8EE",
+    "ink": "#3A1A14",
+    "muted": "#7A5A50",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#FBEDEA",
+    "petal": "#D9585F",
+    "heading": "#8F1018"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Peringatan 28 Oktober",
+    "guestSalute": "Yth. Saudara/i",
+    "guestDefault": "Sahabat Pemuda",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Penyelenggara",
+    "countdownEyebrow": "Menuju peringatan",
+    "countdownTitle": "Hitung Mundur",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Lokasi Peringatan",
+    "storyEyebrow": "Susunan acara",
+    "storyTitle": "Rangkaian Acara",
+    "galleryEyebrow": "Jejak sejarah",
+    "galleryTitle": "Galeri Pemuda",
+    "rsvpEyebrow": "Registrasi peserta",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran agar panitia dapat menyiapkan tempat dan konsumsi.",
+    "giftEyebrow": "Informasi & kontak",
+    "giftTitle": "Sekretariat Panitia",
+    "giftLead": "Dukungan dan donasi kegiatan dapat disalurkan melalui rekening atau alamat berikut:",
+    "wishesEyebrow": "Pesan semangat",
+    "wishesTitle": "Ikrar & Harapan",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran Saudara/i. Pemuda bersatu, Indonesia maju."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/panji.webp",
+    "heading": "art/bendera.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-petunjuk.webp",
+        "w": 54
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/obor.webp",
+    "storyTop": "art/buku-globe.webp",
+    "rsvpHang": "art/panji.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-gallery.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
