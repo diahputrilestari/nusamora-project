@@ -1,0 +1,178 @@
+{
+  "id": "isra-mikraj-maulid",
+  "name": "Peringatan Isra Mikraj & Maulid Nabi Muhammad SAW",
+  "version": 1,
+  "description": "Peringatan Isra Mikraj & Maulid Nabi Muhammad SAW: panggung ungu-emas dengan pelengkung arabesque, siluet masjid di malam berbintang, lentera dan bunga lili, booth buku tamu, photo booth bulan sabit, galeri, kuliner kurma, serta santri berbusana muslim serasi.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Isra Mikraj & Maulid",
+    "full": "Peringatan Isra Mikraj & Maulid Nabi Muhammad SAW",
+    "parents": "Majelis Taklim Al-Hidayah",
+    "title": "Peringatan Isra Mikraj & Maulid Nabi",
+    "eventName": "Isra Mikraj & Maulid Nabi",
+    "start": "19:30",
+    "end": "22:00",
+    "venue": "Masjid Jami' Al-Hidayah",
+    "address": "Jl. Masjid Raya No. 21, Kebayoran Baru, Jakarta Selatan 12120",
+    "bank": "BSI",
+    "holder": "Majelis Taklim Al-Hidayah",
+    "giftAddress": "Sekretariat Masjid Jami' Al-Hidayah, Jl. Masjid Raya No. 21, Jakarta Selatan 12120",
+    "welcome": "Assalamu'alaikum warahmatullahi wabarakatuh. Dengan memohon ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam peringatan Isra Mikraj dan Maulid Nabi Muhammad SAW. Mari mempererat ukhuwah dan meneladani akhlak Rasulullah SAW.",
+    "quote": "Sesungguhnya telah ada pada diri Rasulullah itu suri teladan yang baik bagimu.",
+    "quoteSource": "QS. Al-Ahzab: 21",
+    "closing": "Jazakumullahu khairan atas kehadiran dan doa Bapak/Ibu/Saudara/i. Semoga Allah SWT memberkahi kita semua. Wassalamu'alaikum warahmatullahi wabarakatuh.",
+    "story": [
+      {
+        "date": "19.30 WIB",
+        "title": "Pembukaan & Tilawah",
+        "text": "Registrasi jamaah, pembukaan, dan lantunan ayat suci Al-Qur'an."
+      },
+      {
+        "date": "20.00 WIB",
+        "title": "Sholawat & Tausiyah",
+        "text": "Pembacaan sholawat Nabi dilanjutkan tausiyah tentang hikmah Isra Mikraj dan keteladanan Rasulullah SAW."
+      },
+      {
+        "date": "21.15 WIB",
+        "title": "Doa & Ramah Tamah",
+        "text": "Doa bersama, penutupan, dan jamuan ringan bersama jamaah."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Ustadzah Salma",
+        "message": "Barakallahu fiikum. Semoga acaranya berjalan lancar dan penuh berkah.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Bapak Ridwan",
+        "message": "InsyaAllah hadir bersama keluarga. Jazakumullahu khairan.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Ibu Aminah",
+        "message": "Mohon maaf belum bisa hadir. Semoga acaranya berkah.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#5B2E91",
+    "deep2": "#8A5BC0",
+    "paper": "#FFFAF3",
+    "ink": "#2F1B4A",
+    "muted": "#6E5F86",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#F3EDF9",
+    "petal": "#B58AD6",
+    "heading": "#5B2E91"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Isra Mikraj & Maulid Nabi",
+    "guestSalute": "Yth. Bapak/Ibu/Saudara/i",
+    "guestDefault": "Jamaah & Sahabat",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Penyelenggara",
+    "countdownEyebrow": "Menuju peringatan",
+    "countdownTitle": "Hitung Mundur",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Lokasi Acara",
+    "storyEyebrow": "Susunan acara",
+    "storyTitle": "Rangkaian Acara",
+    "galleryEyebrow": "Dokumentasi",
+    "galleryTitle": "Galeri Kegiatan",
+    "rsvpEyebrow": "Registrasi jamaah",
+    "rsvpTitle": "Konfirmasi Hadir",
+    "rsvpLead": "Mohon konfirmasi kehadiran agar panitia dapat menyiapkan tempat dan jamuan.",
+    "giftEyebrow": "Infaq & sedekah",
+    "giftTitle": "Infaq Kegiatan",
+    "giftLead": "Infaq dan sedekah untuk kelancaran acara dapat disalurkan melalui rekening berikut:",
+    "wishesEyebrow": "Doa & ucapan",
+    "wishesTitle": "Doa & Harapan",
+    "closingEyebrow": "Jazakumullahu khairan",
+    "closingText": "Jazakumullahu khairan atas kehadiran dan doa Bapak/Ibu/Saudara/i."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/lentera.webp",
+    "heading": "art/masjid.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/bedug.webp",
+        "w": 54
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 112
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/bulan-lentera.webp",
+    "storyTop": "art/alquran.webp",
+    "rsvpHang": "art/lentera.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/tangga-mikraj.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
