@@ -79,7 +79,9 @@ with t(slug, name, cats, description, sort) as (values
   ('hari-kemerdekaan', 'Hari Kemerdekaan – 17 Agustus', '{other}'::text[],                           'Perayaan virtual Hari Kemerdekaan 17 Agustus: panggung kayu bergorden merah-putih dengan Garuda, Monas, bendera dan kokarde, booth buku tamu, photo booth, galeri, serta pemuda berpeci pembawa semangat merdeka.', 103,
   ('hari-kartini', 'Hari Kartini – Kartini Day Celebration', '{other}'::text[],                           'Perayaan Hari Kartini: panggung kayu berukir dengan potret Kartini, vas bunga, karpet batik maroon-emas, booth buku tamu, photo booth, galeri, kuliner, serta perempuan berkebaya dan bunga melati di sanggul.', 104,
   ('hardiknas', 'Hari Pendidikan Nasional (Hardiknas)', '{other}'::text[],                           'Perayaan Hari Pendidikan Nasional: aula kayu bergorden merah-putih dengan papan Hardiknas, toga dan buku, karpet biru-emas, booth buku tamu, photo booth toga, galeri sekolah, serta pelajar berbatik biru-emas.', 105,
-  ('hari-pramuka', 'Hari Pramuka – 14 Agustus', '{other}'::text[],                           'Perayaan 14 Agustus – Hari Pramuka: panggung perkemahan dengan papan tali, tenda, api unggun, kacu merah-putih dan lencana tunas kelapa, booth buku tamu, photo booth, galeri, kuliner, serta pramuka cilik berseragam coklat.', 106)
+  ('hari-pramuka', 'Hari Pramuka – 14 Agustus', '{other}'::text[],                           'Perayaan 14 Agustus – Hari Pramuka: panggung perkemahan dengan papan tali, tenda, api unggun, kacu merah-putih dan lencana tunas kelapa, booth buku tamu, photo booth, galeri, kuliner, serta pramuka cilik berseragam coklat.', 106,
+  ('rups-agm', 'RUPS / Annual General Meeting (AGM)', '{other}'::text[],                           'RUPS / Annual General Meeting: aula korporat marmer putih berpanel emas dengan dua layar presentasi, podium dan bunga ungu, booth buku tamu, photo booth, galeri, kuliner, meja pemegang saham, serta profesional berjas ungu.', 107)
+
 
 
 

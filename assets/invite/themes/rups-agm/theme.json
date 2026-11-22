@@ -1,0 +1,179 @@
+{
+  "id": "rups-agm",
+  "name": "RUPS / Annual General Meeting (AGM)",
+  "version": 1,
+  "description": "RUPS / Annual General Meeting: aula korporat marmer putih berpanel emas dengan dua layar presentasi, podium dan bunga ungu, booth buku tamu, photo booth, galeri, kuliner, meja pemegang saham, serta profesional berjas ungu.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "RUPS 2027",
+    "full": "PT Nusantara Maju Bersama Tbk",
+    "parents": "Rapat Umum Pemegang Saham Tahunan Tahun Buku 2026",
+    "title": "RUPS Tahunan PT Nusantara Maju Bersama Tbk",
+    "eventName": "RUPS Tahunan / AGM",
+    "start": "09:00",
+    "end": "12:00",
+    "venue": "Virtual · Zoom Webinar",
+    "address": "Tautan dan kode akses dikirim ke email terdaftar setelah Anda mengonfirmasi kehadiran.",
+    "maps": "https://zoom.us/join",
+    "bank": "BCA",
+    "holder": "PT Nusantara Maju Bersama Tbk",
+    "giftAddress": "Biro Administrasi Efek, Gedung Nusantara Lt. 12, Jl. Jend. Sudirman No. 1, Jakarta 10220",
+    "welcome": "Dengan hormat, Direksi dan Dewan Komisaris mengundang Bapak/Ibu Pemegang Saham untuk menghadiri Rapat Umum Pemegang Saham Tahunan secara virtual. Mohon melakukan konfirmasi kehadiran agar dapat kami daftarkan sebagai peserta dan pemegang hak suara.",
+    "quote": "Transparansi hari ini adalah kepercayaan esok hari.",
+    "quoteSource": "Direksi PT Nusantara Maju Bersama Tbk",
+    "closing": "Terima kasih atas kehadiran dan kepercayaan Bapak/Ibu Pemegang Saham. Bersama kita wujudkan pertumbuhan yang berkelanjutan.",
+    "story": [
+      {
+        "date": "09.00 WIB",
+        "title": "Pembukaan & Pemeriksaan Kuorum",
+        "text": "Registrasi peserta, pembukaan rapat, dan pemaparan tata tertib rapat oleh pimpinan rapat."
+      },
+      {
+        "date": "09.30 WIB",
+        "title": "Mata Acara Rapat",
+        "text": "Persetujuan laporan tahunan dan laporan keuangan, penetapan penggunaan laba, serta pengangkatan anggota Direksi dan Komisaris."
+      },
+      {
+        "date": "11.30 WIB",
+        "title": "Tanya Jawab & Penutupan",
+        "text": "Sesi tanya jawab bersama pemegang saham, pengumuman hasil pemungutan suara, dan penutupan rapat."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Bapak Hartono (Pemegang Saham)",
+        "message": "Terima kasih atas undangannya. Saya akan hadir dan memberikan suara pada semua mata acara.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Ibu Sinta Dewi",
+        "message": "Mohon materi rapat dikirim lebih awal. Saya siap bergabung melalui Zoom.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "PT Mitra Investasi",
+        "message": "Kami memberikan kuasa kepada Biro Administrasi Efek untuk mewakili kami pada rapat.",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#5B2E91",
+    "deep2": "#8A5BC0",
+    "paper": "#FFFAF4",
+    "ink": "#2E1B45",
+    "muted": "#6E5F86",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#F3EDF9",
+    "petal": "#B58AD6",
+    "heading": "#5B2E91"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Rapat Umum Pemegang Saham",
+    "guestSalute": "Yth. Pemegang Saham",
+    "guestDefault": "Pemegang Saham",
+    "profileEyebrow": "Diselenggarakan oleh",
+    "profileTitle": "Direksi & Komisaris",
+    "countdownEyebrow": "Menuju rapat",
+    "countdownTitle": "Hitung Mundur RUPS",
+    "eventsEyebrow": "Waktu & tempat",
+    "eventsTitle": "Pelaksanaan Rapat",
+    "storyEyebrow": "Susunan acara",
+    "storyTitle": "Agenda Rapat",
+    "galleryEyebrow": "Kinerja & dokumentasi",
+    "galleryTitle": "Galeri Perusahaan",
+    "rsvpEyebrow": "Registrasi peserta",
+    "rsvpTitle": "Konfirmasi Kehadiran",
+    "rsvpLead": "Mohon konfirmasi kehadiran atau pemberian kuasa Anda agar dapat kami daftarkan pada rapat.",
+    "giftEyebrow": "Informasi & kontak",
+    "giftTitle": "Biro Administrasi Efek",
+    "giftLead": "Untuk pertanyaan seputar pendaftaran dan pemberian kuasa, silakan hubungi Biro Administrasi Efek:",
+    "wishesEyebrow": "Pertanyaan & masukan",
+    "wishesTitle": "Masukan Pemegang Saham",
+    "closingEyebrow": "Terima kasih",
+    "closingText": "Terima kasih atas kehadiran dan kepercayaan Bapak/Ibu Pemegang Saham."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/panji.webp",
+    "heading": "art/bunga-tiang.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-petunjuk.webp",
+        "w": 50
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/tiang-pembatas.webp",
+    "storyTop": "art/easel.webp",
+    "rsvpHang": "art/banner.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
