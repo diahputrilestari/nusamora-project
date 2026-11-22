@@ -360,7 +360,7 @@
     "hari-pendidikan": "hardiknas",
     "pendidikan": "hardiknas",
     "2-mei": "hardiknas",
-    "hari-guru": "hardiknas",
+    "hari-guru": "hari-guru",
     "tut-wuri-handayani": "hardiknas",
     "pramuka": "hari-pramuka",
     "hari-pramuka": "hari-pramuka",
@@ -389,7 +389,10 @@
     "maulid-nabi": "isra-mikraj-maulid",
     "maulid": "isra-mikraj-maulid",
     "isra-miraj": "isra-mikraj-maulid",
-    "pengajian": "isra-mikraj-maulid"
+    "pengajian": "isra-mikraj-maulid",
+    "hari-guru-nasional": "hari-guru",
+    "guru": "hari-guru",
+    "25-november": "hari-guru"
   },
   "themes": [
     {
@@ -1539,6 +1542,20 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#5B2E91",
+        "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "hari-guru",
+      "name": "Hari Guru Nasional – 25 November",
+      "description": "Hari Guru Nasional 25 November: panggung kayu ungu-krem dengan papan Ki Hajar Dewantara dan papan tulis ucapan, booth buku tamu, photo booth toga, galeri foto, kuliner, serta guru berbusana batik dan seragam ungu.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#6B2E9A",
         "#C9A24A"
       ],
       "art": true
