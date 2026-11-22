@@ -1,0 +1,26 @@
+/* Grand Opening: ukuran ilustrasi per slot */
+.th-isra-mikraj-maulid .ulos-dec { width: min(230px, 66vw); }
+.th-isra-mikraj-maulid .st-kf { width: min(110px, 34vw); margin-top: -6px; }
+.th-isra-mikraj-maulid .gf-amp { width: min(170px, 50vw); }
+.th-isra-mikraj-maulid .ws-bk { width: min(180px, 54vw); }
+.th-isra-mikraj-maulid .ev-lt { width: 30px; }
+.th-isra-mikraj-maulid .rs-lt { width: 34px; top: -26px; animation-name: bob2; }
+.th-isra-mikraj-maulid .cv-lt, .th-isra-mikraj-maulid .rs-lt { filter: drop-shadow(0 0 12px rgba(255, 210, 122, .7)); }
+.th-isra-mikraj-maulid .gable .art { height: 30px; }
+.th-isra-mikraj-maulid .jb-row { gap: 6px; align-items: flex-end; }
+.th-isra-mikraj-maulid .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-isra-mikraj-maulid .pf-ph.fig .art { object-position: 50% 30%; }
+/* penutup: si kecil duduk di bawah gazebo bertirai */
+.th-isra-mikraj-maulid .end-art { width: min(300px, 80%); margin-bottom: 26px; }
+.th-isra-mikraj-maulid .end-art .eg { filter: drop-shadow(0 18px 30px rgba(26, 12, 48, .3)); }
+.th-isra-mikraj-maulid .end-art .cp { bottom: 6%; }
+.th-isra-mikraj-maulid .end-art .cp .art, .th-isra-mikraj-maulid .end-art .cp .art:first-child { height: clamp(96px, 30vw, 128px); }
+@keyframes bob2 { from { translate: 0 -4px; rotate: -3deg; } to { translate: 0 4px; rotate: 3deg; } }
+.th-isra-mikraj-maulid .gate::after { background: radial-gradient(64% 50% at 50% 46%, rgba(38, 18, 66, .5), rgba(38, 18, 66, .2) 72%), linear-gradient(180deg, rgba(38, 18, 66, .14), rgba(38, 18, 66, .62)); }
+.th-isra-mikraj-maulid .cv-nm, .th-isra-mikraj-maulid .hero-nm, .th-isra-mikraj-maulid .end-nm { text-shadow: 0 2px 0 rgba(26, 12, 48, .55), 0 0 18px rgba(255, 225, 150, .5); }
+.th-isra-mikraj-maulid .cv-dt, .th-isra-mikraj-maulid .cv-eb { color: #FFF0C8; font-weight: 600; }
+.th-isra-mikraj-maulid .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(26, 12, 48, .9); }
+.th-isra-mikraj-maulid .cv-gi { filter: drop-shadow(0 0 5px rgba(255, 240, 200, .9)) drop-shadow(0 0 12px rgba(246, 220, 152, .5)); }
+.th-isra-mikraj-maulid .end-art .cp .art, .th-isra-mikraj-maulid .end-art .cp .art:first-child { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .75)); }
+.th-isra-mikraj-maulid .end-art .cp .art, .th-isra-mikraj-maulid .end-art .cp .art:first-child { height: clamp(112px, 35vw, 150px); }
+.th-isra-mikraj-maulid .gf-amp { width: min(150px, 46vw); }

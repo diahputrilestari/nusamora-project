@@ -383,7 +383,13 @@
     "hari-sumpah-pemuda": "sumpah-pemuda",
     "28-oktober": "sumpah-pemuda",
     "sumpah": "sumpah-pemuda",
-    "pemuda": "sumpah-pemuda"
+    "pemuda": "sumpah-pemuda",
+    "isra-mikraj-maulid": "isra-mikraj-maulid",
+    "isra-mikraj": "isra-mikraj-maulid",
+    "maulid-nabi": "isra-mikraj-maulid",
+    "maulid": "isra-mikraj-maulid",
+    "isra-miraj": "isra-mikraj-maulid",
+    "pengajian": "isra-mikraj-maulid"
   },
   "themes": [
     {
@@ -1519,6 +1525,20 @@
       "thumb": "thumb.webp",
       "swatch": [
         "#A3141E",
+        "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "isra-mikraj-maulid",
+      "name": "Peringatan Isra Mikraj & Maulid Nabi Muhammad SAW",
+      "description": "Peringatan Isra Mikraj & Maulid Nabi Muhammad SAW: panggung ungu-emas dengan pelengkung arabesque, siluet masjid di malam berbintang, lentera dan bunga lili, booth buku tamu, photo booth bulan sabit, galeri, kuliner kurma, serta santri berbusana muslim serasi.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5B2E91",
         "#C9A24A"
       ],
       "art": true
