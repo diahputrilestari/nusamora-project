@@ -9,6 +9,10 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteCond %{REQUEST_FILENAME}/index.html !-f
 RewriteRule ^ - [F,L]
 
+# Artikel yang digabung (SEO, 22 Nov 2026): 301 permanen ke artikel utama
+RewriteRule ^artikel/cara-membuat-undangan-pernikahan-digital/?$ /artikel/cara-membuat-undangan-pernikahan-digital-sendiri-tanpa-keahlian-desain [R=301,L,NE]
+RewriteRule ^artikel/retirement-party-ide-perayaan-pensiun-menghargai-perjalanan-karyawan/?$ /artikel/retirement-celebration-cara-mengadakan-acara-pensiun-penuh-apresiasi [R=301,L,NE]
+
 # Konten publik dari database (Manajemen Konten): daftar dan detail dilayani satu halaman konten.html
 RewriteRule ^(artikel|bantuan|tutorial)/?$ konten.html [L,QSA]
 RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
