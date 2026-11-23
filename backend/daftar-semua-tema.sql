@@ -151,6 +151,21 @@ from src
 where not exists (select 1 from public.templates t where t.slug = 'nusa-neon-cosplay');
 
 
+-- ==== daftar-tema-seminar.sql ====
+-- Daftarkan template Essential "Seminar & Konferensi 2D" (jalankan sekali di Supabase > SQL Editor).
+-- Menyalin baris "nusa-kpop-party" (layout, harga, bahasa) lalu mengganti nama, slug, kategori, tema, dan gambar.
+-- Aman dijalankan ulang: baris yang sudah ada dilewati.
+with src as (select * from public.templates where slug = 'nusa-kpop-party')
+insert into public.templates (slug, name, description, thumbnail_url, preview_url, package_type, categories, category_id, theme_key, status, sort, price, layout, capabilities, languages, default_language, featured, recommended, version, published_at)
+select 'nusa-seminar-konferensi', 'Seminar & Konferensi 2D',
+       'Seminar & Konferensi: aula modern berlayar LED biru dengan tata lampu sorot, booth registrasi, photo booth, food booth, serta peserta berlanyard yang profesional.',
+       '/assets/invite/themes/seminar-konferensi/thumb.webp', '/undangan?demo=1&theme=seminar-konferensi',
+       'essential', '{other}'::text[], (select id from public.event_categories where slug = 'other'), 'seminar-konferensi', 'published', 0,
+       src.price, src.layout, src.capabilities, src.languages, src.default_language, false, false, 1, now()
+from src
+where not exists (select 1 from public.templates t where t.slug = 'nusa-seminar-konferensi');
+
+
 -- Urutkan katalog Essential dari yang paling baru.
 -- Halaman template membaca urutan dari kolom "sort" (kecil = tampil lebih dulu),
 -- jadi kita beri nomor ulang: template terbaru mendapat sort terkecil.

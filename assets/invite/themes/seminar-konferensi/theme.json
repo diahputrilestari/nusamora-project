@@ -1,0 +1,180 @@
+{
+  "id": "seminar-konferensi",
+  "name": "Seminar & Konferensi – Auditorium Biru",
+  "version": 1,
+  "description": "Seminar & Konferensi: aula modern berlayar LED biru dengan tata lampu sorot, booth registrasi, photo booth, food booth, serta peserta berlanyard yang profesional.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Nusa Summit",
+    "full": "Seminar Nasional Transformasi Digital 2027",
+    "parents": "Diselenggarakan oleh Nusa Business Forum",
+    "title": "Seminar Nasional Transformasi Digital 2027",
+    "eventName": "Seminar Nasional",
+    "start": "08:30",
+    "end": "15:30",
+    "venue": "Nusa Convention Hall",
+    "address": "Jl. Jenderal Sudirman No. 45, Setiabudi, Jakarta Selatan 12930",
+    "maps": "https://zoom.us/join",
+    "bank": "BCA",
+    "holder": "Panitia Nusa Business Forum",
+    "giftAddress": "Sekretariat Nusa Business Forum, Jl. Jenderal Sudirman No. 45, Jakarta Selatan 12930",
+    "welcome": "Bapak/Ibu/Saudara/i diundang menghadiri Seminar Nasional Transformasi Digital 2027, menghadirkan para praktisi dan pemimpin industri untuk berbagi strategi, studi kasus, dan peluang kolaborasi. Kuota terbatas, silakan konfirmasi kehadiran Anda.",
+    "quote": "Perubahan terbaik dimulai dari ruang yang mempertemukan gagasan dan orang yang tepat.",
+    "quoteSource": "Nusa Business Forum",
+    "closing": "Terima kasih atas kehadiran dan partisipasi Anda. Sampai jumpa di seminar kami berikutnya.",
+    "story": [
+      {
+        "date": "08.30",
+        "title": "Registrasi & Welcome Coffee",
+        "text": "Check-in peserta, penukaran ID card, dan networking pembuka."
+      },
+      {
+        "date": "10.00",
+        "title": "Keynote & Panel Diskusi",
+        "text": "Sesi utama bersama pembicara dari berbagai industri, diakhiri tanya jawab."
+      },
+      {
+        "date": "13.00",
+        "title": "Workshop & Networking Lunch",
+        "text": "Sesi praktik terarah, makan siang, dan penutupan acara."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Andi Prasetyo (PT Nusa Teknologi)",
+        "message": "Terima kasih undangannya. Kami siap hadir dan menantikan sesi keynote.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Maya Sari (Konsultan)",
+        "message": "Hadir bersama dua rekan. Semoga acaranya lancar dan bermanfaat!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Rudi Hartono",
+        "message": "Mohon maaf belum bisa hadir. Mohon dikirimkan materi seminarnya.",
+        "attendance": "tidak"
+      }
+    ],
+    "annual": ""
+  },
+  "colors": {
+    "deep": "#1E2F7A",
+    "deep2": "#3E5BD0",
+    "paper": "#F7F9FF",
+    "ink": "#14204A",
+    "muted": "#5A6590",
+    "accent": "#C9A24A",
+    "accent2": "#F2E0AC",
+    "soft": "#EAF0FF",
+    "petal": "#7FA6F0",
+    "heading": "#1E2F7A"
+  },
+  "fonts": {
+    "script": "Cormorant Garamond",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "dot",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Seminar Nasional",
+    "guestSalute": "Yth.",
+    "guestDefault": "Peserta Seminar",
+    "profileEyebrow": "Penyelenggara",
+    "profileTitle": "Nusa Business Forum",
+    "countdownEyebrow": "Seminar dimulai dalam",
+    "countdownTitle": "Menuju Hari Seminar",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Waktu & Lokasi",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Susunan Acara",
+    "galleryEyebrow": "Dokumentasi",
+    "galleryTitle": "Galeri Seminar",
+    "rsvpEyebrow": "Registrasi",
+    "rsvpTitle": "Konfirmasi Kehadiran",
+    "rsvpLead": "Mohon konfirmasi kehadiran Anda agar panitia dapat menyiapkan ID card, materi, dan konsumsi.",
+    "giftEyebrow": "Kontribusi",
+    "giftTitle": "Dukung Acara",
+    "giftLead": "Dukungan untuk penyelenggaraan seminar dapat disalurkan melalui:",
+    "wishesEyebrow": "Pesan peserta",
+    "wishesTitle": "Pesan & Harapan",
+    "closingEyebrow": "Sampai jumpa di seminar berikutnya",
+    "closingText": "Terima kasih atas kehadiran dan partisipasi Anda."
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1600
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1600
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/banner.webp",
+    "heading": "art/layar-presentasi.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/kamera.webp",
+        "w": 46
+      },
+      {
+        "src": "art/food-booth.webp",
+        "w": 118
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 96
+      }
+    ],
+    "eventBadge": "art/id-card.webp",
+    "storyTop": "art/podium.webp",
+    "rsvpHang": "art/banner.webp",
+    "giftTop": "art/message-wall.webp",
+    "wishesTop": "art/booth-registrasi.webp",
+    "closingScene": "art/area-istirahat.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
