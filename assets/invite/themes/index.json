@@ -290,7 +290,7 @@
     "little-hydrangea": "little-hydrangea",
     "india": "little-india17",
     "sweet17": "little-india17",
-    "sweet-17": "little-india17",
+    "sweet-17": "pink-paradise",
     "sweet-seventeen": "little-india17",
     "bollywood": "little-india17",
     "little-india17": "little-india17",
@@ -392,7 +392,11 @@
     "pengajian": "isra-mikraj-maulid",
     "hari-guru-nasional": "hari-guru",
     "guru": "hari-guru",
-    "25-november": "hari-guru"
+    "25-november": "hari-guru",
+    "pink-paradise": "pink-paradise",
+    "pink-beach": "pink-paradise",
+    "tropical-birthday": "pink-paradise",
+    "pantai-pink": "pink-paradise"
   },
   "themes": [
     {
@@ -1557,6 +1561,20 @@
       "swatch": [
         "#6B2E9A",
         "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "pink-paradise",
+      "name": "Pink Paradise – Ulang Tahun Pantai Tropis",
+      "description": "Pink Paradise: pesta ulang tahun pantai tropis pink saat matahari terbenam, dengan pelengkung berlampu, pohon kelapa, bunga hibiscus, flamingo, papan selancar, booth tiki, serta tamu chibi berbusana liburan pink.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#C2306A",
+        "#E3A049"
       ],
       "art": true
     }
