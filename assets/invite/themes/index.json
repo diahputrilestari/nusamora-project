@@ -400,7 +400,9 @@
     "robot-factory": "robot-factory",
     "robot": "robot-factory",
     "pabrik-robot": "robot-factory",
-    "robot-party": "robot-factory"
+    "robot-party": "robot-factory",
+    "dino-adventure": "dino-adventure",
+    "dino-park": "dino-adventure"
   },
   "themes": [
     {
@@ -1593,6 +1595,20 @@
       "swatch": [
         "#1F3F9E",
         "#F5B31B"
+      ],
+      "art": true
+    },
+    {
+      "id": "dino-adventure",
+      "name": "Dino Adventure – Ulang Tahun Petualangan Dinosaurus",
+      "description": "Dino Adventure: pesta ulang tahun petualangan dinosaurus di hutan prasejarah dengan gerbang batu, air terjun, T-rex dan triceratops, booth safari, serta tamu chibi berpakaian penjelajah.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#3E6B2A",
+        "#E0A526"
       ],
       "art": true
     }
