@@ -24,3 +24,68 @@
 .th-esport-arena .end-art .cp .art, .th-esport-arena .end-art .cp .art:first-child { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .75)); }
 .th-esport-arena .end-art .cp .art, .th-esport-arena .end-art .cp .art:first-child { height: clamp(112px, 35vw, 150px); }
 .th-esport-arena .gf-amp { width: min(150px, 46vw); }
+
+/* ===== Versi meriah: latar neon arena yang hidup ===== */
+.th-esport-arena .sec { --secbg: #150c42; color: #fff;
+  background:
+    radial-gradient(60% 38% at 12% 8%, rgba(47, 196, 238, .42), transparent 72%),
+    radial-gradient(55% 40% at 92% 32%, rgba(168, 70, 255, .46), transparent 72%),
+    radial-gradient(62% 42% at 18% 88%, rgba(255, 64, 170, .32), transparent 72%),
+    linear-gradient(180deg, #150c42, #0b0627); }
+.th-esport-arena .sec.paper { --secbg: #1a1050;
+  background:
+    radial-gradient(58% 36% at 88% 6%, rgba(255, 64, 170, .38), transparent 72%),
+    radial-gradient(60% 42% at 8% 40%, rgba(47, 196, 238, .38), transparent 72%),
+    radial-gradient(55% 40% at 85% 92%, rgba(123, 63, 228, .5), transparent 72%),
+    repeating-linear-gradient(0deg, rgba(120, 190, 255, .07) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(90deg, rgba(120, 190, 255, .07) 0 1px, transparent 1px 44px),
+    linear-gradient(180deg, #1a1050, #0d0830); }
+.th-esport-arena .sec.deep { --secbg: #2a1478;
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(47, 196, 238, .45), transparent 70%),
+    radial-gradient(65% 45% at 10% 90%, rgba(255, 64, 170, .42), transparent 72%),
+    radial-gradient(60% 45% at 95% 80%, rgba(123, 63, 228, .55), transparent 72%),
+    linear-gradient(180deg, #2a1478, #120a3a); }
+/* kilau bintang berkedip */
+.th-esport-arena .sec::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(2px 2px at 8% 12%, #fff, transparent 60%), radial-gradient(3px 3px at 24% 30%, #7fe3ff, transparent 60%),
+    radial-gradient(2px 2px at 41% 8%, #ff8fd8, transparent 60%), radial-gradient(3px 3px at 63% 22%, #fff, transparent 60%),
+    radial-gradient(2px 2px at 82% 14%, #7fe3ff, transparent 60%), radial-gradient(3px 3px at 92% 44%, #ff8fd8, transparent 60%),
+    radial-gradient(2px 2px at 14% 58%, #fff, transparent 60%), radial-gradient(3px 3px at 52% 50%, #7fe3ff, transparent 60%),
+    radial-gradient(2px 2px at 76% 66%, #fff, transparent 60%), radial-gradient(3px 3px at 33% 78%, #ff8fd8, transparent 60%),
+    radial-gradient(2px 2px at 88% 88%, #7fe3ff, transparent 60%), radial-gradient(3px 3px at 6% 92%, #fff, transparent 60%);
+  animation: es-twinkle 3.2s ease-in-out infinite alternate; }
+@keyframes es-twinkle { from { opacity: .25; } to { opacity: 1; } }
+/* garis cahaya neon melintas di tepi atas */
+.th-esport-arena .sec::before { filter: drop-shadow(0 -2px 6px rgba(47, 196, 238, .8)); }
+.th-esport-arena .sec > .wrap, .th-esport-arena .sec .wrap { position: relative; z-index: 1; }
+/* teks di atas latar gelap */
+.th-esport-arena .sec .st, .th-esport-arena .sec .nm, .th-esport-arena .sec h2 { color: #fff; text-shadow: 0 0 14px rgba(47, 196, 238, .75), 0 0 32px rgba(168, 70, 255, .55); }
+.th-esport-arena .sec .eb { color: #7fe3ff; text-shadow: 0 0 10px rgba(47, 196, 238, .9); }
+.th-esport-arena .sec .lead, .th-esport-arena .sec .lead.lt { color: rgba(238, 240, 255, .92); }
+.th-esport-arena .sec .quote, .th-esport-arena .sec blockquote, .th-esport-arena .sec .qt { color: #fff; }
+.th-esport-arena .sec .fl, .th-esport-arena .sec .by, .th-esport-arena .sec .src { color: #7fe3ff; }
+.th-esport-arena .sec .cd-b b, .th-esport-arena .sec .cd b { color: #fff; text-shadow: 0 0 12px rgba(47, 196, 238, .9); }
+/* kartu bercahaya */
+.th-esport-arena .tl-c, .th-esport-arena .card { border: 1px solid rgba(127, 227, 255, .55);
+  box-shadow: 0 0 0 1px rgba(168, 70, 255, .35), 0 0 22px rgba(47, 196, 238, .38), 0 18px 44px rgba(5, 2, 30, .55); }
+.th-esport-arena .tl-dot { box-shadow: 0 0 12px rgba(47, 196, 238, .95); }
+.th-esport-arena .tl-line { filter: drop-shadow(0 0 5px rgba(47, 196, 238, .9)); }
+/* tombol berdenyut */
+.th-esport-arena .btn { box-shadow: 0 0 18px rgba(47, 196, 238, .65), 0 8px 22px rgba(5, 2, 30, .5); }
+.th-esport-arena .cv-bt, .th-esport-arena .cover .btn { animation: es-pulse 1.8s ease-in-out infinite; }
+@keyframes es-pulse { 0%, 100% { box-shadow: 0 0 14px rgba(47, 196, 238, .6), 0 8px 22px rgba(5, 2, 30, .5); } 50% { box-shadow: 0 0 34px rgba(255, 90, 200, .95), 0 8px 22px rgba(5, 2, 30, .5); } }
+/* ilustrasi melayang pelan */
+.th-esport-arena .gf-amp, .th-esport-arena .ws-bk, .th-esport-arena .st-kf, .th-esport-arena .ulos-dec { animation: es-float 4.5s ease-in-out infinite alternate; filter: drop-shadow(0 0 14px rgba(120, 90, 255, .65)); }
+@keyframes es-float { from { translate: 0 -5px; } to { translate: 0 5px; } }
+@media (prefers-reduced-motion: reduce) { .th-esport-arena .sec::after, .th-esport-arena .cover .btn, .th-esport-arena .gf-amp, .th-esport-arena .ws-bk, .th-esport-arena .st-kf { animation: none; } }
+/* perbaikan kontras di latar gelap */
+.th-esport-arena .qt p { color: #fff; text-shadow: 0 0 16px rgba(47, 196, 238, .6); }
+.th-esport-arena .qt cite { color: #7fe3ff; }
+.th-esport-arena .sec { --ink: #F1F0FF; --muted: rgba(226, 228, 255, .82); --heading: #fff; }
+.th-esport-arena .card, .th-esport-arena .tl-c, .th-esport-arena .card * { --ink: #1D1642; --muted: #5E5A8C; --heading: #4B22B0; }
+.th-esport-arena .card .btn.ghost, .th-esport-arena .card { color: #1D1642; }
+.th-esport-arena .sec .pf-nm, .th-esport-arena .sec .pf-pr, .th-esport-arena .sec h3 { color: #fff; }
+.th-esport-arena .tl-c h3 { color: #4B22B0; text-shadow: none; }
+.th-esport-arena .card h2, .th-esport-arena .card h3, .th-esport-arena .card .st { color: #4B22B0; text-shadow: none; }
