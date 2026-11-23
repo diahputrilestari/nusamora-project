@@ -1,0 +1,26 @@
+/* Grand Opening: ukuran ilustrasi per slot */
+.th-robot-factory .ulos-dec { width: min(230px, 66vw); }
+.th-robot-factory .st-kf { width: min(110px, 34vw); margin-top: -6px; }
+.th-robot-factory .gf-amp { width: min(170px, 50vw); }
+.th-robot-factory .ws-bk { width: min(180px, 54vw); }
+.th-robot-factory .ev-lt { width: 30px; }
+.th-robot-factory .rs-lt { width: 34px; top: -26px; animation-name: bob2; }
+.th-robot-factory .cv-lt, .th-robot-factory .rs-lt { filter: drop-shadow(0 0 12px rgba(255, 210, 122, .7)); }
+.th-robot-factory .gable .art { height: 30px; }
+.th-robot-factory .jb-row { gap: 6px; align-items: flex-end; }
+.th-robot-factory .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-robot-factory .pf-ph.fig .art { object-position: 50% 30%; }
+/* penutup: si kecil duduk di bawah gazebo bertirai */
+.th-robot-factory .end-art { width: min(300px, 80%); margin-bottom: 26px; }
+.th-robot-factory .end-art .eg { filter: drop-shadow(0 18px 30px rgba(10, 18, 56, .3)); }
+.th-robot-factory .end-art .cp { bottom: 6%; }
+.th-robot-factory .end-art .cp .art, .th-robot-factory .end-art .cp .art:first-child { height: clamp(96px, 30vw, 128px); }
+@keyframes bob2 { from { translate: 0 -4px; rotate: -3deg; } to { translate: 0 4px; rotate: 3deg; } }
+.th-robot-factory .gate::after { background: radial-gradient(64% 50% at 50% 46%, rgba(14, 28, 80, .5), rgba(14, 28, 80, .2) 72%), linear-gradient(180deg, rgba(14, 28, 80, .14), rgba(14, 28, 80, .62)); }
+.th-robot-factory .cv-nm, .th-robot-factory .hero-nm, .th-robot-factory .end-nm { text-shadow: 0 2px 0 rgba(10, 18, 56, .55), 0 0 18px rgba(255, 225, 150, .5); }
+.th-robot-factory .cv-dt, .th-robot-factory .cv-eb { color: #FFF0C8; font-weight: 600; }
+.th-robot-factory .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(10, 18, 56, .9); }
+.th-robot-factory .cv-gi { filter: drop-shadow(0 0 5px rgba(255, 240, 200, .9)) drop-shadow(0 0 12px rgba(246, 220, 152, .5)); }
+.th-robot-factory .end-art .cp .art, .th-robot-factory .end-art .cp .art:first-child { filter: drop-shadow(0 0 6px rgba(255, 240, 200, .75)); }
+.th-robot-factory .end-art .cp .art, .th-robot-factory .end-art .cp .art:first-child { height: clamp(112px, 35vw, 150px); }
+.th-robot-factory .gf-amp { width: min(150px, 46vw); }

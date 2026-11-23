@@ -1,0 +1,159 @@
+{
+  "id": "robot-factory",
+  "name": "Robot Factory – Ulang Tahun Pabrik Robot",
+  "version": 1,
+  "description": "Robot Factory: pesta ulang tahun pabrik robot biru-kuning dengan panggung gerigi, jendela kota futuristik, drone dan lengan robot, booth robot lucu, serta tamu chibi berseragam teknisi.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Rafa",
+    "full": "Rafa Aditya Pratama",
+    "parents": "Putra kebanggaan Bapak Dimas & Ibu Rania",
+    "age": "7",
+    "title": "Ulang Tahun Rafa – Robot Factory",
+    "eventName": "Robot Factory Birthday Party",
+    "start": "14:00",
+    "end": "17:30",
+    "venue": "Kids Tech Playhouse",
+    "address": "Jl. Inovasi No. 12, Cikarang Utara, Bekasi 17530",
+    "welcome": "Rafa genap 7 tahun! Yuk ikut merakit keseruan di Robot Factory: bikin robot mini, main di arena gerigi, dan tiup lilin bersama. Dress code: biru, kuning, dan gaya teknisi robot!",
+    "quote": "Setiap anak adalah penemu kecil yang membangun mimpi besar.",
+    "quoteSource": "Ayah & Bunda",
+    "closing": "Terima kasih sudah ikut merayakan hari spesial Rafa. Sampai jumpa di Robot Factory!",
+    "story": [
+      {
+        "date": "14.00",
+        "title": "Registrasi Teknisi",
+        "text": "Ambil name tag teknisi, foto di photo booth robot, dan kenalan dengan teman baru."
+      },
+      {
+        "date": "15.00",
+        "title": "Workshop Robot Mini",
+        "text": "Merakit robot mini, bermain di arena gerigi, dan berburu hadiah kejutan."
+      },
+      {
+        "date": "16.30",
+        "title": "Tiup Lilin",
+        "text": "Momen puncak: kue robot, doa, dan kejutan untuk Rafa."
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#1F3F9E",
+    "deep2": "#4A72E0",
+    "paper": "#F5F7FC",
+    "ink": "#1B2347",
+    "muted": "#5A6590",
+    "accent": "#F5B31B",
+    "accent2": "#FFE08A",
+    "soft": "#E9EEFB",
+    "petal": "#7DA2F0",
+    "heading": "#1F3F9E"
+  },
+  "fonts": {
+    "script": "Fredoka",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Robot Factory Birthday Party",
+    "guestSalute": "Hai, teknisi cilik",
+    "guestDefault": "Sahabat Rafa",
+    "profileEyebrow": "Sang bintang pesta",
+    "profileTitle": "Happy Birthday!",
+    "countdownEyebrow": "Pabrik dibuka dalam",
+    "countdownTitle": "Menuju Hari Spesial",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Lokasi Pesta",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Alur Acara",
+    "galleryEyebrow": "Momen bersama",
+    "galleryTitle": "Galeri Foto",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Merakit Robot?",
+    "rsvpLead": "Kabari kami agar panitia bisa menyiapkan tempat, perlengkapan workshop, dan konsumsi untukmu.",
+    "giftEyebrow": "Tanda cinta",
+    "giftTitle": "Hadiah & Kado",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terbaik. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Pesan & doa",
+    "wishesTitle": "Ucapan Selamat",
+    "closingEyebrow": "See you at the factory!",
+    "closingText": "Terima kasih sudah merayakan hari spesial ini. Sampai jumpa di Robot Factory!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/panji.webp",
+    "heading": "art/balon-robot.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/roket.webp",
+        "w": 46
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/lengan-robot.webp",
+    "storyTop": "art/kue-robot.webp",
+    "rsvpHang": "art/panji.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gerbang.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
