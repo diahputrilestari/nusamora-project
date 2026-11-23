@@ -5,7 +5,7 @@
 alter table public.live_venues add column if not exists event_type text, add column if not exists nm_theme jsonb, add column if not exists bg_pos text;
 do $$ begin
   alter table public.live_venues drop constraint if exists live_venues_event_type_chk;
-  alter table public.live_venues add constraint live_venues_event_type_chk check (event_type is null or event_type in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'corporate'));
+  alter table public.live_venues add constraint live_venues_event_type_chk check (event_type is null or event_type in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'pinkparadise', 'littlescientist', 'robotfactory', 'tamanperi', 'corporate'));
   if not exists (select 1 from pg_constraint where conname = 'live_venues_bg_pos_chk') then
     alter table public.live_venues add constraint live_venues_bg_pos_chk check (bg_pos is null or bg_pos ~ '^[a-z0-9 %.-]{3,30}$'); end if;
 end $$;
@@ -49,7 +49,7 @@ begin
   if coalesce(p ->> 'key', '') !~ '^[a-z0-9][a-z0-9-]{1,38}$' then raise exception 'kunci_tidak_valid'; end if;
   if coalesce((p ->> 'max_guests')::int, 300) not between 1 and 5000 then raise exception 'kapasitas_tidak_valid'; end if;
   if p ->> 'background_url' is not null and p ->> 'background_url' !~ '^(https://|/)' then raise exception 'url_tidak_valid'; end if;
-  if nullif(p ->> 'event_type', '') is not null and (p ->> 'event_type') not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'corporate') then raise exception 'jenis_acara_tidak_valid'; end if;
+  if nullif(p ->> 'event_type', '') is not null and (p ->> 'event_type') not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'pinkparadise', 'littlescientist', 'robotfactory', 'tamanperi', 'corporate') then raise exception 'jenis_acara_tidak_valid'; end if;
   if nullif(p ->> 'bg_pos', '') is not null and (p ->> 'bg_pos') !~ '^[a-z0-9 %.-]{3,30}$' then raise exception 'posisi_tidak_valid'; end if;
   if not public.live_theme_ok(th) then raise exception 'tema_tidak_valid'; end if;
   if v_id is null then
@@ -78,7 +78,7 @@ begin
   if v.id is null or v.nm_theme is null then return null; end if;
   select left(title, 60), event_type into ttl, ev from public.invitations where id = c.inv;
   if v.event_type is not null then ev := v.event_type; end if;
-  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'corporate') then ev := null; end if;
+  if ev is null or ev not in ('wedding', 'engagement', 'birthday', 'sweet17', 'aqiqah', 'graduation', 'manasik', 'moveon', 'kemerdekaan', 'kartini', 'hardiknas', 'pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'pinkparadise', 'littlescientist', 'robotfactory', 'tamanperi', 'corporate') then ev := null; end if;
   return jsonb_build_object('id', 'v-' || v.key, 'name', v.name, 'event', ev, 'host', ttl, 'painting', v.background_url, 'pos', v.bg_pos, 'theme', v.nm_theme);
 end $$;
 revoke all on function public.live_theme(text) from public;
