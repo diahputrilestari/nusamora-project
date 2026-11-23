@@ -409,7 +409,13 @@
     "e-sport": "esport-arena",
     "turnamen-esport": "esport-arena",
     "gaming": "esport-arena",
-    "turnamen-gaming": "esport-arena"
+    "turnamen-gaming": "esport-arena",
+    "neon-cosplay": "neon-cosplay",
+    "cosplay": "neon-cosplay",
+    "cosplay-gathering": "neon-cosplay",
+    "neon-anime": "neon-cosplay",
+    "anime-gathering": "neon-cosplay",
+    "anime": "neon-cosplay"
   },
   "themes": [
     {
@@ -1630,6 +1636,20 @@
       "swatch": [
         "#4B22B0",
         "#2FC4EE"
+      ],
+      "art": true
+    },
+    {
+      "id": "neon-cosplay",
+      "name": "Neon Cosplay – Anime Gathering",
+      "description": "Neon Cosplay: pertemuan komunitas cosplay anime bernuansa neon ungu-pink, panggung bersakura dengan gerbang torii, booth lampion, serta kostum chibi.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#5B2BB8",
+        "#FF7BC8"
       ],
       "art": true
     }
