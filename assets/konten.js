@@ -60,6 +60,18 @@
     seo({ title: "Tidak ditemukan | NusaMora", description: "", noindex: true });
     view.innerHTML = '<div class="kt-w"><div class="card kt-empty"><h1>Halaman tidak ditemukan</h1><p>Konten yang Anda cari belum tersedia atau sudah tidak tayang.</p><p><a class="btn" href="/">Kembali ke beranda</a></p></div></div>';
   }
+  function faqLd(body) {
+    var m = /(?:^|\n)## Pertanyaan yang sering diajukan\s*\n([\s\S]*?)(?=\n## |$)/.exec(String(body || ""));
+    if (!m) return [];
+    var clean = function (t) { return t.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[*_`>#]/g, "").replace(/\s+/g, " ").trim(); };
+    var out = [], parts = ("\n" + m[1]).split(/\n### /);
+    for (var i = 1; i < parts.length; i++) {
+      var nl = parts[i].indexOf("\n"); if (nl < 0) continue;
+      var q = clean(parts[i].slice(0, nl)), a = clean(parts[i].slice(nl));
+      if (q && a) out.push({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } });
+    }
+    return out.length ? [{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: out }] : [];
+  }
   function showOne(c, pv) {
     var title = c.seo_title || c.title, desc = c.seo_description || c.excerpt || plain(c.body).slice(0, 155), img = c.og_image_url || c.image_url || "";
     var canon = c.canonical_url || urlFor(c.type, c.slug, c.lang);
@@ -71,7 +83,7 @@
       var au = { "@type": "Organization", name: String(c.author || "NusaMora") };
       seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: safeUrl(img), lang: c.lang, og: "article", alternates: alts.length > 1 ? alts : [],
         ld: pv ? null : [{ "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: safeUrl(img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at || c.published_at, articleSection: info.cat, wordCount: info.words, author: au, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora", logo: { "@type": "ImageObject", url: origin + "/assets/logo-nusamora.png" } } },
-          { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: origin + "/" }, { "@type": "ListItem", position: 2, name: "Artikel", item: origin + "/artikel" }, { "@type": "ListItem", position: 3, name: info.cat, item: origin + "/artikel?kat=" + encodeURIComponent(info.cat) }, { "@type": "ListItem", position: 4, name: c.title, item: canon }] }] });
+          { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: origin + "/" }, { "@type": "ListItem", position: 2, name: "Artikel", item: origin + "/artikel" }, { "@type": "ListItem", position: 3, name: info.cat, item: origin + "/artikel?kat=" + encodeURIComponent(info.cat) }, { "@type": "ListItem", position: 4, name: c.title, item: canon }] }].concat(faqLd(c.body)) });
       return;
     }
     var sw = (c.alternates || [])[0];
