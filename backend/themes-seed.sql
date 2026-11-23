@@ -88,7 +88,8 @@ with t(slug, name, cats, description, sort) as (values
   ('pink-paradise', 'Pink Paradise – Ulang Tahun Pantai Tropis', '{birthday}'::text[],                        'Pink Paradise: pesta ulang tahun pantai tropis pink saat matahari terbenam, dengan pelengkung berlampu, pohon kelapa, bunga hibiscus, flamingo, papan selancar, booth tiki, serta tamu chibi berbusana liburan pink.', 112),
   ('robot-factory', 'Robot Factory – Ulang Tahun Pabrik Robot', '{birthday}'::text[],                        'Robot Factory: pesta ulang tahun pabrik robot biru-kuning dengan panggung gerigi, jendela kota futuristik, drone dan lengan robot, booth robot lucu, serta tamu chibi berseragam teknisi.', 113),
   ('dino-jungle', 'Dino Jungle – Ulang Tahun Hutan Dinosaurus', '{birthday}'::text[],                        'Dino Jungle: pesta ulang tahun penjelajah hutan dinosaurus dengan gerbang batu raksasa, air terjun, T-rex dan triceratops, booth safari berobor, serta tamu chibi berpakaian penjelajah.', 114),
-  ('esport-arena', 'E-Sport Arena – Turnamen Gaming', '{other}'::text[],                           'E-Sport Arena: turnamen e-sport di arena neon ungu-biru dengan layar raksasa, panggung berlampu sorot, booth gaming, serta tim pemain chibi berheadset.', 115)
+  ('esport-arena', 'E-Sport Arena – Turnamen Gaming', '{other}'::text[],                           'E-Sport Arena: turnamen e-sport di arena neon ungu-biru dengan layar raksasa, panggung berlampu sorot, booth gaming, serta tim pemain chibi berheadset.', 115),
+  ('neon-cosplay', 'Neon Cosplay – Anime Gathering', '{other}'::text[], 'Neon Cosplay: pertemuan komunitas cosplay anime bernuansa neon ungu-pink, panggung bersakura dengan gerbang torii, booth lampion, serta kostum chibi.', 116)
 
 
 

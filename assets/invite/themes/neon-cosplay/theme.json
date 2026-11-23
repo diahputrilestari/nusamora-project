@@ -1,0 +1,179 @@
+{
+  "id": "neon-cosplay",
+  "name": "Neon Cosplay – Anime Gathering",
+  "version": 1,
+  "description": "Neon Cosplay: pertemuan komunitas cosplay anime bernuansa neon ungu-pink, panggung bersakura dengan gerbang torii, booth lampion, serta kostum chibi.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Nusa Cosplay",
+    "full": "Nusa Cosplay Gathering 2027",
+    "parents": "Diselenggarakan oleh Nusa Anime Community",
+    "title": "Nusa Cosplay Gathering 2027",
+    "eventName": "Cosplay Gathering Virtual",
+    "start": "13:00",
+    "end": "21:00",
+    "annual": "",
+    "venue": "Nusa Neon Hall (Virtual Venue)",
+    "address": "Jl. Sakura Raya No. 8, Kemang, Jakarta Selatan 12730",
+    "bank": "BCA",
+    "holder": "Nusa Anime Community",
+    "giftAddress": "Sekretariat Nusa Anime Community, Jl. Sakura Raya No. 8, Jakarta Selatan 12730",
+    "welcome": "Kenakan kostum favoritmu! Nusa Cosplay Gathering 2027 hadir dengan parade kostum, photo booth bersakura, lomba cosplay, dan bazar kuliner Jepang. Datang, berfoto, dan berkenalan dengan sesama penggemar anime.",
+    "quote": "Jadilah karakter yang kamu cintai, lalu temukan teman yang mencintainya juga.",
+    "quoteSource": "Nusa Anime Community",
+    "closing": "Terima kasih sudah menjadi bagian dari gathering. Sampai jumpa di acara berikutnya, tetap bersinar!",
+    "story": [
+      {
+        "date": "13.00",
+        "title": "Registrasi & Photo Booth",
+        "text": "Check-in, tulis buku tamu, dan abadikan kostum di photo booth sakura."
+      },
+      {
+        "date": "15.00",
+        "title": "Parade & Lomba Cosplay",
+        "text": "Peserta tampil di panggung neon dan dinilai juri komunitas."
+      },
+      {
+        "date": "18.30",
+        "title": "Pengumuman Pemenang",
+        "text": "Penyerahan hadiah, sesi foto bersama, dan penutupan."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Hana (Cosplayer)",
+        "message": "Kostumnya sudah siap! Tidak sabar bertemu teman-teman semua.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Rafi (Pengunjung)",
+        "message": "Hadir buat foto bareng cosplayer favorit. Semangat panitia!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Dinda (Fotografer)",
+        "message": "Maaf kali ini belum bisa hadir. Sukses acaranya!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#5B2BB8",
+    "deep2": "#8A4DF0",
+    "paper": "#FBF1FA",
+    "ink": "#2A1250",
+    "muted": "#6E5A96",
+    "accent": "#FF7BC8",
+    "accent2": "#FFD1EC",
+    "soft": "#F5E6F7",
+    "petal": "#FF9AD5",
+    "heading": "#5B2BB8"
+  },
+  "fonts": {
+    "script": "Fredoka",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "petal",
+      "bloom",
+      "petal"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Cosplay Gathering",
+    "guestSalute": "Halo, cosplayer",
+    "guestDefault": "Cosplayer & Pengunjung",
+    "profileEyebrow": "Komunitas",
+    "profileTitle": "Nusa Cosplay",
+    "countdownEyebrow": "Gathering dimulai dalam",
+    "countdownTitle": "Menuju Hari Cosplay",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Lokasi Acara",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Rangkaian Acara",
+    "galleryEyebrow": "Momen cosplay",
+    "galleryTitle": "Galeri Cosplay",
+    "rsvpEyebrow": "Registrasi",
+    "rsvpTitle": "Daftar Hadir",
+    "rsvpLead": "Konfirmasi kehadiranmu agar panitia dapat menyiapkan area foto, merchandise, dan konsumsi.",
+    "giftEyebrow": "Dukungan",
+    "giftTitle": "Dukung Acara",
+    "giftLead": "Dukungan untuk hadiah lomba dan operasional acara dapat disalurkan melalui:",
+    "wishesEyebrow": "Pesan komunitas",
+    "wishesTitle": "Fan Letter",
+    "closingEyebrow": "Sampai jumpa di gathering berikutnya!",
+    "closingText": "Terima kasih sudah memeriahkan Cosplay Gathering. Tetap bersinar!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1600
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1600
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/topeng-kitsune.webp",
+    "heading": "art/headset.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/lightstick.webp",
+        "w": 44
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 80
+      }
+    ],
+    "eventBadge": "art/kipas.webp",
+    "storyTop": "art/kamera.webp",
+    "rsvpHang": "art/katana.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
