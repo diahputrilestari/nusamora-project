@@ -28,7 +28,7 @@ set decor = (
   from jsonb_each(v.decor) e
 ), updated_at = now()
 where v.decor is not null and jsonb_typeof(v.decor) = 'object' and v.decor <> '{}'::jsonb
-  and v.key not in ('pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'rustic-wedding', 'pinkparadise', 'littlescientist', 'robotfactory', 'tamanperi');  -- venue perayaan (batch 2): ukuran/posisi dekor diatur di admin-live-theme-<key>.sql
+  and v.key not in ('pramuka', 'rups', 'anniversary', 'grandopening', 'sumpahpemuda', 'nyepi', 'iduladha', 'halalbihalal', 'isramikraj', 'guru', 'legoland', 'bukapuasa', 'rustic-wedding', 'pinkparadise', 'littlescientist', 'robotfactory', 'tamanperi', 'jurassic', 'esport', 'cosplay', 'charityrun');  -- venue perayaan (batch 2): ukuran/posisi dekor diatur di admin-live-theme-<key>.sql
 
 -- Hardiknas & Kemerdekaan 17 Agustus: ukuran dekor disetel per sprite (posisi tetap bawaan Romantic Garden).
 update public.live_venues v set decor = v.decor
