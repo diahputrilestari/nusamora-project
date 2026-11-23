@@ -415,7 +415,13 @@
     "cosplay-gathering": "neon-cosplay",
     "neon-anime": "neon-cosplay",
     "anime-gathering": "neon-cosplay",
-    "anime": "neon-cosplay"
+    "anime": "neon-cosplay",
+    "seminar-konferensi": "seminar-konferensi",
+    "seminar": "seminar-konferensi",
+    "konferensi": "seminar-konferensi",
+    "webinar": "seminar-konferensi",
+    "workshop": "seminar-konferensi",
+    "business-summit": "seminar-konferensi"
   },
   "themes": [
     {
@@ -1650,6 +1656,20 @@
       "swatch": [
         "#5B2BB8",
         "#FF7BC8"
+      ],
+      "art": true
+    },
+    {
+      "id": "seminar-konferensi",
+      "name": "Seminar & Konferensi – Auditorium Biru",
+      "description": "Seminar & Konferensi: aula modern berlayar LED biru dengan tata lampu sorot, booth registrasi, photo booth, food booth, serta peserta berlanyard yang profesional.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1E2F7A",
+        "#C9A24A"
       ],
       "art": true
     }
