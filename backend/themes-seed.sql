@@ -87,7 +87,7 @@ with t(slug, name, cats, description, sort) as (values
   ('hari-guru', 'Hari Guru Nasional – 25 November', '{other}'::text[],                           'Hari Guru Nasional 25 November: panggung kayu ungu-krem dengan papan Ki Hajar Dewantara dan papan tulis ucapan, booth buku tamu, photo booth toga, galeri foto, kuliner, serta guru berbusana batik dan seragam ungu.', 111),
   ('pink-paradise', 'Pink Paradise – Ulang Tahun Pantai Tropis', '{birthday}'::text[],                        'Pink Paradise: pesta ulang tahun pantai tropis pink saat matahari terbenam, dengan pelengkung berlampu, pohon kelapa, bunga hibiscus, flamingo, papan selancar, booth tiki, serta tamu chibi berbusana liburan pink.', 112),
   ('robot-factory', 'Robot Factory – Ulang Tahun Pabrik Robot', '{birthday}'::text[],                        'Robot Factory: pesta ulang tahun pabrik robot biru-kuning dengan panggung gerigi, jendela kota futuristik, drone dan lengan robot, booth robot lucu, serta tamu chibi berseragam teknisi.', 113),
-  ('dino-adventure', 'Dino Adventure – Ulang Tahun Petualangan Dinosaurus', '{birthday}'::text[],                        'Dino Adventure: pesta ulang tahun petualangan dinosaurus di hutan prasejarah dengan gerbang batu, air terjun, T-rex dan triceratops, booth safari, serta tamu chibi berpakaian penjelajah.', 114)
+  ('dino-jungle', 'Dino Jungle – Ulang Tahun Hutan Dinosaurus', '{birthday}'::text[],                        'Dino Jungle: pesta ulang tahun penjelajah hutan dinosaurus dengan gerbang batu raksasa, air terjun, T-rex dan triceratops, booth safari berobor, serta tamu chibi berpakaian penjelajah.', 114)
 
 
 

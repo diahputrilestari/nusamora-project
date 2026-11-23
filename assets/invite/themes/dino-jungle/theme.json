@@ -1,0 +1,159 @@
+{
+  "id": "dino-jungle",
+  "name": "Dino Jungle – Ulang Tahun Hutan Dinosaurus",
+  "version": 1,
+  "description": "Dino Jungle: pesta ulang tahun penjelajah hutan dinosaurus dengan gerbang batu raksasa, air terjun, T-rex dan triceratops, booth safari berobor, serta tamu chibi berpakaian penjelajah.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Dimas",
+    "full": "Dimas Raka Pratama",
+    "parents": "Putra kebanggaan Bapak Arif & Ibu Maya",
+    "age": "6",
+    "title": "Ulang Tahun Dimas – Dino Adventure",
+    "eventName": "Dino Adventure Birthday Party",
+    "start": "09:00",
+    "end": "12:30",
+    "venue": "Taman Safari Mini",
+    "address": "Jl. Rimba Raya No. 6, Cibubur, Jakarta Timur 13720",
+    "welcome": "Dimas genap 6 tahun! Yuk ikut petualangan seru di Dino Adventure: cari telur dinosaurus, jelajah hutan prasejarah, dan tiup lilin bersama. Dress code: safari, hijau, dan coklat. Siapkan topi penjelajahmu!",
+    "quote": "Setiap petualangan besar dimulai dari rasa penasaran seorang anak kecil.",
+    "quoteSource": "Ayah & Bunda",
+    "closing": "Terima kasih sudah ikut berpetualang di hari spesial Dimas. Sampai jumpa di Dino Adventure!",
+    "story": [
+      {
+        "date": "09.00",
+        "title": "Registrasi Penjelajah",
+        "text": "Ambil topi dan name tag penjelajah, lalu foto di gerbang dinosaurus."
+      },
+      {
+        "date": "10.00",
+        "title": "Berburu Telur Dino",
+        "text": "Jelajah hutan, cari telur dinosaurus, dan kumpulkan hadiah kejutan."
+      },
+      {
+        "date": "11.30",
+        "title": "Tiup Lilin",
+        "text": "Momen puncak: kue dinosaurus, doa, dan kejutan untuk Dimas."
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#3E6B2A",
+    "deep2": "#6E9B4A",
+    "paper": "#FBF6EA",
+    "ink": "#2B2417",
+    "muted": "#7A6A4F",
+    "accent": "#E0A526",
+    "accent2": "#FFE29A",
+    "soft": "#F1EAD6",
+    "petal": "#A9C47A",
+    "heading": "#3E6B2A"
+  },
+  "fonts": {
+    "script": "Fredoka",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Dino Adventure Birthday Party",
+    "guestSalute": "Hai, penjelajah cilik",
+    "guestDefault": "Sahabat Dimas",
+    "profileEyebrow": "Sang bintang pesta",
+    "profileTitle": "Happy Birthday!",
+    "countdownEyebrow": "Petualangan dimulai dalam",
+    "countdownTitle": "Menuju Hari Spesial",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Lokasi Pesta",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Alur Acara",
+    "galleryEyebrow": "Momen bersama",
+    "galleryTitle": "Galeri Foto",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Ikut Berpetualang?",
+    "rsvpLead": "Kabari kami agar panitia bisa menyiapkan tempat, perlengkapan petualangan, dan konsumsi untukmu.",
+    "giftEyebrow": "Tanda cinta",
+    "giftTitle": "Hadiah & Kado",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terbaik. Bila ingin mengirim kado, bisa melalui:",
+    "wishesEyebrow": "Pesan & doa",
+    "wishesTitle": "Ucapan Selamat",
+    "closingEyebrow": "See you in the jungle!",
+    "closingText": "Terima kasih sudah merayakan hari spesial ini. Sampai jumpa di Dino Adventure!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/telur.webp",
+    "heading": "art/topi-safari.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-petunjuk.webp",
+        "w": 46
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 80
+      }
+    ],
+    "eventBadge": "art/tengkorak.webp",
+    "storyTop": "art/gunung-api.webp",
+    "rsvpHang": "art/telur.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
