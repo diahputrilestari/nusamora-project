@@ -1,0 +1,106 @@
+{
+  "id": "keliling-dunia",
+  "name": "Keliling Dunia Wedding",
+  "version": 1,
+  "description": "Pernikahan bertema keliling dunia: panggung marmer dengan kubah globe emas, Menara Eiffel, Colosseum, Santorini dan Gunung Fuji bersakura, koper vintage, serta pengantin chibi bergaya traveler.",
+  "categories": [
+    "wedding",
+    "engagement"
+  ],
+  "colors": {
+    "deep": "#25346B",
+    "deep2": "#3B4F9A",
+    "paper": "#FFF9F0",
+    "soft": "#FBE9EC",
+    "ink": "#1B2552",
+    "muted": "#6B6F8E",
+    "accent": "#C9A24A",
+    "accent2": "#F4DFA3",
+    "petal": "#F08CB2",
+    "heading": "#25346B"
+  },
+  "fonts": {
+    "script": "Great Vibes",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "petal",
+      "heart"
+    ],
+    "petalCount": 14
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrow": "The Wedding of",
+    "coupleEyebrow": "Pengantin",
+    "countdownTitle": "Menuju Hari Bahagia",
+    "storyEyebrow": "Perjalanan cinta kami",
+    "closingEyebrow": "Terima kasih"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/pasangan.webp",
+        "w": 185
+      }
+    ],
+    "introTop": "art/penunjuk-arah.webp",
+    "figureBride": "art/pengantin-wanita.webp",
+    "figureGroom": "art/pengantin-pria.webp",
+    "countdownRow": [
+      {
+        "src": "art/koper.webp",
+        "w": 44
+      },
+      {
+        "src": "art/meja-makan.webp",
+        "w": 118
+      },
+      {
+        "src": "art/kubah-eiffel.webp",
+        "w": 40
+      }
+    ],
+    "eventBadge": "art/paspor.webp",
+    "storyTop": "art/galeri-foto.webp",
+    "giftTop": "art/bantal-cincin.webp",
+    "wishesTop": "art/message-wall.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/pasangan.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

@@ -1,0 +1,21 @@
+/* Keliling Dunia: ukuran ilustrasi & sentuhan merah-emas */
+.th-keliling-dunia .ulos-dec { width: min(150px, 46vw); }
+.th-keliling-dunia .st-kf { width: min(170px, 50vw); margin-top: -6px; }
+.th-keliling-dunia .gf-amp { width: min(160px, 48vw); }
+.th-keliling-dunia .ws-bk { width: min(150px, 46vw); }
+.th-keliling-dunia .ev-lt { width: 30px; }
+.th-keliling-dunia .rs-lt { width: 54px; top: -30px; }
+.th-keliling-dunia .cv-lt { width: clamp(52px, 13vw, 72px); }
+.th-keliling-dunia .gable .art { height: 26px; }
+.th-keliling-dunia .jb-row { gap: 6px; align-items: flex-end; }
+.th-keliling-dunia .dv .orn { max-width: 220px; margin: 0 auto; }
+.th-keliling-dunia .end-art { width: min(320px, 84%); margin-bottom: 26px; }
+.th-keliling-dunia .end-art .eg { filter: drop-shadow(0 18px 28px rgba(20, 28, 66, .4)); }
+.th-keliling-dunia .deep .eb { color: #FFE9B8; }
+.th-keliling-dunia .cv-nm, .th-keliling-dunia .hero-nm, .th-keliling-dunia .end-nm { text-shadow: 0 2px 0 rgba(20, 28, 66, .5), 0 0 18px rgba(255, 214, 140, .5); }
+/* panggung terang di tengah backdrop: gelapkan bagian tengah agar nama terbaca */
+.th-keliling-dunia .gate::after { background: radial-gradient(64% 38% at 50% 30%, rgba(20, 28, 66, .82), rgba(20, 28, 66, .55) 58%, rgba(20, 28, 66, 0) 86%), radial-gradient(50% 30% at 50% 58%, rgba(20, 28, 66, .5), rgba(20, 28, 66, 0)), linear-gradient(180deg, rgba(20, 28, 66, .1), rgba(20, 28, 66, .3)); }
+.th-keliling-dunia .cv-dt { color: #FFF0C8; font-weight: 600; }
+.th-keliling-dunia .cv-eb { color: #FFE9B8; }
+/* Beranda: eyebrow tetap terbaca di atas panggung */
+.th-keliling-dunia .hero-in .eb { color: #FFE9B8; text-shadow: 0 1px 8px rgba(20, 28, 66, .9); }

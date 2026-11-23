@@ -421,7 +421,13 @@
     "konferensi": "seminar-konferensi",
     "webinar": "seminar-konferensi",
     "workshop": "seminar-konferensi",
-    "business-summit": "seminar-konferensi"
+    "business-summit": "seminar-konferensi",
+    "keliling-dunia": "keliling-dunia",
+    "world-tour": "keliling-dunia",
+    "around-the-world": "keliling-dunia",
+    "traveler-wedding": "keliling-dunia",
+    "travel-wedding": "keliling-dunia",
+    "wedding-keliling-dunia": "keliling-dunia"
   },
   "themes": [
     {
@@ -1670,6 +1676,21 @@
       "swatch": [
         "#1E2F7A",
         "#C9A24A"
+      ],
+      "art": true
+    },
+    {
+      "id": "keliling-dunia",
+      "name": "Keliling Dunia Wedding",
+      "description": "Pernikahan bertema keliling dunia: panggung marmer dengan kubah globe emas, Menara Eiffel, Colosseum, Santorini dan Gunung Fuji bersakura, koper vintage, serta pengantin chibi bergaya traveler.",
+      "categories": [
+        "wedding",
+        "engagement"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#25346B",
+        "#F08CB2"
       ],
       "art": true
     }
