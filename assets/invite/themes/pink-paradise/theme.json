@@ -1,0 +1,159 @@
+{
+  "id": "pink-paradise",
+  "name": "Pink Paradise – Ulang Tahun Pantai Tropis",
+  "version": 1,
+  "description": "Pink Paradise: pesta ulang tahun pantai tropis pink saat matahari terbenam, dengan pelengkung berlampu, pohon kelapa, bunga hibiscus, flamingo, papan selancar, booth tiki, serta tamu chibi berbusana liburan pink.",
+  "categories": [
+    "birthday"
+  ],
+  "demo": {
+    "name": "Chelsea",
+    "full": "Chelsea Anindya Putri",
+    "parents": "Putri kesayangan Bapak Reza & Ibu Dinda",
+    "age": "17",
+    "title": "Sweet 17 Chelsea – Pink Paradise",
+    "eventName": "Pink Paradise Sweet 17 Party",
+    "start": "16:00",
+    "end": "20:30",
+    "venue": "Sunset Beach Club",
+    "address": "Jl. Pantai Indah No. 8, Ancol, Jakarta Utara 14430",
+    "welcome": "Chelsea genap 17 tahun! Yuk rayakan di Pink Paradise: pesta pantai pink dengan sunset, musik, dan banyak kejutan. Dress code: pink, floral, dan vibes liburan tropis.",
+    "quote": "Hidup itu seperti pantai: indah, penuh warna, dan selalu ada alasan untuk tersenyum.",
+    "quoteSource": "Chelsea",
+    "closing": "Terima kasih sudah ikut merayakan hari spesial Chelsea. Sampai jumpa di Pink Paradise!",
+    "story": [
+      {
+        "date": "16.00",
+        "title": "Welcome Drink",
+        "text": "Datang, ambil welcome drink kelapa, dan foto di photo booth flamingo."
+      },
+      {
+        "date": "17.30",
+        "title": "Sunset Party",
+        "text": "Musik, games pantai, dan sesi foto bersama saat matahari terbenam."
+      },
+      {
+        "date": "19.00",
+        "title": "Tiup Lilin",
+        "text": "Momen puncak: kue pink, doa, dan kejutan untuk Chelsea."
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#C2306A",
+    "deep2": "#E57CA3",
+    "paper": "#FFF6F1",
+    "ink": "#5A2A3A",
+    "muted": "#9A6A7A",
+    "accent": "#E3A049",
+    "accent2": "#FFE2B8",
+    "soft": "#FFEDF2",
+    "petal": "#F7A8C4",
+    "heading": "#B02A60"
+  },
+  "fonts": {
+    "script": "Pacifico",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "Pink Paradise Birthday Party",
+    "guestSalute": "Hai, sahabat Chelsea",
+    "guestDefault": "Sahabat Chelsea",
+    "profileEyebrow": "Sang bintang pesta",
+    "profileTitle": "Happy Birthday!",
+    "countdownEyebrow": "Pesta dimulai dalam",
+    "countdownTitle": "Menuju Hari Spesial",
+    "eventsEyebrow": "Catat tanggalnya",
+    "eventsTitle": "Lokasi Pesta",
+    "storyEyebrow": "Rundown acara",
+    "storyTitle": "Alur Acara",
+    "galleryEyebrow": "Momen bersama",
+    "galleryTitle": "Galeri Foto",
+    "rsvpEyebrow": "Konfirmasi kehadiran",
+    "rsvpTitle": "Hadir di Pink Paradise?",
+    "rsvpLead": "Kabari kami agar panitia bisa menyiapkan tempat, welcome drink, dan konsumsi untukmu.",
+    "giftEyebrow": "Tanda cinta",
+    "giftTitle": "Hadiah & Kado",
+    "giftLead": "Kehadiranmu sudah jadi hadiah terbaik. Bila ingin mengirim kado atau hadiah, bisa melalui:",
+    "wishesEyebrow": "Pesan & doa",
+    "wishesTitle": "Ucapan Selamat",
+    "closingEyebrow": "See you at the beach!",
+    "closingText": "Terima kasih sudah merayakan hari spesial ini. Sampai jumpa di Pink Paradise!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1456
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/balon.webp",
+    "heading": "art/kue.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/papan-petunjuk.webp",
+        "w": 46
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 120
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 78
+      }
+    ],
+    "eventBadge": "art/bintang-flamingo.webp",
+    "storyTop": "art/payung-pantai.webp",
+    "rsvpHang": "art/balon.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/gapura-balon.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}
