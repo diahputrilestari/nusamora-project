@@ -90,7 +90,8 @@ with t(slug, name, cats, description, sort) as (values
   ('dino-jungle', 'Dino Jungle – Ulang Tahun Hutan Dinosaurus', '{birthday}'::text[],                        'Dino Jungle: pesta ulang tahun penjelajah hutan dinosaurus dengan gerbang batu raksasa, air terjun, T-rex dan triceratops, booth safari berobor, serta tamu chibi berpakaian penjelajah.', 114),
   ('esport-arena', 'E-Sport Arena – Turnamen Gaming', '{other}'::text[],                           'E-Sport Arena: turnamen e-sport di arena neon ungu-biru dengan layar raksasa, panggung berlampu sorot, booth gaming, serta tim pemain chibi berheadset.', 115),
   ('neon-cosplay', 'Neon Cosplay – Anime Gathering', '{other}'::text[], 'Neon Cosplay: pertemuan komunitas cosplay anime bernuansa neon ungu-pink, panggung bersakura dengan gerbang torii, booth lampion, serta kostum chibi.', 116),
-  ('seminar-konferensi', 'Seminar & Konferensi – Auditorium Biru', '{other}'::text[], 'Seminar & Konferensi: aula modern berlayar LED biru dengan tata lampu sorot, booth registrasi, photo booth, food booth, serta peserta berlanyard yang profesional.', 117)
+  ('seminar-konferensi', 'Seminar & Konferensi – Auditorium Biru', '{other}'::text[], 'Seminar & Konferensi: aula modern berlayar LED biru dengan tata lampu sorot, booth registrasi, photo booth, food booth, serta peserta berlanyard yang profesional.', 117),
+  ('keliling-dunia', 'Keliling Dunia Wedding', '{wedding,engagement}'::text[], 'Pernikahan bertema keliling dunia: panggung marmer dengan kubah globe emas, Menara Eiffel, Colosseum, Santorini dan Gunung Fuji bersakura, koper vintage, serta pengantin chibi bergaya traveler.', 118)
 
 
 
