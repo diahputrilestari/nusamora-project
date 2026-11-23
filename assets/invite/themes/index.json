@@ -396,7 +396,11 @@
     "pink-paradise": "pink-paradise",
     "pink-beach": "pink-paradise",
     "tropical-birthday": "pink-paradise",
-    "pantai-pink": "pink-paradise"
+    "pantai-pink": "pink-paradise",
+    "robot-factory": "robot-factory",
+    "robot": "robot-factory",
+    "pabrik-robot": "robot-factory",
+    "robot-party": "robot-factory"
   },
   "themes": [
     {
@@ -1575,6 +1579,20 @@
       "swatch": [
         "#C2306A",
         "#E3A049"
+      ],
+      "art": true
+    },
+    {
+      "id": "robot-factory",
+      "name": "Robot Factory – Ulang Tahun Pabrik Robot",
+      "description": "Robot Factory: pesta ulang tahun pabrik robot biru-kuning dengan panggung gerigi, jendela kota futuristik, drone dan lengan robot, booth robot lucu, serta tamu chibi berseragam teknisi.",
+      "categories": [
+        "birthday"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#1F3F9E",
+        "#F5B31B"
       ],
       "art": true
     }
