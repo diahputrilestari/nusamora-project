@@ -1,0 +1,179 @@
+{
+  "id": "esport-arena",
+  "name": "E-Sport Arena – Turnamen Gaming",
+  "version": 1,
+  "description": "E-Sport Arena: turnamen e-sport di arena neon ungu-biru dengan layar raksasa, panggung berlampu sorot, booth gaming, serta tim pemain chibi berheadset.",
+  "categories": [
+    "other"
+  ],
+  "demo": {
+    "name": "Nusa Cup",
+    "full": "Nusa E-Sport Championship 2027",
+    "parents": "Diselenggarakan oleh Nusa Gaming Community",
+    "title": "Nusa E-Sport Championship 2027",
+    "eventName": "Grand Final Nusa Cup",
+    "start": "13:00",
+    "end": "21:00",
+    "annual": "",
+    "venue": "Nusa Arena Esports",
+    "address": "Jl. Gaming Raya No. 1, Kuningan, Jakarta Selatan 12940",
+    "bank": "BCA",
+    "holder": "Nusa Gaming Community",
+    "giftAddress": "Sekretariat Nusa Gaming Community, Jl. Gaming Raya No. 1, Jakarta Selatan 12940",
+    "welcome": "Siapkan tim terbaikmu! Nusa E-Sport Championship 2027 hadir dengan babak final live, hadiah jutaan rupiah, dan keseruan bersama komunitas gamer. Datang, dukung jagoanmu, dan jadi bagian dari sejarah.",
+    "quote": "Menang itu bonus, bermain bersama adalah kemenangan sejati.",
+    "quoteSource": "Nusa Gaming Community",
+    "closing": "Terima kasih sudah ikut meramaikan turnamen. GG, sampai jumpa di musim berikutnya!",
+    "story": [
+      {
+        "date": "13.00",
+        "title": "Registrasi & Check-in Tim",
+        "text": "Verifikasi tim, ambil merchandise, dan jelajahi booth komunitas."
+      },
+      {
+        "date": "15.00",
+        "title": "Babak Semifinal",
+        "text": "Empat tim terbaik bertarung memperebutkan tiket ke grand final."
+      },
+      {
+        "date": "18.30",
+        "title": "Grand Final & Penyerahan Piala",
+        "text": "Pertandingan puncak, penyerahan piala, dan penutupan bersama."
+      }
+    ],
+    "wishes": [
+      {
+        "name": "Raka (Tim Phoenix)",
+        "message": "Siap tanding! Semoga fair play dan seru buat semua tim.",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Salsa (Penonton)",
+        "message": "Hadir buat support tim favorit. GG semuanya!",
+        "attendance": "hadir"
+      },
+      {
+        "name": "Dito (Tim Elang)",
+        "message": "Mohon maaf tim kami mundur kali ini. Sukses terus turnamennya!",
+        "attendance": "tidak"
+      }
+    ]
+  },
+  "colors": {
+    "deep": "#4B22B0",
+    "deep2": "#7B3FE4",
+    "paper": "#F4F1FC",
+    "ink": "#1D1642",
+    "muted": "#5E5A8C",
+    "accent": "#2FC4EE",
+    "accent2": "#B7EBFA",
+    "soft": "#ECE7FA",
+    "petal": "#B58AF0",
+    "heading": "#4B22B0"
+  },
+  "fonts": {
+    "script": "Fredoka",
+    "serif": "Cormorant Garamond",
+    "sans": "Nunito"
+  },
+  "ornament": {
+    "pattern": "art/pattern.svg",
+    "patternPaper": "art/pattern-paper.svg",
+    "border": "art/border.svg",
+    "corner": "none",
+    "divider": "art/divider.svg",
+    "frame": "arch",
+    "petals": [
+      "dot",
+      "bloom",
+      "dot"
+    ],
+    "petalCount": 8
+  },
+  "cover": {
+    "photo": true,
+    "transition": "gate"
+  },
+  "css": "theme.css",
+  "copy": {
+    "coverEyebrowEvent": "E-Sport Championship",
+    "guestSalute": "Hai, gamer",
+    "guestDefault": "Gamer & Supporter",
+    "profileEyebrow": "Turnamen",
+    "profileTitle": "Nusa Cup",
+    "countdownEyebrow": "Pertandingan dimulai dalam",
+    "countdownTitle": "Menuju Grand Final",
+    "eventsEyebrow": "Catat jadwalnya",
+    "eventsTitle": "Lokasi Arena",
+    "storyEyebrow": "Jadwal turnamen",
+    "storyTitle": "Rangkaian Pertandingan",
+    "galleryEyebrow": "Momen turnamen",
+    "galleryTitle": "Galeri Turnamen",
+    "rsvpEyebrow": "Registrasi",
+    "rsvpTitle": "Daftar Hadir",
+    "rsvpLead": "Konfirmasi kehadiranmu agar panitia dapat menyiapkan kursi, merchandise, dan konsumsi.",
+    "giftEyebrow": "Dukungan",
+    "giftTitle": "Dukung Turnamen",
+    "giftLead": "Dukungan dan donasi untuk hadiah turnamen dapat disalurkan melalui:",
+    "wishesEyebrow": "Pesan komunitas",
+    "wishesTitle": "Chat Supporter",
+    "closingEyebrow": "GG, see you next season!",
+    "closingText": "Terima kasih sudah meramaikan turnamen. GG!"
+  },
+  "art": {
+    "backdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "heroBackdrop": {
+      "src": "art/backdrop.webp",
+      "small": "art/backdrop-sm.webp",
+      "width": 1672
+    },
+    "coverGround": [
+      {
+        "src": "art/avatar.webp",
+        "w": 112
+      }
+    ],
+    "coverHang": "art/panji.webp",
+    "heading": "art/controller.webp",
+    "introTop": "art/meja-tamu.webp",
+    "figureBride": "art/avatar.webp",
+    "countdownRow": [
+      {
+        "src": "art/headset.webp",
+        "w": 50
+      },
+      {
+        "src": "art/area-kuliner.webp",
+        "w": 124
+      },
+      {
+        "src": "art/photo-gallery.webp",
+        "w": 80
+      }
+    ],
+    "eventBadge": "art/medali.webp",
+    "storyTop": "art/peti-harta.webp",
+    "rsvpHang": "art/panji.webp",
+    "giftTop": "art/fan-letter.webp",
+    "wishesTop": "art/buku-tamu.webp",
+    "closingScene": "art/photo-booth.webp",
+    "closingFigures": [
+      "art/avatar.webp"
+    ]
+  },
+  "sections": [
+    "salam",
+    "mempelai",
+    "hitung",
+    "acara",
+    "kisah",
+    "galeri",
+    "rsvp",
+    "hadiah",
+    "ucapan"
+  ]
+}

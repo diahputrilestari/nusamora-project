@@ -403,7 +403,13 @@
     "robot-party": "robot-factory",
     "dino-jungle": "dino-jungle",
     "hutan-dino": "dino-jungle",
-    "jungle-dino": "dino-jungle"
+    "jungle-dino": "dino-jungle",
+    "esport-arena": "esport-arena",
+    "esport": "esport-arena",
+    "e-sport": "esport-arena",
+    "turnamen-esport": "esport-arena",
+    "gaming": "esport-arena",
+    "turnamen-gaming": "esport-arena"
   },
   "themes": [
     {
@@ -1610,6 +1616,20 @@
       "swatch": [
         "#3E6B2A",
         "#E0A526"
+      ],
+      "art": true
+    },
+    {
+      "id": "esport-arena",
+      "name": "E-Sport Arena – Turnamen Gaming",
+      "description": "E-Sport Arena: turnamen e-sport di arena neon ungu-biru dengan layar raksasa, panggung berlampu sorot, booth gaming, serta tim pemain chibi berheadset.",
+      "categories": [
+        "other"
+      ],
+      "thumb": "thumb.webp",
+      "swatch": [
+        "#4B22B0",
+        "#2FC4EE"
       ],
       "art": true
     }
