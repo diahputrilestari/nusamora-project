@@ -8,6 +8,17 @@
   var TOKEN = q, C = window.NM_CONFIG || {}, d = document, $ = function (s) { return d.querySelector(s); };
   if (!C.SUPABASE_URL || !C.SUPABASE_ANON_KEY || !window.fetch) return;
   var CONTENT = null;
+  /* tirai pemuatan (lihat skrip kecil di <head>): halaman baru tampil setelah tema, lukisan, dekor, dan avatar venue selesai diunduh */
+  var themeDone = false, jobs = 0, root = d.documentElement;
+  function veilOn() { try { root.classList.add("nmv"); } catch (e) { } }
+  function veilOff() { var rm = function () { try { root.classList.remove("nmv"); } catch (e) { } }; try { if (typeof P !== "undefined" && P && window.requestAnimationFrame) requestAnimationFrame(function () { requestAnimationFrame(function () { setTimeout(rm, 150); }); }); else rm(); } catch (e) { rm(); } }
+  function settle() {
+    if (!themeDone || jobs > 0) return;
+    if (typeof P !== "undefined" && P && (decorPending || tintPending)) return;
+    veilOff();
+  }
+  function job(p) { if (!p || typeof p.then !== "function") return; jobs++; var f = function () { jobs--; settle(); }; p.then(f, f); }
+  setTimeout(veilOff, 9000);
   var THEME = null, CFG = null, joined = false, hb = null, poll = null, sy = null, raf = 0, peers = {}, lastT = 0, syncBusy = false, seen = {}, mine = {}, esc2 = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
@@ -106,14 +117,17 @@
     var ev = t.event && NM.events[t.event] ? t.event : null;
     var cfg = Object.assign({}, t.theme, { env: id }); if (ev) cfg.events = [ev];
     if (!NM.registerTheme(id, cfg)) return;
-    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; applyAvatars(decorPending); tryDecor();
+    decorPending = t.decor && typeof t.decor === "object" ? t.decor : null; tintPending = t.theme && t.theme.mono ? t.theme : null; job(applyAvatars(decorPending));
+    /* unduh semua gambar dekor sekarang (disimpan di cache) agar saat tamu masuk scene langsung terpasang */
+    if (decorPending) job(Promise.all(Object.keys(decorPending).filter(function (k) { return DECOR[k] && decorPending[k] && typeof decorPending[k].url === "string"; }).map(function (k) { return loadDecor(decorPending[k].url).then(function () { }, function () { }); })));
+    tryDecor();
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
-    if (pt) fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+    if (pt) job(fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
       if (!/^image\/(png|jpeg|webp)$/.test(bl.type) || bl.size > 12582912) return;
-      document.documentElement.style.setProperty("--bgurl", 'url("' + URL.createObjectURL(bl) + '")');
-    }, function () { });
+      return new Promise(function (ok) { var u = URL.createObjectURL(bl), im = new Image(); im.onload = im.onerror = function () { document.documentElement.style.setProperty("--bgurl", 'url("' + u + '")'); ok(); }; im.src = u; });
+    }, function () { }));
   });
 
 
@@ -128,8 +142,10 @@
   }, DECOR_HIDE = { pelaminan: ["arch"], meja: ["table"], kuliner: ["stall_drinks", "stall_snacks", "stall_candy", "claw"],
     deco: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"],
     furn: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"] }, decorPending = null;
+  var DCACHE = {};
   function loadDecor(url) {
-    return fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+    if (DCACHE[url]) return DCACHE[url];
+    return (DCACHE[url] = fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
       if (!/^image\/(png|webp)$/.test(bl.type) || bl.size > 4194304) return Promise.reject(new Error("tipe"));
       return new Promise(function (ok, no) {
         var u = URL.createObjectURL(bl), im = new Image(); im.onload = function () {
@@ -137,7 +153,7 @@
           c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c);
         }; im.onerror = function () { URL.revokeObjectURL(u); no(new Error("gambar")); }; im.src = u;
       });
-    });
+    }).then(function (c) { return c; }, function (e) { delete DCACHE[url]; return Promise.reject(e); }));
   }
   /* lantai & karpet venue ikut palet tema: lantai = ui.soft (dikali tekstur marmer), karpet = mono.accent */
   var tintPending = null, tintScene = function (th) {
@@ -166,7 +182,7 @@
   var applyAvatars = safe(function (dc) {
     var ks = Object.keys(dc || {}).filter(function (k) { return /^av_([lp][1-5]|host)$/.test(k) && dc[k] && typeof dc[k].url === "string"; }).sort();
     if (!ks.length || typeof AV === "undefined" || typeof S === "undefined") return;
-    Promise.all(ks.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
+    return Promise.all(ks.map(function (k) { return loadDecor(dc[k].url).then(function (cv) { return { k: k, cv: cv }; }, function () { return null; }); })).then(function (res) {
       var ok = res.filter(Boolean); if (!ok.length) return;
       if (!window.__nmAvWrap) {
         window.__nmAvWrap = 1;
@@ -212,6 +228,7 @@
   });
   var tryDecor = safe(function () {
     if (tintPending && typeof P !== "undefined" && P && typeof THREE !== "undefined" && typeof sc !== "undefined" && sc.getObjectByName("meja")) { var tp = tintPending; tintPending = null; try { tintScene(tp); } catch (e) { } }
+    if (!decorPending) settle();
     var dc = decorPending; if (!dc || typeof P === "undefined" || !P || typeof THREE === "undefined" || typeof sc === "undefined" || !sc.getObjectByName("meja")) return;
     decorPending = null;
     var slots = Object.keys(dc).filter(function (k) { return DECOR[k] && dc[k] && typeof dc[k].url === "string"; });
@@ -229,7 +246,7 @@
       Object.keys(AT).forEach(function (id) { var o = dc[AT[id][2]]; if (o && typeof o.x === "number" && typeof o.z === "number") { AT[id][0] = o.x; AT[id][1] = o.z + 2.9; } });
       try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
       sc.add(grp);
-    });
+    }).then(settle, settle);
   });
 
   /* Tamu lain di scene: kirim posisi sendiri, terima tamu aktif lain, tampilkan sebagai karakter. */
@@ -367,30 +384,33 @@
     else if (k === "tap" && G) { G.taps++; var c = $("#nmb-c"); if (c) c.textContent = G.taps; }
   });
 
+  /* saat tamu masuk (spawnMe), pasang dekor di tick yang sama; bila belum siap, tahan tampilan sampai selesai */
+  try { var is0 = window.initScene; if (typeof is0 === "function") window.initScene = function () { try { if (decorPending || tintPending) veilOn(); } catch (e) { } return is0.apply(this, arguments); }; } catch (e) { }
+  try { var sm0 = window.spawnMe; if (typeof sm0 === "function") window.spawnMe = function () { var r = sm0.apply(this, arguments); try { if (decorPending || tintPending) { veilOn(); tryDecor(); } } catch (e) { } return r; }; } catch (e) { }
   /* ---- pasang ---- */
   if (DEMO) {
     rpc("live_theme_demo", { p_key: DEMO }).then(function (t) {
-      if (!t) return; THEME = t; applyConfig({ venue: { areas: t.areas || [] }, features: {} }); applyTheme(t);
+      if (!t) { themeDone = true; settle(); return; } THEME = t; applyConfig({ venue: { areas: t.areas || [] }, features: {} }); applyTheme(t); themeDone = true; settle();
       var iv = setInterval(function () {
         if (typeof P !== "undefined" && P) {
           clearInterval(iv); try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
           setTimeout(function () { hideMenu(); relabelMenu(); }, 600);
         }
-      }, 400);
-    }, function () { });
+      }, 100);
+    }, function () { themeDone = true; settle(); });
     return;
   }
   rpc("live_config", { p_token: TOKEN }).then(function (c) {
-    if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; block(MSG.token_tidak_valid); return; }
-    if (!c.enabled) { block(MSG.dimatikan); return; }
+    if (!c) { var n1 = $("#n1"); if (n1) n1.disabled = true; veilOff(); block(MSG.token_tidak_valid); return; }
+    if (!c.enabled) { veilOff(); block(MSG.dimatikan); return; }
     applyConfig(c); loadContent();
-    rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); }, function () { });
+    rpc("live_theme", { p_token: TOKEN }).then(function (t) { THEME = t; applyTheme(t); themeDone = true; settle(); }, function () { themeDone = true; settle(); });
     var iv = setInterval(function () {
       if (typeof P !== "undefined" && P) {
         clearInterval(iv); join(); if (THEME) try { applyIdentity(); } catch (e) { } tryDecor(); var di = setInterval(function () { if (!decorPending && !tintPending) clearInterval(di); else tryDecor(); }, 500); setTimeout(function () { clearInterval(di); }, 20000);
         var sb = $("#sb"), ci = $("#ci"); if (sb) sb.onclick = sendChat; if (ci) ci.onkeydown = function (e) { if (e.key === "Enter") sendChat(); };
       }
-    }, 400);
-  }, function () { toast("Tidak dapat terhubung ke server. Mode demo tetap berjalan.", true); });
+    }, 100);
+  }, function () { veilOff(); toast("Tidak dapat terhubung ke server. Mode demo tetap berjalan.", true); });
   addEventListener("pagehide", function () { if (joined) try { fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/live_leave", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json", apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + C.SUPABASE_ANON_KEY }, body: JSON.stringify({ p_token: TOKEN }) }); } catch (e) { } });
 })();
