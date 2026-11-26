@@ -28,6 +28,12 @@
       "template": "Available Template",
       "coming-soon": "Coming Soon"
     },
+    statusNotes: {
+      "live-demo": "A working demo you can open and try yourself.",
+      "concept": "A creative concept that shows what is possible. Not a customer project.",
+      "template": "Built from a template you can use today.",
+      "coming-soon": "Announced, not yet published."
+    },
     visualNote: "Visual: tangkapan template NusaMora yang paling mendekati konsep ini. Render final akan menggantikannya.",
     projects: [
       {
@@ -39,7 +45,7 @@
         experience: "Guests enter the venue as avatars, meet other guests live, leave notes in the guestbook, browse the photo gallery, and play small games together.",
         theme: "Romantic garden, soft pastel pink",
         features: ["3D Virtual Venue", "Avatar Interaction", "Live Guest", "Interactive Guestbook", "Photo Gallery", "Mini Games"],
-        cover: { src: IMG + "romantic-garden-s1.webp", alt: "Layar pemilihan karakter berlatar taman bunga merah muda dengan lengkung bunga" },
+        cover: { src: IMG + "romantic-garden-s1.webp", alt: "Layar pemilihan karakter berlatar taman bunga merah muda dengan lengkung bunga", pos: "50% 45%" },
         gallery: [
           { src: IMG + "live-sage-garden.webp", alt: "Venue 3D bergaya taman dengan karpet hijau dan avatar tamu" },
           { src: IMG + "signature-dusk-flower-garden.webp", alt: "Pasangan avatar di taman bunga saat senja" }
@@ -55,7 +61,7 @@
         experience: "Guests explore the venue with avatars, chat in real time, and browse the photo gallery.",
         theme: "Coastal white and blue",
         features: ["3D Virtual Venue", "Interactive Avatars", "Guest Interaction", "Live Chat", "Photo Gallery"],
-        cover: { src: IMG + "live-blue-elegance.webp", alt: "Venue 3D bernuansa putih dan biru dengan karpet biru dan avatar tamu" },
+        cover: { src: IMG + "live-blue-elegance.webp", alt: "Venue 3D bernuansa putih dan biru dengan karpet biru dan avatar tamu", pos: "50% 42%" },
         gallery: [
           { src: IMG + "live-blue-elegance.webp", alt: "Venue pernikahan bernuansa putih dan biru dengan dekorasi bunga" }
         ],
@@ -70,7 +76,7 @@
         experience: "Guests explore the grounds as avatars, greet each other live, sign the guestbook, and join mini games.",
         theme: "Japanese winter, sakura pink",
         features: ["3D Virtual Venue", "Interactive Avatars", "Live Guest", "Mini Games", "Guestbook"],
-        cover: { src: IMG + "live-sakura-wedding.webp", alt: "Venue 3D bertema sakura dan arsitektur Jepang dengan avatar mempelai" },
+        cover: { src: IMG + "live-sakura-wedding.webp", alt: "Venue 3D bertema sakura dan arsitektur Jepang dengan avatar mempelai", pos: "50% 40%" },
         gallery: [
           { src: IMG + "live-sakura-wedding.webp", alt: "Taman sakura dengan jembatan merah dan lentera di venue 3D" }
         ],
@@ -85,7 +91,7 @@
         experience: "Guests leave digital wishes, browse the family photo gallery, and celebrate together live.",
         theme: "Champagne gold, warm light",
         features: ["Interactive Guestbook", "Digital Wishes", "Family Photo Gallery", "Mini Games", "Live Guest Interaction"],
-        cover: { src: IMG + "signature-golden-hour-estate.webp", alt: "Pasangan avatar di taman dengan cahaya keemasan" },
+        cover: { src: IMG + "signature-golden-hour-estate.webp", alt: "Pasangan avatar di taman dengan cahaya keemasan", pos: "50% 55%" },
         gallery: [
           { src: IMG + "signature-golden-hour-estate.webp", alt: "Pasangan avatar saat cahaya keemasan di taman" },
           { src: IMG + "live-anniversary.webp", alt: "Venue 3D dengan panggung ungu dan emas serta dekorasi perayaan" }
@@ -101,7 +107,7 @@
         experience: "Participants choose avatars, move with a virtual joystick, chat, use emotes, and see who else is in the room.",
         theme: "Pastel pink, sakura",
         features: ["Multiple Avatars", "Virtual Joystick", "Interactive Objects", "Participant List", "Chat", "Avatar Emotes"],
-        cover: { src: IMG + "live-hardiknas.webp", alt: "Venue 3D bertema sekolah dengan papan tulis dan avatar siswa" },
+        cover: { src: IMG + "live-hardiknas.webp", alt: "Venue 3D bertema sekolah dengan papan tulis dan avatar siswa", pos: "50% 38%" },
         gallery: [
           { src: IMG + "live-hardiknas.webp", alt: "Ruang acara sekolah 3D dengan panggung dan avatar siswa" },
           { src: IMG + "live-guru.webp", alt: "Ruang kelas 3D bertema Hari Guru dengan papan tulis" }
@@ -117,7 +123,7 @@
         experience: "A live presentation on the stage, a virtual audience, interactive chat, and participant interaction.",
         theme: "Corporate blue and violet",
         features: ["Virtual Audience", "Interactive Chat", "Live Presentation", "Participant Interaction"],
-        cover: { src: IMG + "live-seminar.webp", alt: "Venue seminar 3D dengan panggung, layar presentasi, dan kursi audiens" },
+        cover: { src: IMG + "live-seminar.webp", alt: "Venue seminar 3D dengan panggung, layar presentasi, dan kursi audiens", pos: "50% 40%" },
         gallery: [
           { src: IMG + "live-seminar.webp", alt: "Panggung virtual dengan layar presentasi dan podium" }
         ],
