@@ -70,7 +70,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('gothic','Wedding Gothic Live Guest','Venue 3D pernikahan bertema gothic dengan altar tirai beludru, candelabra, mawar merah, booth, dan avatar pengantin serta tamu berbusana burgundy.','{wedding}'::text[],120),
  ('dayak','Wedding Dayak Kenyah Live Guest','Venue 3D pernikahan adat Dayak Kenyah dengan pelaminan berornamen khas, booth, dan avatar pengantin serta tamu berbusana adat.','{wedding}'::text[],121),
  ('sunda','Wedding Adat Sunda Live Guest','Venue 3D pernikahan adat Sunda dengan pelaminan siger, booth, dan avatar pengantin serta tamu berbusana adat Sunda.','{wedding}'::text[],122),
- ('gorontalo','Wedding Adat Gorontalo Live Guest','Venue 3D pernikahan adat Gorontalo dengan pelaminan Bili'u, booth, dan avatar pengantin serta tamu berbusana adat Gorontalo.','{wedding}'::text[],123),
+ ('gorontalo','Wedding Adat Gorontalo Live Guest','Venue 3D pernikahan adat Gorontalo dengan pelaminan Bili''u, booth, dan avatar pengantin serta tamu berbusana adat Gorontalo.','{wedding}'::text[],123),
  ('lebaran','Ucapan Lebaran di Kampung Live Guest','Venue 3D ucapan Idulfitri suasana kampung dengan booth, hidangan lebaran, dan avatar keluarga berbusana hari raya.','{other}'::text[],124),
  ('wabisabi','Wedding Wabi Sabi Live Guest','Venue 3D pernikahan bergaya wabi sabi dengan nuansa natural sederhana, booth, dan avatar pengantin serta tamu.','{wedding}'::text[],125),
  ('joseon','Wedding Istana Joseon Live Guest','Venue 3D pernikahan bertema istana Joseon dengan paviliun klasik, booth, dan avatar pengantin serta tamu berbusana hanbok.','{wedding}'::text[],126),
