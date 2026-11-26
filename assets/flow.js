@@ -40,7 +40,7 @@
      Jadikan same-origin (nusamora.com). Mesin demo Essential lama (/assets-essential/invite/index) sudah digantikan oleh /preview?demo=<slug>. */
   var LEGACY_HOST = /^https?:\/\/[a-z0-9-]+\.hostingersite\.com(?=[\/?#]|$)/i;
   /* Thumbnail/aset tema Essential lama (/assets-essential/invite/themes/...) kini berada di /assets/invite/themes/... */
-  function localUrl(u) { return typeof u === "string" ? u.replace(LEGACY_HOST, "").replace(/^\/assets-essential\/invite\/themes\//, "/assets/invite/themes/") : ""; }
+  function localUrl(u) { return typeof u === "string" ? u.replace(LEGACY_HOST, "").replace(/^(\/assets\/img\/live-[a-z0-9-]+\.webp)$/, "$1?v=2").replace(/^\/assets-essential\/invite\/themes\//, "/assets/invite/themes/") : ""; }
   function demoUrl(u, slug) { u = localUrl(u); return (!u || /^\/assets-essential\/invite\/(index|$)/.test(u)) ? "/preview?demo=" + encodeURIComponent(slug) : u; }
   function mapT(t) { return { slug: t.slug, name: t.name, desc: t.description || "", img: localUrl(t.thumbnail_url), demo: demoUrl(t.preview_url, t.slug), pkg: t.package_type, cats: t.categories || [], caps: t.capabilities || {}, created: t.created_at || "", themeKey: t.theme_key || "", culture: String(((t.capabilities || {}).culture) || ""), palettes: Array.isArray((t.capabilities || {}).palettes) ? t.capabilities.palettes : [] }; }
   var TSEL = "slug,name,description,thumbnail_url,preview_url,package_type,categories,capabilities,created_at,theme_key";
