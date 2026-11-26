@@ -43,6 +43,10 @@
       "destination": "/konten.html"
     },
     {
+      "source": "/portofolio/:slug",
+      "destination": "/portofolio.html"
+    },
+    {
       "source": "/(backend|ops|docs|builder|source|supabase|next|\\.github)/:path*",
       "destination": "/404"
     },
