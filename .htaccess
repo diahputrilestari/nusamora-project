@@ -17,6 +17,9 @@ RewriteRule ^artikel/retirement-party-ide-perayaan-pensiun-menghargai-perjalanan
 RewriteRule ^(artikel|bantuan|tutorial)/?$ konten.html [L,QSA]
 RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
 
+# Portofolio: detail proyek dilayani satu halaman (portofolio.html), slug dibaca di sisi klien
+RewriteRule ^portofolio/[a-z0-9]+(-[a-z0-9]+)*/?$ portofolio.html [L,QSA]
+
 # Hapus .html dari URL yang diketik
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L,NE]
