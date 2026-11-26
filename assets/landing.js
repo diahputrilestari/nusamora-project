@@ -92,7 +92,7 @@ var EVMAP={wedding:'pernikahan',engagement:'pernikahan',birthday:'ulangtahun',gr
 var grid=$('#tgrid');if(!grid)return;
 function mk(tag,cls,txt){var e=d.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
 /* alamat lama di database (domain sementara Hostinger, folder assets-essential) dipetakan ke lokasi yang aktif */
-function fixUrl(u){u=String(u||'').replace(/^https?:\/\/[a-z0-9-]+\.hostingersite\.com(?=\/)/i,'').replace(/^\/assets-essential\/invite\//,'/assets/invite/').replace(/^(\/assets\/img\/live-[a-z0-9-]+\.webp)$/,'$1?v=2');return /^(https:\/\/|\/)/.test(u)&&u.indexOf('//')!==0?u:''}
+function fixUrl(u){u=String(u||'').replace(/^https?:\/\/[a-z0-9-]+\.hostingersite\.com(?=\/)/i,'').replace(/^\/assets-essential\/invite\//,'/assets/invite/').replace(/^(\/assets\/img\/live-[a-z0-9-]+\.webp)$/,'$1?v=3');return /^(https:\/\/|\/)/.test(u)&&u.indexOf('//')!==0?u:''}
 function card(pk,r,list){var cats=[];list.forEach(function(x){(x.categories||[]).forEach(function(c){if(cats.indexOf(c)<0)cats.push(c)})});
  var ev=cats.map(function(c){return EVMAP[c]}).filter(Boolean).filter(function(x,i,a){return a.indexOf(x)===i}).join(' ')||'lainnya';
  var a=mk('article','tcard');a.dataset.ev=ev;a.dataset.id=r?r.slug:'paket-'+pk;a.dataset.pkg=pk;
