@@ -65,7 +65,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('guru','Hari Guru Nasional Live Guest','Venue 3D peringatan Hari Guru Nasional dengan papan tulis terima kasih guru, potret Ki Hajar Dewantara, piala apresiasi, dan avatar guru berbatik ungu.','{other}'::text[],104),
  ('aksimhs','Aksi Mahasiswa Live Guest','Venue 3D forum aksi mahasiswa dengan panggung orasi merah-putih, bendera, megafon, booth registrasi, dan avatar mahasiswa.','{other}'::text[],116),
  ('jazznight','Jazz Night Live Guest','Venue 3D malam jazz dengan panggung ungu-emas, instrumen musik, booth, meja lounge, dan avatar musisi serta penonton.','{other}'::text[],117),
- ('seminar','Seminar Virtual Live Guest','Venue 3D seminar virtual dengan panggung navy-emas, layar presentasi, booth registrasi, galeri, dan avatar peserta profesional.','{corporate}'::text[],118),
+ ('seminar','Seminar Virtual Live Guest','Venue 3D seminar virtual dengan panggung navy-emas, layar presentasi, booth registrasi, galeri, dan avatar peserta profesional.','{seminar}'::text[],118),
  ('worldtour','Wedding Keliling Dunia Live Guest','Venue 3D pernikahan bertema keliling dunia dengan pelaminan globe emas, koper, papan petunjuk arah, booth, dan avatar pengantin serta tamu bergaya traveler.','{wedding}'::text[],119),
  ('gothic','Wedding Gothic Live Guest','Venue 3D pernikahan bertema gothic dengan altar tirai beludru, candelabra, mawar merah, booth, dan avatar pengantin serta tamu berbusana burgundy.','{wedding}'::text[],120),
  ('dayak','Wedding Dayak Kenyah Live Guest','Venue 3D pernikahan adat Dayak Kenyah dengan pelaminan berornamen khas, booth, dan avatar pengantin serta tamu berbusana adat.','{wedding}'::text[],121),
