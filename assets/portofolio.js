@@ -17,9 +17,9 @@
 
   function card(p, i) {
     var demo = demoOf(p), eager = i < 2;
-    var tags = p.features.slice(0, 4).map(function (f) { return '<li class="pf-tag">' + esc(f) + "</li>"; }).join("");
+    var tags = p.features.slice(0, 3).map(function (f) { return '<li class="pf-tag">' + esc(f) + "</li>"; }).join("");
     return '<article class="pf-card' + (p.featured ? " is-feat" : "") + '" data-id="' + esc(p.id) + '">' +
-      '<a class="pf-img" href="' + url(p) + '" tabindex="-1" aria-hidden="true"><img src="' + esc(p.cover.src) + '" alt="" width="960" height="540" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async"><span class="pf-badge s-' + esc(p.status) + '">' + esc(statusOf(p)) + "</span></a>" +
+      '<a class="pf-img" href="' + url(p) + '" tabindex="-1" aria-hidden="true"><img src="' + esc(p.cover.src) + '" alt="" width="960" height="540"' + (p.cover.pos ? ' style="object-position:' + esc(p.cover.pos) + '"' : "") + ' ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + ' decoding="async"><span class="pf-badge s-' + esc(p.status) + '">' + esc(statusOf(p)) + "</span></a>" +
       '<div class="pf-cb"><span class="pf-cat">' + esc(catLabel(p.category)) + "</span>" +
       '<h3><a href="' + url(p) + '">' + esc(p.title) + "</a></h3><p>" + esc(p.short) + "</p>" +
       '<ul class="pf-tags" aria-label="Features">' + tags + "</ul>" +
@@ -95,6 +95,9 @@
     chips.addEventListener("click", function (e) { var b = e.target.closest(".pf-chip"); if (b) setCat(b.dataset.k); });
     draw();
 
+    var lg = $("#pf-legend");
+    if (lg) lg.innerHTML = Object.keys(D.statuses).map(function (k) { return "<li><b>" + esc(D.statuses[k]) + "</b><span>" + esc((D.statusNotes || {})[k] || "") + "</span></li>"; }).join("");
+
     var ld = {
       "@context": "https://schema.org", "@type": "CollectionPage", name: "NusaMora Portfolio", url: SITE + "/portofolio",
       description: "Creative showcase of interactive 3D wedding invitations, virtual celebrations, and immersive digital event experiences by NusaMora.",
@@ -136,7 +139,7 @@
 
     app.innerHTML =
       '<div class="pf-w"><nav class="pf-crumb" aria-label="Breadcrumb"><a href="/">Beranda</a> / <a href="/portofolio">Portofolio</a> / <span aria-current="page">' + esc(p.title) + "</span></nav>" +
-      '<header class="pf-dh"><img src="' + esc(p.cover.src) + '" alt="' + esc(p.cover.alt) + '" width="960" height="540" fetchpriority="high" decoding="async"><div class="pf-dh-t"><span class="pf-cat">' + esc(catLabel(p.category)) + " &middot; " + esc(statusOf(p)) + "</span><h1>" + esc(p.title) + "</h1><p>" + esc(p.short) + "</p></div></header>" +
+      '<header class="pf-dh"><img src="' + esc(p.cover.src) + '" alt="' + esc(p.cover.alt) + '" width="960" height="540"' + (p.cover.pos ? ' style="object-position:' + esc(p.cover.pos) + '"' : "") + ' fetchpriority="high" decoding="async"><div class="pf-dh-t"><span class="pf-cat">' + esc(catLabel(p.category)) + " &middot; " + esc(statusOf(p)) + "</span><h1>" + esc(p.title) + "</h1><p>" + esc(p.short) + "</p></div></header>" +
       '<section class="pf-ov pf-rv" aria-label="Project overview"><div><h2>Creative Concept</h2><p>' + esc(p.concept) + '</p></div><div><h2>Design Inspiration</h2><p>' + esc(p.inspiration) + '</p></div><div><h2>The Experience</h2><p>' + esc(p.experience) + "</p></div></section>" +
       '<div class="pf-meta pf-rv"><div><span>Category</span><b>' + esc(catLabel(p.category)) + "</b></div><div><span>Theme</span><b>" + esc(p.theme) + "</b></div><div><span>Status</span><b>" + esc(statusOf(p)) + "</b></div></div>" +
       '<section class="pf-band pf-rv" aria-labelledby="g-h"><div class="pf-band-h"><span class="pf-eyebrow">Visual Gallery</span><h2 id="g-h" class="pf-h">A closer look</h2></div><div class="pf-gal">' +
@@ -147,7 +150,7 @@
       (demo ? '<section class="pf-live pf-rv" aria-labelledby="l-h"><div><h2 id="l-h" class="pf-h">Live Experience</h2><p>Walk through this experience yourself.</p></div><a class="btn lg" href="' + esc(demo) + '" target="_blank" rel="noopener">Experience This Invitation ' + arrow + "</a></section>" : "") +
       (rel.length ? '<section class="pf-band pf-rv" aria-labelledby="r-h"><div class="pf-band-h"><span class="pf-eyebrow">Related Projects</span><h2 id="r-h" class="pf-h">More to explore</h2></div><div class="pf-grid pf-rel">' + rel.map(card).join("") + "</div></section>" : "") +
       "</div>" +
-      '<section class="pf-end pf-rv" aria-labelledby="c-h"><h2 id="c-h" class="pf-h">Ready to Create Your Own Extraordinary Invitation?</h2><p>Pick a template, make it yours, and share it with a single link.</p><a class="btn lg inv" href="/template">Create Your Invitation ' + arrow + '</a><a class="pf-sec" href="/#template">Browse templates</a></section>';
+      '<section class="pf-end pf-rv" aria-labelledby="c-h"><h2 id="c-h" class="pf-h">Ready to Create Your Own Extraordinary Invitation?</h2><p>Pick a template, make it yours, and share it with a single link.</p><div class="pf-end-a"><a class="btn lg inv" href="/template">Create Your Invitation ' + arrow + '</a><a class="btn lg ghost" href="/#template">Browse Templates</a></div></section>';
 
     app.querySelector(".pf-gal").addEventListener("click", function (e) {
       var b = e.target.closest("button[data-i]"); if (b) lightbox(all, +b.dataset.i, b);
