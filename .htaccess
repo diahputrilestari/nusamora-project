@@ -13,6 +13,14 @@ RewriteRule ^ - [F,L]
 RewriteRule ^artikel/cara-membuat-undangan-pernikahan-digital/?$ /artikel/cara-membuat-undangan-pernikahan-digital-sendiri-tanpa-keahlian-desain [R=301,L,NE]
 RewriteRule ^artikel/retirement-party-ide-perayaan-pensiun-menghargai-perjalanan-karyawan/?$ /artikel/retirement-celebration-cara-mengadakan-acara-pensiun-penuh-apresiasi [R=301,L,NE]
 
+# Prarender artikel (SEO): bila ada snapshot HTML statis di prerender/artikel/, sajikan itu (isi lengkap tanpa JavaScript).
+# Dibuat otomatis oleh ops/seo/prerender_artikel.py (workflow "prerender-artikel"). Bila tidak ada, jatuh ke konten.html seperti biasa.
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond %{DOCUMENT_ROOT}/prerender/artikel/index.html -f
+RewriteRule ^artikel/?$ /prerender/artikel/index.html [L]
+RewriteCond %{DOCUMENT_ROOT}/prerender/artikel/$1.html -f
+RewriteRule ^artikel/([a-z0-9]+(-[a-z0-9]+)*)/?$ /prerender/artikel/$1.html [L]
+
 # Konten publik dari database (Manajemen Konten): daftar dan detail dilayani satu halaman konten.html
 RewriteRule ^(artikel|bantuan|tutorial)/?$ konten.html [L,QSA]
 RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
@@ -48,7 +56,7 @@ DirectoryIndex index.html
   # CSP MODE REPORT-ONLY: hanya melaporkan pelanggaran, TIDAK memblokir. Jadikan "Content-Security-Policy"
   # setelah laporan bersih (docs/security/SECURITY-HEADERS.md). 'unsafe-inline' dibutuhkan halaman lama
   # (skrip inline Live Guest & atribut style) dan dihapus saat halaman dipindah ke Next.js (nonce).
-  Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://app.midtrans.com https://app.sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.midtrans.com https://api.sandbox.midtrans.com; frame-src https://app.midtrans.com https://app.sandbox.midtrans.com https://maps.google.com https://www.google.com https://www.youtube-nocookie.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
+  Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://app.midtrans.com https://app.sandbox.midtrans.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.supabase.co wss://*.supabase.co https://api.midtrans.com https://api.sandbox.midtrans.com; frame-src https://app.midtrans.com https://app.sandbox.midtrans.com https://maps.google.com https://www.google.com https://www.youtube-nocookie.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"
   <FilesMatch "\.(webp|png|svg|mp3)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
