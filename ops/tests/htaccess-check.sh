@@ -36,6 +36,16 @@ for p in /backend/asset-schema.sql /backend/ /ops/stack/lib.mjs /ops/tests/htacc
   /supabase/functions/asset-url/index.ts /supabase/config.toml /next/ /.git/config /.git/HEAD /.github/workflows/supabase-stack.yml /README.md /vercel.json /BACKEND/asset-schema.sql /Docs/security/SECURITY.md /assets/ /assets/img/; do expect 403 "$p"; done
 echo "== harus TETAP TERBUKA"
 for p in / /masuk /daftar /akun /live/ /live/jawa-tengah /assets/landing.css /assets/landing.js /assets/protect.js /assets/favicon.svg /assets/img/romantic-garden-s1.webp /robots.txt /sitemap.xml /artikel /artikel/contoh-slug /info/tentang-kami /bantuan /tutorial; do expect 200 "$p"; done
+echo "== prarender artikel (snapshot dipakai bila ada, jatuh ke konten.html bila tidak)"
+mkdir -p "$ROOT/prerender/artikel"; [ -f "$ROOT/prerender/artikel/index.html" ] && mv "$ROOT/prerender/artikel/index.html" "$ROOT/prerender/artikel/index.html.bak-uji"
+printf '<!doctype html><title>uji</title>PRARENDER-UJI-OK' > "$ROOT/prerender/artikel/zz-uji-prarender.html"
+printf '<!doctype html><title>uji</title>PRARENDER-INDEKS-OK' > "$ROOT/prerender/artikel/index.html"
+curl -s "$B/artikel/zz-uji-prarender" | grep -q PRARENDER-UJI-OK && echo "PASS /artikel/<slug> memakai snapshot" || { echo "FAIL snapshot artikel tidak dipakai"; fail=$((fail+1)); }
+curl -s "$B/artikel/zz-uji-prarender/" | grep -q PRARENDER-UJI-OK && echo "PASS /artikel/<slug>/ memakai snapshot" || { echo "FAIL snapshot (slash)"; fail=$((fail+1)); }
+curl -s "$B/artikel" | grep -q PRARENDER-INDEKS-OK && echo "PASS /artikel memakai snapshot daftar" || { echo "FAIL snapshot daftar"; fail=$((fail+1)); }
+curl -s "$B/artikel?kat=Tips" | grep -q PRARENDER-INDEKS-OK && { echo "FAIL /artikel?kat= tidak boleh memakai snapshot daftar"; fail=$((fail+1)); } || echo "PASS /artikel?kat= tetap dilayani konten.html"
+curl -s "$B/artikel/slug-tanpa-snapshot" | grep -q "Aktifkan JavaScript" && echo "PASS artikel tanpa snapshot jatuh ke konten.html" || { echo "FAIL fallback konten.html"; fail=$((fail+1)); }
+rm -f "$ROOT/prerender/artikel/zz-uji-prarender.html" "$ROOT/prerender/artikel/index.html"; [ -f "$ROOT/prerender/artikel/index.html.bak-uji" ] && mv "$ROOT/prerender/artikel/index.html.bak-uji" "$ROOT/prerender/artikel/index.html"; rmdir "$ROOT/prerender/artikel" "$ROOT/prerender" 2>/dev/null || true
 echo "== URL bersih & header"
 got=$(st "$B/masuk.html"); [ "$got" = 301 ] && echo "PASS /masuk.html -> 301 (URL bersih)" || { echo "FAIL /masuk.html -> $got"; fail=$((fail+1)); }
 h=$(curl -sI "$B/"); for k in "x-content-type-options: nosniff" "content-security-policy-report-only" "referrer-policy"; do echo "$h" | grep -qi "$k" && echo "PASS header $k" || { echo "FAIL header $k"; fail=$((fail+1)); }; done
