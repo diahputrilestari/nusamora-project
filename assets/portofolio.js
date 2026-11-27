@@ -57,7 +57,8 @@
 
   /* header burger (halaman ini tidak memuat landing.js) */
   var burger = $("#burger"), menu = $("#menu");
-  if (burger && menu) burger.addEventListener("click", function () {
+  /* landing.js (index) sudah memasang handler burger; dua handler = buka lalu langsung tutup (menu tak bisa diklik) */
+  if (burger && menu && !document.querySelector('script[src*="landing.js"]')) burger.addEventListener("click", function () {
     var o = !menu.classList.contains("open"); menu.classList.toggle("open", o);
     burger.setAttribute("aria-expanded", o); burger.setAttribute("aria-label", o ? "Tutup menu" : "Buka menu");
   });
