@@ -1,7 +1,21 @@
 <!DOCTYPE html><html lang="id" data-protect="demo"><head><meta charset="utf-8"><title>Wedding Live Guest</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>/* tirai pemuatan: sembunyikan halaman sampai tema venue (palet, lukisan, dekor, avatar) siap, agar Romantic Garden bawaan tidak sempat tampil. Dilepas oleh live-bridge.js; batas aman 9 detik. */(function(){try{if(!/[?&](t=[0-9a-f]{32}|venue=[a-z0-9][a-z0-9-]+)(&|$)/.test(location.search))return;var s=document.createElement("style");s.textContent="html.nmv{background:#17141f!important}html.nmv body{visibility:hidden!important}html.nmv::after{content:'';position:fixed;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border:3px solid rgba(255,255,255,.22);border-top-color:#fff;border-radius:50%;animation:nmvs .8s linear infinite;z-index:2147483647}@keyframes nmvs{to{transform:rotate(360deg)}}";document.head.appendChild(s);document.documentElement.classList.add("nmv");setTimeout(function(){document.documentElement.classList.remove("nmv")},9000)}catch(e){}})()</script>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<script src="/assets/config.js"></script>
+<script>/* pengambilan awal demo venue: tema (RPC live_theme_demo), lukisan, dan dekor mulai diunduh SEKARANG, paralel dengan unduhan mesin halaman (7,6 MB).
+   live-bridge.js memakai hasilnya (window.__nmEarly) alih-alih mengulang panggilan. Gagal apa pun = jatuh ke alur lama. */(function(){try{
+var m=location.search.match(/[?&]venue=([a-z0-9][a-z0-9-]{1,38})(&|$)/);if(!m||/[?&]t=[0-9a-f]{32}/.test(location.search))return;
+var C=window.NM_CONFIG||{};if(!C.SUPABASE_URL||!C.SUPABASE_ANON_KEY||!window.fetch)return;
+var noop=function(){},E=window.__nmEarly={key:m[1],blobs:{}};
+E.blob=function(u){return E.blobs[u]||(E.blobs[u]=fetch(u,{mode:"cors",credentials:"omit"}).then(function(r){return r.ok?r.blob():Promise.reject(new Error("http"))}))};
+E.theme=fetch(C.SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/rpc/live_theme_demo",{method:"POST",headers:{"Content-Type":"application/json",apikey:C.SUPABASE_ANON_KEY,Authorization:"Bearer "+C.SUPABASE_ANON_KEY},body:JSON.stringify({p_key:m[1]})}).then(function(r){return r.ok?r.json():Promise.reject(new Error("http_"+r.status))});
+E.theme.then(function(t){if(!t)return;var u=[],pt=t.painting?String(t.painting):null;if(pt&&pt.charAt(0)==="/")pt=location.origin+pt;if(pt&&/^https:\/\//.test(pt))u.push(pt);
+var dc=t.decor&&typeof t.decor==="object"?t.decor:{};Object.keys(dc).forEach(function(k){if(dc[k]&&typeof dc[k].url==="string"&&/^https:\/\//.test(dc[k].url))u.push(dc[k].url)});
+u.forEach(function(x){E.blob(x).catch(noop)})},noop);
+E.theme.catch(noop)}catch(e){}})()</script>
+<link rel="preconnect" href="https://ixzmogwaaajkyltcnwaf.supabase.co" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;600&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{--bg:#efeaff;--card:#fff;--ink:#2b2f5c;--mute:#7b7fa8;--wine:#3b4fa8;--gold:#f2b84b;--line:#d9d4f2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1d1b3a;--card:#2a2850;--ink:#eceaff;--mute:#aaa8d6;--line:#433f7a;--wine:#9fb0ff}}
@@ -2758,4 +2772,4 @@ applyIdentity();NM.refresh();
 // Untuk integrasi login nanti, panggil window.nmOpenDashboard() setelah pengguna terautentikasi.
 (function(){const b=document.getElementById('dopenbtn');if(b)b.remove();window.nmOpenDashboard=()=>{go('dash');renderDash()}})();
 
-</script><script src="/assets/config.js"></script><script src="/live/live-content.js?v=5" defer></script><script src="/live/live-bridge.js?v=8" defer></script><script src="/assets/protect.js?v=1" defer></script></body></html>
+</script><script src="/assets/config.js"></script><script src="/live/live-content.js?v=5" defer></script><script src="/live/live-bridge.js?v=9" defer></script><script src="/assets/protect.js?v=1" defer></script></body></html>
