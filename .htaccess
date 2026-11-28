@@ -21,6 +21,10 @@ RewriteRule ^artikel/?$ /prerender/artikel/index.html [L]
 RewriteCond %{DOCUMENT_ROOT}/prerender/artikel/$1.html -f
 RewriteRule ^artikel/([a-z0-9]+(-[a-z0-9]+)*)/?$ /prerender/artikel/$1.html [L]
 
+# Kategori digabung (28 Nov 2026): lamaran -> pernikahan, aqiqah -> ulang-tahun (301 permanen)
+RewriteRule ^template/lamaran/?$ /template/pernikahan [R=301,L,NE]
+RewriteRule ^template/aqiqah/?$ /template/ulang-tahun [R=301,L,NE]
+
 # Halaman landing kategori template (SEO): /template/<slug> disajikan dari snapshot statis prerender/kategori/<slug>.html
 # (dibuat oleh ops/seo/build_kategori.py). Sengaja BUKAN folder template/ fisik, agar /template?paket=... tetap jalan.
 RewriteCond %{DOCUMENT_ROOT}/prerender/kategori/$1.html -f
