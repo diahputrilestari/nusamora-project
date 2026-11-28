@@ -14,6 +14,7 @@ document.head.appendChild(Object.assign(document.createElement('style'),{textCon
 `}));
 const NMMUS=(()=>{
  const DEFAULT_TRACK={url:'audio/we-are.mp3',title:'We Are — Moavii',credit:'Music provided by Free To Use · freetouse.com'},KEY='nm:mute',au=new Audio();au.loop=true;au.preload='none';au.volume=.55;au.setAttribute('playsinline','');
+ const trk=()=>{try{const m=nmEv().music;if(m&&ok(m.url))return m}catch(e){}return DEFAULT_TRACK};
  let url='',muted=false,liveOn=false,wantPlay=false,unlockBound=false,toastT=0;
  try{muted=localStorage.getItem(KEY)==='1'}catch(e){}
  const ICON=m=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" fill-opacity=".15"/>${m?'<path d="M16 9.5l5 5M21 9.5l-5 5"/>':'<path class="nm-wave" d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path class="nm-wave" d="M18 6.5a7.6 7.6 0 0 1 0 11"/>'}</svg>`;
@@ -23,7 +24,7 @@ const NMMUS=(()=>{
   const t=document.createElement('div');t.id='nmtoast';t.setAttribute('role','status');l.appendChild(t)}return b};
  function toast(m){const t=document.getElementById('nmtoast');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),3200)}
  function paint(){const b=btn();if(!b)return;b.innerHTML=ICON(muted||!url);b.classList.toggle('nomusic',!url);b.classList.toggle('playing',!!url&&!muted&&!au.paused);
-  b.setAttribute('aria-pressed',String(muted));b.setAttribute('aria-label',!url?'Musik latar belum diatur':muted?'Nyalakan musik latar':'Matikan musik latar');b.title=b.getAttribute('aria-label')+(url===DEFAULT_TRACK.url?' · ♪ '+DEFAULT_TRACK.title:'')}
+  b.setAttribute('aria-pressed',String(muted));b.setAttribute('aria-label',!url?'Musik latar belum diatur':muted?'Nyalakan musik latar':'Matikan musik latar');b.title=b.getAttribute('aria-label')+(url===trk().url?' · ♪ '+trk().title:'')}
  function bindUnlock(){if(unlockBound)return;unlockBound=true;const f=()=>{unlockBound=false;['pointerdown','keydown','touchend'].forEach(e=>document.removeEventListener(e,f,true));if(wantPlay)tryPlay()};['pointerdown','keydown','touchend'].forEach(e=>document.addEventListener(e,f,true))}
  function tryPlay(){if(!url||muted||!liveOn||document.hidden){paint();return}
   const p=au.play();if(p&&p.catch)p.then(paint).catch(()=>{bindUnlock();paint()});else paint()}
@@ -33,7 +34,7 @@ const NMMUS=(()=>{
  function setSrc(u){u=ok(u)?u.trim():'';if(u===url)return;url=u;
   if(!url){wantPlay=false;stop();au.removeAttribute('src');try{au.load()}catch(e){}paint();return}
   au.src=url;au.load();wantPlay=true;if(liveOn)tryPlay();paint()}
- const source=()=>{let u=(typeof INVDATA!=='undefined'&&INVDATA&&INVDATA.musicUrl)||'';if(!u){try{u=JSON.parse(localStorage.getItem('nm:music:'+curInv)||'null')||''}catch(e){}}return u||DEFAULT_TRACK.url};
+ const source=()=>{let u=(typeof INVDATA!=='undefined'&&INVDATA&&INVDATA.musicUrl)||'';if(!u){try{u=JSON.parse(localStorage.getItem('nm:music:'+curInv)||'null')||''}catch(e){}}return u||trk().url};
  function sync(){const l=document.getElementById('live'),on=!!l&&l.classList.contains('on');btn();
   if(on!==liveOn){liveOn=on;if(on){wantPlay=!!url;tryPlay()}else stop()}
   setSrc(source())}
@@ -42,7 +43,7 @@ const NMMUS=(()=>{
  document.addEventListener('visibilitychange',()=>{if(document.hidden){try{au.pause()}catch(e){}paint()}else if(liveOn&&wantPlay)tryPlay()});
  const l=document.getElementById('live');if(l)new MutationObserver(sync).observe(l,{attributes:true,attributeFilter:['class']});
  setInterval(sync,1500);
- return{sync,ok,get url(){return url},get isDefault(){return url===DEFAULT_TRACK.url},audio:au,toast}})();
+ return{sync,ok,get url(){return url},get isDefault(){return url===trk().url},audio:au,toast}})();
 
 // ---- Dashboard: kartu "Musik Latar" ----
 function nmMusicForm(){if($('#dmusic'))return;const base=$('#didform');if(!base)return;const d=document.createElement('div');d.id='dmusic';d.className='did dmus';
