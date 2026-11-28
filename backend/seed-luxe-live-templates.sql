@@ -106,6 +106,7 @@ with t(slug, name, descr, cats, sort) as (values
  ('tangledlantern','Ulang Tahun Tangled Lantern Festival Live Guest','Venue 3D ulang tahun bertema festival lentera dengan menara rambut emas, ribuan lentera, dan danau senja.','{birthday}'::text[],156),
  ('moana','Ulang Tahun Moana Tropical Island Live Guest','Venue 3D ulang tahun bertema pulau tropis dengan pondok jerami, obor, perahu layar, dan bunga hibiscus.','{birthday}'::text[],157),
  ('unicorn','Ulang Tahun Unicorn Ajaib Live Guest','Venue 3D ulang tahun bertema unicorn ajaib dengan istana awan, pelangi pastel, kristal, dan unicorn lilac.','{birthday}'::text[],158),
+ ('demonhunter','Ulang Tahun Demon Hunter Live Guest','Venue 3D ulang tahun bertema demon hunter dengan gerbang torii, sakura neon, bulan purnama ungu, dan lentera berpendar.','{birthday}'::text[],159),
  ('jurassic','Birthday Jurassic World Live Guest','Venue 3D pesta ulang tahun bertema Jurassic World dengan gerbang batu, dinosaurus, telur purba, booth, kado, dan avatar penjelajah cilik.','{birthday,aqiqah}'::text[],112),
  ('esport','Turnamen E-Sport Live Guest','Venue 3D turnamen e-sport dengan arena neon ungu-biru, layar raksasa, trofi di sepanjang karpet, booth, dan avatar gamer.','{other}'::text[],113),
  ('cosplay','Cosplay Gathering Neon Anime Live Guest','Venue 3D kumpul virtual cosplayer dengan panggung neon sakura, kipas tangan di sepanjang karpet, booth, dan avatar bergaya anime.','{other}'::text[],114),
