@@ -141,7 +141,10 @@ with sync_playwright() as pw:
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH
     pg.route("https://cdn.test/venue.png", lambda r: r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1))
     pg.goto(BASE + "/live/?venue=midnight-party"); pg.wait_for_function("document.documentElement.dataset.nmTheme==='v-midnight-party'", timeout=8000)
-    chk("demo venue: tema diambil sekali (skrip awal) & diterapkan", len(cn(calls, "live_theme_demo")) == 1 and cn(calls, "live_theme_demo")[0].get("p_key") == "midnight-party" and not errs, (calls, errs)); ctx.close()
+    chk("demo venue: tema diambil sekali (skrip awal) & diterapkan", len(cn(calls, "live_theme_demo")) == 1 and cn(calls, "live_theme_demo")[0].get("p_key") == "midnight-party" and not errs, (calls, errs))
+    pg.wait_for_timeout(3000)
+    fin = pg.evaluate("[document.documentElement.dataset.nmTheme, document.documentElement.dataset.nmEvent, getComputedStyle(document.documentElement).getPropertyValue('--nm-accent').trim()]")
+    chk("demo venue: tema TETAP terpasang setelah halaman selesai dimuat (tidak kembali ke template dasar)", fin[0] == "v-midnight-party" and fin[2].lower() == "#6d3fc0", fin); ctx.close()
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = dict(TH, decor={"table": {"url": "https://cdn.test/dec/table.webp"}, "lamp": {"url": "https://cdn.test/dec/lamp.png", "w": 1.2}, "sign": {"url": "https://cdn.test/dec/rusak.png"}})
     got = []
     pg.route("https://cdn.test/dec/*", lambda r: (got.append(r.request.url.split("/")[-1]), r.fulfill(status=404, body="x") if "rusak" in r.request.url else r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1))[1])

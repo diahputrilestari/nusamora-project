@@ -23,11 +23,7 @@
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
 
-  /* hasil pengambilan awal dari <head> (halaman demo venue): tema + gambar diunduh paralel dengan mesin halaman. */
-  function earlyBlob(url) { var e = window.__nmEarly; return e && e.blobs && e.blobs[url] ? e.blobs[url] : fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }); }
   function rpc(name, args) {
-    var e = window.__nmEarly;
-    if (name === "live_theme_demo" && e && e.theme && args && e.key === args.p_key) { var ep = e.theme; e.theme = null; return ep.catch(function () { return rpc(name, args); }); }
     return fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json", apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + C.SUPABASE_ANON_KEY }, body: JSON.stringify(args || {}) })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("http_" + r.status)); });
   }
@@ -128,7 +124,7 @@
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
-    if (pt) job(earlyBlob(pt).then(function (bl) {
+    if (pt) job(fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
       if (!/^image\/(png|jpeg|webp)$/.test(bl.type) || bl.size > 12582912) return;
       return new Promise(function (ok) { var u = URL.createObjectURL(bl), im = new Image(); im.onload = im.onerror = function () { document.documentElement.style.setProperty("--bgurl", 'url("' + u + '")'); ok(); }; im.src = u; });
     }, function () { }));
@@ -152,7 +148,7 @@
   var DCACHE = {};
   function loadDecor(url) {
     if (DCACHE[url]) return DCACHE[url];
-    return (DCACHE[url] = earlyBlob(url).then(function (bl) {
+    return (DCACHE[url] = fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
       if (!/^image\/(png|webp)$/.test(bl.type) || bl.size > 4194304) return Promise.reject(new Error("tipe"));
       return new Promise(function (ok, no) {
         var u = URL.createObjectURL(bl), im = new Image(); im.onload = function () {
