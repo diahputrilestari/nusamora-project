@@ -3,7 +3,9 @@ Allow: /
 Disallow: /live/
 Disallow: /admin
 Disallow: /akun
-Disallow: /template
+# /template/<kategori> = halaman landing kategori (boleh dirayapi); hanya alur /template dan /template?paket=... yang diblokir
+Disallow: /template$
+Disallow: /template?
 Disallow: /buat
 Disallow: /editor
 Disallow: /paket

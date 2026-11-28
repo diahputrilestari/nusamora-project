@@ -33,14 +33,28 @@ if len(locs) != len(set(locs)): bad("sitemap: URL ganda")
 for u in locs:
     if not u.startswith(ORIGIN) or "?" in u or u.endswith(".html"): bad("sitemap: URL tidak kanonik %s" % u)
 for u in ("/admin", "/akun", "/masuk", "/daftar", "/paket", "/template", "/buat", "/editor", "/preview", "/pembayaran", "/live"):
-    if any(l.startswith(ORIGIN + u) for l in locs): bad("sitemap memuat halaman privat/alur: " + u)
+    if any(l == ORIGIN + u or l.startswith(ORIGIN + u + "?") or (u != "/template" and l.startswith(ORIGIN + u)) for l in locs): bad("sitemap memuat halaman privat/alur: " + u)
 rb = rd("robots.txt")
 if "Sitemap: %s/sitemap.xml" % ORIGIN not in rb: bad("robots.txt tanpa Sitemap yang benar")
 if re.search(r"Disallow:\s*/(assets|prerender)?\s*$", rb, re.M) or re.search(r"Disallow:\s*/\s*$", rb, re.M): bad("robots.txt memblokir sumber daya penting")
 
+# robots: tiru aturan Google (pola terpanjang menang; Allow menang bila sama panjang; mendukung $ dan *)
+def robots_ok(path):
+    best = (-1, True)
+    for kind, pat in re.findall(r"^(Allow|Disallow):\s*(\S*)", rb, re.M | re.I):
+        if not pat: continue
+        rx = re.escape(pat).replace(r"\*", ".*").replace(r"\$", "$")
+        if re.match(rx, path):
+            L = len(pat.rstrip("$"))
+            if L > best[0] or (L == best[0] and kind.lower() == "allow"): best = (L, kind.lower() == "allow")
+    return best[1]
+for pth, want in (("/template/pernikahan", True), ("/template", False), ("/template?paket=luxe", False), ("/buat?paket=luxe", False), ("/live/", False), ("/artikel", True), ("/", True)):
+    if robots_ok(pth) != want: bad("robots: %s seharusnya %s" % (pth, "boleh dirayapi" if want else "diblokir"))
+
 pages = {"/": "index.html", "/portofolio": "portofolio.html", "/kebijakan-privasi": "kebijakan-privasi.html", "/syarat-ketentuan": "syarat-ketentuan.html"}
 for f in glob.glob("prerender/artikel/*.html"):
     s = os.path.basename(f)[:-5]; pages["/artikel" if s == "index" else "/artikel/" + s] = f
+for f in glob.glob("prerender/kategori/*.html"): pages["/template/" + os.path.basename(f)[:-5]] = f
 seen_t, seen_d = {}, {}
 for u, f in sorted(pages.items()):
     o = info(f); full = ORIGIN + (u if u != "/" else "/")
@@ -70,6 +84,46 @@ for u in art:
 for u in art:
     ld = info(pages[u])["ld"]
     if "Article" not in ld or "BreadcrumbList" not in ld: bad("%s: JSON-LD Article/BreadcrumbList kurang" % u)
+# ---- halaman kategori template ----
+kat = sorted(u for u in pages if u.startswith("/template/"))
+if not kat: bad("tidak ada halaman kategori template")
+sm_kat = sorted(l.replace(ORIGIN, "") for l in locs if l.startswith(ORIGIN + "/template/"))
+if sm_kat != kat: bad("sitemap kategori %s != file kategori %s" % (sm_kat, kat))
+art_slugs = {u[len("/artikel/"):] for u in art}
+rbody = {}
+for u in kat:
+    h = rd(pages[u]); o = info(pages[u]); body = re.sub(r"<script.*?</script>", "", h, flags=re.S)
+    n_cards = len(re.findall(r'<article class="card tc', h))
+    if n_cards < 1: bad("%s: katalog kosong (halaman kategori tidak boleh kosong)" % u)
+    il = [x for x in re.findall(r'"numberOfItems":(\d+)', h)]
+    if not il or int(il[0]) != n_cards: bad("%s: ItemList.numberOfItems %s != jumlah kartu %d" % (u, il, n_cards))
+    for t in ("CollectionPage", "BreadcrumbList", "ItemList"):
+        if t not in o["ld"]: bad("%s: JSON-LD %s tidak ada" % (u, t))
+    if len(re.findall(r"<h2[\s>]", h)) < 4: bad("%s: struktur H2 kurang" % u)
+    if len(re.findall(r'<nav class="ar-bc"', h)) != 1: bad("%s: breadcrumb tidak ada" % u)
+    txt = re.sub(r"<[^>]+>", " ", body.split("<main")[1] if "<main" in body else body)
+    if len(txt.split()) < 350: bad("%s: teks terlalu sedikit (%d kata)" % (u, len(txt.split())))
+    rbody[u] = re.search(r'<section class="kat-intro"[^>]*>(.*?)</section>', h, re.S).group(1)
+    if not o["links"] or not any(l.startswith("/artikel/") for l in o["links"]): bad("%s: tanpa tautan artikel terkait" % u)
+    ra = re.findall(r'<a class="kt-ac" href="/artikel/([^"]+)"', h)
+    if not ra: bad("%s: tanpa artikel terkait" % u)
+    for x in ra:
+        if x not in art_slugs: bad("%s: artikel terkait %s tidak ada" % (u, x))
+    rc = re.findall(r'<ul class="kat-rc">(.*?)</ul>', h, re.S)
+    rcs = re.findall(r'href="/template/([^"]+)"', rc[0]) if rc else []
+    if not rcs or any(("/template/" + x) not in pages for x in rcs) or ("/template/" + u.split("/")[-1]) in [("/template/" + x) for x in rcs]: bad("%s: kategori terkait kosong/rusak/menaut diri sendiri" % u)
+    if not re.search(r'href="/buat\?paket=(essential|signature|luxe)&amp;kategori=\w+&amp;template=', h): bad("%s: tautan Gunakan Template tidak ada" % u)
+    if not any(l.rstrip("/") == u for l in info("index.html")["links"]): bad("%s: tidak ditautkan dari beranda" % u)
+    if u not in [ORIGIN + x for x in []] and ORIGIN + u not in locs: bad("%s: tidak ada di sitemap" % u)
+ks = list(rbody.values())
+for i in range(len(kat)):
+    for j in range(i + 1, len(kat)):
+        if rbody[kat[i]] == rbody[kat[j]]: bad("intro sama: %s & %s" % (kat[i], kat[j]))
+inbound = sum(1 for u, f in pages.items() if u.startswith("/artikel/") and any(l.split("?")[0].rstrip("/").startswith("/template/") for l in info(f)["links"]))
+if inbound < 20: bad("tautan artikel -> kategori terlalu sedikit (%d)" % inbound)
+for u in kat:
+    if sum(1 for uu, f in pages.items() if uu != u and any(l.split("?")[0].rstrip("/") == u for l in info(f)["links"])) < 2: bad("%s: tautan masuk < 2 halaman" % u)
+print("kategori: %d halaman | artikel yang menaut ke kategori: %d" % (len(kat), inbound))
 print("halaman diaudit: %d | artikel: %d | URL sitemap: %d" % (len(pages), len(art), len(locs)))
 for m in fails[:60]: print("GAGAL", m)
 print("%d pelanggaran" % len(fails)); sys.exit(1 if fails else 0)

@@ -21,6 +21,11 @@ RewriteRule ^artikel/?$ /prerender/artikel/index.html [L]
 RewriteCond %{DOCUMENT_ROOT}/prerender/artikel/$1.html -f
 RewriteRule ^artikel/([a-z0-9]+(-[a-z0-9]+)*)/?$ /prerender/artikel/$1.html [L]
 
+# Halaman landing kategori template (SEO): /template/<slug> disajikan dari snapshot statis prerender/kategori/<slug>.html
+# (dibuat oleh ops/seo/build_kategori.py). Sengaja BUKAN folder template/ fisik, agar /template?paket=... tetap jalan.
+RewriteCond %{DOCUMENT_ROOT}/prerender/kategori/$1.html -f
+RewriteRule ^template/([a-z0-9]+(-[a-z0-9]+)*)/?$ /prerender/kategori/$1.html [L]
+
 # Konten publik dari database (Manajemen Konten): daftar dan detail dilayani satu halaman konten.html
 RewriteRule ^(artikel|bantuan|tutorial)/?$ konten.html [L,QSA]
 RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
