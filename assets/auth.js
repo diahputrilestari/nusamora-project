@@ -68,7 +68,7 @@
       if (!d.getElementById(I("terms")).checked) { fieldErr(I("terms"), "Anda perlu menyetujui syarat dan kebijakan."); ok = false; }
       if (!ok) { var bad = fm.querySelector("[aria-invalid=true]"); if (bad) bad.focus(); return; }
       busy(true);
-      sb.auth.signUp({ email: v("email"), password: pwi.value, options: { emailRedirectTo: SITE + "/masuk", data: { full_name: v("name"), whatsapp: wa, event_type: pick.ev, template_id: pick.tpl, plan: pick.plan, terms: "true" } } })
+      sb.auth.signUp({ email: v("email"), password: pwi.value, options: { emailRedirectTo: SITE + "/masuk", data: Object.assign({ full_name: v("name"), whatsapp: wa, event_type: pick.ev, template_id: pick.tpl, plan: pick.plan, terms: "true" }, (function () { var i = window.NMTrack && window.NMTrack.ids(); return i ? { nm_vid: i.vid, nm_sid: i.sid } : {}; })()) } })
         .then(function (r) {
           if (r.error) { busy(false, LBL.register); return msg(friendly(r.error)); }
           // email sudah terdaftar: Supabase mengembalikan user tanpa identities (tidak membocorkan keberadaan akun)
