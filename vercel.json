@@ -43,6 +43,10 @@
       "destination": "/konten.html"
     },
     {
+      "source": "/template/:slug",
+      "destination": "/prerender/kategori/:slug.html"
+    },
+    {
       "source": "/portofolio/:slug",
       "destination": "/portofolio.html"
     },

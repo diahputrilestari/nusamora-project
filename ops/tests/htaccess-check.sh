@@ -47,6 +47,11 @@ curl -s "$B/artikel?kat=Tips" | grep -q PRARENDER-INDEKS-OK && { echo "FAIL /art
 curl -s "$B/artikel/slug-tanpa-snapshot" | grep -q "Aktifkan JavaScript" && echo "PASS artikel tanpa snapshot jatuh ke konten.html" || { echo "FAIL fallback konten.html"; fail=$((fail+1)); }
 rm -f "$ROOT/prerender/artikel/zz-uji-prarender.html" "$ROOT/prerender/artikel/index.html"; [ -f "$ROOT/prerender/artikel/index.html.bak-uji" ] && mv "$ROOT/prerender/artikel/index.html.bak-uji" "$ROOT/prerender/artikel/index.html"; rmdir "$ROOT/prerender/artikel" "$ROOT/prerender" 2>/dev/null || true
 echo "== URL bersih & header"
+echo "== halaman kategori template (/template/<slug> dari prerender/kategori/, /template?paket= tetap alur lama)"
+for s in $(ls "$ROOT/prerender/kategori" | sed 's/\.html$//'); do got=$(st "$B/template/$s"); [ "$got" = 200 ] && echo "PASS /template/$s -> 200" || { echo "FAIL /template/$s -> $got"; fail=$((fail+1)); }; done
+curl -s "$B/template/pernikahan" | grep -q "<h1>Template Undangan Pernikahan" && echo "PASS /template/pernikahan memuat H1 di HTML awal" || { echo "FAIL H1 kategori"; fail=$((fail+1)); }
+got=$(st "$B/template/tidak-ada-kategori"); [ "$got" = 404 ] && echo "PASS kategori tak dikenal -> 404" || { echo "FAIL /template/tidak-ada-kategori -> $got (harap 404)"; fail=$((fail+1)); }
+got=$(st "$B/template?paket=luxe"); [ "$got" = 200 ] && echo "PASS /template?paket=luxe tetap 200 (alur lama)" || { echo "FAIL /template?paket=luxe -> $got"; fail=$((fail+1)); }
 for p in /konten /konten.html "/konten?x=1"; do got=$(st "$B$p"); [ "$got" = 301 ] && echo "PASS $p -> 301 (ke /artikel)" || { echo "FAIL $p -> $got (harap 301)"; fail=$((fail+1)); }; done
 got=$(st "$B/masuk.html"); [ "$got" = 301 ] && echo "PASS /masuk.html -> 301 (URL bersih)" || { echo "FAIL /masuk.html -> $got"; fail=$((fail+1)); }
 h=$(curl -sI "$B/"); for k in "x-content-type-options: nosniff" "content-security-policy-report-only" "referrer-policy"; do echo "$h" | grep -qi "$k" && echo "PASS header $k" || { echo "FAIL header $k"; fail=$((fail+1)); }; done

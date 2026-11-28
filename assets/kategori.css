@@ -1,0 +1,22 @@
+/* Halaman landing kategori template (/template/<slug>) */
+.kat-w{max-width:1120px;margin:0 auto;padding:28px clamp(16px,4vw,32px) 64px;display:grid;gap:36px}
+.kat .ar-bc ol{justify-content:flex-start}
+.kat-h h1{font:700 clamp(28px,4.6vw,44px)/1.15 var(--display);margin:0 0 12px;color:var(--ink)}
+.kat-lead{font-size:clamp(16px,2vw,19px);color:var(--mute);max-width:70ch;margin:0}
+.kat-intro{display:grid;gap:12px;max-width:74ch;color:var(--ink);line-height:1.7}
+.kat-intro p{margin:0}.kat-intro a{color:var(--deep);font-weight:600}
+.kat h2{font:700 clamp(22px,3vw,30px)/1.2 var(--display);margin:0 0 16px}
+.kat-f{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.kat-s input{font:500 14px var(--sans);padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;min-width:220px;background:#fff}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.kat .tc h3{font:700 20px/1.2 var(--display);margin:0}
+.kat .tc[hidden]{display:none}
+.kat-empty{padding:28px;text-align:center;color:var(--mute)}
+.kat-tips ol{list-style:none;margin:0;padding:0;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.kat-tips li{padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:#fff}
+.kat-tips h3{font:700 17px/1.3 var(--sans);margin:0 0 6px}.kat-tips p{margin:0;color:var(--mute);font-size:14.5px;line-height:1.65}
+.kat-rc{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.kat-rc a{text-decoration:none}.kat-rc small{opacity:.7}
+.kat-ra{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+@media(max-width:900px){.kat .tg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.kat .tg{grid-template-columns:1fr}.kat-s input{min-width:0;width:100%}.kat-s{flex:1 1 100%}}

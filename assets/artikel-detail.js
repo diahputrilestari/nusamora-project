@@ -4,6 +4,9 @@
 (function () {
   "use strict";
   var d = document;
+  // Tautan ke halaman kategori template yang paling relevan dengan judul artikel (urutan HARUS sama dengan ops/seo/build_kategori.py -> ARTIKEL_KAT)
+  var TPLK = [["aqiqah", "Aqiqah", /aqiqah|kelahiran|bayi/i], ["wisuda", "Wisuda", /wisuda|graduation|kelulusan/i], ["seminar-workshop", "Seminar & Workshop", /seminar|workshop|webinar/i], ["lamaran", "Lamaran & Pertunangan", /lamaran|tunangan|proposal/i], ["ulang-tahun", "Ulang Tahun", /ulang tahun|birthday|ultah|sweet seventeen/i], ["pernikahan", "Pernikahan", /pernikahan|wedding|nikah/i], ["acara-perusahaan", "Acara Perusahaan", /perusahaan|corporate|gathering|retirement/i]];
+  function tplLink(t) { for (var i = 0; i < TPLK.length; i++) if (TPLK[i][2].test(t || "")) return '<a class="ar-pl" href="/template/' + TPLK[i][0] + '">Lihat template undangan ' + TPLK[i][1].replace(/&/g, "&amp;") + " " + ico("right", 16) + "</a>"; return ""; }
   var IC = {
     chev: '<path d="M6 9l6 6 6-6"/>', up: '<path d="M12 19V5M6 11l6-6 6 6"/>', left: '<path d="M19 12H5M11 6l-6 6 6 6"/>', right: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>', chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
@@ -68,7 +71,7 @@
     h += '<div class="ar-body kt-body" id="ar-body">' + bodyHtml + "</div>";
     h += '<div class="ar-end"><p class="ar-endl">Bagikan artikel ini</p>' + share + "</div>";
     h += '<div class="ai-root" id="ai-root"></div>';
-    h += '<aside class="ar-promo" aria-labelledby="ar-ph"><div><p class="ar-pe">NusaMora</p><h2 id="ar-ph">Undangan digital yang terasa seperti hari bahagia Anda</h2><p>Pilih template, isi data, dan bagikan link pribadi ke tiap tamu. Coba demo dulu, bayar saat Anda siap.</p></div><div class="ar-pa"><a class="btn lg ar-pb" href="/#template">Jelajahi Undangan Pernikahan</a><a class="ar-pl" href="/live/">Lihat demo Live Guest ' + ico("right", 16) + "</a></div></aside>";
+    h += '<aside class="ar-promo" aria-labelledby="ar-ph"><div><p class="ar-pe">NusaMora</p><h2 id="ar-ph">Undangan digital yang terasa seperti hari bahagia Anda</h2><p>Pilih template, isi data, dan bagikan link pribadi ke tiap tamu. Coba demo dulu, bayar saat Anda siap.</p></div><div class="ar-pa"><a class="btn lg ar-pb" href="/#template">Jelajahi Undangan Pernikahan</a><a class="ar-pl" href="/live/">Lihat demo Live Guest ' + ico("right", 16) + "</a>" + tplLink(title) + "</div></aside>";
     h += '<div class="ar-nav" id="ar-nav" hidden></div>';
     h += '<nav class="ar-cats" aria-label="Kategori artikel"><p>Jelajahi kategori</p><ul id="ar-cl"></ul></nav></div></div>';
     h += '<section class="ar-rel" id="ar-rel" aria-labelledby="ar-rh" hidden><div class="ar-relw"><div class="ar-rh"><h2 id="ar-rh">Baca Juga</h2><a href="/artikel">Semua artikel ' + ico("right", 16) + "</a></div><div class=\"kt-grid\" id=\"ar-rg\"></div></div></section>";
