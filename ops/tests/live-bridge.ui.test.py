@@ -45,7 +45,7 @@ def newpage(b, cfg=None, join=None, hb=None, chat=None, token=TOK, listing=None)
         elif name == "live_chat_list": out = state["chat"]
         elif name == "live_game_submit": out = {"ok": True, "score": 50, "best": 100}
         elif name == "live_leaderboard": out = [{"name": "Budi", "score": 100}]
-        elif name == "live_theme": out = state.get("theme")
+        elif name in ("live_theme", "live_theme_demo"): out = state.get("theme")
         elif name == "live_sync": out = state.get("sync")
         elif name == "live_leave": out = True
         r.fulfill(status=200, content_type="application/json", body=json.dumps(out), headers={"access-control-allow-origin": "*"})
@@ -137,6 +137,11 @@ with sync_playwright() as pw:
     chk("lukisan venue diunduh & dipasang sebagai blob same-origin (aman untuk panorama 3D); nama tuan rumah dari undangan", "blob:" in cs[2] and cs[3] == "Alya", cs)
     pg.click("#n1"); pg.fill("#nm", "Budi Uji"); pg.click("#go"); pg.wait_for_function("typeof P!=='undefined'&&P"); pg.wait_for_timeout(1200)
     chk("tema tetap setelah masuk venue; tanpa galat halaman", pg.evaluate("document.documentElement.dataset.nmTheme") == "v-midnight-party" and not errs, errs); ctx.close()
+    # 5d. demo venue: tema diambil SEKALI oleh skrip awal di <head> (tidak diulang oleh jembatan), tema tetap diterapkan
+    ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = TH
+    pg.route("https://cdn.test/venue.png", lambda r: r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1))
+    pg.goto(BASE + "/live/?venue=midnight-party"); pg.wait_for_function("document.documentElement.dataset.nmTheme==='v-midnight-party'", timeout=8000)
+    chk("demo venue: tema diambil sekali (skrip awal) & diterapkan", len(cn(calls, "live_theme_demo")) == 1 and cn(calls, "live_theme_demo")[0].get("p_key") == "midnight-party" and not errs, (calls, errs)); ctx.close()
     ctx, pg, errs, calls, st = newpage(b, BASE_CFG); st["theme"] = dict(TH, decor={"table": {"url": "https://cdn.test/dec/table.webp"}, "lamp": {"url": "https://cdn.test/dec/lamp.png", "w": 1.2}, "sign": {"url": "https://cdn.test/dec/rusak.png"}})
     got = []
     pg.route("https://cdn.test/dec/*", lambda r: (got.append(r.request.url.split("/")[-1]), r.fulfill(status=404, body="x") if "rusak" in r.request.url else r.fulfill(status=200, content_type="image/png", headers={"access-control-allow-origin": "*"}, body=PNG1))[1])

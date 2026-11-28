@@ -23,7 +23,11 @@
   var MSG = { token_tidak_valid: "Link tamu tidak berlaku.", dimatikan: "Live Guest sedang dimatikan oleh penyelenggara.", ruangan_ditutup: "Ruangan sedang ditutup oleh penyelenggara.", penuh: "Ruangan sedang penuh. Coba lagi beberapa saat lagi.", diblokir: "Akses Anda ke ruangan ini diblokir oleh penyelenggara.",
     chat_nonaktif: "Chat sedang dimatikan.", dibisukan: "Anda sedang dibisukan sementara.", terlalu_cepat: "Tunggu sebentar sebelum mengirim lagi.", belum_masuk: "Anda belum masuk ke ruangan.", pesan_tidak_valid: "Pesan tidak valid (1 sampai 300 karakter).", interaksi_tidak_aktif: "Interaksi ini sedang tidak tersedia." };
 
+  /* hasil pengambilan awal dari <head> (halaman demo venue): tema + gambar diunduh paralel dengan mesin halaman. */
+  function earlyBlob(url) { var e = window.__nmEarly; return e && e.blobs && e.blobs[url] ? e.blobs[url] : fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }); }
   function rpc(name, args) {
+    var e = window.__nmEarly;
+    if (name === "live_theme_demo" && e && e.theme && args && e.key === args.p_key) { var ep = e.theme; e.theme = null; return ep.catch(function () { return rpc(name, args); }); }
     return fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rpc/" + name, { method: "POST", headers: { "Content-Type": "application/json", apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + C.SUPABASE_ANON_KEY }, body: JSON.stringify(args || {}) })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("http_" + r.status)); });
   }
@@ -124,7 +128,7 @@
     var d = { theme: id }; if (ev) d.eventType = ev; if (t.host) d.hostName = String(t.host);
     INVDATA = Object.assign({}, (typeof INVDATA !== "undefined" && INVDATA) || {}, d);
     if (typeof applyIdentity === "function") applyIdentity();
-    if (pt) job(fetch(pt, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+    if (pt) job(earlyBlob(pt).then(function (bl) {
       if (!/^image\/(png|jpeg|webp)$/.test(bl.type) || bl.size > 12582912) return;
       return new Promise(function (ok) { var u = URL.createObjectURL(bl), im = new Image(); im.onload = im.onerror = function () { document.documentElement.style.setProperty("--bgurl", 'url("' + u + '")'); ok(); }; im.src = u; });
     }, function () { }));
@@ -142,10 +146,13 @@
   }, DECOR_HIDE = { pelaminan: ["arch"], meja: ["table"], kuliner: ["stall_drinks", "stall_snacks", "stall_candy", "claw"],
     deco: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"],
     furn: ["arch", "fountain", "speakers", "banner", "balloons", "gifts", "photobooth", "easel", "lamp", "rope", "sign", "planter", "bush"] }, decorPending = null;
+  /* Rasio lebar/tinggi umum tiap slot (median aset tema). Ukuran aset = muat dalam kotak (lebar nominal x tinggi nominal) dengan rasio asli:
+     gambar tinggi tidak lagi jadi raksasa dan yang lebar tidak melebihi lebar slot, sehingga skala antar tema seragam. */
+  var DECOR_AR = { arch: 1, balloons: .86, banner: 1, bush: 1.28, claw: 1.08, easel: .97, fountain: 1.08, gifts: .99, lamp: .76, photobooth: 1.08, planter: .97, rope: 1.02, sign: .7, speakers: .99, stall_candy: 1.12, stall_drinks: 1.24, stall_snacks: 1, table: 1.44 };
   var DCACHE = {};
   function loadDecor(url) {
     if (DCACHE[url]) return DCACHE[url];
-    return (DCACHE[url] = fetch(url, { mode: "cors", credentials: "omit" }).then(function (r) { return r.ok ? r.blob() : Promise.reject(new Error("http")); }).then(function (bl) {
+    return (DCACHE[url] = earlyBlob(url).then(function (bl) {
       if (!/^image\/(png|webp)$/.test(bl.type) || bl.size > 4194304) return Promise.reject(new Error("tipe"));
       return new Promise(function (ok, no) {
         var u = URL.createObjectURL(bl), im = new Image(); im.onload = function () {
@@ -236,14 +243,20 @@
       var ok = res.filter(Boolean); if (!ok.length) return;
       var have = {}, grp = new THREE.Group(); grp.name = "nm-decor"; ok.forEach(function (r) { have[r.k] = 1; });
       ok.forEach(function (r) {
-        var L = DECOR[r.k], w = Number(dc[r.k].w) > 0 ? Number(dc[r.k].w) : L[0], h = w * r.cv.height / r.cv.width, tex = new THREE.CanvasTexture(r.cv);
+        var L = DECOR[r.k], ar = r.cv.width / r.cv.height, w0 = Number(dc[r.k].w) > 0 ? Number(dc[r.k].w) : L[0], w = Math.min(w0, (w0 / (DECOR_AR[r.k] || 1)) * ar), h = w / ar, tex = new THREE.CanvasTexture(r.cv);
         var pos = typeof dc[r.k].x === "number" && typeof dc[r.k].z === "number" ? (dc[r.k].mirror ? [[dc[r.k].x, dc[r.k].z], [-dc[r.k].x, dc[r.k].z]] : [[dc[r.k].x, dc[r.k].z]]) : L[1]; pos.forEach(function (p) { var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, alphaTest: 0.04 })); sp.center.set(0.5, 0); sp.scale.set(w, h, 1); sp.position.set(p[0], 0, p[1]); sp.name = "nm-decor-" + r.k; grp.add(sp); });
       });
       Object.keys(DECOR_HIDE).forEach(function (g) { if (DECOR_HIDE[g].some(function (k) { return have[k]; })) { var o = sc.getObjectByName(g); if (o) o.visible = false; } });
       /* titik area (menu & teleport) dipindah ke depan kios dekor-nya */
-      var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"] };
-      /* posisi kustom (x,z) di decor: titik area ikut, 2.9 satuan di depan dekornya */
-      Object.keys(AT).forEach(function (id) { var o = dc[AT[id][2]]; if (o && typeof o.x === "number" && typeof o.z === "number") { AT[id][0] = o.x; AT[id][1] = o.z + 2.9; } });
+      var AT = { booth: [-12.2, -5.4, "photobooth"], galeri: [12.2, -5.4, "claw"], kuliner: [-7.5, -8.4, "stall_drinks"], buku: [-5.6, 11.9, "sign"], istirahat: [11.5, 7.1, "table"] };
+      /* posisi aset (kustom atau bawaan): titik area = 2.9 satuan di depan aset (z+), hanya jika aset itu terpasang. Aset kembar (mirror/beberapa titik) memakai yang pertama. */
+      Object.keys(AT).forEach(function (id) {
+        var sl = AT[id][2], o = dc[sl]; if (!have[sl]) return;
+        if (o && typeof o.x === "number" && typeof o.z === "number") { AT[id][0] = o.x; AT[id][1] = o.z + 2.9; }
+        else if (DECOR[sl] && DECOR[sl][1].length) { var q = DECOR[sl][1][DECOR[sl][1].length > 2 ? DECOR[sl][1].length - 1 : 0]; AT[id][0] = q[0]; AT[id][1] = q[1] + 2.9; }
+        /* tetap di area jalan pemandangan (z -9.3 .. batas bawah layar) */
+        AT[id][1] = Math.max(-9.3, Math.min(typeof ZMAX !== "undefined" ? ZMAX : 12, AT[id][1]));
+      });
       try { if (typeof AREAS !== "undefined") AREAS.forEach(function (ar) { var t = AT[ar.id]; if (t && have[t[2]]) { ar.x = t[0]; ar.z = t[1]; } }); } catch (e) { }
       sc.add(grp);
     }).then(settle, settle);
