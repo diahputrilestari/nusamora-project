@@ -44,6 +44,9 @@ const MSG: Record<string, [number, string]> = {
   tidak_ditemukan: [404, "Undangan tidak ditemukan."], akun_ditangguhkan: [403, "Akun Anda sedang ditangguhkan."],
   sudah_aktif: [409, "Undangan ini sudah dipublikasikan dan masih aktif."], tidak_dapat_dipublikasi: [409, "Undangan ini tidak dapat dipublikasikan."],
   paket_tidak_valid: [400, "Paket tidak tersedia."], harga_tidak_valid: [400, "Harga paket tidak valid."], data_belum_lengkap: [422, "Data undangan belum lengkap."],
+  tidak_dapat_diperpanjang: [409, "Undangan ini tidak dapat diperpanjang."], ada_pembayaran_tertunda: [409, "Masih ada pembayaran lain yang menunggu untuk undangan ini."],
+  upgrade_belum_didukung: [409, "Perpanjangan dengan paket lebih tinggi belum tersedia. Perpanjang dengan paket yang sama."],
+  downgrade_tidak_diizinkan: [409, "Perpanjangan hanya bisa dengan paket yang sama."],
 };
 
 async function midtransStatus(orderId: string, d: Deps): Promise<{ ok: boolean; notFound?: boolean; data?: any }> {
@@ -54,7 +57,10 @@ async function midtransStatus(orderId: string, d: Deps): Promise<{ ok: boolean; 
   if (!r.ok || !j) return { ok: false };
   return { ok: true, data: j };
 }
-const slim = (j: any) => ({ order_id: j.order_id, transaction_status: j.transaction_status, status_code: j.status_code, gross_amount: j.gross_amount, payment_type: j.payment_type, transaction_id: j.transaction_id, fraud_status: j.fraud_status, transaction_time: j.transaction_time });
+const slim = (j: any) => ({ order_id: j.order_id, transaction_status: j.transaction_status, status_code: j.status_code, gross_amount: j.gross_amount, payment_type: j.payment_type, transaction_id: j.transaction_id, fraud_status: j.fraud_status, transaction_time: j.transaction_time,
+  // refund: total kumulatif dari Status API (dipakai apply_payment untuk membedakan refund sebagian/penuh); tanpa data pribadi
+  ...(j.refund_amount != null ? { refund_amount: String(j.refund_amount) } : {}),
+  ...(Array.isArray(j.refunds) ? { refunds: j.refunds.slice(0, 20).map((x: any) => ({ refund_amount: x?.refund_amount ?? null, created_at: x?.created_at ?? null, refund_key: x?.refund_key ?? null })) } : {}) });
 async function applyFromMidtrans(j: any, source: "webhook" | "sync", d: Deps) {
   return d.rpc("apply_payment", { p_order: j.order_id, p_tx_status: j.transaction_status, p_fraud: j.fraud_status ?? null, p_payment_type: j.payment_type ?? null, p_tx_id: j.transaction_id ?? null,
     p_gross: j.gross_amount != null ? String(j.gross_amount) : null, p_status_code: j.status_code != null ? String(j.status_code) : null, p_source: source, p_payload: slim(j) });
@@ -91,7 +97,9 @@ export async function handleCheckout(req: Request, d: Deps): Promise<Response> {
   if (!origin) return json(req, d.env, 500, { error: "konfigurasi", message: "ALLOWED_ORIGINS belum diisi di server." });
 
   // harga, validasi data wajib, dan pencegahan transaksi ganda ditentukan database; nilai harga TIDAK diterima dari klien
-  const prep = await d.rpc("prepare_checkout", { p_user: user.id, p_invitation: b.invitation_id, p_plan: b.plan_id });
+  // action "renew": perpanjangan undangan yang sudah terbit (kepemilikan & paket dicek di prepare_renewal; masa aktif baru bertambah setelah webhook terverifikasi)
+  const renew = b.action === "renew";
+  const prep = await d.rpc(renew ? "prepare_renewal" : "prepare_checkout", { p_user: user.id, p_invitation: b.invitation_id, p_plan: b.plan_id });
   if (prep.error) return json(req, d.env, 500, { error: "server", message: "Terjadi kendala. Coba lagi." });
   const p = prep.data;
   if (!p?.ok) { const m = MSG[p?.error] || [400, "Permintaan ditolak."]; return json(req, d.env, m[0], { error: p?.error, message: m[1], missing: p?.missing }); }
@@ -103,7 +111,7 @@ export async function handleCheckout(req: Request, d: Deps): Promise<Response> {
     const r = await d.fetch(`${snapBase(d.env.isProd)}/snap/v1/transactions`, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: auth(d.env.serverKey) },
       body: JSON.stringify({
         transaction_details: { order_id: p.order_id, gross_amount: p.amount },
-        item_details: [{ id: p.plan_id, price: p.amount, quantity: 1, name: `NusaMora ${p.plan_name} (${p.duration_days} hari)`.slice(0, 50) }],
+        item_details: [{ id: p.plan_id, price: p.amount, quantity: 1, name: `${renew ? "Perpanjangan " : ""}NusaMora ${p.plan_name} (${p.duration_days} hari)`.slice(0, 50) }],
         customer_details: { first_name: String(p.name || "Pelanggan").slice(0, 50), email: p.email },
         callbacks: { finish: `${origin}/pembayaran?order_id=${encodeURIComponent(p.order_id)}` },
         expiry: { unit: "hours", duration: 24 },

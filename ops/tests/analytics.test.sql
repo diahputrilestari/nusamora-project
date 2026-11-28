@@ -107,7 +107,7 @@ begin
   update public.invoices set status = 'lunas', paid_at = now() where id = i2;
   perform pg_temp.ok('E6 lunas: purchase_complete tepat satu kali dengan jumlah benar', pg_temp.cnt('select count(*) from public.analytics_events where event = ''purchase_complete'' and invoice_id = ''' || i2 || ''' and amount = 79000') = 1);
   update public.invoices set midtrans_status = 'settlement' where id = i2;
-  update public.invoices set status = 'refund' where id = i2; update public.invoices set status = 'lunas' where id = i2;
+  update public.invoices set status = 'menunggu' where id = i2; update public.invoices set status = 'lunas' where id = i2;   -- invoice refund kini final (after-sales A)
   perform pg_temp.ok('E7 pembaruan berulang tidak menggandakan purchase_complete', pg_temp.cnt('select count(*) from public.analytics_events where event = ''purchase_complete'' and invoice_id = ''' || i2 || '''') = 1);
 
   insert into public.invoices (id, user_id, number, description, amount, status, is_sandbox, paid_at) values (i3, u2, 'T-REAL-2', 'x', 149000, 'lunas', false, now());

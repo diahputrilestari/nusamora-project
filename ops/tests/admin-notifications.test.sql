@@ -49,7 +49,7 @@ do $$ declare c1 uuid := current_setting('nt.c1')::uuid; inv uuid; pid uuid; n i
   select * into r from public.notif_outbox where dedupe_key like 'pay:' || pid || '%' and channel = 'whatsapp' and recipient_kind = 'internal';
   if r.to_address <> '6281999000222' then raise exception 'WA internal: %', r.to_address; end if;
   -- dedupe: status berubah lagi ke paid tidak menggandakan
-  update public.payments set status = 'refunded' where id = pid; update public.payments set status = 'paid' where id = pid;
+  update public.payments set status = 'cancelled' where id = pid; update public.payments set status = 'paid' where id = pid;   -- refunded kini final (after-sales A), jadi dipakai cancelled
   select count(*) into n from public.notif_outbox where dedupe_key like 'pay:' || pid || '%'; if n <> 4 then raise exception 'dedupe gagal: %', n; end if;
   -- pelanggan tanpa nomor WA -> dilewati dengan alasan, bukan "terkirim"
   perform public.notif_emit('payment_paid', current_setting('nt.c2')::uuid, '{"order_id":"X","paket":"essential","judul":"J","jumlah":"Rp 1"}', 'nt-skip');

@@ -144,7 +144,7 @@ do $$ declare ad uuid := current_setting('st.ad')::uuid; c1 uuid := current_sett
   insert into public.invitations (user_id, title, category, template_id, package_type, slug, status, event_date, content) values (c1, 'WH', 'wedding', 'st-tpl', 'essential', 'st-6', 'menunggu_pembayaran', current_date + 30, '{}') returning id into inv;
   insert into public.payments (order_id, user_id, invitation_id, plan_id, amount, duration_days, experience, expires_at, status) values ('NMST2', c1, inv, 'essential', 79000, 90, '2d', now() + interval '1 day', 'pending') returning id into pid;
   select count(*) into n from public.webhook_deliveries where endpoint_id = wid; if n <> 0 then raise exception 'pending tidak boleh memicu webhook'; end if;
-  update public.payments set status = 'paid', paid_at = now() where id = pid; update public.payments set status = 'refunded' where id = pid; update public.payments set status = 'paid' where id = pid;
+  update public.payments set status = 'paid', paid_at = now() where id = pid; update public.payments set status = 'cancelled' where id = pid; update public.payments set status = 'paid' where id = pid;   -- refunded kini final (after-sales A)
   select count(*) into n from public.webhook_deliveries where endpoint_id = wid and event = 'payment_paid'; if n <> 1 then raise exception 'payment_paid harus 1 (dedupe), ada %', n; end if;
   if exists (select 1 from public.webhook_deliveries where endpoint_id = (w2 ->> 'id')::uuid) then raise exception 'endpoint nonaktif/tak berlangganan menerima kiriman'; end if;
   if (select payload::text from public.webhook_deliveries where endpoint_id = wid limit 1) like '%@%' then raise exception 'payload membawa email'; end if;

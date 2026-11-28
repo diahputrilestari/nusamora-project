@@ -839,8 +839,8 @@
     function rows(p) { return '<dl class="sum"><div><dt>Invoice</dt><dd>' + esc(p.invoice_number || "-") + "</dd></div><div><dt>Paket</dt><dd>" + esc(p.plan_name) + " &middot; " + esc(EXP[p.experience] || "") + "</dd></div><div><dt>Total</dt><dd>" + rp(p.amount) + "</dd></div></dl>"; }
     function render(p) {
       var inv = p.invitation || {}, url = inv.public_url || "";
-      if (p.status === "paid") {
-        stop = true; shell(icon("ok") + '<h1>Pembayaran berhasil</h1><p class="sub">Undangan Anda sudah dipublikasikan.</p>' + rows(p) +
+      if (p.status === "paid" || p.status === "partially_refunded") {
+        stop = true; shell(icon("ok") + '<h1>Pembayaran berhasil</h1><p class="sub">Undangan Anda sudah aktif.</p>' + rows(p) +
           '<dl class="sum"><div><dt>Status</dt><dd>Published</dd></div><div><dt>Aktif sejak</dt><dd>' + esc(fdate(inv.published_at)) + "</dd></div><div><dt>Aktif hingga</dt><dd>" + esc(fdate(inv.expires_at)) + "</dd></div></dl>" +
           (inv.status === "aktif" ? '<div class="urlb"><code>' + esc(url.replace(/^https?:\/\//, "")) + '</code><button class="btn o sm" type="button" id="cpy" data-u="' + esc(url) + '">Salin link</button></div>' : '<p class="note">Pembayaran Anda diterima dan sedang ditinjau tim kami karena ada transaksi lain pada undangan ini.</p>') +
           '<div class="acts"><a class="btn o" href="/editor?id=' + encodeURIComponent(inv.id) + '">Buka editor</a><a class="btn" href="/akun#undangan">Ke Dashboard</a></div>');

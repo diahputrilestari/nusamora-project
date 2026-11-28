@@ -58,7 +58,7 @@
     var uid = S.user.id;
     return Promise.all([
       safe(sb.from("profiles").select("full_name,whatsapp,event_type,template_id,plan,created_at").eq("id", uid).maybeSingle(), {}),
-      safe(sb.from("invitations").select("id,title,event_type,template_id,event_date,status,public_url,guest_count,wish_count,created_at,package_type").order("created_at", { ascending: false }).limit(500), []),
+      safe(sb.from("invitations").select("id,title,event_type,template_id,event_date,status,public_url,guest_count,wish_count,created_at,package_type,plan_id,expires_at").order("created_at", { ascending: false }).limit(500), []),
       safe(sb.from("subscriptions").select("plan,status,started_at,expires_at").eq("status", "aktif").order("expires_at", { ascending: false }).limit(1), []),
       safe(sb.from("wallets").select("credits,bonus_balance").eq("user_id", uid).maybeSingle(), { credits: 0, bonus_balance: 0 }),
       safe(sb.from("invoices").select("number,description,amount,status,created_at,paid_at").order("created_at", { ascending: false }).limit(200), []),
@@ -112,7 +112,12 @@
   function invRow(i, actions) {
     var meta = [EVL[i.event_type] || "", i.event_date ? dt(i.event_date) : "Tanggal belum diatur"].filter(Boolean).map(esc).join(" &middot; ");
     return '<li class="inv" data-id="' + esc(i.id) + '">' + thumb(i.template_id) + "<div><b>" + esc(i.title) + '</b><div class="m"><span>' + meta + "</span>" + badge(i.status) + "</div></div>" +
-      '<div class="ac">' + (actions === false ? "" : (i.public_url && /^https?:\/\//.test(i.public_url) ? '<button class="btn o sm" type="button" data-copy="' + esc(i.public_url) + '">' + ico("copy") + " Salin link</button>" : "") + '<button class="btn sm" type="button" data-act="manage">Kelola</button>') + "</div></li>";
+      '<div class="ac">' + (actions === false ? "" : (i.public_url && /^https?:\/\//.test(i.public_url) ? '<button class="btn o sm" type="button" data-copy="' + esc(i.public_url) + '">' + ico("copy") + " Salin link</button>" : "") + (canRenew(i) ? '<button class="btn o sm" type="button" data-renew="' + esc(i.id) + '" data-plan="' + esc(i.plan_id || i.package_type) + '">Perpanjang</button>' : "") + '<button class="btn sm" type="button" data-act="manage">Kelola</button>') + "</div></li>";
+  }
+  /* perpanjangan: hanya tampilan; kelayakan, kepemilikan, dan harga diputuskan server (prepare_renewal) */
+  function canRenew(i) {
+    if (!(i.plan_id || i.package_type) || !i.expires_at) return false;
+    return i.status === "aktif" || ((i.status === "nonaktif" || i.status === "selesai") && new Date(i.expires_at) <= new Date());
   }
   V.dashboard = function () {
     var f = S.inv.filter(inRange), gs = f.reduce(function (a, i) { return a + (i.guest_count || 0); }, 0), ws = f.reduce(function (a, i) { return a + (i.wish_count || 0); }, 0);
@@ -208,7 +213,7 @@
     h += '<div class="grid g2" style="align-items:start"><div class="card"><div class="card-h"><h2>Paket aktif</h2>' + badge("aktif") + '</div><div class="plan-n">' + esc(PLAN[sub.plan] || sub.plan) + '</div>' +
       '<div class="meta"><div><span>Mulai</span><b>' + dt(sub.started_at, true) + '</b></div><div><span>Berakhir</span><b>' + dt(sub.expires_at, true) + '</b></div><div><span>Sisa masa aktif</span><b>' + left + ' hari</b></div></div>' +
       (soon ? '<p class="note" style="margin-top:14px">Masa aktif paket Anda tinggal ' + left + ' hari. Perpanjang agar undangan tetap bisa dibuka tamu.</p>' : "") +
-      '<div class="row-end"><a class="btn" href="/#harga">' + ico("crown") + ' Perpanjang</a></div></div>' +
+      '<div class="row-end"><a class="btn" href="#undangan">' + ico("crown") + ' Perpanjang undangan</a></div><p class="sub" style="margin-top:8px">Perpanjangan per undangan dengan paket yang sama. Masa aktif bertambah setelah pembayaran terverifikasi.</p></div>' +
       '<div class="card"><h2 style="margin-bottom:8px">Saldo</h2><div class="cred"><b>' + Number(S.wallet.credits || 0).toLocaleString("id-ID") + '</b><span>kredit</span></div></div></div>';
     return h + subHistory();
   };
@@ -377,6 +382,16 @@
       var bt = $("#ga-go"); bt.disabled = true; sb.rpc("guest_add", { p_inv: G.inv, p_name: n, p_phone: $("#ga-ph").value.trim() || null }).then(function (x) { bt.disabled = false; if (x.error) return toast(gErr(x.error), "bad"); toast("Tamu ditambahkan.", "ok"); G.data = null; route(); });
     });
   }
+  d.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-renew]"); if (!b || !sb) return; e.preventDefault(); e.stopPropagation();
+    if (!confirm("Perpanjang undangan ini dengan paket yang sama? Masa aktif bertambah setelah pembayaran berhasil.")) return;
+    b.disabled = true; var t0 = b.textContent; b.textContent = "Menyiapkan...";
+    sb.functions.invoke("midtrans-checkout", { body: { action: "renew", invitation_id: b.dataset.renew, plan_id: b.dataset.plan } }).then(function (r) {
+      if (r.data && r.data.redirect_url && /^https:\/\//.test(r.data.redirect_url)) { location.href = r.data.redirect_url; return; }
+      var ctx = r.error && r.error.context;
+      return (ctx && typeof ctx.json === "function" ? ctx.json().catch(function () { return {}; }) : Promise.resolve({})).then(function (j) { b.disabled = false; b.textContent = t0; toast((j && j.message) || "Gagal menyiapkan pembayaran. Coba lagi.", "bad"); });
+    }, function () { b.disabled = false; b.textContent = t0; toast("Layanan pembayaran belum dapat dihubungi. Coba lagi.", "bad"); });
+  }, true);
   d.addEventListener("click", function (e) {
     var b = e.target.closest("[data-g]"); if (!b) return; var a = b.dataset.g, id = b.dataset.id, call;
     if (a === "csv") {
