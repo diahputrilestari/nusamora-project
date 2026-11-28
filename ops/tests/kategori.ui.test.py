@@ -23,7 +23,7 @@ def ok(c, m):
     global fails
     print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
 slugs = sorted(os.path.basename(f)[:-5] for f in glob.glob("prerender/kategori/*.html"))
-ok(len(slugs) == 8, "8 halaman kategori ada (%d)" % len(slugs))
+ok(len(slugs) == 6, "6 halaman kategori ada (%d)" % len(slugs))
 with sync_playwright() as p:
     br = p.chromium.launch(args=["--no-sandbox"])
     # 1) JS mati: konten harus lengkap di HTML awal
@@ -34,7 +34,7 @@ with sync_playwright() as p:
           vis: [...document.querySelectorAll('.tc')].filter(e => e.offsetParent !== null).length, canon: (document.querySelector('link[rel=canonical]')||{}).href,
           imgs: [...document.querySelectorAll('.tc img')].filter(i => !i.getAttribute('src')).length, art: document.querySelectorAll('.kt-ac').length,
           cat: document.querySelectorAll('.kat-rc a').length, bc: document.querySelectorAll('.ar-bc li').length, ld: document.querySelectorAll('script[type="application/ld+json"]').length})""")
-        ok(resp.status == 200 and t["h1"] == 1 and t["cards"] > 0 and t["vis"] == t["cards"] and t["imgs"] == 0 and t["art"] >= 3 and t["cat"] == 7 and t["bc"] == 3 and t["canon"].endswith("/template/" + s) and t["ld"] == 1,
+        ok(resp.status == 200 and t["h1"] == 1 and t["cards"] > 0 and t["vis"] == t["cards"] and t["imgs"] == 0 and t["art"] >= 3 and t["cat"] == 5 and t["bc"] == 3 and t["canon"].endswith("/template/" + s) and t["ld"] == 1,
            "tanpa JS /template/%s: %s" % (s, t))
         q.close()
     # 2) JS hidup: filter + cari + tanpa galat konsol
@@ -56,7 +56,7 @@ with sync_playwright() as p:
     pg.screenshot(path="/tmp/kat-mobile.png"); ok(not errs, "tanpa galat konsol %s" % errs[:3])
     # 3) beranda menaut ke semua kategori
     pg.goto(base + "/"); hl = pg.evaluate("[...document.querySelectorAll('a[href^=\"/template/\"]')].map(a=>a.getAttribute('href'))")
-    ok(all(("/template/" + s) in hl for s in slugs), "beranda menaut ke 8 kategori (%d tautan)" % len(hl))
+    ok(all(("/template/" + s) in hl for s in slugs), "beranda menaut ke 6 kategori (%d tautan)" % len(hl))
     # 4) jalur lama tidak rusak: /template?paket= tetap file template.html
     r = pg.goto(base + "/template.html?paket=luxe"); ok(r.status == 200, "template.html (alur lama) masih ada")
     br.close()

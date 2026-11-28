@@ -50,6 +50,7 @@ echo "== URL bersih & header"
 echo "== halaman kategori template (/template/<slug> dari prerender/kategori/, /template?paket= tetap alur lama)"
 for s in $(ls "$ROOT/prerender/kategori" | sed 's/\.html$//'); do got=$(st "$B/template/$s"); [ "$got" = 200 ] && echo "PASS /template/$s -> 200" || { echo "FAIL /template/$s -> $got"; fail=$((fail+1)); }; done
 curl -s "$B/template/pernikahan" | grep -q "<h1>Template Undangan Pernikahan" && echo "PASS /template/pernikahan memuat H1 di HTML awal" || { echo "FAIL H1 kategori"; fail=$((fail+1)); }
+for o in "lamaran:pernikahan" "aqiqah:ulang-tahun"; do got=$(st "$B/template/${o%%:*}"); loc=$(curl -s -o /dev/null -w '%{redirect_url}' "$B/template/${o%%:*}"); [ "$got" = 301 ] && echo "$loc" | grep -q "/template/${o##*:}$" && echo "PASS /template/${o%%:*} -> 301 ke /template/${o##*:}" || { echo "FAIL /template/${o%%:*} -> $got $loc"; fail=$((fail+1)); }; done
 got=$(st "$B/template/tidak-ada-kategori"); [ "$got" = 404 ] && echo "PASS kategori tak dikenal -> 404" || { echo "FAIL /template/tidak-ada-kategori -> $got (harap 404)"; fail=$((fail+1)); }
 got=$(st "$B/template?paket=luxe"); [ "$got" = 200 ] && echo "PASS /template?paket=luxe tetap 200 (alur lama)" || { echo "FAIL /template?paket=luxe -> $got"; fail=$((fail+1)); }
 for p in /konten /konten.html "/konten?x=1"; do got=$(st "$B$p"); [ "$got" = 301 ] && echo "PASS $p -> 301 (ke /artikel)" || { echo "FAIL $p -> $got (harap 301)"; fail=$((fail+1)); }; done

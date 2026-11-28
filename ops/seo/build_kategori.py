@@ -24,41 +24,32 @@ CKEY = {"w": "wedding", "b": "birthday", "e": "engagement", "g": "graduation", "
 
 # slug halaman -> (kunci kategori di katalog, nama pendek, H1, title, kata kunci artikel terkait)
 CATS = [
-    dict(key="wedding", slug="pernikahan", name="Pernikahan", h1="Template Undangan Pernikahan Digital",
-         title="Template Undangan Pernikahan Digital", kw=["pernikahan", "nikah", "wedding", "akad", "resepsi", "mempelai"],
-         lead="Undangan pernikahan digital untuk akad, resepsi, dan syukuran, dari gaya adat daerah sampai film pembuka 3D.",
+    dict(key="wedding", keys=["wedding", "engagement"], slug="pernikahan", name="Pernikahan & Lamaran", h1="Template Undangan Pernikahan dan Lamaran Digital",
+         title="Template Undangan Pernikahan & Lamaran", kw=["pernikahan", "nikah", "wedding", "akad", "resepsi", "mempelai", "lamaran", "tunangan", "pertunangan", "khitbah", "proposal"],
+         lead="Undangan pernikahan, lamaran, dan pertunangan digital, dari gaya adat daerah sampai film pembuka 3D.",
          body=[
-             "Undangan pernikahan adalah kesan pertama tamu terhadap hari bahagia Anda. Di halaman ini ada {n} template pernikahan NusaMora yang bisa langsung dicoba demonya: ada tema adat Nusantara seperti Jawa, Betawi, Minang, dan Melayu, ada juga tema modern dan romantis dengan taman, pantai, atau istana sebagai latar.",
-             "Setiap template dilengkapi susunan acara, peta lokasi, RSVP, dan buku ucapan. Anda memilih tingkat pengalaman yang cocok: {pk}.",
+             "Undangan adalah kesan pertama tamu terhadap hari bahagia Anda. Di halaman ini ada {n} template untuk pernikahan, lamaran, dan pertunangan yang bisa langsung dicoba demonya: tema adat Nusantara seperti Jawa, Betawi, Minang, dan Melayu, serta tema modern dan romantis dengan taman, pantai, atau istana sebagai latar.",
+             "Template untuk lamaran dan pertunangan memakai pola yang sama dengan undangan pernikahan: susunan acara, peta lokasi, RSVP, dan buku ucapan. Ada empat template yang dibuat khusus untuk lamaran, dan template lain bisa dipakai untuk keduanya. Pilihan paket: {pk}.",
          ],
          tips=[
              ("Mulai dari suasana, bukan dari fitur", "Tentukan dulu suasana yang Anda mau: khidmat adat, hangat dan sederhana, atau megah dan sinematik. Suasana itu menyempitkan pilihan jauh lebih cepat daripada membandingkan fitur."),
              ("Cocokkan dengan tamu Anda", "Jika sebagian besar tamu membuka dari WhatsApp di ponsel, pilih Essential yang ringan. Jika Anda ingin tamu berkesan dan ada waktu untuk menontonnya, Signature atau Luxe layak dicoba."),
+             ("Untuk lamaran, sesuaikan dengan adat keluarga", "Pilih tema yang dekat dengan budaya kedua keluarga agar undangan terasa pantas bagi para sesepuh, dan tuliskan kontak keluarga dengan jelas."),
              ("Coba demo sebelum memutuskan", "Buka demo di ponsel, bukan hanya di komputer, karena sebagian besar tamu akan membukanya di sana."),
          ]),
-    dict(key="birthday", slug="ulang-tahun", name="Ulang Tahun", h1="Template Undangan Ulang Tahun Digital",
-         title="Template Undangan Ulang Tahun Digital", kw=["ulang tahun", "birthday", "ultah", "sweet seventeen", "sweet 17"],
-         lead="Undangan ulang tahun digital untuk anak, remaja, hingga dewasa, dengan tema yang ceria dan mudah dibagikan.",
+    dict(key="birthday", keys=["birthday", "aqiqah"], slug="ulang-tahun", name="Ulang Tahun & Aqiqah", h1="Template Undangan Ulang Tahun dan Aqiqah Digital",
+         title="Template Undangan Ulang Tahun & Aqiqah", kw=["ulang tahun", "birthday", "ultah", "sweet seventeen", "sweet 17", "aqiqah", "kelahiran", "bayi", "syukuran", "baby"],
+         lead="Undangan ulang tahun dan aqiqah digital untuk anak, remaja, hingga dewasa, dengan tema ceria dan mudah dibagikan.",
          body=[
-             "Ulang tahun punya karakter yang berbeda dari pernikahan: lebih ringan, lebih ceria, dan sering bertema. Ada {n} template ulang tahun di NusaMora, dari tema karakter dan hobi anak sampai tema elegan untuk perayaan dewasa.",
-             "Undangan dibagikan sebagai tautan lewat WhatsApp, lengkap dengan lokasi, jam acara, dan konfirmasi kehadiran. Pilihan paket: {pk}.",
-         ],
+             "Ulang tahun dan aqiqah sama-sama merayakan seorang anak, dan sering memakai tema yang ceria. Ada {n} template di halaman ini, dari tema karakter dan hobi anak sampai tema elegan untuk perayaan dewasa. Tiga di antaranya dibuat khusus untuk aqiqah dengan nuansa lembut dan khidmat.",
+             "Undangan dibagikan sebagai tautan lewat WhatsApp, lengkap dengan lokasi, jam acara, doa pembuka bila perlu, dan konfirmasi kehadiran. Pilihan paket: {pk}.",
+         ]
+         ,
          tips=[
-             ("Samakan tema dengan pesta", "Pilih template yang warna dan temanya senada dengan dekorasi pesta, agar undangan terasa menjadi bagian dari acaranya."),
-             ("Ulang tahun anak: pikirkan orang tua tamu", "Yang membuka undangan biasanya orang tua. Pastikan jam, alamat, dan kontak panitia mudah ditemukan."),
-             ("Tema sinematik untuk momen besar", "Untuk ulang tahun yang dirayakan besar-besaran, template Signature atau Luxe memberi pembuka yang lebih berkesan."),
-         ]),
-    dict(key="engagement", slug="lamaran", name="Lamaran & Pertunangan", h1="Template Undangan Lamaran dan Pertunangan Digital",
-         title="Template Undangan Lamaran & Pertunangan", kw=["lamaran", "tunangan", "pertunangan", "khitbah", "proposal"],
-         lead="Undangan lamaran dan pertunangan digital yang hangat, untuk acara keluarga yang intim namun tetap berkesan.",
-         body=[
-             "Lamaran dan pertunangan biasanya dihadiri keluarga dan kerabat dekat. Karena itu undangannya perlu terasa personal dan jelas: siapa, kapan, di mana, dan bagaimana menghubungi keluarga. Tersedia {n} template yang bisa Anda pilih.",
-             "Anda bisa memakai tema adat sesuai budaya keluarga atau tema modern yang sederhana. Pilihan paket: {pk}.",
-         ],
-         tips=[
-             ("Sesuaikan dengan adat keluarga", "Pilih tema yang dekat dengan budaya kedua keluarga agar undangan terasa pantas bagi para sesepuh."),
-             ("Daftar tamu kecil, undangan tetap rapi", "Meski tamunya sedikit, tautan pribadi per tamu membuat sapaan terasa hangat dan memudahkan Anda mencatat siapa yang hadir."),
-             ("Pertimbangkan lanjutan ke pernikahan", "Jika setelah lamaran Anda akan membuat undangan pernikahan, memilih gaya yang serasi membuat rangkaian acara terasa utuh."),
+             ("Samakan tema dengan pesta", "Pilih template yang warna dan temanya senada dengan dekorasi, agar undangan terasa menjadi bagian dari acaranya."),
+             ("Pikirkan orang tua tamu", "Yang membuka undangan anak biasanya orang tuanya. Pastikan jam mulai dan selesai, alamat, dan kontak panitia mudah ditemukan."),
+             ("Aqiqah: pilih suasana yang tenang", "Untuk aqiqah, pilih tema berwarna lembut dan tuliskan susunan acara serta doa dengan jelas; ada tema biru dan merah muda yang khusus aqiqah."),
+             ("Tema sinematik untuk momen besar", "Untuk perayaan besar, template Signature atau Luxe memberi pembuka yang lebih berkesan."),
          ]),
     dict(key="graduation", slug="wisuda", name="Wisuda", h1="Template Undangan Wisuda Digital",
          title="Template Undangan Wisuda Digital", kw=["wisuda", "graduation", "kelulusan", "lulus"],
@@ -70,18 +61,6 @@ CATS = [
          tips=[
              ("Cantumkan detail yang dibutuhkan tamu", "Tulis jam, lokasi, dan informasi parkir atau akses masuk jika acara berada di kampus atau gedung."),
              ("Libatkan foto", "Foto toga dan galeri kenangan membuat undangan terasa lebih personal."),
-         ]),
-    dict(key="aqiqah", slug="aqiqah", name="Aqiqah & Syukuran Kelahiran", h1="Template Undangan Aqiqah dan Syukuran Kelahiran Digital",
-         title="Template Undangan Aqiqah Digital", kw=["aqiqah", "kelahiran", "bayi", "syukuran", "baby"],
-         lead="Undangan aqiqah dan syukuran kelahiran digital yang khidmat, lembut, dan mudah dibagikan.",
-         body=[
-             "Aqiqah adalah wujud syukur atas kelahiran buah hati, dan undangannya sebaiknya terasa tenang, hangat, dan khidmat. NusaMora menyediakan {n} template aqiqah dengan nuansa lembut dan pilihan warna untuk putra maupun putri.",
-             "Undangan memuat waktu, tempat, dan doa pembuka, lengkap dengan konfirmasi kehadiran. Pilihan paket: {pk}.",
-         ],
-         tips=[
-             ("Pilih warna sesuai kebutuhan", "Tersedia tema berwarna biru, merah muda, dan netral. Pilih yang paling sesuai dengan suasana keluarga."),
-             ("Perhatikan kenyamanan tamu", "Karena banyak tamu yang membawa anak kecil, tuliskan jam mulai dan selesai acara dengan jelas."),
-             ("Bagikan lewat WhatsApp", "Tautan undangan cukup dikirim sekali; tamu bisa membuka, melihat lokasi, dan mengonfirmasi kehadiran dari satu halaman."),
          ]),
     dict(key="seminar", slug="seminar-workshop", name="Seminar & Workshop", h1="Template Undangan Seminar dan Workshop Digital",
          title="Template Undangan Seminar & Workshop", kw=["seminar", "workshop", "pelatihan", "webinar", "konferensi"],
@@ -203,7 +182,8 @@ def pk_sentence(items):
 
 
 def card(t, cat):
-    use = "/buat?paket=%s&amp;kategori=%s&amp;template=%s" % (t["pkg"], cat["key"], esc(t["slug"]))
+    kk = next((k for k in t["cats"] if k in cat.get("keys", [cat["key"]])), cat["key"])
+    use = "/buat?paket=%s&amp;kategori=%s&amp;template=%s" % (t["pkg"], kk, esc(t["slug"]))
     return (
         '<article class="card tc hov" data-pkg="%s" data-q="%s"><div class="im"><img src="%s" alt="Pratinjau template %s" width="640" height="400" loading="lazy" decoding="async">'
         '<span class="pkchip sm">%s</span></div><div class="bd"><h3>%s</h3><p>%s</p>'
@@ -246,7 +226,7 @@ def page(cat, items, arts, allcats):
     for o in allcats:
         if o["key"] == cat["key"]:
             continue
-        both = [t for t in items if o["key"] in t["cats"]]
+        both = [t for t in items if any(k in t["cats"] for k in o.get("keys", [o["key"]]))]
         if len(both) * 2 >= n and len(both) >= 5:
             body += '<p>%d dari %d template di halaman ini juga cocok untuk <a href="/template/%s">%s</a>, karena tema yang sama sering dipakai untuk kedua acara. Template yang dibuat khusus untuk %s tampil lebih dulu.</p>' % (len(both), n, o["slug"], esc(o["name"].lower()), esc(cat["name"].lower()))
     tips = "".join("<li><h3>%s</h3><p>%s</p></li>" % (esc(a), esc(b)) for a, b in cat["tips"])
@@ -294,9 +274,9 @@ def page(cat, items, arts, allcats):
 
 
 # Urutan HARUS sama dengan TPLK di assets/artikel-detail.js (tautan artikel -> kategori template)
-ARTIKEL_KAT = [("aqiqah", "Aqiqah", r"aqiqah|kelahiran|bayi"), ("wisuda", "Wisuda", r"wisuda|graduation|kelulusan"),
-               ("seminar-workshop", "Seminar &amp; Workshop", r"seminar|workshop|webinar"), ("lamaran", "Lamaran &amp; Pertunangan", r"lamaran|tunangan|proposal"),
-               ("ulang-tahun", "Ulang Tahun", r"ulang tahun|birthday|ultah|sweet seventeen"), ("pernikahan", "Pernikahan", r"pernikahan|wedding|nikah"),
+ARTIKEL_KAT = [("ulang-tahun", "Ulang Tahun &amp; Aqiqah", r"aqiqah|kelahiran|bayi"), ("wisuda", "Wisuda", r"wisuda|graduation|kelulusan"),
+               ("seminar-workshop", "Seminar &amp; Workshop", r"seminar|workshop|webinar"), ("pernikahan", "Pernikahan &amp; Lamaran", r"lamaran|tunangan|proposal"),
+               ("ulang-tahun", "Ulang Tahun &amp; Aqiqah", r"ulang tahun|birthday|ultah|sweet seventeen"), ("pernikahan", "Pernikahan &amp; Lamaran", r"pernikahan|wedding|nikah"),
                ("acara-perusahaan", "Acara Perusahaan", r"perusahaan|corporate|gathering|retirement")]
 
 
@@ -324,12 +304,25 @@ def link_artikel(live_slugs):
     return n
 
 
+def link_home(live):
+    p = os.path.join(ROOT, "index.html")
+    s = open(p, encoding="utf-8").read()
+    nav = '<nav class="katnav" aria-label="Jelajahi template per kategori"><span>Jelajahi per kategori:</span>' + "".join(
+        '<a href="/template/%s">%s <small>%d</small></a>' % (c["slug"], esc(c["name"]), c["n"]) for c in live) + "</nav>"
+    s, k1 = re.subn(r'<nav class="katnav".*?</nav>', lambda m: nav, s, flags=re.S)
+    col = '<nav aria-label="Template"><h2>Template</h2>' + "".join('<a href="/template/%s">Undangan %s</a>' % (c["slug"], esc(c["name"])) for c in live) + "</nav>"
+    s, k2 = re.subn(r'<nav aria-label="Template"><h2>Template</h2>.*?</nav>', lambda m: col, s, flags=re.S)
+    if k1 != 1 or k2 != 1:
+        raise SystemExit("index.html: blok tautan kategori tidak ditemukan")
+    open(p, "w", encoding="utf-8", newline="").write(s)
+
+
 def main():
     tpl = load_templates()
     arts = load_articles()
     built = []
     for c in CATS:
-        items = [t for t in tpl if c["key"] in t["cats"]]
+        items = [t for t in tpl if any(k in t["cats"] for k in c.get("keys", [c["key"]]))]
         items.sort(key=lambda t: len(t["cats"]))  # template khusus kategori ini tampil lebih dulu (sort stabil)
         c["n"] = len(items)
         c["items"] = items
@@ -343,6 +336,7 @@ def main():
         open(os.path.join(outdir, c["slug"] + ".html"), "w", encoding="utf-8").write(doc)
         built.append((c["slug"], c["n"], upd))
         print("%-18s %3d template  lastmod %s  %d artikel terkait" % (c["slug"], c["n"], upd, len(related_articles(c, arts))))
+    link_home(live)
     print("artikel -> kategori: %d tautan" % link_artikel({c["slug"] for c in live}))
     # sitemap
     sm = os.path.join(ROOT, "sitemap.xml")

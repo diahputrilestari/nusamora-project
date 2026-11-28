@@ -5,7 +5,7 @@
   "use strict";
   var d = document;
   // Tautan ke halaman kategori template yang paling relevan dengan judul artikel (urutan HARUS sama dengan ops/seo/build_kategori.py -> ARTIKEL_KAT)
-  var TPLK = [["aqiqah", "Aqiqah", /aqiqah|kelahiran|bayi/i], ["wisuda", "Wisuda", /wisuda|graduation|kelulusan/i], ["seminar-workshop", "Seminar & Workshop", /seminar|workshop|webinar/i], ["lamaran", "Lamaran & Pertunangan", /lamaran|tunangan|proposal/i], ["ulang-tahun", "Ulang Tahun", /ulang tahun|birthday|ultah|sweet seventeen/i], ["pernikahan", "Pernikahan", /pernikahan|wedding|nikah/i], ["acara-perusahaan", "Acara Perusahaan", /perusahaan|corporate|gathering|retirement/i]];
+  var TPLK = [["ulang-tahun", "Ulang Tahun & Aqiqah", /aqiqah|kelahiran|bayi/i], ["wisuda", "Wisuda", /wisuda|graduation|kelulusan/i], ["seminar-workshop", "Seminar & Workshop", /seminar|workshop|webinar/i], ["pernikahan", "Pernikahan & Lamaran", /lamaran|tunangan|proposal/i], ["ulang-tahun", "Ulang Tahun & Aqiqah", /ulang tahun|birthday|ultah|sweet seventeen/i], ["pernikahan", "Pernikahan & Lamaran", /pernikahan|wedding|nikah/i], ["acara-perusahaan", "Acara Perusahaan", /perusahaan|corporate|gathering|retirement/i]];
   function tplLink(t) { for (var i = 0; i < TPLK.length; i++) if (TPLK[i][2].test(t || "")) return '<a class="ar-pl" href="/template/' + TPLK[i][0] + '">Lihat template undangan ' + TPLK[i][1].replace(/&/g, "&amp;") + " " + ico("right", 16) + "</a>"; return ""; }
   var IC = {
     chev: '<path d="M6 9l6 6 6-6"/>', up: '<path d="M12 19V5M6 11l6-6 6 6"/>', left: '<path d="M19 12H5M11 6l-6 6 6 6"/>', right: '<path d="M5 12h14M13 6l6 6-6 6"/>',

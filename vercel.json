@@ -33,6 +33,10 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/template/lamaran", "destination": "/template/pernikahan", "permanent": true },
+    { "source": "/template/aqiqah", "destination": "/template/ulang-tahun", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/(artikel|bantuan|tutorial)",
