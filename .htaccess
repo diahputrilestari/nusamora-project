@@ -29,6 +29,9 @@ RewriteRule ^(artikel|info)/[a-z0-9]+(-[a-z0-9]+)*/?$ konten.html [L,QSA]
 RewriteRule ^portofolio/[a-z0-9]+(-[a-z0-9]+)*/?$ portofolio.html [L,QSA]
 
 # Hapus .html dari URL yang diketik
+# /konten (dan /konten.html) hanyalah cangkang untuk /artikel, /bantuan, /tutorial; diakses langsung isinya kosong -> arahkan ke daftar artikel
+RewriteCond %{THE_REQUEST} ^[A-Z]+\s/+konten(\.html)?(\?\S*)?\s [NC]
+RewriteRule ^ /artikel? [R=301,L]
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L,NE]
 
