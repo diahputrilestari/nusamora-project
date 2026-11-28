@@ -141,6 +141,16 @@ jobs:
         run: |
           set -a; . "$RUNNER_TEMP/stack.env"; set +a
           psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/admin-reports.test.sql 2>&1 | tee "$RUNNER_TEMP/admin-reports.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji DB analytics (saklar, ingest, sesi, pemicu pendaftaran/pembayaran, agregasi WIB, retensi, hak akses)"
+        id: analyticsdb
+        continue-on-error: true
+        run: |
+          set -a; . "$RUNNER_TEMP/stack.env"; set +a
+          psql "$DB_URL" -v ON_ERROR_STOP=1 -f ops/tests/analytics.test.sql 2>&1 | tee "$RUNNER_TEMP/analytics.log"; exit ${PIPESTATUS[0]}
+      - name: "Uji Edge Function analytics-collect (bot, origin, DNT/GPC, rate limit, batas isi)"
+        id: analyticsfn
+        continue-on-error: true
+        run: node --experimental-strip-types ops/tests/analytics-collect.test.mjs 2>&1 | grep -v ExperimentalWarning | tee "$RUNNER_TEMP/analytics-collect.log"; exit ${PIPESTATUS[0]}
       - name: "Uji DB manajemen konten (SEO, slug, bahasa, jadwal tayang, revisi, media, fungsi publik, hak akses)"
         id: admcontent
         continue-on-error: true
@@ -246,4 +256,4 @@ jobs:
         if: always()
         run: |
           echo "mfa=${{ steps.mfa.outcome }} authlimits=${{ steps.authlimits.outcome }} dr=${{ steps.dr.outcome }} captcha=${{ steps.captcha.outcome }} datingdb=${{ steps.datingdb.outcome }} datingui=${{ steps.datingui.outcome }} dating=${{ steps.dating.outcome }} contentprot=${{ steps.contentprot.outcome }} custfeat=${{ steps.custfeat.outcome }} guestdb=${{ steps.guestdb.outcome }} tplmeta=${{ steps.tplmeta.outcome }} admdash=${{ steps.admdash.outcome }} admcust=${{ steps.admcust.outcome }} admtpl=${{ steps.admtpl.outcome }} admtx=${{ steps.admtx.outcome }} admsup=${{ steps.admsup.outcome }} admplans=${{ steps.admplans.outcome }} admreports=${{ steps.admreports.outcome }} admcontent=${{ steps.admcontent.outcome }} admnotif=${{ steps.admnotif.outcome }} admsettings=${{ steps.admsettings.outcome }} admroles=${{ steps.admroles.outcome }} admaffiliate=${{ steps.admaffiliate.outcome }} admlive=${{ steps.admlive.outcome }} admasset=${{ steps.admasset.outcome }}"
-          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success -a "${{ steps.guestdb.outcome }}" = success -a "${{ steps.tplmeta.outcome }}" = success -a "${{ steps.admdash.outcome }}" = success -a "${{ steps.admcust.outcome }}" = success -a "${{ steps.admtpl.outcome }}" = success -a "${{ steps.admtx.outcome }}" = success -a "${{ steps.admsup.outcome }}" = success -a "${{ steps.admplans.outcome }}" = success -a "${{ steps.admreports.outcome }}" = success -a "${{ steps.admcontent.outcome }}" = success -a "${{ steps.admnotif.outcome }}" = success -a "${{ steps.admsettings.outcome }}" = success -a "${{ steps.admroles.outcome }}" = success -a "${{ steps.admaffiliate.outcome }}" = success -a "${{ steps.admlive.outcome }}" = success -a "${{ steps.admasset.outcome }}" = success
+          test "${{ steps.mfa.outcome }}" = success -a "${{ steps.authlimits.outcome }}" = success -a "${{ steps.dr.outcome }}" = success -a "${{ steps.captcha.outcome }}" = success -a "${{ steps.datingdb.outcome }}" = success -a "${{ steps.dating.outcome }}" = success -a "${{ steps.datingui.outcome }}" = success -a "${{ steps.contentprot.outcome }}" = success -a "${{ steps.custfeat.outcome }}" = success -a "${{ steps.guestdb.outcome }}" = success -a "${{ steps.tplmeta.outcome }}" = success -a "${{ steps.admdash.outcome }}" = success -a "${{ steps.admcust.outcome }}" = success -a "${{ steps.admtpl.outcome }}" = success -a "${{ steps.admtx.outcome }}" = success -a "${{ steps.admsup.outcome }}" = success -a "${{ steps.admplans.outcome }}" = success -a "${{ steps.admreports.outcome }}" = success -a "${{ steps.analyticsdb.outcome }}" = success -a "${{ steps.analyticsfn.outcome }}" = success -a "${{ steps.admcontent.outcome }}" = success -a "${{ steps.admnotif.outcome }}" = success -a "${{ steps.admsettings.outcome }}" = success -a "${{ steps.admroles.outcome }}" = success -a "${{ steps.admaffiliate.outcome }}" = success -a "${{ steps.admlive.outcome }}" = success -a "${{ steps.admasset.outcome }}" = success

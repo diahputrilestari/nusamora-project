@@ -25,3 +25,6 @@ verify_jwt = false
 
 [functions.system-status]
 verify_jwt = false
+
+[functions.analytics-collect]
+verify_jwt = false
