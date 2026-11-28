@@ -49,10 +49,13 @@
     (o.alternates || []).forEach(function (a) { link("alternate", a.href, { hreflang: a.lang }); });
     meta("og:type", o.og || "website", "property"); meta("og:site_name", "NusaMora", "property"); meta("og:title", o.title, "property"); meta("og:description", o.description || "", "property"); meta("og:locale", o.lang === "en" ? "en_US" : "id_ID", "property");
     if (o.canonical) meta("og:url", o.canonical, "property");
-    meta("twitter:card", o.image ? "summary_large_image" : "summary"); meta("twitter:title", o.title); meta("twitter:description", o.description || "");
-    if (o.image) { meta("og:image", o.image, "property"); meta("twitter:image", o.image); }
+    /* gambar berbagi: thumbnail artikel bila ada, jika tidak gambar merek bawaan (halaman yang diindeks tidak boleh tanpa og:image) */
+    var im = o.image || (o.noindex ? "" : origin + "/assets/og-nusamora.png");
+    meta("twitter:card", im ? "summary_large_image" : "summary"); meta("twitter:title", o.title); meta("twitter:description", o.description || "");
+    if (im) { meta("og:image", im, "property"); meta("twitter:image", im); }
     if (o.ld) { var s = d.createElement("script"); s.type = "application/ld+json"; s.setAttribute("data-ld", "1"); s.textContent = JSON.stringify(o.ld).replace(/</g, "\\u003c"); d.head.appendChild(s); }
   }
+  var ogImg = function (c, img) { var u = safeUrl(img); if (u) return u; var t = artImg(c); return t ? safeUrl(t.charAt(0) === "/" ? origin + t : t) : ""; };
   var fdate = function (iso) { try { return new Date(iso).toLocaleDateString(lang === "en" ? "en-US" : "id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: TZ }); } catch (e) { return ""; } };
   var urlFor = function (t, s, l) { return origin + "/" + BASEP[t] + (s ? "/" + s : "") + (l === "en" ? "?lang=en" : ""); };
 
@@ -76,13 +79,13 @@
     var title = c.seo_title || c.title, desc = c.seo_description || c.excerpt || plain(c.body).slice(0, 155), img = c.og_image_url || c.image_url || "";
     var canon = c.canonical_url || urlFor(c.type, c.slug, c.lang);
     var alts = [{ lang: c.lang, href: urlFor(c.type, c.slug, c.lang) }].concat((c.alternates || []).map(function (a) { return { lang: a.lang, href: urlFor(c.type, a.slug, a.lang) }; }));
-    seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: safeUrl(img), lang: c.lang, og: c.type === "article" ? "article" : "website", alternates: alts.length > 1 ? alts : [],
-      ld: c.type === "article" && !pv ? { "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: safeUrl(img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora" } } : null });
+    seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: ogImg(c, img), lang: c.lang, og: c.type === "article" ? "article" : "website", alternates: alts.length > 1 ? alts : [],
+      ld: c.type === "article" && !pv ? { "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: ogImg(c, img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora" } } : null });
     if (c.type === "article" && c.lang !== "en" && window.NMArticle) {
       var info = window.NMArticle.render({ c: c, pv: pv, view: view, sb: sb, esc: esc, md: md, safeUrl: safeUrl, artImg: artImg, catOf: catOf, catOrder: CAT_ORDER, fdate: fdate, canon: canon, cover: ktCover, meta: ktMeta, href: ktHref });
       var au = { "@type": "Organization", name: String(c.author || "NusaMora") };
-      seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: safeUrl(img), lang: c.lang, og: "article", alternates: alts.length > 1 ? alts : [],
-        ld: pv ? null : [{ "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: safeUrl(img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at || c.published_at, articleSection: info.cat, wordCount: info.words, author: au, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora", logo: { "@type": "ImageObject", url: origin + "/assets/logo-nusamora.png" } } },
+      seo({ title: title + " | NusaMora", description: desc, canonical: canon, noindex: pv || c.noindex, image: ogImg(c, img), lang: c.lang, og: "article", alternates: alts.length > 1 ? alts : [],
+        ld: pv ? null : [{ "@context": "https://schema.org", "@type": "Article", headline: c.title, description: desc, image: ogImg(c, img) || undefined, inLanguage: c.lang, datePublished: c.published_at, dateModified: c.updated_at || c.published_at, articleSection: info.cat, wordCount: info.words, author: au, mainEntityOfPage: canon, publisher: { "@type": "Organization", name: "NusaMora", logo: { "@type": "ImageObject", url: origin + "/assets/logo-nusamora.png" } } },
           { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Beranda", item: origin + "/" }, { "@type": "ListItem", position: 2, name: "Artikel", item: origin + "/artikel" }, { "@type": "ListItem", position: 3, name: info.cat, item: origin + "/artikel?kat=" + encodeURIComponent(info.cat) }, { "@type": "ListItem", position: 4, name: c.title, item: canon }] }].concat(faqLd(c.body)) });
       return;
     }
@@ -119,7 +122,7 @@
   }
   var ktHref = function (r) { return "/" + BASEP[type] + "/" + esc(r.slug) + (lang === "en" ? "?lang=en" : ""); };
   function showArticles(rows) {
-    seo({ title: "Artikel | NusaMora", description: "Artikel dan tips seputar undangan digital dari NusaMora.", canonical: urlFor(type, "", lang), lang: lang });
+    seo({ title: "Artikel & Panduan Undangan Digital | NusaMora", description: "Panduan, ide acara, dan tips undangan digital dari NusaMora: pernikahan, ulang tahun, aqiqah, wisuda, seminar, hingga acara perusahaan.", canonical: urlFor(type, "", lang), lang: lang });
     var items = rows.map(function (r) { return { r: r, cat: catOf(r), hay: (String(r.title || "") + " " + String(r.excerpt || "")).toLowerCase() }; }), cats = [];
     items.forEach(function (x) { if (cats.indexOf(x.cat) < 0) cats.push(x.cat); });
     cats.sort(function (a, b) { var i = CAT_ORDER.indexOf(a), j = CAT_ORDER.indexOf(b); return (i < 0 ? 99 : i) - (j < 0 ? 99 : j); });
@@ -185,7 +188,7 @@
     if (type === "tutorial" && lang !== "en" && window.NMTutorial) { window.NMTutorial.render({ view: view, rows: rows, esc: esc, md: md, seo: seo, urlFor: urlFor, type: type, lang: lang }); return; }
     if (type === "faq" && lang !== "en" && window.NMHelp) { window.NMHelp.render({ view: view, rows: rows, esc: esc, md: md, seo: seo, urlFor: urlFor, type: type, lang: lang }); return; }
     var t = TITLE[type] || "Konten";
-    seo({ title: t + " | NusaMora", description: type === "article" ? "Artikel dan tips seputar undangan digital dari NusaMora." : type === "faq" ? "Jawaban atas pertanyaan yang sering diajukan tentang NusaMora." : "Panduan langkah demi langkah menggunakan NusaMora.", canonical: urlFor(type, "", lang), lang: lang });
+    seo({ title: (type === "article" ? "Artikel & Panduan Undangan Digital" : t) + " | NusaMora", description: type === "article" ? "Panduan, ide acara, dan tips undangan digital dari NusaMora: pernikahan, ulang tahun, aqiqah, wisuda, seminar, hingga acara perusahaan." : type === "faq" ? "Jawaban atas pertanyaan yang sering diajukan tentang NusaMora." : "Panduan langkah demi langkah menggunakan NusaMora.", canonical: urlFor(type, "", lang), lang: lang });
     var body;
     if (!rows.length) body = '<div class="card kt-empty">Belum ada konten.</div>';
     else if (type === "faq" || type === "tutorial") body = '<div class="kt-faq">' + rows.map(function (r) { return "<details><summary>" + esc(r.title) + '</summary><div class="kt-body">' + md(r.body) + "</div></details>"; }).join("") + "</div>";

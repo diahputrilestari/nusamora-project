@@ -47,6 +47,7 @@ curl -s "$B/artikel?kat=Tips" | grep -q PRARENDER-INDEKS-OK && { echo "FAIL /art
 curl -s "$B/artikel/slug-tanpa-snapshot" | grep -q "Aktifkan JavaScript" && echo "PASS artikel tanpa snapshot jatuh ke konten.html" || { echo "FAIL fallback konten.html"; fail=$((fail+1)); }
 rm -f "$ROOT/prerender/artikel/zz-uji-prarender.html" "$ROOT/prerender/artikel/index.html"; [ -f "$ROOT/prerender/artikel/index.html.bak-uji" ] && mv "$ROOT/prerender/artikel/index.html.bak-uji" "$ROOT/prerender/artikel/index.html"; rmdir "$ROOT/prerender/artikel" "$ROOT/prerender" 2>/dev/null || true
 echo "== URL bersih & header"
+for p in /konten /konten.html "/konten?x=1"; do got=$(st "$B$p"); [ "$got" = 301 ] && echo "PASS $p -> 301 (ke /artikel)" || { echo "FAIL $p -> $got (harap 301)"; fail=$((fail+1)); }; done
 got=$(st "$B/masuk.html"); [ "$got" = 301 ] && echo "PASS /masuk.html -> 301 (URL bersih)" || { echo "FAIL /masuk.html -> $got"; fail=$((fail+1)); }
 h=$(curl -sI "$B/"); for k in "x-content-type-options: nosniff" "content-security-policy-report-only" "referrer-policy"; do echo "$h" | grep -qi "$k" && echo "PASS header $k" || { echo "FAIL header $k"; fail=$((fail+1)); }; done
 c=$(curl -sI "$B/assets/img/romantic-garden-s1.webp" | grep -i '^cache-control'); echo "$c" | grep -qi immutable && echo "PASS cache aset gambar immutable" || { echo "FAIL cache aset: $c"; fail=$((fail+1)); }
